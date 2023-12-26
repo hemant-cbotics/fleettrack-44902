@@ -39,8 +39,8 @@ const dummyData = [{
 ];
 
 const ScreenComponent = () => {
-  return <SafeAreaView style={_styles.QpaLtsFW}>
-      <TextInput placeholder="Search" style={_styles.ZZLHWpcj} />
+  return <SafeAreaView style={_styles.LakbBHLO}>
+      <TextInput placeholder="Search" style={_styles.lOfRvXND} />
       <FlatList data={dummyData} keyExtractor={item => item.id} renderItem={({
       item
     }) => <View>
@@ -57,7 +57,7 @@ const ScreenComponent = () => {
                 <Text>{report.title}</Text>
                 <Image source={{
           uri: report.shareIcon
-        }} style={_styles.bCQMHfmL} />
+        }} style={_styles.dlFHRmbv} />
                 <Button title={report.downloadButton} onPress={() => {}} />
               </View>)}
           </View>} />
@@ -67,16 +67,16 @@ const ScreenComponent = () => {
 export default ScreenComponent;
 
 const _styles = StyleSheet.create({
-  QpaLtsFW: {
+  LakbBHLO: {
     flex: 1,
     backgroundColor: "#fff"
   },
-  ZZLHWpcj: {
+  lOfRvXND: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1
   },
-  bCQMHfmL: {
+  dlFHRmbv: {
     width: 50,
     height: 50
   }
