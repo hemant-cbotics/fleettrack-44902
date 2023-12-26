@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, TextInput, Image, Pressable, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  Image,
+  Pressable,
+  ScrollView
+} from "react-native";
 
 const Signup2 = () => {
   const [email, setEmail] = useState("");
@@ -7,18 +15,52 @@ const Signup2 = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [secureTextEntryPassword, setSecureTextEntryPassword] = useState(true);
-  const [secureTextEntryConfirmPassword, setSecureTextEntryConfirmPassword] = useState(true);
-  return <View style={styles.container}>
+  const [secureTextEntryConfirmPassword, setSecureTextEntryConfirmPassword] =
+    useState(true);
+  return (
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.heading}>Welcome</Text>
         <Text style={styles.subHeading}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non at sed.
         </Text>
-        <Input text="Email address" placeholder="Enter your email address" value={email} onChange={setEmail} containerStyle={styles.inputContainer} />
-        <Input text="Password" placeholder="Enter your password" value={password} onChange={setPassword} containerStyle={styles.inputContainer} secureTextEntry={secureTextEntryPassword} icon={require("./assets/eyeIcon.png")} iconOnPress={() => setSecureTextEntryPassword(!secureTextEntryPassword)} />
-        <Input text="Confirm password" placeholder="Enter your password again" value={confirmPassword} onChange={setConfirmPassword} containerStyle={styles.inputContainer} secureTextEntry={secureTextEntryConfirmPassword} icon={require("./assets/eyeIcon.png")} iconOnPress={() => setSecureTextEntryConfirmPassword(!secureTextEntryConfirmPassword)} />
+        <Input
+          text="Email address"
+          placeholder="Enter your email address"
+          value={email}
+          onChange={setEmail}
+          containerStyle={styles.inputContainer}
+        />
+        <Input
+          text="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={setPassword}
+          containerStyle={styles.inputContainer}
+          secureTextEntry={secureTextEntryPassword}
+          icon={require("./assets/eyeIcon.png")}
+          iconOnPress={() =>
+            setSecureTextEntryPassword(!secureTextEntryPassword)
+          }
+        />
+        <Input
+          text="Confirm password"
+          placeholder="Enter your password again"
+          value={confirmPassword}
+          onChange={setConfirmPassword}
+          containerStyle={styles.inputContainer}
+          secureTextEntry={secureTextEntryConfirmPassword}
+          icon={require("./assets/eyeIcon.png")}
+          iconOnPress={() =>
+            setSecureTextEntryConfirmPassword(!secureTextEntryConfirmPassword)
+          }
+        />
         <View style={styles.flexRow}>
-          <Checkbox value={isCheck} setValue={setIsCheck} style={styles.checkbox} />
+          <Checkbox
+            value={isCheck}
+            setValue={setIsCheck}
+            style={styles.checkbox}
+          />
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non at sed.
           </Text>
@@ -26,13 +68,19 @@ const Signup2 = () => {
         <View style={styles.flexRow}>
           <Button buttonText="Sign Up" style={styles.button} />
           <Pressable style={styles.fingerprintButton}>
-            <Image source={require("./assets/fingerprintIcon.png")} style={styles.fingerprintIcon} />
+            <Image
+              source={require("./assets/fingerprintIcon.png")}
+              style={styles.fingerprintIcon}
+            />
           </Pressable>
         </View>
         <Text style={styles.separatorText}>Or Sign Up with</Text>
         <SocialButton text="Apple" icon={require("./assets/appleIcon.png")} />
         <SocialButton text="Google" icon={require("./assets/googleIcon.png")} />
-        <SocialButton text="Facebook" icon={require("./assets/facebookIcon.png")} />
+        <SocialButton
+          text="Facebook"
+          icon={require("./assets/facebookIcon.png")}
+        />
         <View style={styles.footer}>
           <Text style={styles.footerText}>I have an account. </Text>
           <Pressable>
@@ -40,9 +88,9 @@ const Signup2 = () => {
           </Pressable>
         </View>
       </ScrollView>
-    </View>;
+    </View>
+  );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -121,19 +169,54 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   }
 });
+
 export default Signup2;
 
 const Input = props => {
-  return <View style={[inputStyles.inputContainer, props.containerStyle]}>
-      {props.text ? <Text style={inputStyles.inputText}>{props.text}</Text> : null}
+  return (
+    <View style={[inputStyles.inputContainer, props.containerStyle]}>
+      {props.text
+        ? (
+        <Text style={inputStyles.inputText}>{props.text}</Text>
+          )
+        : null}
 
-      <TextInput style={[inputStyles.input, props.style, props.textArea ? inputStyles.textArea : null]} placeholder={props.placeholder ? props.placeholder : "Enter"} value={props.value} onChangeText={() => props.onChange()} placeholderTextColor={props.placeholderTextColor ? props.placeholderTextColor : "#9B9B9B"} editable={props.editable !== false} autoCapitalize="none" autoCorrect={false} multiline={!!props.textArea} backgroundColor={props.backgroundColor} secureTextEntry={props.secureTextEntry} />
-      {props.errorText ? <Text style={inputStyles.error}>{props.errorText}</Text> : null}
-      {props.icon ? <Pressable onPress={() => props.iconOnPress()} style={inputStyles.iconWithText}>
+      <TextInput
+        style={[
+          inputStyles.input,
+          props.style,
+          props.textArea ? inputStyles.textArea : null
+        ]}
+        placeholder={props.placeholder ? props.placeholder : "Enter"}
+        value={props.value}
+        onChangeText={() => props.onChange()}
+        placeholderTextColor={
+          props.placeholderTextColor ? props.placeholderTextColor : "#9B9B9B"
+        }
+        editable={props.editable !== false}
+        autoCapitalize="none"
+        autoCorrect={false}
+        multiline={!!props.textArea}
+        backgroundColor={props.backgroundColor}
+        secureTextEntry={props.secureTextEntry}
+      />
+      {props.errorText
+        ? (
+        <Text style={inputStyles.error}>{props.errorText}</Text>
+          )
+        : null}
+      {props.icon
+        ? (
+        <Pressable
+          onPress={() => props.iconOnPress()}
+          style={inputStyles.iconWithText}>
           <Image source={props.icon} style={inputStyles.icon} />
-        </Pressable> : null}
+        </Pressable>
+          )
+        : null}
       <View style={styles.children}>{props.children}</View>
-    </View>;
+    </View>
+  );
 };
 
 const inputStyles = StyleSheet.create({
@@ -179,15 +262,26 @@ const inputStyles = StyleSheet.create({
 });
 
 const Checkbox = props => {
-  return <Pressable onPress={() => {
-    props.setValue(!props.value);
-  }} style={[checkboxStyles.container, props.style]}>
-      <Image source={props.value ? require("./assets/checkboxIconActive.png") : require("./assets/checkboxIcon.png")} style={[checkboxStyles.checkbox, props.color && {
-      tintColor: props.color
-    }, props.activeColor && props.value && {
-      tintColor: props.activeColor
-    }]} />
-    </Pressable>;
+  return (
+    <Pressable
+      onPress={() => {
+        props.setValue(!props.value);
+      }}
+      style={[checkboxStyles.container, props.style]}>
+      <Image
+        source={
+          props.value
+            ? require("./assets/checkboxIconActive.png")
+            : require("./assets/checkboxIcon.png")
+        }
+        style={[
+          checkboxStyles.checkbox,
+          props.color && { tintColor: props.color },
+          props.activeColor && props.value && { tintColor: props.activeColor }
+        ]}
+      />
+    </Pressable>
+  );
 };
 
 const checkboxStyles = StyleSheet.create({
@@ -213,16 +307,20 @@ const Button = params => {
   const btnText = {
     color: textColor
   };
-  return <View style={[buttonStyles.btnContainer, params.style]}>
+  return (
+    <View style={[buttonStyles.btnContainer, params.style]}>
       <View style={!params.hideShadow ? buttonStyles.shadowContainer : null}>
-        <Pressable style={[buttonStyles.btn, btnStyle]} onPress={params.onPress}>
+        <Pressable
+          style={[buttonStyles.btn, btnStyle]}
+          onPress={params.onPress}>
           <Text style={[buttonStyles.btnText, btnText]}>
             {params.buttonText}
           </Text>
           <View style={styles.childrenContainer}>{params.children}</View>
         </Pressable>
       </View>
-    </View>;
+    </View>
+  );
 };
 
 const buttonStyles = StyleSheet.create({
@@ -248,6 +346,7 @@ const buttonStyles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+
     flexDirection: "row"
   },
   btnText: {
@@ -262,10 +361,14 @@ const buttonStyles = StyleSheet.create({
 });
 
 const SocialButton = props => {
-  return <Pressable style={[socialButtonStyles.container, props.style]} onPress={props.onPress}>
+  return (
+    <Pressable
+      style={[socialButtonStyles.container, props.style]}
+      onPress={props.onPress}>
       <Image source={props.icon} style={socialButtonStyles.icon} />
       <Text style={socialButtonStyles.text}>Sign up via {props.text}</Text>
-    </Pressable>;
+    </Pressable>
+  );
 };
 
 const socialButtonStyles = StyleSheet.create({
