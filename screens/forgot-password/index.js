@@ -1,12 +1,19 @@
 import * as React from "react";
-import { Text, View, StyleSheet, TextInput, TouchableHighlight } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight
+} from "react-native";
 
 const pressed = () => {
   console.log("pressed");
 };
 
 const ForgotPassword = () => {
-  return <View style={styles.container}>
+  return (
+    <View style={styles.container}>
       <View style={styles.topHead}>
         <Text style={styles.mainHeading}>Forgot {"\n"} password</Text>
       </View>
@@ -34,9 +41,9 @@ const ForgotPassword = () => {
       <View style={styles.back}>
         <Text style={styles.backText}>Back</Text>
       </View>
-    </View>;
+    </View>
+  );
 };
-
 const styles = StyleSheet.create({
   topHead: {
     display: "flex",
@@ -90,23 +97,36 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
+
 export default ForgotPassword;
 
-const Button = props => {
-  return <TouchableHighlight onPress={props.onPress} underlayColor="#DDDDDD">
-      <View style={[btnStyles.button, {
-      backgroundColor: props.backgroundColor ? props.backgroundColor : "#000000",
-      height: props.height ? props.height : 49,
-      borderWidth: props.borderWidth ? props.borderWidth : 0,
-      borderColor: props.borderColor ? props.borderColor : "#000000"
-    }]}>
-        <Text style={[btnStyles.text, {
-        color: props.color ? props.color : "#ffffff"
-      }]}>
+const Button = (props) => {
+  return (
+    <TouchableHighlight onPress={props.onPress} underlayColor="#DDDDDD">
+      <View
+        style={[
+          btnStyles.button,
+          {
+            backgroundColor: props.backgroundColor
+              ? props.backgroundColor
+              : "#000000",
+            height: props.height ? props.height : 49,
+            borderWidth: props.borderWidth ? props.borderWidth : 0,
+            borderColor: props.borderColor ? props.borderColor : "#000000"
+          }
+        ]}
+      >
+        <Text
+          style={[
+            btnStyles.text,
+            { color: props.color ? props.color : "#ffffff" }
+          ]}
+        >
           {props.children}
         </Text>
       </View>
-    </TouchableHighlight>;
+    </TouchableHighlight>
+  );
 };
 
 const btnStyles = StyleSheet.create({
@@ -122,11 +142,24 @@ const btnStyles = StyleSheet.create({
   }
 });
 
-const Input = props => {
-  return <View>
-      <TextInput style={inputStyles.input} placeholder={props.placeholder} value={props.value} onChangeText={num => props.setValue(num)} placeholderTextColor="#ddd" editable={props.editable !== false} />
-      {props.errorText ? <Text style={inputStyles.error}>{props.errorText}</Text> : null}
-    </View>;
+const Input = (props) => {
+  return (
+    <View>
+      <TextInput
+        style={inputStyles.input}
+        placeholder={props.placeholder}
+        value={props.value}
+        onChangeText={(num) => props.setValue(num)}
+        placeholderTextColor="#ddd"
+        editable={props.editable !== false}
+      />
+      {props.errorText
+        ? (
+        <Text style={inputStyles.error}>{props.errorText}</Text>
+          )
+        : null}
+    </View>
+  );
 };
 
 const inputStyles = StyleSheet.create({
