@@ -15,37 +15,37 @@ const DocumentScreen = () => {
     description: 'This is video 2'
   } // Add more videos as needed
   ];
-  return <SafeAreaView style={_styles.VvLSLBiS}>
-      <View style={_styles.eqOYKXTn}>
-        <Text style={_styles.ckkphOXK}>Document Section</Text>
+  return <SafeAreaView style={_styles.mOYtqPIy}>
+      <View style={_styles.tAQXfPYg}>
+        <Text style={_styles.NoJbExUa}>Document Section</Text>
         <Text>A document or user manual providing detailed instructions and information</Text>
         <TouchableOpacity onPress={() => Linking.openURL('https://tinyurl.com/42evm3m3')}>
-          <Text style={_styles.DuokVyBG}>Click to view- pdf</Text>
+          <Text style={_styles.xbrdrZcn}>Click to view- pdf</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={_styles.SbPGGiuU}>
-        <Text style={_styles.zIYLtMQt}>Video List Section</Text>
+      <View style={_styles.ptMxNHnf}>
+        <Text style={_styles.yjGrfqUv}>Video List Section</Text>
         <FlatList data={videos} keyExtractor={item => item.id} renderItem={({
         item
       }) => <TouchableOpacity onPress={() => setSelectedVideo(item)}>
-              <Text style={_styles.vuooiVmV}>{item.title}</Text>
+              <Text style={_styles.WTrkxuNV}>{item.title}</Text>
               <Text>{item.description}</Text>
               <Image source={{
           uri: 'https://tinyurl.com/42evm3m3'
-        }} style={_styles.rIfqAjFN} />
+        }} style={_styles.XMzOTLQc} />
             </TouchableOpacity>} />
       </View>
 
-      {selectedVideo && <View style={_styles.oSPynHnr}>
-          <Text style={_styles.laimvwoM}>Video Player Section</Text>
+      {selectedVideo && <View style={_styles.moWEQUsu}>
+          <Text style={_styles.JaUrUmiw}>Video Player Section</Text>
           <Video source={{
         uri: 'https://tinyurl.com/42evm3m3'
-      }} rate={1.0} volume={1.0} isMuted={false} resizeMode="cover" shouldPlay useNativeControls style={_styles.yavnxHxm} />
+      }} rate={1.0} volume={1.0} isMuted={false} resizeMode="cover" shouldPlay useNativeControls style={_styles.GzNoqbcW} />
         </View>}
 
-      <View style={_styles.WlwPWFUG}>
-        <Text style={_styles.NiXFbZxG}>Contact Details Section</Text>
+      <View style={_styles.yzqnPQop}>
+        <Text style={_styles.LvqdXnlq}>Contact Details Section</Text>
         <Text>Phone number for customer support: +1234567890</Text>
         <Text>Email address for customer support: support@example.com</Text>
       </View>
@@ -55,50 +55,50 @@ const DocumentScreen = () => {
 export default DocumentScreen;
 
 const _styles = StyleSheet.create({
-  VvLSLBiS: {
+  mOYtqPIy: {
     flex: 1,
     backgroundColor: "#fff"
   },
-  eqOYKXTn: {
+  tAQXfPYg: {
     padding: 20
   },
-  ckkphOXK: {
+  NoJbExUa: {
     fontSize: 24,
     fontWeight: "bold"
   },
-  DuokVyBG: {
+  xbrdrZcn: {
     color: "blue"
   },
-  SbPGGiuU: {
+  ptMxNHnf: {
     padding: 20
   },
-  zIYLtMQt: {
+  yjGrfqUv: {
     fontSize: 24,
     fontWeight: "bold"
   },
-  vuooiVmV: {
+  WTrkxuNV: {
     fontSize: 18,
     fontWeight: "bold"
   },
-  rIfqAjFN: {
+  XMzOTLQc: {
     width: "100%",
     height: 200
   },
-  oSPynHnr: {
+  moWEQUsu: {
     padding: 20
   },
-  laimvwoM: {
+  JaUrUmiw: {
     fontSize: 24,
     fontWeight: "bold"
   },
-  yavnxHxm: {
+  GzNoqbcW: {
     width: "100%",
     height: 300
   },
-  WlwPWFUG: {
+  yzqnPQop: {
     padding: 20
   },
-  NiXFbZxG: {
+  LvqdXnlq: {
     fontSize: 24,
     fontWeight: "bold"
   }
