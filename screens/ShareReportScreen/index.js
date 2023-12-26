@@ -6,30 +6,30 @@ const formats = ['HTML', 'XLS', 'CSV', 'PDF'];
 const intervals = ['Hourly', 'Last 2 Hours', 'Daily', 'Weekly', 'Bi-Monthly', 'Monthly'];
 
 const ScreenComponent = () => {
-  return <SafeAreaView style={_styles.cUqZGnCa}>
-      <Text style={_styles.bMKtrrRY}>Selected report title</Text>
-      <Text style={_styles.MnvyMDGG}>Share with organization</Text>
-      <Text style={_styles.tuuOLYpm}>All users</Text>
-      <Text style={_styles.SuydqyVc}>Specific user role</Text>
-      <Text style={_styles.SyVmlKZL}>Specific user- Search and select users</Text>
+  return <SafeAreaView style={_styles.RkdNpeWY}>
+      <Text style={_styles.NzzwSqdl}>Selected report title</Text>
+      <Text style={_styles.MnvUcyob}>Share with organization</Text>
+      <Text style={_styles.HKIqhWuf}>All users</Text>
+      <Text style={_styles.fZIjUTDK}>Specific user role</Text>
+      <Text style={_styles.ayrtEQlP}>Specific user- Search and select users</Text>
       <FlatList data={users} renderItem={({
       item
-    }) => <Text style={_styles.jPARbSkO}>{item}</Text>} keyExtractor={item => item} />
-      <Text style={_styles.JJEQqcvS}>Share via Email/Phone number</Text>
-      <TextInput style={_styles.sFGaRLGT} placeholder="Enter multiple emails/Phone numbers" />
-      <Text style={_styles.DdfiSciS}>Report Format</Text>
+    }) => <Text style={_styles.JdlVVznn}>{item}</Text>} keyExtractor={item => item} />
+      <Text style={_styles.YxilRPRu}>Share via Email/Phone number</Text>
+      <TextInput style={_styles.IygqUBvL} placeholder="Enter multiple emails/Phone numbers" />
+      <Text style={_styles.ZllMLJJB}>Report Format</Text>
       <Picker>
         {formats.map((format, index) => <Picker.Item key={index} label={format} value={format} />)}
       </Picker>
-      <Text style={_styles.INjIONsr}>Schedule</Text>
-      <Text style={_styles.LYIRSodU}>Automated Sending</Text>
-      <Text style={_styles.XKwSlNWn}>Enable the option for automated report sending</Text>
-      <Text style={_styles.VneHOTvf}>Interval Selection</Text>
+      <Text style={_styles.xeJMFXav}>Schedule</Text>
+      <Text style={_styles.AOZTTKjV}>Automated Sending</Text>
+      <Text style={_styles.JSydokWQ}>Enable the option for automated report sending</Text>
+      <Text style={_styles.xjPGVxJE}>Interval Selection</Text>
       <Picker>
         {intervals.map((interval, index) => <Picker.Item key={index} label={interval} value={interval} />)}
       </Picker>
-      <Text style={_styles.WvCohTyH}>Day/Time Selection</Text>
-      <TextInput style={_styles.OBqPqGqU} placeholder="Specify the day and time for automated report sending" />
+      <Text style={_styles.HfrBvTxl}>Day/Time Selection</Text>
+      <TextInput style={_styles.fUYFMWhp} placeholder="Specify the day and time for automated report sending" />
       <Button title="Share" onPress={() => {}} />
     </SafeAreaView>;
 };
@@ -37,70 +37,70 @@ const ScreenComponent = () => {
 export default ScreenComponent;
 
 const _styles = StyleSheet.create({
-  cUqZGnCa: {
+  RkdNpeWY: {
     flex: 1,
     backgroundColor: "#fff"
   },
-  bMKtrrRY: {
+  NzzwSqdl: {
     fontSize: 24,
     fontWeight: "bold",
     margin: 10
   },
-  MnvyMDGG: {
+  MnvUcyob: {
     fontSize: 20,
     margin: 10
   },
-  tuuOLYpm: {
+  HKIqhWuf: {
     fontSize: 20,
     margin: 10
   },
-  SuydqyVc: {
+  fZIjUTDK: {
     fontSize: 20,
     margin: 10
   },
-  SyVmlKZL: {
+  ayrtEQlP: {
     fontSize: 20,
     margin: 10
   },
-  jPARbSkO: {
+  JdlVVznn: {
     fontSize: 18,
     margin: 10
   },
-  JJEQqcvS: {
+  YxilRPRu: {
     fontSize: 20,
     margin: 10
   },
-  sFGaRLGT: {
+  IygqUBvL: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
     margin: 10
   },
-  DdfiSciS: {
+  ZllMLJJB: {
     fontSize: 20,
     margin: 10
   },
-  INjIONsr: {
+  xeJMFXav: {
     fontSize: 20,
     margin: 10
   },
-  LYIRSodU: {
+  AOZTTKjV: {
     fontSize: 20,
     margin: 10
   },
-  XKwSlNWn: {
+  JSydokWQ: {
     fontSize: 20,
     margin: 10
   },
-  VneHOTvf: {
+  xjPGVxJE: {
     fontSize: 20,
     margin: 10
   },
-  WvCohTyH: {
+  HfrBvTxl: {
     fontSize: 20,
     margin: 10
   },
-  OBqPqGqU: {
+  fUYFMWhp: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
