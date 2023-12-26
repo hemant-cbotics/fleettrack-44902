@@ -20,7 +20,7 @@ const ScreenComponent = () => {
 
   const renderItem = ({
     item
-  }) => <View style={_styles.CWjnPkCl}>
+  }) => <View style={_styles.RwjzbEqN}>
       <Text>{item.type}</Text>
       <Text>{item.title}</Text>
       <Text>{item.description}</Text>
@@ -28,16 +28,16 @@ const ScreenComponent = () => {
       <Button title="Delete" onPress={() => {}} />
     </View>;
 
-  return <SafeAreaView style={_styles.YWWyshFG}>
-      <View style={_styles.hbpBsRKV}>
+  return <SafeAreaView style={_styles.fYFMDZMO}>
+      <View style={_styles.eOmqCsAK}>
         <Button title="Add New" onPress={() => {}} />
         <Button title="Edit" onPress={() => {}} />
         <Button title="Delete" onPress={() => {}} />
       </View>
-      <View style={_styles.FCxDlEpv}>
+      <View style={_styles.trmwtByg}>
         <FlatList data={data} renderItem={renderItem} keyExtractor={item => item.id} />
       </View>
-      <View style={_styles.qwWtztDL}>
+      <View style={_styles.HHjDyQFZ}>
         <Picker selectedValue={contentType} onValueChange={itemValue => setContentType(itemValue)}>
           <Picker.Item label="Video" value="Video" />
           <Picker.Item label="Document" value="Document" />
@@ -46,7 +46,7 @@ const ScreenComponent = () => {
         <TextInput placeholder="Description" value={description} onChangeText={text => setDescription(text)} />
         <Button title="Submit" onPress={() => {}} />
       </View>
-      <View style={_styles.rYTbasuQ}>
+      <View style={_styles.JTKXJQtc}>
         <Button title="Save" onPress={() => {}} />
         <Button title="Cancel" onPress={() => {}} />
       </View>
@@ -56,25 +56,25 @@ const ScreenComponent = () => {
 export default ScreenComponent;
 
 const _styles = StyleSheet.create({
-  CWjnPkCl: {
+  RwjzbEqN: {
     flexDirection: "row",
     justifyContent: "space-between",
     margin: 10
   },
-  YWWyshFG: {
+  fYFMDZMO: {
     flex: 1,
     padding: 20
   },
-  hbpBsRKV: {
+  eOmqCsAK: {
     flex: 1
   },
-  FCxDlEpv: {
+  trmwtByg: {
     flex: 4
   },
-  qwWtztDL: {
+  HHjDyQFZ: {
     flex: 1
   },
-  rYTbasuQ: {
+  JTKXJQtc: {
     flex: 1
   }
 });
