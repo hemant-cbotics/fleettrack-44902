@@ -23,22 +23,22 @@ const WeatherScreen = () => {
     setUnit(unit === 'Celsius' ? 'Fahrenheit' : 'Celsius');
   };
 
-  return <SafeAreaView style={_styles.xXdFNnBi}>
+  return <SafeAreaView style={_styles.plVhWZZw}>
       <ScrollView>
-        {dummyData.map((data, index) => <View key={index} style={_styles.pXzCzCSM}>
+        {dummyData.map((data, index) => <View key={index} style={_styles.yhjSpOkk}>
             <Text>{data.date}</Text>
-            <View style={_styles.imbqwZoC}>
+            <View style={_styles.KDlVoJgb}>
               <View>
                 <Text>Day: {data.dayTemp}°{unit}</Text>
                 <Image source={{
               uri: data.dayIcon
-            }} style={_styles.GAkzRhAb} />
+            }} style={_styles.HvsTfFhC} />
               </View>
               <View>
                 <Text>Night: {data.nightTemp}°{unit}</Text>
                 <Image source={{
               uri: data.nightIcon
-            }} style={_styles.rPRFqYTK} />
+            }} style={_styles.ZDxXtSOM} />
               </View>
             </View>
             <Text>Precipitation: {data.precipitation}%</Text>
@@ -49,7 +49,7 @@ const WeatherScreen = () => {
             <Text>Sunset: {data.sunset}</Text>
           </View>)}
       </ScrollView>
-      <View style={_styles.PezGFzTT}>
+      <View style={_styles.zdWTKLwn}>
         <Button title="Refresh" onPress={() => {}} />
         <TouchableOpacity onPress={toggleUnit}>
           <Text>Switch to {unit === 'Celsius' ? 'Fahrenheit' : 'Celsius'}</Text>
@@ -61,28 +61,28 @@ const WeatherScreen = () => {
 export default WeatherScreen;
 
 const _styles = StyleSheet.create({
-  xXdFNnBi: {
+  plVhWZZw: {
     flex: 1,
     backgroundColor: "#fff"
   },
-  pXzCzCSM: {
+  yhjSpOkk: {
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd"
   },
-  imbqwZoC: {
+  KDlVoJgb: {
     flexDirection: "row",
     justifyContent: "space-between"
   },
-  GAkzRhAb: {
+  HvsTfFhC: {
     width: 50,
     height: 50
   },
-  rPRFqYTK: {
+  ZDxXtSOM: {
     width: 50,
     height: 50
   },
-  PezGFzTT: {
+  zdWTKLwn: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 20

@@ -1,15 +1,13 @@
 import React from "react";
 import { Text, StyleSheet, Dimensions, View, TouchableOpacity } from "react-native";
-
 const deviceWidth = Dimensions.get("window").width;
 
 const pressed = () => {
   console.log("pressed");
 };
 
-const LoginScreen = (params) => {
-  return (
-    <View style={styles.container}>
+const LoginScreen = params => {
+  return <View style={styles.container}>
       <View style={styles.topSection}>
         <Text style={styles.headingTxt}>Sign In</Text>
       </View>
@@ -20,15 +18,9 @@ const LoginScreen = (params) => {
           eiusmod tempor
         </Text>
         <Button title={"SignUp"}></Button>
-        <Button
-          title={"Login"}
-          btnStyle={styles.loginBtnStyle}
-          textStyle={styles.loginBtnText}
-          onPress={pressed}
-        ></Button>
+        <Button title={"Login"} btnStyle={styles.loginBtnStyle} textStyle={styles.loginBtnText} onPress={pressed}></Button>
       </View>
-    </View>
-  );
+    </View>;
 };
 
 const styles = StyleSheet.create({
@@ -76,12 +68,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const Button = ({ title, btnStyle, textStyle, onPress }) => {
-  return (
-    <TouchableOpacity style={[btnStyles.btn, btnStyle]} onPress={onPress}>
+const Button = ({
+  title,
+  btnStyle,
+  textStyle,
+  onPress
+}) => {
+  return <TouchableOpacity style={[btnStyles.btn, btnStyle]} onPress={onPress}>
       <Text style={[btnStyles.btnText, textStyle]}>{title}</Text>
-    </TouchableOpacity>
-  );
+    </TouchableOpacity>;
 };
 
 const btnStyles = StyleSheet.create({
@@ -102,5 +97,4 @@ const btnStyles = StyleSheet.create({
     color: "white"
   }
 });
-
 export default LoginScreen;
