@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0792451a.css",
+    "main.js": "/static/js/main.59dbe5c2.js",
+    "static/js/453.1965c8d6.chunk.js": "/static/js/453.1965c8d6.chunk.js",
+    "static/media/logo-fleettrack-dark-bg.svg": "/static/media/logo-fleettrack-dark-bg.f5da35e508ac9fa1cdfd03474badc901.svg",
+    "service-worker.js": "/service-worker.js",
+    "index.html": "/index.html",
+    "main.0792451a.css.map": "/static/css/main.0792451a.css.map",
+    "main.59dbe5c2.js.map": "/static/js/main.59dbe5c2.js.map",
+    "453.1965c8d6.chunk.js.map": "/static/js/453.1965c8d6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0792451a.css",
+    "static/js/main.59dbe5c2.js"
+  ]
+}
