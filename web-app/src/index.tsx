@@ -5,6 +5,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
+import './services/i18n';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
