@@ -1,9 +1,10 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import language_en from "../translations/en";
 
 const resources = {
   en: {
-    translation: 
+    translation: language_en,
   },
 };
 
