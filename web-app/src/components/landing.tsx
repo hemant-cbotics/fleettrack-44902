@@ -17,7 +17,7 @@ const LandingWrapper: FC<LandingWrapperProps> = ({ children }) => {
           />
 
           <div className="hidden lg:relative lg:block lg:p-12">
-            <a className="block text-white bg-white px-4 py-2 w-1/2 flex justify-center rounded-full" href="#">
+            <a className="block text-white bg-white px-4 py-2 w-1/3 flex justify-center rounded-full" href="#">
               <span className="sr-only">Home</span>
               <img src={logo} alt={'FleetTrack'} />
             </a>
