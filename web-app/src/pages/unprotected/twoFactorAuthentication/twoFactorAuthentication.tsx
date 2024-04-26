@@ -39,13 +39,12 @@ const ScreenTwoFactorAuthentication = () => {
             {t("verify_and_signin")}
           </button>
 
-          <p className="mt-4 text-sm text-gray-500 sm:mt-0 flex items-center">
+          <p className="mt-4 text-sm text-gray-500 sm:mt-0">
             {t("not_receive_code")}{" "}
             <Link to={routeUrls.twoFactorAuthentication} className="text-gray-700 underline">
               {" "}
               {t("resend_code")}{" "}
             </Link>
-            <span className="w-1 h-1 bg-black rounded-full ml-4"></span>
             <span className="ml-4 font-bold text-black">0:30</span>
           </p>
         </div>

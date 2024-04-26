@@ -22,7 +22,7 @@ const ScreenLogin: FC<ScreenLoginProps> = ({ showSessionExpiredMessage }) => {
   return (
     <LandingWrapper>
 
-      <form action="#" className="mt-8 grid grid-cols-6 gap-6">
+      <form action="#" className="mt-8 p-8 bg-white grid grid-cols-6 gap-6 rounded-lg">
 
         <div className="col-span-6">
           <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> {t("email")} </label>

@@ -9,7 +9,7 @@ const ScreenResetPassword = () => {
   return (
     <LandingWrapper>
 
-      <form action="#" className="mt-8 grid grid-cols-6 gap-6">
+      <form action="#" className="mt-8 p-8 bg-white grid grid-cols-6 gap-6 rounded-lg">
 
         <h1 className="col-span-6 mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
           {t("setup_a_new_password")}
