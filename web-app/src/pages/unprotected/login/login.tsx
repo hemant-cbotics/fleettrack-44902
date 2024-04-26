@@ -5,12 +5,15 @@ import LandingWrapper from "../../../components/landing";
 import { routeUrls } from "../../../navigation/routeUrls";
 
 import './login.scss';
+import { useTranslation } from "react-i18next";
 
 interface ScreenLoginProps {
   showSessionExpiredMessage?: boolean;
 }
 
 const ScreenLogin: FC<ScreenLoginProps> = ({ showSessionExpiredMessage }) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (showSessionExpiredMessage) {
       toast.error("Session expired. Please login again.");
@@ -22,7 +25,7 @@ const ScreenLogin: FC<ScreenLoginProps> = ({ showSessionExpiredMessage }) => {
       <form action="#" className="mt-8 grid grid-cols-6 gap-6">
 
         <div className="col-span-6">
-          <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
+          <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> {t("email")} </label>
 
           <input
             type="email"
@@ -33,7 +36,7 @@ const ScreenLogin: FC<ScreenLoginProps> = ({ showSessionExpiredMessage }) => {
         </div>
 
         <div className="col-span-6">
-          <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
+          <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> {t("password")} </label>
 
           <input
             type="password"
@@ -53,17 +56,17 @@ const ScreenLogin: FC<ScreenLoginProps> = ({ showSessionExpiredMessage }) => {
             />
 
             <span className="text-sm text-gray-700">
-              Remember me
+              {t("remember_me")}
             </span>
           </label>
         </div>
 
         <div className="col-span-6">
           <p className="text-sm text-gray-500">
-            By logging in, you agree to our{" "}
-            <Link to={routeUrls.termsAndConditions} className="text-gray-700 underline">terms and conditions</Link>
-            {" "}and{" "}
-            <Link to={routeUrls.privacyPolicy} className="text-gray-700 underline">privacy policy</Link>.
+            {t("login_policies")}{" "}
+            <Link to={routeUrls.termsAndConditions} className="text-gray-700 underline"> {t("terms_and_conditions")} </Link>
+            {" "}{t("and")}{" "}
+            <Link to={routeUrls.privacyPolicy} className="text-gray-700 underline"> {t("privacy_policy")} </Link>.
           </p>
         </div>
 
@@ -71,12 +74,12 @@ const ScreenLogin: FC<ScreenLoginProps> = ({ showSessionExpiredMessage }) => {
           <button
             className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
           >
-            Sign In
+            {t("sign_in")}
           </button>
 
           <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-            Forgot your password?{" "}
-            <Link to={routeUrls.forgotPassword} className="text-gray-700 underline">Click here</Link>.
+            {t("forgot_your_password")}{" "}
+            <Link to={routeUrls.forgotPassword} className="text-gray-700 underline">{t("click_here")}</Link>.
           </p>
         </div>
       </form>
