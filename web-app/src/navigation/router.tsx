@@ -9,6 +9,7 @@ import ScreenPrivacyPolicy from "../pages/unprotected/privacy-policy/privacy-pol
 import ScreenDashboard from "../pages/dashboard/dashboard"
 import ScreenForgotPassword from "../pages/unprotected/forgotPassword/forgotPassword"
 import ScreenResetPassword from "../pages/unprotected/resetPassword/resetPassword"
+import ScreenTwoFactorAuthentication from "../pages/unprotected/twoFactorAuthentication/twoFactorAuthentication"
 
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -49,6 +50,10 @@ const routes: RouteObject[] = [
   {
     path: routeUrls.privacyPolicy,
     element: <ScreenPrivacyPolicy />
+  },
+  {
+    path: routeUrls.twoFactorAuthentication,
+    element: <ScreenTwoFactorAuthentication />
   }
 ]
 

@@ -5,6 +5,7 @@ export const routeUrls = {
   resetPassword: "/reset-password",
   termsAndConditions: "/terms-and-conditions",
   privacyPolicy: "/privacy-policy",
+  twoFactorAuthentication: "/verification",
 
   dashboard: "/dashboard",
 }

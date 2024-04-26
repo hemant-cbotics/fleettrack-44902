@@ -19,4 +19,10 @@ export const language_en =  {
   new_password: "New Password",
   confirm_new_password: "Confirm New Password",
   reset_password: "Reset Password",
+  verification: "Verification",
+  verification_link_sent_to_email: "We have sent you a verification link on your email. Please click the link sent on your email to proceed.",
+  verification_code: "Verification Code",
+  verify_and_signin: "Verify and Sign In",
+  not_receive_code: "Didn't receive the code?",
+  resend_code: "Resend Code",
 };

@@ -7,7 +7,7 @@ interface LandingWrapperProps extends React.PropsWithChildren {
 
 const LandingWrapper: FC<LandingWrapperProps> = ({ children }) => {
   return (
-    <section className="bg-white">
+    <section className="bg-gray-100">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-6 lg:h-full xl:col-span-6">
           <img
