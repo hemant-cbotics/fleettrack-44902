@@ -23,12 +23,11 @@ const LandingWrapper: FC<LandingWrapperProps> = ({ children }) => {
             </a>
 
             <h2 className="mt-10 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Manage your fleet with confidence
+              Navigate Efficiency, Control, and Safety with Fleet Track.
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
-              quibusdam aperiam voluptatum.
+              Fleet Track is a complete fleet management solution that monitors vehicle locations in real-time, analyses fuel consumption patterns, and ensures safety compliance. With customisable reporting features and intuitive interfaces, Fleet Track provides unparalleled visibility and control over your fleet, enabling you to streamline performance, enhance efficiency, and reduce costs. Make informed decisions that drive productivity and transform your fleet management experience with the power of Fleet Track today.
             </p>
           </div>
         </section>
