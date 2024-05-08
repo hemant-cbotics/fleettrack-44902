@@ -34,6 +34,10 @@ env.read_env(env_file)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
+# Base URL
+BASE_URL = "https://fleettrack-44902.botics.co/" if not DEBUG else "localhost:3000"
+
+
 try:
     # Pull secrets from Secret Manager
     _, project = google.auth.default()
@@ -73,6 +77,7 @@ INSTALLED_APPS = [
 LOCAL_APPS = [
     'home',
     'users.apps.UsersConfig',
+    'organization.apps.OrganizationConfig',
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -88,6 +93,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'storages',
     'import_export',
+    'corsheaders',
 ]
 MODULES_APPS = get_modules()
 
@@ -97,6 +103,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -182,8 +189,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build/static'), os.path.join(BASE_DIR, 'web_build')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
@@ -222,6 +230,8 @@ EMAIL_HOST_PASSWORD = env.str("SENDGRID_PASSWORD", "")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+EMAIL_OTP_LENGTH = 6
+EMAIL_OTP_EXPIRY = env.int("EMAIL_OTP_EXPIRY", 300)
 
 # AWS S3 config
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
