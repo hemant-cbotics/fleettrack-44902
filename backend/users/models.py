@@ -24,8 +24,8 @@ class User(AbstractUser):
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     email = models.EmailField(_('email address'), unique = True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    # USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = ['username']
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
