@@ -1,17 +1,37 @@
 {
   "files": {
-    "main.css": "/static/css/main.0792451a.css",
-    "main.js": "/static/js/main.59dbe5c2.js",
+    "main.css": "/static/css/main.989a117d.css",
+    "main.js": "/static/js/main.b648f868.js",
     "static/js/453.1965c8d6.chunk.js": "/static/js/453.1965c8d6.chunk.js",
-    "static/media/logo-fleettrack-dark-bg.svg": "/static/media/logo-fleettrack-dark-bg.f5da35e508ac9fa1cdfd03474badc901.svg",
+    "static/media/landing2.png": "/static/media/landing2.c9711f9ad4940aa90eda.png",
     "service-worker.js": "/service-worker.js",
+    "static/media/logo-fleettrack.svg": "/static/media/logo-fleettrack.cc7efe9c3d2d69c7da7791dd86abdb6e.svg",
+    "static/media/maintainance-admin-icon.svg": "/static/media/maintainance-admin-icon.29c04a3e0d7d8a846526f174560e5574.svg",
+    "static/media/manage-roles-icon.svg": "/static/media/manage-roles-icon.a98b732a82d9eb44232108f63192909e.svg",
+    "static/media/group-admin-icon.svg": "/static/media/group-admin-icon.ac9fedfc357244f4f4613e3b82b0f443.svg",
+    "static/media/help-icon.svg": "/static/media/help-icon.fb4c044da5e4859e0ccb4b18f86917e2.svg",
+    "static/media/manage-rule-icon.svg": "/static/media/manage-rule-icon.a609030ed3c35737e7a403f197fdcdab.svg",
+    "static/media/chat-icon.svg": "/static/media/chat-icon.698ab1ff615dcb57f4cd23a058ae974c.svg",
+    "static/media/dashboard-icon.svg": "/static/media/dashboard-icon.30cc46bcd88a595fc5bcd2766245b514.svg",
+    "static/media/warning-icon.svg": "/static/media/warning-icon.4d5a4f800085a47d428464c9c3344ca3.svg",
+    "static/media/refresh-icon.svg": "/static/media/refresh-icon.4952ae2faccb2d7120f4ea936c696c24.svg",
+    "static/media/map-overview-icon.svg": "/static/media/map-overview-icon.f2059163be0d7f12a8f017ffc05afa33.svg",
+    "static/media/notification-icon.svg": "/static/media/notification-icon.169254e06f964a75da72406e93c454ed.svg",
+    "static/media/search-icon.svg": "/static/media/search-icon.2227975e257d0eafa6c40a93a01baa59.svg",
+    "static/media/camera-admin-icon.svg": "/static/media/camera-admin-icon.d750c61052bb3d7d0128da1d32959a1e.svg",
+    "static/media/reports-icon.svg": "/static/media/reports-icon.de3a6ad9dfc6b46b9ed1535806372214.svg",
     "index.html": "/index.html",
-    "main.0792451a.css.map": "/static/css/main.0792451a.css.map",
-    "main.59dbe5c2.js.map": "/static/js/main.59dbe5c2.js.map",
+    "static/media/edit-icon.svg": "/static/media/edit-icon.baa67a48776d44409e746cb3dbf4d78e.svg",
+    "static/media/collapse-icon.svg": "/static/media/collapse-icon.38249231cc21a4a4315c0f0fb15f01a2.svg",
+    "static/media/expand-more-icon.svg": "/static/media/expand-more-icon.e4acf936b3d9a4825ee8d83ddaaa47a0.svg",
+    "static/media/user-icon.svg": "/static/media/user-icon.79e2a89ea906a8b37231c1cc13d9473b.svg",
+    "static/media/left-arrow-icon.svg": "/static/media/left-arrow-icon.a63cb2d52fd0a5d442ac22f9e6ad76dd.svg",
+    "main.989a117d.css.map": "/static/css/main.989a117d.css.map",
+    "main.b648f868.js.map": "/static/js/main.b648f868.js.map",
     "453.1965c8d6.chunk.js.map": "/static/js/453.1965c8d6.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0792451a.css",
-    "static/js/main.59dbe5c2.js"
+    "static/css/main.989a117d.css",
+    "static/js/main.b648f868.js"
   ]
 }
