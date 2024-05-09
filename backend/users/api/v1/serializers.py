@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     role_and_permission = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ["id", "email", "name", "role_and_permission"]
+        fields = ["id", "email", "name", "role_and_permission", "is_active"]
 
     def get_role_and_permission(self, obj):
         try:

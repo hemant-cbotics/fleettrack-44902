@@ -56,6 +56,7 @@ class InvitedUser(CommonModel):
     organization = models.ForeignKey('organization.Organization', on_delete=models.CASCADE, related_name='invited_users')
     role = models.ForeignKey('organization.OrganizationRole', on_delete=models.CASCADE, related_name='invited_users')
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited_users')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited_user', null=True, blank=True)
     is_accepted = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
 
