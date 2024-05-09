@@ -7,12 +7,14 @@ from organization.api.v1.viewsets import (
     GetInvitedUserView,
     OnboardInvitedUserView,
     OrganizationUsersView,
-    OrganizationUserEditView
+    OrganizationUserEditView,
+    OrganizatioUserViewset
 )
 app_name = 'organization'
 
 router = routers.DefaultRouter()
 router.register("roles-permission", OrganizationRoleViewset, basename="roles-permission")
+router.register("organization-user", OrganizatioUserViewset, basename="organization-user")
 
 urlpatterns = [
     path("", include(router.urls)),

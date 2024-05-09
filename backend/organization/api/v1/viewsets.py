@@ -8,7 +8,9 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters, permissions
 from users.models import User, UserRoleAndPermission
 from generics.utils import OrganizationUtil, CustomPagination
-from users.api.v1.serializers import OrganizationUsersSerializer
+from users.api.v1.serializers import OrganizationUsersSerializer, UserSerializer
+from rest_framework import mixins, viewsets
+from generics.custom_permissions import OrganizationUsersManagePermission
 
 
 class UserPermissionsView(APIView):
@@ -109,6 +111,17 @@ class OrganizationUsersView(APIView):
         paginated_users = paginator.paginate_queryset(user_role_permission, request)
         serializer = OrganizationUsersSerializer(paginated_users, many=True)
         return paginator.get_paginated_response(serializer.data)
+    
+class OrganizatioUserViewset(mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [OrganizationUsersManagePermission] # this is custom permission which needs to be updated later on
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.delete()
+    #     return Response({'message': 'User deleted successfully'}, status=200)
         
 class OrganizationUserEditView(APIView):
     authentication_classes = [TokenAuthentication]
