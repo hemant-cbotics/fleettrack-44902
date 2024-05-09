@@ -20,12 +20,18 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
 
 class UserRoleAndPermissionSerializer(serializers.Serializer):
-    assigned_role = OrganizationRoleSerializer(source='role', required=False)
-    assigned_permissions = serializers.JSONField(source='custom_permissions', required=False)
+    role = OrganizationRoleSerializer(required=False)
+    custom_permissions = serializers.JSONField(required=False)
+    id = serializers.IntegerField(required=False)
     class Meta:
         model = UserRoleAndPermission
-        fields = ('id', 'assigned_role', 'assigned_permissions')
+        fields = ('id', 'role', 'custom_permissions')
 
+
+class UserRoleAndPermissionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserRoleAndPermission
+        fields = "__all__"
 
 class UserProfileSerialzer(serializers.ModelSerializer):
     class Meta:
@@ -40,7 +46,8 @@ class OrganizationUsersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserRoleAndPermission
-        fields = ('id', 'user', 'role', 'profile')
+        fields = ('id', 'user', 'profile')
+        # depth = 2
     
     def get_profile(self, obj):
         try:

@@ -110,3 +110,37 @@ class OrganizationUsersView(APIView):
         serializer = OrganizationUsersSerializer(paginated_users, many=True)
         return paginator.get_paginated_response(serializer.data)
         
+class OrganizationUserEditView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OrganizationUsersSerializer
+    
+    def patch(self, request, *args, **kwargs):
+        request_data = request.data.copy()
+        if 'user' in request_data:
+            user_data = request_data.pop('user')
+            from users.api.v1.serializers import UserSerializer
+            serializer = UserSerializer(data=user_data, partial=True)
+            user = User.objects.get(id=user_data['id'])
+            if serializer.is_valid(raise_exception=True):
+                serializer.update(user, serializer.validated_data)
+                if 'password' in user_data:
+                    user.set_password(user_data['password'])
+                    user.save()
+        if 'profile' in request_data:
+            profile_data = request_data.pop('profile')
+            from users.api.v1.serializers import UserProfileSerialzer
+            from users.models import UserProfile
+            serializer = UserProfileSerialzer(data=profile_data, partial=True)
+            profile = UserProfile.objects.get(id=profile_data['id'])
+            if serializer.is_valid(raise_exception=True):
+                serializer.update(profile, serializer.validated_data)
+        if 'role_and_permission' in request_data:
+            roles_and_permission = request_data.pop('role_and_permission')
+            from users.api.v1.serializers import UserRoleAndPermissionUpdateSerializer
+            from users.models import UserRoleAndPermission
+            serializer = UserRoleAndPermissionUpdateSerializer(data=roles_and_permission, partial=True)
+            role_permission = UserRoleAndPermission.objects.get(id=roles_and_permission['id'])
+            if serializer.is_valid(raise_exception=True):
+                serializer.update(role_permission, serializer.validated_data)
+        return Response({'message': 'User updated successfully'}, status=200)
