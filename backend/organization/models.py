@@ -47,7 +47,7 @@ class OrganizationRole(CommonModel):
         verbose_name_plural = "Organization Roles and Permissions"
 
     def __str__(self):
-        return self.name
+        return self.name + " - " + self.organization.name
 
 class InvitedUser(CommonModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
