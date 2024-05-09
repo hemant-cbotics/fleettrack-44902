@@ -3,6 +3,15 @@ from django.core.mail import send_mail
 import random, string
 from rest_framework.pagination import PageNumberPagination
 
+def generate_random_password(length=12):
+    # Define characters to use in the password
+    characters = string.ascii_letters + string.digits + string.punctuation
+
+    # Generate password
+    password = ''.join(random.choice(characters) for i in range(length))
+
+    return password
+
 class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 20  # Optional: set maximum page size

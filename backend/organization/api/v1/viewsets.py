@@ -60,19 +60,10 @@ class OnboardInvitedUserView(APIView):
             invited_user.is_accepted = True
             invited_user.save()
             try:
-                user = User.objects.create(
-                    email=invited_user.email,
-                    username=invited_user.username,
-                    name=invited_user.username,
-                    is_active=True,
-                )
+                user = invited_user.user
+                user.is_active = True
                 user.set_password(serializer.validated_data['password'])
                 user.save()
-                UserRoleAndPermission.objects.create(
-                    user=user,
-                    role=invited_user.role,
-                    custom_permissions={}
-                )
                 return Response({'message': 'User onboarded successfully'})
             except Exception as e:
                 return Response({'error': str(e)}, status=400)
