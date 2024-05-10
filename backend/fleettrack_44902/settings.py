@@ -35,7 +35,7 @@ env.read_env(env_file)
 DEBUG = env.bool("DEBUG", default=False)
 
 # Base URL
-BASE_URL = "https://fleettrack-44902-staging.botics.co/" if not DEBUG else "localhost:3000/"
+BASE_URL = "https://fleettrack-44902-staging.botics.co" if not DEBUG else "localhost:3000/"
 
 
 try:
