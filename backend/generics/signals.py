@@ -42,6 +42,15 @@ def create_user(sender, instance, created, **kwargs):
                     role=instance.role,
                     custom_permissions={}
                 )
+            # send invitation email
+            subject = "Invitation to join Fleet Track organization"
+            invitation_link = f"{settings.BASE_URL}/organization/invitation/{instance.id}"
+            html_content = f'Hi {instance.username}, <br/><br/> You have been invited to join the organization {instance.organization.name}. Please click here to continue <a href="{invitation_link}" _blank>{invitation_link}</a>.'
+            Email.send_mail(email=instance.email, subject=subject, html_content=html_content)
+            instance.email_sent = True
+            instance.save()
+            # send email to the invited user
+            pass
         except Exception as e:
             pass
 
@@ -53,15 +62,3 @@ def create_user_profile(sender, instance, created, **kwargs):
             UserProfile.objects.create(user=instance)
         except Exception as e:
             pass
-
-@receiver(post_save, sender=InvitedUser)
-def send_mail_invited_user(sender, instance, created, **kwargs):
-    if created:
-        subject = "Invitation to join Fleet Track organization"
-        invitation_link = f"{settings.BASE_URL}/organization/invitation/{instance.id}"
-        html_content = f'Hi {instance.username}, <br/><br/> You have been invited to join the organization {instance.organization.name}. Please click here to continue {invitation_link}.'
-        Email.send_mail(email=instance.email, subject=subject, html_content=html_content)
-        instance.email_sent = True
-        instance.save()
-        # send email to the invited user
-        pass
