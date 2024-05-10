@@ -51,8 +51,8 @@ class OrganizationRole(CommonModel):
 
 class InvitedUser(CommonModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=255, null=True, blank=True)
-    email = models.EmailField()
+    username = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    email = models.EmailField(unique=True)
     organization = models.ForeignKey('organization.Organization', on_delete=models.CASCADE, related_name='invited_users')
     role = models.ForeignKey('organization.OrganizationRole', on_delete=models.CASCADE, related_name='invited_users')
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invited_users')
@@ -63,5 +63,3 @@ class InvitedUser(CommonModel):
     def __str__(self) -> str:
         return self.email
     
-    class Meta:
-        unique_together = ['email', 'organization']
