@@ -43,12 +43,12 @@ const ScreenDashboardAdminUsers = () => {
     {
       SrNo: index + 1,
       id: item?.user?.id,
-      description: item?.profile?.description || "Not available",
+      description: item?.user?.profile?.description || "Not available",
       role: item?.user?.role_and_permission?.role?.name || "Not available",
       name: item?.user?.name || "Not available",
       email: item?.user?.email,
-      timezone: item?.profile?.timezone || "Not available",
-      active: item?.profile?.is_active,
+      timezone: item?.user?.profile?.timezone || "Not available",
+      active: item?.user?.profile?.is_active,
       last_login: "2021-09-01 12:00:00"
     }
   )) : [];
