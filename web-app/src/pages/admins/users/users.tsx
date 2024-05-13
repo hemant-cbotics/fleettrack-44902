@@ -46,7 +46,7 @@ const ScreenDashboardAdminUsers = () => {
 
   const {
     data: dataOrgUsers,
-    isLoading: isLoadingOrgUsers,
+    isFetching: isFetchingOrgUsers,
     error
   } =
     useOrganizationUsersQuery(orgUsersQueryParams, {
@@ -84,8 +84,8 @@ const ScreenDashboardAdminUsers = () => {
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
         <div className="py-4 mt-4">
-          <AdminTable columns={columns} data={tabledata} />
-          {!isLoadingOrgUsers && (
+          <AdminTable columns={columns} data={tabledata} isLoading={isFetchingOrgUsers} />
+          {!isFetchingOrgUsers && (
             <Pagination
               pageSize={orgUsersQueryParams.page_size}
               handlePageSizeChange={(e: React.ChangeEvent<HTMLSelectElement>) => {

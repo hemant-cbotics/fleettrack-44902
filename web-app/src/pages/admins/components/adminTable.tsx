@@ -3,18 +3,23 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TAdminTableData } from "./types";
+import LoadingAnimation from "../../../assets/svg/loadingAnimation.svg";
 
 interface AdminTableProps {
   data: TAdminTableData[] | null;
   columns: string[];
+  isLoading: boolean;
 }
 
-const AdminTable: FC<AdminTableProps> = ({ columns, data }) => {
+const AdminTable: FC<AdminTableProps> = ({ columns, data, isLoading = false }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="overflow-y-auto">
-      <table className="w-full">
+    <div className="overflow-y-auto relative">
+      <div className={`absolute z-10 min-w-full h-full${isLoading ? "" : " hidden"}`}>
+        <img src={LoadingAnimation} alt="loading-animation" className="w-20 h-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+      </div>
+      <table className={`w-full transition ${isLoading ? " opacity-25" : ""}`}>
         <thead className="sticky top-0 bg-white border-b border-gray-500">
           <tr>
             {columns?.map((column, index) => (
@@ -57,7 +62,11 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data }) => {
                 {item.last_login}
               </td>
             </tr>
-          )) : (
+          ))
+          : isLoading ? (<tr>
+            <td colSpan={columns.length} className="text-center py-24 text-lg font-bold text-gray-400">&nbsp;</td>
+          </tr>)
+          : (
             <tr><td colSpan={columns.length} className="text-center py-24 text-lg font-bold text-gray-400">{t('no_items_found')}</td></tr>
           )}
         </tbody>
