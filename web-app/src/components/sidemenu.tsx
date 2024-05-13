@@ -60,15 +60,16 @@ const Sidemenu = () => {
       {adminsMenuActive ? (
         <>
           <button
-            className="flex items-center justify-center bg-blue-200 text-blue-800 font-medium text-base leading-6 rounded-full w-full"
+            className="flex items-center justify-center bg-accent-blue-pale text-accent-blue-dark font-medium text-base leading-6 rounded-full w-full"
             onClick={backToMainMenu}>
             <img
               src={LeftArrowIcon}
               alt="left-arrow-icon"
-              className="p-2 bg-blue-200 rounded-full pointer-events-none -ml-4"
+              className="size-10 p-2 rounded-full pointer-events-none -ml-4"
             />
             {t("main_menu")}
           </button>
+          <p className="text-gray-500 text-sm font-bold uppercase leading-6 tracking-wider text-center">{t('administration')}</p>
           <ul className="space-y-4 flex-grow overflow-auto">
             {dashboardAdminsMenuItems.map((item, index) => (
               <DashboardMenuListItem

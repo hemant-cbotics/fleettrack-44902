@@ -15,10 +15,10 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data }) => {
   return (
     <div className="overflow-y-auto max-h-[350px]">
       <table className="w-full">
-        <thead className="sticky top-0 bg-gray-50 border-b border-gray-500">
+        <thead className="sticky top-0 bg-white border-b border-gray-500">
           <tr>
             {columns?.map((column, index) => (
-              <th key={index} className="px-6 py-3 text-left text-xs font-semibold text-black leading-6 uppercase tracking-wider">
+              <th key={index} className="px-4 py-3 text-left text-sm font-semibold text-black leading-6 whitespace-nowrap">
                 {column}
               </th>
             ))}
@@ -29,31 +29,31 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data }) => {
             <tr key={`table_${index}_${item.SrNo}`} className="cursor-pointer" onClick={() => {
               navigate(`${routeUrls.dashboardChildren.adminChildren.users}/${item.id}`);
             }}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {index + 1}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.id}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.description}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.role}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.name}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.email}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.timezone}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.active ? "Yes" : "No"}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium leading-6 text-gray-700">
+              <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                 {item.last_login}
               </td>
             </tr>

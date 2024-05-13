@@ -110,6 +110,7 @@ export const language_en = {
       maintenance_admin: "Maintenance Admin",
       group_admin: "Group Admin",
       administrators: "Administrators",
+      administration: "Administration",
       manage_rule_alert: "Manage Rule/Alert",
       camera_admin: "Camera Admin",
       main_menu: "Main Menu",

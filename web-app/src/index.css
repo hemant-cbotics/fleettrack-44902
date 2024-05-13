@@ -38,6 +38,17 @@ code {
   /* --tw-shadow: 0 0 #0000; */
 }
 
+[type="password"] {
+  font-size: 32px;
+  line-height: 20px;
+}
+
+[type="password"]::placeholder {
+  font-size: 14px;
+  line-height: 20px;
+  transform: translateY(-7px)
+}
+
 [type=checkbox], [type=radio] {
   -webkit-appearance: none;
   -moz-appearance: none;
