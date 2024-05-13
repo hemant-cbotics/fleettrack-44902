@@ -23,11 +23,11 @@ const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboar
   const title = t(dashboardMenuItem.slug);
   return (
     <li
-      className={`px-3 py-2 rounded-lg ${active ? "bg-accent-blue-pale" : "hover:bg-gray-300 cursor-pointer"}`}
+      className={`px-3 py-2 rounded-lg ${active ? "bg-gray-300" : "hover:bg-gray-300 cursor-pointer"}`}
       onClick={() => handleClick(dashboardMenuItem.path)}>
       <span className="flex items-center gap-2">
         <img src={dashboardMenuItem.icon} alt={title} />
-        <p className={`font-bold text-xs ${active ? "text-accent-blue-dark" : "text-gray-500"}`}>{title}</p>
+        <p className={`font-bold text-xs ${active ? "text-gray-500" : "text-gray-500"}`}>{title}</p>
       </span>
     </li>
   )
