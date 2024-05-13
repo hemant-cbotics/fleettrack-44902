@@ -37,6 +37,29 @@ export type SingleOrganizationUserPayload = {
 }
 
 export type EditOrganizationUserPayload = {
-  user_id: number;
   data: any;
+}
+
+export type TEditOrganizationUserPayloadData = {
+  user : {
+    id: number;
+    is_active: boolean;
+  }
+  profile: {
+    id: number;
+    description: string;
+    mobile: string;
+    timezone: string;
+    enable_sso_vistrack: boolean;
+    default_overlay: string;
+    user_state: string;
+    session_timeout: number;
+    first_login_page: string;
+    two_factor_auth: boolean;
+    user_geozone_labels: boolean;
+  },
+  role_and_permission: {
+    id: number;
+    role: number;
+  }
 }
