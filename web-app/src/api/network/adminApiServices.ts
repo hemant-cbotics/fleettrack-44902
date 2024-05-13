@@ -72,9 +72,14 @@ export const AdminAPIs = createApi({
 
     // organization users
     organizationUsers: builder.query<ListingResponse<OrganizationUser[]>, OrganizationUsersPayload>({
-      query: ({ organization_id }) => {
+      query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_USERS(organization_id),
+          params: {
+            page,
+            page_size,
+            search
+          },
           method: API_METHODS.GET,
         };
       },

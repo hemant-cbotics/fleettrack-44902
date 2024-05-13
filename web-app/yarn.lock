@@ -7903,7 +7903,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.8.1:
+prop-types@^15, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -8068,6 +8068,13 @@ react-is@^18.0.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-paginate@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-8.2.0.tgz#947c3dcb444a6c16c1bcf8361871aa135baa3dcd"
+  integrity sha512-sJCz1PW+9PNIjUSn919nlcRVuleN2YPoFBOvL+6TPgrH/3lwphqiSOgdrLafLdyLDxsgK+oSgviqacF4hxsDIw==
+  dependencies:
+    prop-types "^15"
 
 react-redux@^9.1.2:
   version "9.1.2"
@@ -9532,6 +9539,11 @@ url-parse@^1.5.3:
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
+
+use-debounce@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-10.0.0.tgz#5091b18d6c16292605f588bae3c0d2cfae756ff2"
+  integrity sha512-XRjvlvCB46bah9IBXVnq/ACP2lxqXyZj0D9hj4K5OzNroMDpTEBg8Anuh1/UfRTRs7pLhQ+RiNxxwZu9+MVl1A==
 
 use-sync-external-store@^1.0.0:
   version "1.2.2"

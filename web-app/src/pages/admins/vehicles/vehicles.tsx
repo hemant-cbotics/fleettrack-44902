@@ -48,7 +48,7 @@ const ScreenDashboardAdminVehicles = () => {
         />
         <div className="py-4 mt-4">
           {/* <AdminTable columns={columns} data={data} /> */}
-          <Pagination pageSize={15} currentPage={2} count={28} />
+          {/* <Pagination pageSize={15} currentPage={2} count={28} /> */}
         </div>
       </div>
     </>

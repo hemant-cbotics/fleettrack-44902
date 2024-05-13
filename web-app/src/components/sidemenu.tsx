@@ -23,11 +23,11 @@ const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboar
   const title = t(dashboardMenuItem.slug);
   return (
     <li
-      className={`px-3 py-2 rounded-lg ${active ? "bg-accent-blue-pale" : "hover:bg-gray-300 cursor-pointer"}`}
+      className={`px-3 py-2 rounded-lg ${active ? "bg-gray-300" : "hover:bg-gray-300 cursor-pointer"}`}
       onClick={() => handleClick(dashboardMenuItem.path)}>
       <span className="flex items-center gap-2">
         <img src={dashboardMenuItem.icon} alt={title} />
-        <p className={`font-bold text-xs ${active ? "text-accent-blue-dark" : "text-gray-500"}`}>{title}</p>
+        <p className={`font-bold text-xs ${active ? "text-gray-500" : "text-gray-500"}`}>{title}</p>
       </span>
     </li>
   )
@@ -60,15 +60,16 @@ const Sidemenu = () => {
       {adminsMenuActive ? (
         <>
           <button
-            className="flex items-center justify-center bg-blue-200 text-blue-800 font-medium text-base leading-6 rounded-full w-full"
+            className="flex items-center justify-center bg-accent-blue-pale text-accent-blue-dark font-medium text-base leading-6 rounded-full w-full"
             onClick={backToMainMenu}>
             <img
               src={LeftArrowIcon}
               alt="left-arrow-icon"
-              className="p-2 bg-blue-200 rounded-full pointer-events-none -ml-4"
+              className="size-10 p-2 rounded-full pointer-events-none -ml-4"
             />
             {t("main_menu")}
           </button>
+          <p className="text-gray-500 text-sm font-bold uppercase leading-6 tracking-wider text-center">{t('administration')}</p>
           <ul className="space-y-4 flex-grow overflow-auto">
             {dashboardAdminsMenuItems.map((item, index) => (
               <DashboardMenuListItem

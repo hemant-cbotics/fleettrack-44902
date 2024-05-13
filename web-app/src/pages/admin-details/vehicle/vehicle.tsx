@@ -1,5 +1,4 @@
 import HeaderView from "../../../components/admin/headerView";
-import DashboardWrapper from "../../../components/dashboard";
 import SearchIcon from "../../../assets/svg/search-icon.svg";
 import { FC } from "react";
 import Accordian from "../../../components/accordian";

@@ -11,6 +11,7 @@ from generics.utils import OrganizationUtil, CustomPagination
 from users.api.v1.serializers import OrganizationUsersSerializer, UserSerializer
 from rest_framework import mixins, viewsets
 from generics.custom_permissions import OrganizationUsersManagePermission
+from django.db.models import Q
 
 
 class UserPermissionsView(APIView):
@@ -104,15 +105,30 @@ class OrganizationUsersView(APIView):
 
     def get(self, request, *args, **kwargs):
         organization_id = kwargs.get('organization_id')
+        search_query = request.query_params.get('search', '')
         #user = self.request.user
-        user_role_permission = UserRoleAndPermission.objects.filter(role__organization__id=organization_id)
-        print(user_role_permission)
+        user_role_permission = UserRoleAndPermission.objects.filter(role__organization__id=organization_id).filter(Q(user__name__icontains=search_query) | Q(user__email__icontains=search_query))
         paginator = self.pagination_class()
         paginated_users = paginator.paginate_queryset(user_role_permission, request)
         serializer = OrganizationUsersSerializer(paginated_users, many=True)
         return paginator.get_paginated_response(serializer.data)
     
-class OrganizatioUserViewset(mixins.DestroyModelMixin, viewsets.GenericViewSet):
+
+class OrganizationUserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OrganizationUsersSerializer
+    pagination_class = CustomPagination
+
+    def get(self, request, *args, **kwargs):
+        organization_id = kwargs.get('organization_id')
+        user_id = kwargs.get('user_id')
+        user_role_permission = UserRoleAndPermission.objects.filter(role__organization__id=organization_id,user__id=user_id).first()
+        serializer = OrganizationUsersSerializer(user_role_permission)
+        return Response(serializer.data)
+
+    
+class OrganizatioUserViewset(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [OrganizationUsersManagePermission] # this is custom permission which needs to be updated later on
     serializer_class = UserSerializer

@@ -1,15 +1,22 @@
 import React from "react";
-import SearchIcon from "../assets/svg/search-icon.svg";
-import HelpIcon from "../assets/svg/help-icon.svg";
-import NotificationIcon from "../assets/svg/notification-icon.svg";
-import ChatIcon from "../assets/svg/chat-icon.svg";
-import WarningIcon from "../assets/svg/warning-icon.svg";
-import UserIcon from "../assets/svg/user-icon.svg";
+import SearchIcon from "../../assets/svg/search-icon.svg";
+import HelpIcon from "../../assets/svg/help-icon.svg";
+import NotificationIcon from "../../assets/svg/notification-icon.svg";
+import ChatIcon from "../../assets/svg/chat-icon.svg";
+import WarningIcon from "../../assets/svg/warning-icon.svg";
+import UserIcon from "../../assets/svg/user-icon.svg";
 import { useTranslation } from "react-i18next";
-import { APP_CONFIG } from "../constants/constants";
-import { AdminFormFieldDropdown } from "./admin/formFields";
-import { routeUrls } from "../navigation/routeUrls";
-import { useNavigate } from "react-router-dom";
+import { APP_CONFIG } from "../../constants/constants";
+import { AdminFormFieldDropdown } from "../admin/formFields";
+import { routeUrls } from "../../navigation/routeUrls";
+import { useLocation, useNavigate } from "react-router-dom";
+import AppAvatar from "../avatar";
+import { getUserIntials } from "../../utils/string";
+import { useSelector } from "react-redux";
+import { VerifyEmailOtpResponseSuccess } from "../../api/types/Onboarding";
+import AdminsDropdown from "./adminsDropdown";
+import { sessionStorageKeys, useSessionStorage } from "../../utils/sessionStorageItems";
+import { TUser } from "../../api/types/User";
 
 interface IconWithCounterProps {
   src: string;
@@ -29,6 +36,13 @@ const IconWithCounter: React.FC<IconWithCounterProps> = ({src, alt, counter = nu
 const DashboardHeader = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { getSessionStorageItem } = useSessionStorage();
+
+  const loggedInUserData: VerifyEmailOtpResponseSuccess = useSelector((state: any) => state.commonReducer.user);
+  const loggedInUser: TUser = loggedInUserData?.user ?? getSessionStorageItem(sessionStorageKeys.user);
+
+  const { pathname } = useLocation();
+  const adminsMenuActive = pathname.indexOf(routeUrls.dashboardChildren.admins) > -1;
 
   const handleClickProfileIcon = () => {
     // TODO: Implement the logic to open the profile dropdown
@@ -52,7 +66,8 @@ const DashboardHeader = () => {
         />
       </div>
       <div className="lg:col-span-8 flex justify-end">
-        <AdminFormFieldDropdown
+        {!adminsMenuActive && <AdminsDropdown />}
+        {/* <AdminFormFieldDropdown
           label={false}
           id="admins"
           name="admins"
@@ -75,7 +90,7 @@ const DashboardHeader = () => {
               );
           }}
           customSelectboxClass={`h-10 mt-2 self-center`}
-        />
+        /> */}
         <div className="ml-5">
           <ul className="flex items-center space-x-2">
             <IconWithCounter src={HelpIcon} alt="help-icon" />
@@ -85,7 +100,7 @@ const DashboardHeader = () => {
           </ul>
         </div>
         <div className="flex items-center justify-center ml-5 cursor-pointer" onClick={handleClickProfileIcon}>
-          <img src={UserIcon} alt="user-icon" className="size-8 max-w-8" />
+          <AppAvatar initials={getUserIntials(loggedInUser?.name ?? loggedInUser?.email)} />
         </div>
       </div>
     </div>

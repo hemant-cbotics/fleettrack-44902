@@ -7,6 +7,9 @@ export type OrganizationUser = {
 
 export type OrganizationUsersPayload = {
   organization_id: number;
+  page: number;
+  page_size: number;
+  search?: string;
 }
 
 export type CreateOrganizationUserPayload = {

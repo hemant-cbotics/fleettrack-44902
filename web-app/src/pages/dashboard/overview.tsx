@@ -1,5 +1,4 @@
 import React from 'react'
-import DashboardWrapper from '../../components/dashboard';
 
 const ScreenOverview = () => {
   return (

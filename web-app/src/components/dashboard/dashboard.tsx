@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Sidemenu from "./sidemenu";
+import Sidemenu from "../sidemenu";
 import DashboardHeader from "./dashboardHeader";
 import { Outlet } from "react-router-dom";
 
