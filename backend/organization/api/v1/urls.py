@@ -8,7 +8,8 @@ from organization.api.v1.viewsets import (
     OnboardInvitedUserView,
     OrganizationUsersView,
     OrganizationUserEditView,
-    OrganizatioUserViewset
+    OrganizatioUserViewset,
+    OrganizationUserView
 )
 app_name = 'organization'
 
@@ -23,6 +24,7 @@ urlpatterns = [
     path('show-invite-user/<uuid:id>/', GetInvitedUserView.as_view(), name='invite-user'),
     path('onboard-invited-user/', OnboardInvitedUserView.as_view(), name='onboard-invited-user'),
     path('organization-users/<int:organization_id>/', OrganizationUsersView.as_view(), name='organization-users'),
+    # path('organization-user/<int:organization_id>/<int:user_id>/', OrganizationUserView.as_view(), name='organization-user'),
     path('edit-user/', OrganizationUserEditView.as_view(), name='edit-user'),
     #path('get-organization-roles/', OrganizationRolesView.as_view(), name='get-organization-roles'),
 ]

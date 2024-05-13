@@ -42,17 +42,17 @@ class VerifyEmailOTPView(generics.GenericAPIView):
             token, created = Token.objects.get_or_create(user=user)
             user_serializer = UserSerializer(user)
             organization_owner_data = OrganizationUtil.get_owned_organization_data(user)
-            try:
-                user_profile = UserProfileSerialzer(user.profile).data
-            except:
-                user_profile = {}
+            # try:
+            #     user_profile = UserProfileSerialzer(user.profile).data
+            # except:
+            #     user_profile = {}
             #allowed_role = OrganizationUtil.get_allowed_organization_data(user)
             return Response(
                 {
                     "token": token.key,
                     "user": user_serializer.data,
                     "owner_organization": organization_owner_data,
-                    "user_profile": user_profile
+                    # "user_profile": user_profile
                     #"allowed_roles": allowed_role,
                 },
                 status=status.HTTP_200_OK
