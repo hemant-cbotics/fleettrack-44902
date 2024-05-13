@@ -115,7 +115,7 @@ export const AdminAPIs = createApi({
     editOrganizationUser: builder.mutation<OrganizationUser, EditOrganizationUserPayload>({
       query: (params: EditOrganizationUserPayload) => {
         return {
-          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_USER(params.user_id),
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_USER,
           method: API_METHODS.PATCH,
           body: params.data
         }
