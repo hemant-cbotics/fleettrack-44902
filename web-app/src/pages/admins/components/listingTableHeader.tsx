@@ -9,12 +9,20 @@ export type TListingFilters = {
 type TListingTableHeaderProps = {
   heading: string;
   searchBoxPlaceholder?: string;
+  searchBoxOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   filters?: TListingFilters[];
   activeFilterSlug?: string;
   handleFilterChange?: (slug: string) => void;
 };
 
-const ListingTableHeader: FC<TListingTableHeaderProps> = ({ heading, searchBoxPlaceholder, filters, activeFilterSlug, handleFilterChange }) => {
+const ListingTableHeader: FC<TListingTableHeaderProps> = ({
+  heading,
+  searchBoxPlaceholder,
+  searchBoxOnChange,
+  filters,
+  activeFilterSlug,
+  handleFilterChange
+}) => {
   return (
     <div className="flex mt-6">
       <div className="flex items-center">
@@ -57,6 +65,7 @@ const ListingTableHeader: FC<TListingTableHeaderProps> = ({ heading, searchBoxPl
           <input
             type="text"
             placeholder={searchBoxPlaceholder}
+            onChange={searchBoxOnChange}
             className="w-full p-2 pl-10 rounded-md border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
           />
           <img

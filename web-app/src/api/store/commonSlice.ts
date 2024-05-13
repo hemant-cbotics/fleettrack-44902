@@ -8,6 +8,7 @@ export type TPreLoginUserData = {
 
 export type TModalsState = {
   showCreateUser: boolean;
+  showAdminsDropdown: boolean;
 }
 
 export type TAppCommonState = {
@@ -20,7 +21,8 @@ const initialState: TAppCommonState = {
   preLoginUserData: undefined,
   user: undefined,
   modals: {
-    showCreateUser: false
+    showCreateUser: false,
+    showAdminsDropdown: false
   }
 }
 
