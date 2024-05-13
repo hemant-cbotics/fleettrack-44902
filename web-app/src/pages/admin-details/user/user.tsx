@@ -56,7 +56,7 @@ const ScreenAdminDetailUser = () => {
         ?.organization;
 
   const { data: dataOrgUsers, isLoading, error } = useOrganizationUsersQuery({
-    organization_id: thisUserOrganizationId,
+    organization_id: thisUserOrganizationId, page: 1, page_size: 10
   });
 
   const {
