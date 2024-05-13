@@ -9,51 +9,82 @@ import {
 } from "./user-form";
 import { useTranslation } from "react-i18next";
 import { APP_CONFIG } from "../../../constants/constants";
-
-const data = [
-  {
-    user_id: "Cindy/P-1032",
-    user_description: "New User (Admin)",
-    user_email: "cindy.p1032@ibtechnology.com",
-    user_role: "System Admin",
-  },
-  {
-    user_id: "Cindy/P-1032",
-    user_description: "New User (Admin)",
-    user_email: "cindy.p1032@ibtechnology.com",
-    user_role: "System Admin",
-  },
-  {
-    user_id: "Cindy/P-1032",
-    user_description: "New User (Admin)",
-    user_email: "cindy.p1032@ibtechnology.com",
-    user_role: "System Admin",
-  },
-  {
-    user_id: "Cindy/P-1032",
-    user_description: "New User (Admin)",
-    user_email: "cindy.p1032@ibtechnology.com",
-    user_role: "System Admin",
-  },
-  {
-    user_id: "Cindy/P-1032",
-    user_description: "New User (Admin)",
-    user_email: "cindy.p1032@ibtechnology.com",
-    user_role: "System Admin",
-  },
-  {
-    user_id: "Cindy/P-1032",
-    user_description: "New User (Admin)",
-    user_email: "cindy.p1032@ibtechnology.com",
-    user_role: "System Admin",
-  },
-];
+import { useOrganizationUsersQuery } from "../../../api/network/adminApiServices";
+import {
+  sessionStorageKeys,
+  useSessionStorage,
+} from "../../../utils/sessionStorageItems";
+import {
+  TLoggedInUser,
+  TLoggedInUserOrganization,
+} from "../../../api/types/User";
+import { OrganizationUser } from "../../../api/types/Admin";
+import { TListData } from "./type";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 const ScreenAdminDetailUser = () => {
+  const { userId } = useParams<{ userId: any }>();
+  const [currentUserId, setCurrentUserId] = useState<number>(parseInt(userId));
   const { t: tmain } = useTranslation();
   const { t } = useTranslation("translation", {
     keyPrefix: "adminDetailScreen",
   });
+  const { getSessionStorageItem } = useSessionStorage();
+
+  const thisUser = {
+    ownerOrganization: getSessionStorageItem(
+      sessionStorageKeys.ownerOrganization
+    ),
+    user: getSessionStorageItem(sessionStorageKeys.user),
+  };
+
+  const thisUserOrganizationId = !!thisUser.ownerOrganization
+    ? ((thisUser.ownerOrganization || {}) as TLoggedInUserOrganization)?.id
+    : ((thisUser.user || {}) as TLoggedInUser)?.role_and_permission?.role
+        ?.organization;
+
+  const { data: dataOrgUsers, isLoading, error } = useOrganizationUsersQuery({
+    organization_id: thisUserOrganizationId,
+  });
+
+  const { results } = dataOrgUsers || {};
+
+  const listData: TListData[] = !!results
+    ? (results || ([] as OrganizationUser[])).map(
+        (item: OrganizationUser, index: number) => ({
+          user_id: item?.user?.id,
+          user_description: item?.profile?.description || "Not available",
+          user_email: item?.user?.email,
+          user_role: item?.user?.role_and_permission?.role?.name,
+        })
+      )
+    : [];
+
+  // const specificUserData = !!results ? (results || ([] as OrganizationUser[])).map((item: OrganizationUser, index: number) => ({
+
+  // })
+  const generalDetailData = !!results
+    ? (results || ([] as OrganizationUser[])).map(
+        (item: OrganizationUser, index: number) => ({
+          user_id: item?.user?.id,
+          password: "",
+          user_description: item?.profile?.description,
+          is_active: item?.user?.is_active,
+          use_two_factor: item?.profile?.two_factor_auth,
+          use_geozone_labels: item?.profile?.user_geozone_labels,
+          contact_name: item?.user?.name,
+          contact_phone_number: item?.profile?.mobile,
+          contact_email: item?.user?.email,
+          timezone: item?.profile?.timezone,
+          enable_sso_to_visatracks: item?.profile?.enable_sso_vistrack,
+          default_overlay: item?.profile?.default_overlay,
+          user_state: item?.profile?.user_state,
+          session_timeout: item?.profile?.session_timeout,
+          first_login_page: item?.profile?.first_login_page,
+        })
+      )
+    : [];
 
   return (
     <>
@@ -79,8 +110,15 @@ const ScreenAdminDetailUser = () => {
                 className="absolute left-2 top-1/2 transform -translate-y-1/2"
               />
             </div>
-              {data.map((item, index) => (
-                <div key={index} className="border-b px-3 py-2 border-gray-200">
+            <div>
+              {listData?.map((item: any, index: number) => (
+                <div
+                  key={index}
+                  className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
+                    currentUserId === item.user_id ? "bg-blue-200" : ""
+                  }`}
+                  onClick={() => setCurrentUserId(item.user_id)}
+                >
                   <div className="grid grid-cols-4">
                     <div className="col-span-3">
                       <p className="font-semibold text-sm leading-6 text-blue-900">
@@ -99,6 +137,7 @@ const ScreenAdminDetailUser = () => {
                   </p>
                 </div>
               ))}
+            </div>
           </div>
           <div className="lg:col-span-9 px-4">
             <div className="flex justify-end space-x-4">

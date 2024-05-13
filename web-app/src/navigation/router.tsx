@@ -21,6 +21,7 @@ import DashboardWrapper from "../components/dashboard"
 import DashboardAdminWrapper from "../components/dashboardAdmin"
 import ScreenDashboardAdminUsers from "../pages/admins/users/users"
 import ScreenDashboardAdminVehicles from "../pages/admins/vehicles/vehicles"
+import ScreenAdminDetailAccount from "../pages/admin-details/account/account"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -170,6 +171,10 @@ const routes: RouteObject[] = [
           {
             path: routeUrls.dashboardChildren.adminChildren.geozones,
             element: <TemporaryRoute />
+          },
+          {
+            path: routeUrls.dashboardChildren.adminChildren.account,
+            element: <ScreenAdminDetailAccount />
           }
         ]
       },

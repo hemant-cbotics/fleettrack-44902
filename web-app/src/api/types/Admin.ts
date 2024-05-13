@@ -1,10 +1,9 @@
-import { TUser } from "./User";
+import { TLoggedInUser, TUser } from "./User";
 import { TUserProfile } from "./UserProfile";
 
 export type OrganizationUser = {
   id: number;
-  user: TUser;
-  role: number;
+  user: TLoggedInUser;
   profile: TUserProfile;
 }
 
