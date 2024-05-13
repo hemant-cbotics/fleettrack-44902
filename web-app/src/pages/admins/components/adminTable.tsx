@@ -13,7 +13,7 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="overflow-y-auto max-h-[350px]">
+    <div className="overflow-y-auto">
       <table className="w-full">
         <thead className="sticky top-0 bg-white border-b border-gray-500">
           <tr>
@@ -58,7 +58,7 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data }) => {
               </td>
             </tr>
           )) : (
-            <tr><td colSpan={columns.length} className="text-center py-4">{t('no_items_found')}</td></tr>
+            <tr><td colSpan={columns.length} className="text-center py-24 text-lg font-bold text-gray-400">{t('no_items_found')}</td></tr>
           )}
         </tbody>
       </table>
