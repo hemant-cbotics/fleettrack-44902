@@ -5,7 +5,7 @@ export type OrganizationUser = {
   user: TLoggedInUser;
 }
 
-export type OrganizationUsersPayload = {
+export type OrganizationEntityListingPayload = {
   organization_id: number;
   page: number;
   page_size: number;
@@ -62,13 +62,6 @@ export type TEditOrganizationUserPayloadData = {
     id: number;
     role: number;
   }
-}
-
-export type OrganizationVehiclesPayload = {
-  organization_id: number;
-  page: number;
-  page_size: number;
-  search?: string;
 }
 
 export type OrganizationVehicle = any;

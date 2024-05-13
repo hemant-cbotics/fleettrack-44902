@@ -4,9 +4,8 @@ import {
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   EditOrganizationUserPayload,
+  OrganizationEntityListingPayload,
   OrganizationUser,
-  OrganizationUsersPayload,
-  OrganizationVehiclesPayload,
   SingleOrganizationUserPayload,
 } from "../types/Admin";
 import { API_METHODS } from "./constants";
@@ -72,7 +71,7 @@ export const AdminAPIs = createApi({
     }),
 
     // organization users
-    organizationUsers: builder.query<ListingResponse<OrganizationUser[]>, OrganizationUsersPayload>({
+    organizationUsers: builder.query<ListingResponse<OrganizationUser[]>, OrganizationEntityListingPayload>({
       query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_USERS(organization_id),
@@ -150,10 +149,33 @@ export const AdminAPIs = createApi({
     }),
 
     // organization vehicles
-    organizationVehicles: builder.query<ListingResponse<OrganizationUser[]>, OrganizationVehiclesPayload>({
+    organizationVehicles: builder.query<ListingResponse<OrganizationUser[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_VEHICLES,
+          params: {
+            organization_id,
+            page,
+            page_size,
+            search
+          },
+          method: API_METHODS.GET,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: ListingResponse<OrganizationUser[]>) => {
+        return response;
+      },
+    }),
+
+    // organization drivers
+    organizationDrivers: builder.query<ListingResponse<OrganizationUser[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+      query: ({ organization_id, page, page_size, search }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_DRIVERS,
           params: {
             organization_id,
             page,
@@ -183,4 +205,5 @@ export const {
   useEditOrganizationUserMutation,
   useDeleteSingleUserMutation,
   useOrganizationVehiclesQuery,
+  useOrganizationDriversQuery,
 } = AdminAPIs;

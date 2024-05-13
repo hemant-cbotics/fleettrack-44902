@@ -171,6 +171,13 @@ export const language_en = {
       listing_heading: "Vehicle Listing",
       search_placeholder: "Search vehicles here...",
     },
+    drivers: {
+      heading: "Drivers",
+      sub_heading: "Add and Delete driver information",
+      add_new: "Add New Driver",
+      listing_heading: "Driver Listing",
+      search_placeholder: "Search drivers here...",
+    },
   },
   active: "Active",
   inactive: "Inactive",
