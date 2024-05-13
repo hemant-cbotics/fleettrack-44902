@@ -44,7 +44,7 @@ const ScreenDashboardAdminUsers = () => {
       SrNo: index + 1,
       id: item?.user?.id,
       description: item?.profile?.description || "Not available",
-      role: item?.role,
+      role: item?.user?.role_and_permission?.role?.name || "Not available",
       name: item?.user?.name || "Not available",
       email: item?.user?.email,
       timezone: item?.profile?.timezone || "Not available",

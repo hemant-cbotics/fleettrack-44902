@@ -1,0 +1,38 @@
+import * as Yup from "yup";
+
+export const accountGeneralDetailsInitialValues = {
+  account_id: "",
+  account_description: "",
+  contact_name: "",
+  contact_phone_number: "",
+  contact_email: "",
+  private_cost: "",
+  idle_gas_usage: "",
+  distance_gas_usage: "",
+  auto_update_interval_for_maps: "",
+  drivers_assigned_to_devices: "",
+  enable_map_clustering: "",
+  open_reports_in_new_tab: "",
+  sync_driverId_from_driver_admin: "",
+  has_snowplows: "",
+  hide_total_rows_in_csv: "",
+  timezone: "",
+  speed_units: "",
+  distance_units: "",
+  volume_units: "",
+  economy_units: "",
+  pressure_units: "",
+  temperature_units: "",
+  latitude_longitude_format: "",
+  route_segment_color_rule: "",
+  route_line_thickness: "",
+  multi_vehicle_map_name: "",
+  device_title: "",
+  device_title_plural: "",
+  device_group_title: "",
+  device_group_title_plural: "",
+  default_login_userId: "",
+  default_overlay: "",
+}
+
+export const accountGeneralDetailsYupValidationSchema = Yup.object().shape({});

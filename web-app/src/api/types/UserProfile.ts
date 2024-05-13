@@ -5,7 +5,7 @@ export type TUserProfile = {
   updated_at: string;
   description: string | null;
   country_code: string | null;
-  phone_number: string | null;
+  mobile: string | null;
   profile_picture: string | null;
   is_active: boolean;
   two_factor_auth: boolean;

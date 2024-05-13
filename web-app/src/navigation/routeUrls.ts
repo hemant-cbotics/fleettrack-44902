@@ -28,6 +28,7 @@ export const routeUrls = {
       fleettags: "/dashboard/admins/fleet-tags",
       drivers: "/dashboard/admins/drivers",
       geozones: "/dashboard/admins/geozones",
+      account: "/dashboard/admins/account",
     },
 
     // under development

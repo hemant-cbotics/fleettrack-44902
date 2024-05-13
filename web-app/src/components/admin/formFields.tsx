@@ -13,6 +13,7 @@ type AdminFormFieldInputProps = {
   error?: string;
   disabled?: boolean;
   customInputClass?: string;
+  customWrapperClass?: string;
 };
 
 export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
@@ -28,6 +29,7 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
   error,
   disabled = false,
   customInputClass = "",
+  customWrapperClass = "col-span-6",
 }) => {
   let wrapperClass = touched && !!error ? "" : "";
   let labelClass =
@@ -40,9 +42,9 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
 
   return (
     <div
-      className={`col-span-6${
+      className={`${
         floatingError ? ` relative pb-4` : ""
-      } ${wrapperClass}`}
+      } ${wrapperClass} ${customWrapperClass}`}
     >
       <label
         htmlFor={id}

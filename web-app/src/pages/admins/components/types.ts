@@ -1,9 +1,9 @@
 
 export type TAdminTableData = {
   SrNo: number;
-  id: string;
+  id: number;
   description: string;
-  role: number;
+  role: string;
   name: string;
   email: string;
   timezone: string;
