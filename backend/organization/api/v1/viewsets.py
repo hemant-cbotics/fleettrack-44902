@@ -12,6 +12,7 @@ from users.api.v1.serializers import OrganizationUsersSerializer, UserSerializer
 from rest_framework import mixins, viewsets
 from generics.custom_permissions import OrganizationUsersManagePermission
 from django.db.models import Q
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserPermissionsView(APIView):
@@ -130,7 +131,7 @@ class OrganizationUserView(APIView):
     
 class OrganizatioUserViewset(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [OrganizationUsersManagePermission] # this is custom permission which needs to be updated later on
+    permission_classes = [IsAuthenticated] # this is custom permission which needs to be updated later on
     serializer_class = UserSerializer
     queryset = User.objects.all()
     
