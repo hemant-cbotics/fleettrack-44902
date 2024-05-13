@@ -11,12 +11,12 @@ body {
   -moz-osx-font-smoothing: grayscale; */
 }
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
-  font-style: unset;
+  font-style: normal;
   font-variation-settings:
-    "slnt" 0;
+    "wdth" 100;
 }
 
 code {
@@ -24,7 +24,7 @@ code {
     monospace;
 }
 
-[multiple], [type=date], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=time], [type=url], [type=week], input:where(:not([type])), select, textarea {
+[multiple], [type=date], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=time], [type=url], [type=week], input:where(:not([type])), textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -32,7 +32,7 @@ code {
   /* border-color: #6b7280; */
   border-width: 1px;
   /* border-radius: 0; */
-  padding: .5rem .75rem;
+  /* padding: .5rem .75rem; */
   /* font-size: 1rem; */
   /* line-height: 1.5rem; */
   /* --tw-shadow: 0 0 #0000; */
@@ -84,4 +84,8 @@ code {
 [type=checkbox]:checked:focus, [type=checkbox]:checked:hover, [type=checkbox]:indeterminate, [type=radio]:checked:focus, [type=radio]:checked:hover {
   border-color: #0000;
   background-color: currentColor;
+}
+
+.placeholder-tracking-normal::placeholder {
+  letter-spacing: normal;
 }
