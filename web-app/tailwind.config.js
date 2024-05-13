@@ -31,6 +31,7 @@ module.exports = {
         },
         accent: {
           blue: {
+            paleO66: '#C2DCF266',
             pale: '#C2DCF2',
             bright: '#0E88FF',
             dark: '#005B90',

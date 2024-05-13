@@ -43,5 +43,7 @@ export const API_ENDPOINTS = {
     ORGANIZATION_USERS: (organization_id: number) => `/organization/organization-users/${organization_id}/`,
     SINGLE_ORGANIZATION_USER: (user_id: number) => `/organization/organization-user/${user_id}/`,
     EDIT_ORGANIZATION_USER: `/organization/edit-user/`,
+
+    ORGANIZATION_VEHICLES: `/vehicle/ap1/v1/`,
   }
 }
