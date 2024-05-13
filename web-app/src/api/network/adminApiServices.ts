@@ -6,6 +6,7 @@ import {
   EditOrganizationUserPayload,
   OrganizationUser,
   OrganizationUsersPayload,
+  OrganizationVehiclesPayload,
   SingleOrganizationUserPayload,
 } from "../types/Admin";
 import { API_METHODS } from "./constants";
@@ -148,6 +149,29 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    // organization vehicles
+    organizationVehicles: builder.query<ListingResponse<OrganizationUser[]>, OrganizationVehiclesPayload>({
+      query: ({ organization_id, page, page_size, search }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_VEHICLES,
+          params: {
+            organization_id,
+            page,
+            page_size,
+            search
+          },
+          method: API_METHODS.GET,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: ListingResponse<OrganizationUser[]>) => {
+        return response;
+      },
+    }),
+
   }),
 });
 
@@ -158,4 +182,5 @@ export const {
   useSingleOrganizationUserQuery,
   useEditOrganizationUserMutation,
   useDeleteSingleUserMutation,
+  useOrganizationVehiclesQuery,
 } = AdminAPIs;

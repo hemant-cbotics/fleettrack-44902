@@ -63,3 +63,12 @@ export type TEditOrganizationUserPayloadData = {
     role: number;
   }
 }
+
+export type OrganizationVehiclesPayload = {
+  organization_id: number;
+  page: number;
+  page_size: number;
+  search?: string;
+}
+
+export type OrganizationVehicle = any;

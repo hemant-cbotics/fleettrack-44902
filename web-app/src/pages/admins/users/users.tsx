@@ -1,24 +1,33 @@
 import React from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
-import SearchIcon from "../../../assets/svg/search-icon.svg";
 import { useTranslation } from "react-i18next";
 import { APP_CONFIG } from "../../../constants/constants";
 import HeaderView from "../../../components/admin/headerView";
-import ButtonIconPlus from "../../../assets/svg/buttonicon-plus.svg";
 import ListingPageSubHeader from "../components/listingPageSubHeader";
 import ListingTableHeader from "../components/listingTableHeader";
 import AdminsUsersCreateNew from "./createNewUser";
 import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { useOrganizationUsersQuery } from "../../../api/network/adminApiServices";
-import { TAdminTableData } from "../components/types";
-import { sessionStorageKeys, useSessionStorage } from "../../../utils/sessionStorageItems";
+import { TAdminTableRowData } from "../components/types";
+import { useSessionStorage } from "../../../utils/sessionStorageItems";
 import { OrganizationUser } from "../../../api/types/Admin";
-import { TLoggedInUser, TLoggedInUserOrganization } from "../../../api/types/User";
 import { useDebouncedCallback } from 'use-debounce';
+import { routeUrls } from "../../../navigation/routeUrls";
+import { useLoggedInUserData } from "../../../utils/user";
 
-const columns = [ "Sr. No", "User Id", "Description", "Role", "Contact Name", "Email", "Timezone", "Active", "Last Login"]
+const columns = [
+  "Sr. No",
+  "User Id",
+  "Description",
+  "Role",
+  "Contact Name",
+  "Email",
+  "Timezone",
+  "Active",
+  "Last Login"
+]
 
 const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
@@ -26,16 +35,9 @@ const ScreenDashboardAdminUsers = () => {
   const dispatch = useDispatch();
   const { getSessionStorageItem } = useSessionStorage();
 
-  const thisUser = {
-    ownerOrganization: getSessionStorageItem(sessionStorageKeys.ownerOrganization),
-    user: getSessionStorageItem(sessionStorageKeys.user)
-  };
-  const thisUserOrganizationId = !!thisUser.ownerOrganization
-    ? ((thisUser.ownerOrganization || {}) as TLoggedInUserOrganization)?.id
-    : ((thisUser.user || {}) as TLoggedInUser)?.role_and_permission?.role?.organization;
-
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState({
-    organization_id: thisUserOrganizationId,
+    organization_id: thisUserOrganizationId ?? 0,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
     search: ""
@@ -54,19 +56,24 @@ const ScreenDashboardAdminUsers = () => {
     });
   const { count, next, previous, results } = dataOrgUsers || {};
 
-  const tabledata: TAdminTableData[] = !!results ? (results || [] as OrganizationUser[]).map((item: OrganizationUser, index: number) => (
-    {
-      SrNo: index + 1,
-      id: item?.user?.id,
-      description: item?.user?.profile?.description || "Not available",
-      role: item?.user?.role_and_permission?.role?.name || "Not available",
-      name: item?.user?.name || "Not available",
-      email: item?.user?.email,
-      timezone: item?.user?.profile?.timezone || "Not available",
-      active: item?.user?.profile?.is_active,
-      last_login: "2021-09-01 12:00:00"
-    }
-  )) : [];
+  const tableData: TAdminTableRowData[] = !!results
+    ? (results || [] as OrganizationUser[]).map((item: OrganizationUser, index: number) => (
+      {
+        navLink: `${routeUrls.dashboardChildren.adminChildren.users}/${item.id}`,
+        cellData: [
+          index + 1, // SrNo: 
+          item?.user?.id, // id: 
+          item?.user?.profile?.description || "Not available", // description: 
+          item?.user?.role_and_permission?.role?.name || "Not available", // role: 
+          item?.user?.name || "Not available", // name: 
+          item?.user?.email, // email: 
+          item?.user?.profile?.timezone || "Not available", // timezone: 
+          item?.user?.profile?.is_active, // active: 
+          "2021-09-01 12:00:00" // last_login: 
+        ]
+      }))
+    : [];
+
   return (
     <>
       <HeaderView title={t('heading')} />
@@ -84,7 +91,11 @@ const ScreenDashboardAdminUsers = () => {
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
         <div className="py-4 mt-4">
-          <AdminTable columns={columns} data={tabledata} isLoading={isFetchingOrgUsers} />
+          <AdminTable
+            columns={columns}
+            data={tableData}
+            isLoading={isFetchingOrgUsers}
+          />
           {!isFetchingOrgUsers && (
             <Pagination
               pageSize={orgUsersQueryParams.page_size}
