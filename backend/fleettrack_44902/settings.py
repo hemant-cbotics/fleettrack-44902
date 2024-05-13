@@ -82,6 +82,7 @@ LOCAL_APPS = [
     'home',
     'users.apps.UsersConfig',
     'organization.apps.OrganizationConfig',
+    'vehicle.apps.VehicleConfig',
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
