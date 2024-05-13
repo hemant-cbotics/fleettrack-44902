@@ -5,13 +5,20 @@ from users.models import UserRoleAndPermission, UserProfile, User
 
 class UserSerializer(serializers.ModelSerializer):
     role_and_permission = serializers.SerializerMethodField()
+    profile = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ["id", "email", "name", "role_and_permission", "is_active"]
+        fields = ["id", "email", "name", "role_and_permission", "profile", "is_active"]
 
     def get_role_and_permission(self, obj):
         try:
             return UserRoleAndPermissionSerializer(obj.role_and_permission).data
+        except:
+            return None
+    
+    def get_profile(self, obj):
+        try:
+            return UserProfileSerialzer(obj.profile).data
         except:
             return None
 
@@ -40,17 +47,17 @@ class UserProfileSerialzer(serializers.ModelSerializer):
 
 class OrganizationUsersSerializer(serializers.ModelSerializer):
     #user = UserSerializer()
-    profile = serializers.SerializerMethodField()
+    # profile = serializers.SerializerMethodField()
     user = UserSerializer()
     #role_and_permission = serializers.SerializerMethodField()
 
     class Meta:
         model = UserRoleAndPermission
-        fields = ('id', 'user', 'profile')
+        fields = ('id', 'user')
         # depth = 2
     
-    def get_profile(self, obj):
-        try:
-            return UserProfileSerialzer(obj.user.profile).data
-        except:
-            return None
+    # def get_profile(self, obj):
+    #     try:
+    #         return UserProfileSerialzer(obj.user.profile).data
+    #     except:
+    #         return None
