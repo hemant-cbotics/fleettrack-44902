@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from vehicle.models import Vehicle
-from vehicle.api.v1.serializers import VehicleSerializer
+from driver.models import Driver
+from driver.api.v1.serializers import DriverSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from generics.utils import CustomPagination
@@ -9,18 +9,17 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from generics.custom_permissions import IsPassedOrganizationPermission
 
 
-
-class VehicleViewSet(viewsets.ModelViewSet):
-    serializer_class = VehicleSerializer
-    queryset = Vehicle.objects.all()
+class DriverViewSet(viewsets.ModelViewSet):
+    serializer_class = DriverSerializer
+    queryset = Driver.objects.all()
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
     pagination_class = CustomPagination
     filter_backends = [ SearchFilter, OrderingFilter]
-    filterset_fields = ['short_name', 'email']
-    search_fields = ['short_name', 'email', 'added_by__name', 'added_by__email']
-    ordering_fields = ['short_name', 'email']
-    ordering = ['short_name']
+    filterset_fields = ['name', 'email', 'nick_name']
+    search_fields = ['name', 'email', 'added_by__name', 'added_by__email', 'nick_name']
+    ordering_fields = ['name', 'email', 'nick_name']
+    ordering = ['name', 'email', 'nick_name']
 
     def get_queryset(self):
         organization_id = self.request.GET.get('organization_id')
