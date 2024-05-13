@@ -189,6 +189,7 @@ export const language_en = {
     user_access_control: "User Access Control",
   },
   edit: "Edit",
+  update: "Update",
   sms: "SMS",
   command: "Command",
   delete: "Delete",

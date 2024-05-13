@@ -13,4 +13,5 @@ export enum API_METHODS {
   POST = 'POST',
   PUT = 'PUT',
   DELETE = 'DELETE',
+  PATCH = 'PATCH',
 }

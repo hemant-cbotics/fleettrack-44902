@@ -8,7 +8,12 @@ import {
 } from "./user-form";
 import { useTranslation } from "react-i18next";
 import { APP_CONFIG } from "../../../constants/constants";
-import { useOrganizationUsersQuery } from "../../../api/network/adminApiServices";
+import {
+  useDeleteSingleUserMutation,
+  useEditOrganizationUserMutation,
+  useOrganizationUsersQuery,
+  useSingleOrganizationUserQuery,
+} from "../../../api/network/adminApiServices";
 import {
   sessionStorageKeys,
   useSessionStorage,
@@ -19,17 +24,24 @@ import {
 } from "../../../api/types/User";
 import { OrganizationUser } from "../../../api/types/Admin";
 import { TListData } from "./type";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Formik, useFormik } from "formik";
+import {
+  userDetailsInitialValues,
+  userDetailsYupValidationSchema,
+} from "./validation";
+import { routeUrls } from "../../../navigation/routeUrls";
 
 const ScreenAdminDetailUser = () => {
+  const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
   const { userId } = useParams<{ userId: any }>();
-  const [currentUserId, setCurrentUserId] = useState<number>(parseInt(userId));
   const { t: tmain } = useTranslation();
   const { t } = useTranslation("translation", {
     keyPrefix: "adminDetailScreen",
   });
   const { getSessionStorageItem } = useSessionStorage();
+  const navigate = useNavigate();
 
   const thisUser = {
     ownerOrganization: getSessionStorageItem(
@@ -44,47 +56,100 @@ const ScreenAdminDetailUser = () => {
         ?.organization;
 
   const { data: dataOrgUsers, isLoading, error } = useOrganizationUsersQuery({
-    organization_id: thisUserOrganizationId,
+    organization_id: thisUserOrganizationId, page: 1, page_size: 10
   });
 
+  const {
+    data: dataSingleUser,
+    isLoading: isLoadingSingleUser,
+    error: errorSingleUser,
+  } = useSingleOrganizationUserQuery({ user_id: parseInt(userId) },{ skip: !userId });
+
+  const [ editOrganizationUserApiTrigger , {isLoading : isLoadingEditUser } ] = useEditOrganizationUserMutation();
+  const [ deleteSingleUserApiTrigger, {isLoading: isLoadingDeleteUser}] = useDeleteSingleUserMutation();
   const { results } = dataOrgUsers || {};
+
+  const formik = useFormik({
+    initialValues: userDetailsInitialValues,
+    validationSchema: userDetailsYupValidationSchema,
+    onSubmit: (values) => {
+      const data = {
+        user: {
+          id: values.user_id,
+          is_active: values.is_active,
+        },
+        profile: {
+          id: dataSingleUser?.profile?.id,
+          description: values.user_description,
+          two_factor_auth: values.use_two_factor,
+          user_geozone_labels: values.use_geozone_labels,
+          mobile: values.contact_phone_number,
+          timezone: values.timezone,
+          enable_sso_vistrack: values.enable_sso_to_visatracks,
+          default_overlay: values.default_overlay,
+          user_state: values.user_state,
+          session_timeout: values.session_timeout,
+          first_login_page: values.first_login_page,
+        },
+        role_and_permission: {
+          id: dataSingleUser?.role_and_permission?.id,
+          role: {
+            id: dataSingleUser?.role_and_permission?.role?.id,
+          },
+        }
+      }
+      editOrganizationUserApiTrigger({user_id: parseInt(userId), data})
+    },
+  });
+
+  useEffect(() => {
+    if (dataSingleUser) {
+      formik.setValues({
+        user_id: dataSingleUser?.id,
+        password: "",
+        user_description: dataSingleUser?.profile?.description || "",
+        is_active: dataSingleUser?.is_active || false,
+        use_two_factor: dataSingleUser?.profile?.two_factor_auth || false,
+        use_geozone_labels: dataSingleUser?.profile?.user_geozone_labels || false,
+        contact_name: dataSingleUser?.name || "",
+        contact_phone_number: dataSingleUser?.profile?.mobile || "",
+        contact_email: dataSingleUser?.email || "",
+        timezone: dataSingleUser?.profile?.timezone || "",
+        enable_sso_to_visatracks: dataSingleUser?.profile?.enable_sso_vistrack || false,
+        default_overlay: dataSingleUser?.profile?.default_overlay || "",
+        user_state: dataSingleUser?.profile?.user_state || "",
+        session_timeout: dataSingleUser?.profile?.session_timeout || "",
+        first_login_page: dataSingleUser?.profile?.first_login_page || "",
+        authorized_group_1: "",
+        authorized_group_2: "",
+        default_acl_role: "",
+        maximum_access_level: "",
+      });
+    }
+  }, [dataSingleUser, userId]);
 
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationUser[])).map(
         (item: OrganizationUser, index: number) => ({
           user_id: item?.user?.id,
-          user_description: item?.profile?.description || "Not available",
+          user_description: item?.user?.profile?.description || "Not available",
           user_email: item?.user?.email,
           user_role: item?.user?.role_and_permission?.role?.name,
         })
       )
     : [];
 
-  // const specificUserData = !!results ? (results || ([] as OrganizationUser[])).map((item: OrganizationUser, index: number) => ({
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = formik;
 
-  // })
-  const generalDetailData = !!results
-    ? (results || ([] as OrganizationUser[])).map(
-        (item: OrganizationUser, index: number) => ({
-          user_id: item?.user?.id,
-          password: "",
-          user_description: item?.profile?.description,
-          is_active: item?.user?.is_active,
-          use_two_factor: item?.profile?.two_factor_auth,
-          use_geozone_labels: item?.profile?.user_geozone_labels,
-          contact_name: item?.user?.name,
-          contact_phone_number: item?.profile?.mobile,
-          contact_email: item?.user?.email,
-          timezone: item?.profile?.timezone,
-          enable_sso_to_visatracks: item?.profile?.enable_sso_vistrack,
-          default_overlay: item?.profile?.default_overlay,
-          user_state: item?.profile?.user_state,
-          session_timeout: item?.profile?.session_timeout,
-          first_login_page: item?.profile?.first_login_page,
-        })
-      )
-    : [];
+  const handleEditUser = () => {
+    if(userCanEdit) {
+      formik.handleSubmit();
+    }
+  }
 
+  const handleDeleteUser = () => {
+    deleteSingleUserApiTrigger({user_id: parseInt(userId)});
+  }
   return (
     <>
       <HeaderView title={t("user_specific_view")} />
@@ -114,9 +179,9 @@ const ScreenAdminDetailUser = () => {
                 <div
                   key={index}
                   className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    currentUserId === item.user_id ? "bg-blue-200" : ""
+                    parseInt(userId) === item.user_id ? "bg-blue-200" : ""
                   }`}
-                  onClick={() => setCurrentUserId(item.user_id)}
+                  onClick={() => navigate(`${routeUrls.dashboardChildren.adminChildren.users}/${item.user_id}`)}
                 >
                   <div className="grid grid-cols-4">
                     <div className="col-span-3">
@@ -141,26 +206,49 @@ const ScreenAdminDetailUser = () => {
           <div className="lg:col-span-9 px-4">
             <div className="flex justify-end space-x-4">
               <button className="rounded-full px-6 py-2 border border-red-500">
-                <p className="font-medium text-lg leading-6 text-red-500">
+                <p className="font-medium text-lg leading-6 text-red-500" onClick={handleDeleteUser}>
                   {tmain("delete")}
                 </p>
               </button>
-              <button className="rounded-full bg-blue-200 px-6 py-2">
-                <p className="font-medium text-lg leading-6 text-blue-900">
-                  {tmain("edit")}
+              <button className="rounded-full bg-blue-200 px-6 py-2" onClick={() => setUserCanEdit(!userCanEdit)}>
+                <p className="font-medium text-lg leading-6 text-blue-900" onClick={handleEditUser}>
+                  {userCanEdit ? tmain("update") : tmain("edit")}
                 </p>
               </button>
             </div>
             <div className="rounded-lg mt-2 bg-blue-200">
-              <Accordian title={t("general_details")}>
-                <UserGeneralDetailForm user={""} onSubmit={() => {}} />
-              </Accordian>
-              <Accordian title={t("authorized_groups")}>
-                <UserAuthorizedGroupsForm groups={""} onSubmit={() => {}} />
-              </Accordian>
-              <Accordian title={t("user_access_control")}>
-                <UserAccessControlForm access={""} onSubmit={() => {}} />
-              </Accordian>
+              <form onSubmit={handleSubmit}>
+                <Accordian title={t("general_details")}>
+                  <UserGeneralDetailForm
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    userCanEdit={userCanEdit}
+                  />
+                </Accordian>
+                <Accordian title={t("authorized_groups")}>
+                  <UserAuthorizedGroupsForm
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    userCanEdit={userCanEdit}
+                  />
+                </Accordian>
+                <Accordian title={t("user_access_control")}>
+                  <UserAccessControlForm
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    userCanEdit={userCanEdit}
+                  />
+                </Accordian>
+              </form>
             </div>
           </div>
         </div>
