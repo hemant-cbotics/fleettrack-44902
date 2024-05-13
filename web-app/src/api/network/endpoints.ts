@@ -41,5 +41,7 @@ export const API_ENDPOINTS = {
 
   ADMINS: {
     ORGANIZATION_USERS: (organization_id: number) => `/organization/organization-users/${organization_id}/`,
+    SINGLE_ORGANIZATION_USER: (user_id: number) => `/organization/organization-user/${user_id}/`,
+    EDIT_ORGANIZATION_USER: (user_id: number) => `/organization/edit-user/${user_id}/`,
   }
 }
