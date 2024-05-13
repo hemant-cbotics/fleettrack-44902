@@ -14,7 +14,7 @@ export const userDetailsInitialValues = {
   enable_sso_to_visatracks: false,
   default_overlay: "",
   user_state: "",
-  session_timeout: "",
+  session_timeout: 0,
   first_login_page: "",
   authorized_group_1: "",
   authorized_group_2: "",

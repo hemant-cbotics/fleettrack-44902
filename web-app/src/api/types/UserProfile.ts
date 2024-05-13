@@ -16,7 +16,7 @@ export type TUserProfile = {
   timezone: string;
   default_overlay: string;
   user_state: string;
-  session_timeout: string
+  session_timeout: number;
   first_login_page: string;
   user: number;
 }

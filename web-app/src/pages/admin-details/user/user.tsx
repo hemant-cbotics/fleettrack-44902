@@ -22,7 +22,7 @@ import {
   TLoggedInUser,
   TLoggedInUserOrganization,
 } from "../../../api/types/User";
-import { OrganizationUser } from "../../../api/types/Admin";
+import { OrganizationUser, TEditOrganizationUserPayloadData } from "../../../api/types/Admin";
 import { TListData } from "./type";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -73,13 +73,13 @@ const ScreenAdminDetailUser = () => {
     initialValues: userDetailsInitialValues,
     validationSchema: userDetailsYupValidationSchema,
     onSubmit: (values) => {
-      const data = {
+      const data: TEditOrganizationUserPayloadData = {
         user: {
           id: values.user_id,
           is_active: values.is_active,
         },
         profile: {
-          id: dataSingleUser?.profile?.id,
+          id: dataSingleUser?.profile?.id || 0,
           description: values.user_description,
           two_factor_auth: values.use_two_factor,
           user_geozone_labels: values.use_geozone_labels,
@@ -92,13 +92,11 @@ const ScreenAdminDetailUser = () => {
           first_login_page: values.first_login_page,
         },
         role_and_permission: {
-          id: dataSingleUser?.role_and_permission?.id,
-          role: {
-            id: dataSingleUser?.role_and_permission?.role?.id,
-          },
+          id: dataSingleUser?.role_and_permission?.id || 0,
+          role: dataSingleUser?.role_and_permission?.role?.id || 0,
         }
       }
-      editOrganizationUserApiTrigger({user_id: parseInt(userId), data})
+      editOrganizationUserApiTrigger({data})
     },
   });
 
@@ -118,7 +116,7 @@ const ScreenAdminDetailUser = () => {
         enable_sso_to_visatracks: dataSingleUser?.profile?.enable_sso_vistrack || false,
         default_overlay: dataSingleUser?.profile?.default_overlay || "",
         user_state: dataSingleUser?.profile?.user_state || "",
-        session_timeout: dataSingleUser?.profile?.session_timeout || "",
+        session_timeout: dataSingleUser?.profile?.session_timeout || 0,
         first_login_page: dataSingleUser?.profile?.first_login_page || "",
         authorized_group_1: "",
         authorized_group_2: "",
