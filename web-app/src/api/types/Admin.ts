@@ -1,10 +1,8 @@
-import { TLoggedInUser, TUser } from "./User";
-import { TUserProfile } from "./UserProfile";
+import { TLoggedInUser } from "./User";
 
 export type OrganizationUser = {
   id: number;
   user: TLoggedInUser;
-  profile: TUserProfile;
 }
 
 export type OrganizationUsersPayload = {
@@ -29,4 +27,13 @@ export type CreateOrganizationUserResponse = {
   updated_at: string,
   user: number,
   username: string
+}
+
+export type SingleOrganizationUserPayload = {
+  user_id: number;
+}
+
+export type EditOrganizationUserPayload = {
+  user_id: number;
+  data: any;
 }

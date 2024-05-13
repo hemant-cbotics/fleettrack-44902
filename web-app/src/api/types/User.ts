@@ -1,3 +1,4 @@
+import { TUserProfile } from "./UserProfile"
 import { TUserRole } from "./UserRole"
 
 export type TUser = {
@@ -44,6 +45,7 @@ export type TLoggedInUser = {
     custom_permissions: {},
     id: number
   },
+  profile: TUserProfile
   is_active: boolean
 }
 
