@@ -1,5 +1,5 @@
+import React from "react";
 import HeaderView from "../../../components/admin/headerView";
-import SearchIcon from "../../../assets/svg/search-icon.svg";
 import Accordian from "../../../components/accordian";
 import {
   UserAccessControlForm,
@@ -14,50 +14,43 @@ import {
   useOrganizationUsersQuery,
   useSingleOrganizationUserQuery,
 } from "../../../api/network/adminApiServices";
-import {
-  sessionStorageKeys,
-  useSessionStorage,
-} from "../../../utils/sessionStorageItems";
-import {
-  TLoggedInUser,
-  TLoggedInUserOrganization,
-} from "../../../api/types/User";
-import { OrganizationUser, TEditOrganizationUserPayloadData } from "../../../api/types/Admin";
+import { OrganizationEntityListingPayload, OrganizationUser, TEditOrganizationUserPayloadData } from "../../../api/types/Admin";
 import { TListData } from "./type";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import {
   userDetailsInitialValues,
   userDetailsYupValidationSchema,
 } from "./validation";
 import { routeUrls } from "../../../navigation/routeUrls";
+import { useLoggedInUserData } from "../../../utils/user";
+import { useDebouncedCallback } from "use-debounce";
+import AppSearchBox from "../../../components/searchBox";
 
 const ScreenAdminDetailUser = () => {
   const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
   const { userId } = useParams<{ userId: any }>();
-  const { t: tmain } = useTranslation();
-  const { t } = useTranslation("translation", {
-    keyPrefix: "adminDetailScreen",
-  });
-  const { getSessionStorageItem } = useSessionStorage();
+  const { state: locationState } = useLocation();
+  const { t: tMain } = useTranslation();
+  const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.users" });
+  const { t } = useTranslation("translation", { keyPrefix: "admins.users.detailsPage" });
   const navigate = useNavigate();
 
-  const thisUser = {
-    ownerOrganization: getSessionStorageItem(
-      sessionStorageKeys.ownerOrganization
-    ),
-    user: getSessionStorageItem(sessionStorageKeys.user),
-  };
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
+  const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState<OrganizationEntityListingPayload>(
+    (locationState as OrganizationEntityListingPayload)
+    ?? {
+      organization_id: thisUserOrganizationId,
+      page: 1,
+      page_size: 10,
+      search: "",
+    });
+  const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
+    setOrgUsersQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+  }, 500);
 
-  const thisUserOrganizationId = !!thisUser.ownerOrganization
-    ? ((thisUser.ownerOrganization || {}) as TLoggedInUserOrganization)?.id
-    : ((thisUser.user || {}) as TLoggedInUser)?.role_and_permission?.role
-        ?.organization;
-
-  const { data: dataOrgUsers, isLoading, error } = useOrganizationUsersQuery({
-    organization_id: thisUserOrganizationId, page: 1, page_size: 10
-  });
+  const { data: dataOrgUsers, isLoading, error } = useOrganizationUsersQuery(orgUsersQueryParams);
 
   const {
     data: dataSingleUser,
@@ -150,28 +143,20 @@ const ScreenAdminDetailUser = () => {
   }
   return (
     <>
-      <HeaderView title={t("user_specific_view")} />
+      <HeaderView title={t("heading")} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">
-            {t("create_user_description")}
+            {t("sub_heading")}
           </p>
         </div>
         <div className="lg:grid lg:grid-cols-12 mt-8 py-2">
           <div className="lg:col-span-3 space-y-4">
-            <div className="font-bold text-lg leading-6">{t("users")}</div>
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search user here"
-                className="w-full p-2 pl-10 rounded-md border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              />
-              <img
-                src={SearchIcon}
-                alt="search-icon"
-                className="absolute left-2 top-1/2 transform -translate-y-1/2"
-              />
-            </div>
+            <div className="font-bold text-lg leading-6">{t("listing_heading")}</div>
+            <AppSearchBox
+              placeholder={tAdmin('search_placeholder')}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
+            />
             <div>
               {listData?.map((item: any, index: number) => (
                 <div
@@ -205,18 +190,18 @@ const ScreenAdminDetailUser = () => {
             <div className="flex justify-end space-x-4">
               <button className="rounded-full px-6 py-2 border border-red-500">
                 <p className="font-medium text-lg leading-6 text-red-500" onClick={handleDeleteUser}>
-                  {tmain("delete")}
+                  {tMain("delete")}
                 </p>
               </button>
               <button className="rounded-full bg-blue-200 px-6 py-2" onClick={() => setUserCanEdit(!userCanEdit)}>
                 <p className="font-medium text-lg leading-6 text-blue-900" onClick={handleEditUser}>
-                  {userCanEdit ? tmain("update") : tmain("edit")}
+                  {userCanEdit ? tMain("update") : tMain("edit")}
                 </p>
               </button>
             </div>
             <div className="rounded-lg mt-2 bg-blue-200">
               <form onSubmit={handleSubmit}>
-                <Accordian title={t("general_details")}>
+                <Accordian title={t("accord_general_details")}>
                   <UserGeneralDetailForm
                     values={values}
                     errors={errors}
@@ -226,7 +211,7 @@ const ScreenAdminDetailUser = () => {
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
-                <Accordian title={t("authorized_groups")}>
+                <Accordian title={t("accord_authorized_groups")}>
                   <UserAuthorizedGroupsForm
                     values={values}
                     errors={errors}
@@ -236,7 +221,7 @@ const ScreenAdminDetailUser = () => {
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
-                <Accordian title={t("user_access_control")}>
+                <Accordian title={t("accord_user_access_control")}>
                   <UserAccessControlForm
                     values={values}
                     errors={errors}

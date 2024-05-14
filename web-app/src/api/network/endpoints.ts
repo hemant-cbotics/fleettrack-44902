@@ -45,5 +45,7 @@ export const API_ENDPOINTS = {
     EDIT_ORGANIZATION_USER: `/organization/edit-user/`,
 
     ORGANIZATION_VEHICLES: `/vehicle/ap1/v1/`,
+
+    ORGANIZATION_DRIVERS: `/driver/ap1/v1/`,
   }
 }
