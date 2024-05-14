@@ -9,9 +9,10 @@ interface AdminTableProps {
   data: TAdminTableRowData[] | null;
   columns: string[];
   isLoading: boolean;
+  listingQueryParams?: any;
 }
 
-const AdminTable: FC<AdminTableProps> = ({ columns, data, isLoading = false }) => {
+const AdminTable: FC<AdminTableProps> = ({ columns, data, isLoading = false, listingQueryParams = {} }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
@@ -31,11 +32,11 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data, isLoading = false }) =
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 border-b border-gray-200">
           {!!data && data.length > 0 ? data.map((rowData: TAdminTableRowData, index: number) => (
-            <tr key={`table_${index}`} className="cursor-pointer hover:bg-accent-blue-paleO66" onClick={() => {
-              if(!!rowData.navLink) navigate(rowData.navLink);
+            <tr key={`row_${index}`} className="cursor-pointer hover:bg-accent-blue-paleO66" onClick={() => {
+              if(!!rowData.navLink) navigate(rowData.navLink, { state: listingQueryParams });
             }}>
               {rowData.cellData.map((cellData, i) => (
-                <td className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
+                <td key={`row_${index}_cell_${i}`} className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
                   {cellData}
                 </td>)
               )}

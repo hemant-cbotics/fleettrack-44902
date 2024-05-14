@@ -1,10 +1,10 @@
 import HeaderView from "../../../components/admin/headerView";
-import SearchIcon from "../../../assets/svg/search-icon.svg";
 import { FC } from "react";
 import Accordian from "../../../components/accordian";
 import { VehicleDetailForm, VehicleGroupMembershipForm } from "./vehicle-form";
 import { useTranslation } from "react-i18next";
 import { APP_CONFIG } from "../../../constants/constants";
+import AppSearchBox from "../../../components/searchBox";
 
 const data = [
   {
@@ -52,35 +52,27 @@ const ActionButton: FC<ActionButtonProps> = ({ text }) => {
 };
 
 const ScreenAdminDetailVehicle = () => {
-  const { t: tmain } = useTranslation();
-  const { t } = useTranslation("translation", {
-    keyPrefix: "adminDetailScreen",
-  });
+  const { t: tMain } = useTranslation();
+  const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.vehicles" });
+  const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage" });
 
   return (
     <>
-      <HeaderView title={t("user_specific_view")} />
+      <HeaderView title={t("heading")} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">
-            {t("create_user_description")}
+            {t("sub_heading")}
           </p>
         </div>
         <div className="lg:grid lg:grid-cols-12 mt-8 py-2">
           <div className="lg:col-span-3 space-y-4">
-            <div className="font-bold text-lg leading-6">{t("users")}</div>
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder={t("search_user_here")}
-                className="w-full p-2 pl-10 rounded-md border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              />
-              <img
-                src={SearchIcon}
-                alt="search-icon"
-                className="absolute left-2 top-1/2 transform -translate-y-1/2"
-              />
-            </div>
+            <div className="font-bold text-lg leading-6">{t("listing_heading")}</div>
+            <AppSearchBox
+              placeholder={tAdmin('search_placeholder')}
+              onChange={() => {}}
+              // onChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
+            />
             {data.map((item, index) => (
               <div key={index} className="border-b px-3 py-2 border-gray-200">
                 <div className="grid grid-cols-4">
@@ -104,21 +96,21 @@ const ScreenAdminDetailVehicle = () => {
           </div>
           <div className="lg:col-span-9 px-4">
             <div className="flex justify-end space-x-4">
-              <ActionButton text={tmain("edit")} />
-              <ActionButton text={tmain("sms")} />
-              <ActionButton text={tmain("command")} />
+              <ActionButton text={tMain("edit")} />
+              <ActionButton text={tMain("sms")} />
+              <ActionButton text={tMain("command")} />
             </div>
             <div className="rounded-lg mt-2 bg-blue-200">
-              <Accordian title={t("details")}>
+              <Accordian title={t("accord_details")}>
                 <VehicleDetailForm vehicle={""} onSubmit={() => {}} />
               </Accordian>
-              <Accordian title={t("camera_id")}>
+              <Accordian title={t("accord_camera_id")}>
                 <p>Hiii</p>
               </Accordian>
-              <Accordian title={t("maintainance_intervals")}>
+              <Accordian title={t("accord_maintainance_intervals")}>
                 <p>Hiii</p>
               </Accordian>
-              <Accordian title={t("group_membership")}>
+              <Accordian title={t("accord_group_membership")}>
                 <VehicleGroupMembershipForm groups={""} onSubmit={() => {}} />
               </Accordian>
             </div>

@@ -95,6 +95,7 @@ const ScreenDashboardAdminUsers = () => {
             columns={columns}
             data={tableData}
             isLoading={isFetchingOrgUsers}
+            listingQueryParams={orgUsersQueryParams}
           />
           {!isFetchingOrgUsers && (
             <Pagination

@@ -162,6 +162,14 @@ export const language_en = {
         bottom_text_2: "to create new ACL Role",
         create_failed: "Failed to create user. Please check the information that you have entered.",
         create_success: "User has been created successfully. An email has been sent to the user with a link to setup their account.",
+      },
+      detailsPage: {
+        heading: "User Specific View",
+        sub_heading: "Create Users and delete users in the system to view maps and vehicle information",
+        listing_heading: "Users",
+        accord_general_details: "General Details",
+        accord_authorized_groups: "Authorized Groups",
+        accord_user_access_control: "User Access Control",
       }
     },
     vehicles: {
@@ -170,6 +178,15 @@ export const language_en = {
       add_new: "Add New Vehicle",
       listing_heading: "Vehicle Listing",
       search_placeholder: "Search vehicles here...",
+      detailsPage: {
+        heading: "Vehicle Specific View",
+        sub_heading: "Create vehicles and vehicle details for monitoring",
+        listing_heading: "Vehicles",
+        accord_details: "Details",
+        accord_camera_id: "Camera ID",
+        accord_maintainance_intervals: "Maintainance Intervals",
+        accord_group_membership: "Group Membership",
+      }
     },
     drivers: {
       heading: "Drivers",
@@ -182,19 +199,6 @@ export const language_en = {
   active: "Active",
   inactive: "Inactive",
   both: "Both",
-  adminDetailScreen: {
-    user_specific_view: "User Specific View",
-    create_user_description: "Create Users and delete users in the system to view maps and vehicle information",
-    users: "Users",
-    search_user_here: "Search user here",
-    details: "Details",
-    camera_id: "Camera ID",
-    maintainance_intervals: "Maintainance Intervals",
-    group_membership: "Group Membership",
-    general_details: "General Details",
-    authorized_groups: "Authorized Groups",
-    user_access_control: "User Access Control",
-  },
   edit: "Edit",
   update: "Update",
   sms: "SMS",
