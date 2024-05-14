@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import Select from "react-select";
 
 type AdminFormFieldInputProps = {
@@ -251,8 +251,8 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
 
 type AdminFormFieldSubmitProps = {
   type?: 'submit' | 'button';
-  variant?: 'primary' | 'secondary' | 'danger';
-  label: string;
+  variant?: 'primary' | 'secondary' | 'danger-transparent' | 'danger' | 'success';
+  label: string | ReactNode;
   onClick?: () => void;
   disabled?: boolean;
 };
@@ -261,17 +261,29 @@ export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'su
   let variantClass = "";
   const disabledClass = "border-gray-200 bg-gray-200 text-gray-400"
   switch (variant) {
+    case "success":
+      variantClass =
+        disabled
+          ? disabledClass
+          : "border-0 bg-accent-green text-white enabled:hover:opacity-80 ring-green-200";
+      break;
     case "primary":
       variantClass =
         disabled
         ? disabledClass
         : "border-accent-blue-pale bg-accent-blue-pale text-accent-blue-dark enabled:hover:bg-accent-blue-dark enabled:hover:text-white enabled:hover:bg-accent-blue-dark active:bg-accent-blue-pale";
       break;
-    case "danger":
+    case "danger-transparent":
       variantClass =
         disabled
         ? disabledClass
         : "border-0 bg-transparent text-red-600 enabled:hover:bg-red-100 ring-red-200";
+      break;
+    case "danger":
+      variantClass =
+        disabled
+        ? disabledClass
+        : "border border-red-600 bg-transparent text-red-600 enabled:hover:bg-red-100 ring-red-200";
       break;
     default: // secondary
       variantClass =
@@ -282,7 +294,7 @@ export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'su
   return (
     <div className="col-span-6">
       <button
-        className={`h-12 w-full rounded-full border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
+        className={`h-10 w-full px-4 rounded-lg border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
         type={type}
         onClick={onClick}
         disabled={disabled}

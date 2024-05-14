@@ -58,7 +58,7 @@ const ScreenDashboardAdminUsers = () => {
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationUser[]).map((item: OrganizationUser, index: number) => (
       {
-        navLink: `${routeUrls.dashboardChildren.adminChildren.users}/${item.id}`,
+        navLink: `${routeUrls.dashboardChildren.adminChildren.users}/${item.user.id}`,
         cellData: [
           index + 1, // SrNo: 
           item?.user?.id, // id: 

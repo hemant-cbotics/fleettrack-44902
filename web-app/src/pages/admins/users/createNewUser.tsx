@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCreateOrganizationUserMutation, useOrganizationRolesPermissionsQuery } from "../../../api/network/adminApiServices";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
@@ -17,6 +17,7 @@ const AdminsUsersCreateNew = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users.create_new'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     data: dataOrgRolesPermissions,
@@ -53,6 +54,7 @@ const AdminsUsersCreateNew = () => {
                   if(!!data?.created_at) {
                     dispatch(setModalsData({ ...modalsState, showCreateUser: false }));
                     toast.success(t('create_success'), { autoClose: 10000 });
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.users}/${data?.user}`, { state: { new: true } });
                   } else {
                     toast.error(tMain('toast.general_error'));
                   }
@@ -141,7 +143,7 @@ const AdminsUsersCreateNew = () => {
                 <AdminFormFieldSubmit
                   label={tMain('cancel')}
                   type="button"
-                  variant="danger"
+                  variant="danger-transparent"
                   disabled={isSubmitting || isFetchingOrgRolesPermissions /* || isLoading*/}
                   onClick={hideModal}
                 />
