@@ -207,7 +207,9 @@ const ScreenAdminDetailUser = () => {
                     errors={errors}
                     touched={touched}
                     handleChange={handleChange}
+                    formikSetValue={formik.setFieldValue}
                     handleBlur={handleBlur}
+                    formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
@@ -217,7 +219,9 @@ const ScreenAdminDetailUser = () => {
                     errors={errors}
                     touched={touched}
                     handleChange={handleChange}
+                    formikSetValue={formik.setFieldValue}
                     handleBlur={handleBlur}
+                    formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
@@ -227,7 +231,9 @@ const ScreenAdminDetailUser = () => {
                     errors={errors}
                     touched={touched}
                     handleChange={handleChange}
+                    formikSetValue={formik.setFieldValue}
                     handleBlur={handleBlur}
+                    formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>

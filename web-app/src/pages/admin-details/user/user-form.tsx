@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 
 import {
   AdminFormFieldCheckbox,
@@ -11,7 +11,9 @@ interface UserGeneralDetailFormProps {
   errors: any;
   touched: any;
   handleChange: (event: React.ChangeEvent<any>) => void;
+  formikSetValue: (field: string, value: any, shouldValidate?: boolean) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
+  formikSetTouched: (field: string, isTouched?: boolean, shouldValidate?: boolean) => void;
   userCanEdit: boolean;
 }
 
@@ -20,7 +22,9 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
   errors,
   touched,
   handleChange,
+  formikSetValue,
   handleBlur,
+  formikSetTouched,
   userCanEdit,
 }) => {
   return (
@@ -36,6 +40,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.user_id}
         error={errors.user_id}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -70,7 +75,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
           id="is_active"
           type="checkbox"
           name="is_active"
-          value={values.is_active}
+          checked={values.is_active}
           onChange={handleChange}
           onBlur={handleBlur}
           touched={touched.is_active}
@@ -83,7 +88,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
           id="use_two_factor"
           type="checkbox"
           name="use_two_factor"
-          value={values.use_two_factor}
+          checked={values.use_two_factor}
           onChange={handleChange}
           onBlur={handleBlur}
           touched={touched.use_two_factor}
@@ -96,7 +101,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
           id="use_geozone_labels"
           type="checkbox"
           name="use_geozone_labels"
-          value={values.use_geozone_labels}
+          checked={values.use_geozone_labels}
           onChange={handleChange}
           onBlur={handleBlur}
           touched={touched.use_geozone_labels}
@@ -149,8 +154,8 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="timezone"
         name="timezone"
         value={values.timezone}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("timezone", e?.value); }}
+        onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
         touched={touched.timezone}
         error={errors.timezone}
         disabled={!userCanEdit}
@@ -162,7 +167,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
           id="enable_sso_to_visatracks"
           type="checkbox"
           name="enable_sso_to_visatracks"
-          value={values.enable_sso_to_visatracks}
+          checked={values.enable_sso_to_visatracks}
           onChange={handleChange}
           onBlur={handleBlur}
           touched={touched.enable_sso_to_visatracks}
@@ -176,8 +181,8 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="default_overlay"
         name="default_overlay"
         value={values.default_overlay}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("default_overlay", e?.value); }}
+        onBlur={(e) => { formikSetTouched("default_overlay", true); handleBlur(e); }}
         touched={touched.default_overlay}
         error={errors.default_overlay}
         disabled={!userCanEdit}
@@ -188,8 +193,8 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="user_state"
         name="user_state"
         value={values.user_state}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("user_state", e?.value); }}
+        onBlur={(e) => { formikSetTouched("user_state", true); handleBlur(e); }}
         touched={touched.user_state}
         error={errors.user_state}
         disabled={!userCanEdit}
@@ -213,8 +218,8 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="first_login_page"
         name="first_login_page"
         value={values.first_login_page}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("first_login_page", e?.value); }}
+        onBlur={(e) => { formikSetTouched("first_login_page", true); handleBlur(e); }}
         touched={touched.first_login_page}
         error={errors.first_login_page}
         disabled={!userCanEdit}
@@ -227,8 +232,9 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   values,
   errors,
   touched,
-  handleChange,
+  formikSetValue,
   handleBlur,
+  formikSetTouched,
   userCanEdit,
 }) => {
   return (
@@ -238,8 +244,8 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
         id="authorized_group_1"
         name="authorized_group_1"
         value={values.authorized_group_1}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue('authorized_group_1', e?.value); }}
+        onBlur={(e) => { formikSetTouched("authorized_group_1", true); handleBlur(e); }}
         touched={touched.authorized_group_1}
         error={errors.authorized_group_1}
         disabled={!userCanEdit}
@@ -250,8 +256,8 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
         id="authorized_group_2"
         name="authorized_group_2"
         value={values.authorized_group_2}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue('authorized_group_2', e?.value); }}
+        onBlur={(e) => { formikSetTouched("authorized_group_2", true); handleBlur(e); }}
         touched={touched.authorized_group_2}
         error={errors.authorized_group_2}
         disabled={!userCanEdit}
@@ -264,8 +270,9 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
   values,
   errors,
   touched,
-  handleChange,
+  formikSetValue,
   handleBlur,
+  formikSetTouched,
   userCanEdit,
 }) => {
   return (
@@ -275,8 +282,8 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
         id="default_acl_role"
         name="default_acl_role"
         value={values.default_acl_role}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue('default_acl_role', e?.value); }}
+        onBlur={(e) => { formikSetTouched("default_acl_role", true); handleBlur(e); }}
         touched={touched.default_acl_role}
         error={errors.default_acl_role}
         disabled={!userCanEdit}
@@ -287,8 +294,8 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
         id="maximum_access_level"
         name="maximum_access_level"
         value={values.maximum_access_level}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue('maximum_access_level', e?.value); }}
+        onBlur={(e) => { formikSetTouched("maximum_access_level", true); handleBlur(e); }}
         touched={touched.maximum_access_level}
         error={errors.maximum_access_level}
         disabled={!userCanEdit}

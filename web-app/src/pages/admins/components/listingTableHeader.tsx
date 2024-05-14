@@ -35,9 +35,9 @@ const ListingTableHeader: FC<TListingTableHeaderProps> = ({
           <div className="sm:hidden">
             <label htmlFor="Tab" className="sr-only">Tab</label>
 
-            <select id="Tab" className="w-full rounded-md border-gray-200">
+            <select id="Tab" className="w-full rounded-md border-gray-200" defaultValue={activeFilterSlug}>
               {filters.map((filter, i) => (
-                <option key={`select_${i}_${filter.slug}`} {...(filter.slug === activeFilterSlug ? { selected: true } : null)}>
+                <option key={`select_${i}_${filter.slug}`} value={filter.slug}>
                   {filter.title}
                 </option>
               ))}

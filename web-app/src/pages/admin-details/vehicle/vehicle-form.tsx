@@ -42,6 +42,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         handleChange,
         handleBlur,
         handleSubmit,
+        setFieldTouched,
+        setFieldValue
       }) => {
         return (
           <form className="px-5 pt-4 pb-8 bg-gray-100" onSubmit={handleSubmit}>
@@ -240,7 +242,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
                 id="equipment_status"
                 name="equipment_status"
                 value={values.equipment_status}
-                onChange={handleChange}
+                onChange={(e) => { setFieldValue("equipment_status", e?.value); }}
+                onBlur={(e) => { setFieldTouched("equipment_status", true); handleBlur(e); }}
                 disabled={!userCanEdit}
               />
 
@@ -249,7 +252,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
                 id="asset_type"
                 name="asset_type"
                 value={values.asset_type}
-                onChange={handleChange}
+                onChange={(e) => { setFieldValue("asset_type", e?.value); }}
+                onBlur={(e) => { setFieldTouched("asset_type", true); handleBlur(e); }}
                 disabled={!userCanEdit}
               />
 
@@ -258,7 +262,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
                 id="vehicle_class"
                 name="vehicle_class"
                 value={values.vehicle_class}
-                onChange={handleChange}
+                onChange={(e) => { setFieldValue("vehicle_class", e?.value); }}
+                onBlur={(e) => { setFieldTouched("vehicle_class", true); handleBlur(e); }}
                 disabled={!userCanEdit}
               />
 
@@ -322,7 +327,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
                 id="map_route_color"
                 name="map_route_color"
                 value={values.map_route_color}
-                onChange={handleChange}
+                onChange={(e) => { setFieldValue("map_route_color", e?.value); }}
+                onBlur={(e) => { setFieldTouched("map_route_color", true); handleBlur(e); }}
                 disabled={!userCanEdit}
               />
 
@@ -331,7 +337,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
                 id="ignition_input"
                 name="ignition_input"
                 value={values.ignition_input}
-                onChange={handleChange}
+                onChange={(e) => { setFieldValue("ignition_input", e?.value); }}
+                onBlur={(e) => { setFieldTouched("ignition_input", true); handleBlur(e); }}
                 disabled={!userCanEdit}
               />
               <div className="grid grid-cols-12 col-span-12">
@@ -387,7 +394,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
                 id="fuel_type"
                 name="fuel_type"
                 value={values.fuel_type}
-                onChange={handleChange}
+                onChange={(e) => { setFieldValue("fuel_type", e?.value); }}
+                onBlur={(e) => { setFieldTouched("fuel_type", true); handleBlur(e); }}
                 disabled={!userCanEdit}
               />
 
@@ -458,7 +466,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="all_vehicles"
                 type="checkbox"
                 name="all_vehicles"
-                value={values.all_vehicles}
+                checked={!!values.all_vehicles}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -469,7 +477,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="demo_map"
                 type="checkbox"
                 name="demo_map"
-                value={values.demo_map}
+                checked={!!values.demo_map}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -480,7 +488,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district1"
                 type="checkbox"
                 name="district1"
-                value={values.district1}
+                checked={!!values.district1}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -491,7 +499,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district2"
                 type="checkbox"
                 name="district2"
-                value={values.district2}
+                checked={!!values.district2}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -502,7 +510,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district3"
                 type="checkbox"
                 name="district3"
-                value={values.district3}
+                checked={!!values.district3}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -513,7 +521,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district4"
                 type="checkbox"
                 name="district4"
-                value={values.district4}
+                checked={!!values.district4}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -524,7 +532,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district5"
                 type="checkbox"
                 name="district5"
-                value={values.district5}
+                checked={!!values.district5}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -535,7 +543,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district6"
                 type="checkbox"
                 name="district6"
-                value={values.district6}
+                checked={!!values.district6}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -546,7 +554,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district7"
                 type="checkbox"
                 name="district7"
-                value={values.district7}
+                checked={!!values.district7}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -557,7 +565,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="district8"
                 type="checkbox"
                 name="district8"
-                value={values.district8}
+                checked={!!values.district8}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -568,7 +576,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="group_a"
                 type="checkbox"
                 name="group_a"
-                value={values.group_a}
+                checked={!!values.group_a}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -579,7 +587,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="group_b"
                 type="checkbox"
                 name="group_b"
-                value={values.group_b}
+                checked={!!values.group_b}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -590,7 +598,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="hybrid_vehicle"
                 type="checkbox"
                 name="hybrid_vehicle"
-                value={values.hybrid_vehicle}
+                checked={!!values.hybrid_vehicle}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -601,7 +609,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="jacob"
                 type="checkbox"
                 name="jacob"
-                value={values.jacob}
+                checked={!!values.jacob}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -612,7 +620,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="k9_units"
                 type="checkbox"
                 name="k9_units"
-                value={values.k9_units}
+                checked={!!values.k9_units}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -623,7 +631,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="map_demo"
                 type="checkbox"
                 name="map_demo"
-                value={values.map_demo}
+                checked={!!values.map_demo}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -634,7 +642,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="medium_group"
                 type="checkbox"
                 name="medium_group"
-                value={values.medium_group}
+                checked={!!values.medium_group}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -645,7 +653,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="meitrack"
                 type="checkbox"
                 name="meitrack"
-                value={values.meitrack}
+                checked={!!values.meitrack}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -656,7 +664,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="patrol_cars"
                 type="checkbox"
                 name="patrol_cars"
-                value={values.patrol_cars}
+                checked={!!values.patrol_cars}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -667,7 +675,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="public_works_pickups"
                 type="checkbox"
                 name="public_works_pickups"
-                value={values.public_works_pickups}
+                checked={!!values.public_works_pickups}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -678,7 +686,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="small_group"
                 type="checkbox"
                 name="small_group"
-                value={values.small_group}
+                checked={!!values.small_group}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}
@@ -689,7 +697,7 @@ export const VehicleGroupMembershipForm: FC<VehicleGroupMembershipFormProps> = (
                 id="snow_plows"
                 type="checkbox"
                 name="snow_plows"
-                value={values.snow_plows}
+                checked={!!values.snow_plows}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 disabled={!userCanEdit}

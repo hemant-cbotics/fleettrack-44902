@@ -16,7 +16,9 @@ interface AccountGeneralDetailFormProps {
   errors: any;
   touched: any;
   handleChange: (event: React.ChangeEvent<any>) => void;
+  formikSetValue: (field: string, value: any, shouldValidate?: boolean) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
+  formikSetTouched: (field: string, isTouched?: boolean, shouldValidate?: boolean) => void;
   userCanEdit: boolean;
 }
 
@@ -25,7 +27,9 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
   errors,
   touched,
   handleChange,
+  formikSetValue,
   handleBlur,
+  formikSetTouched,
   userCanEdit,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "dashboard.profile.account.form" });
@@ -170,8 +174,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           id="enable_map_clustering"
           name="enable_map_clustering"
           value={values.enable_map_clustering}
-          onChange={handleChange}
-          onBlur={handleBlur}
+          onChange={(e) => { formikSetValue("enable_map_clustering", e?.value); }}
+          onBlur={(e) => { formikSetTouched("enable_map_clustering", true); handleBlur(e); }}
           touched={touched.enable_map_clustering}
           error={errors.enable_map_clustering}
           disabled={!userCanEdit}
@@ -236,8 +240,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="timezone"
         name="timezone"
         value={values.timezone}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("timezone", e?.value); }}
+        onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
         touched={touched.timezone}
         error={errors.timezone}
         disabled={!userCanEdit}
@@ -248,8 +252,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="speed_units"
         name="speed_units"
         value={values.speed_units}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("speed_units", e?.value); }}
+        onBlur={(e) => { formikSetTouched("speed_units", true); handleBlur(e); }}
         touched={touched.speed_units}
         error={errors.speed_units}
         disabled={!userCanEdit}
@@ -260,8 +264,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="distance_units"
         name="distance_units"
         value={values.distance_units}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("distance_units", e?.value); }}
+        onBlur={(e) => { formikSetTouched("distance_units", true); handleBlur(e); }}
         touched={touched.distance_units}
         error={errors.distance_units}
         disabled={!userCanEdit}
@@ -272,8 +276,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="volume_units"
         name="volume_units"
         value={values.volume_units}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("volume_units", e?.value); }}
+        onBlur={(e) => { formikSetTouched("volume_units", true); handleBlur(e); }}
         touched={touched.volume_units}
         error={errors.volume_units}
         disabled={!userCanEdit}
@@ -284,8 +288,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="economy_units"
         name="economy_units"
         value={values.economy_units}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("economy_units", e?.value); }}
+        onBlur={(e) => { formikSetTouched("economy_units", true); handleBlur(e); }}
         touched={touched.economy_units}
         error={errors.economy_units}
         disabled={!userCanEdit}
@@ -296,8 +300,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="pressure_units"
         name="pressure_units"
         value={values.pressure_units}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("pressure_units", e?.value); }}
+        onBlur={(e) => { formikSetTouched("pressure_units", true); handleBlur(e); }}
         touched={touched.pressure_units}
         error={errors.pressure_units}
         disabled={!userCanEdit}
@@ -308,8 +312,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="temperature_units"
         name="temperature_units"
         value={values.temperature_units}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("temperature_units", e?.value); }}
+        onBlur={(e) => { formikSetTouched("temperature_units", true); handleBlur(e); }}
         touched={touched.temperature_units}
         error={errors.temperature_units}
         disabled={!userCanEdit}
@@ -320,8 +324,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="latitude_longitude_format"
         name="latitude_longitude_format"
         value={values.latitude_longitude_format}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("latitude_longitude_format", e?.value); }}
+        onBlur={(e) => { formikSetTouched("latitude_longitude_format", true); handleBlur(e); }}
         touched={touched.latitude_longitude_format}
         error={errors.latitude_longitude_format}
         disabled={!userCanEdit}
@@ -347,8 +351,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="route_line_thickness"
         name="route_line_thickness"
         value={values.route_line_thickness}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("route_line_thickness", e?.value); }}
+        onBlur={(e) => { formikSetTouched("route_line_thickness", true); handleBlur(e); }}
         touched={touched.route_line_thickness}
         error={errors.route_line_thickness}
         disabled={!userCanEdit}
@@ -436,8 +440,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="default_overlay"
         name="default_overlay"
         value={values.default_overlay}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("default_overlay", e?.value); }}
+        onBlur={(e) => { formikSetTouched("default_overlay", true); handleBlur(e); }}
         touched={touched.default_overlay}
         error={errors.default_overlay}
         disabled={!userCanEdit}

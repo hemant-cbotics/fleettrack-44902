@@ -8,7 +8,7 @@ import { useCreateOrganizationUserMutation, useOrganizationRolesPermissionsQuery
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { TUserRole } from "../../../api/types/UserRole";
-import { AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
+import { AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { formInitialValues, TFormFieldNames, YupValidationSchema } from "./validation";
 
@@ -34,7 +34,7 @@ const AdminsUsersCreateNew = () => {
   return (
     <>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="absolute w-full h-screen z-[9980]" onClick={hideModal}></div>
         <div className="relative my-6 mx-auto max-w-[calc(100vw-4rem)] w-[560px] z-[9990]">
           {/* <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"> */}
@@ -122,7 +122,7 @@ const AdminsUsersCreateNew = () => {
                   name="alc_role"
                   placeholder={t('acl_role_placeholder')}
                   onChange={e => {
-                    setFieldValue('acl_role', e.target.value)
+                    setFieldValue('acl_role', `${e?.value}`)
                   }}
                   onBlur={handleBlur}
                   value={values.acl_role}

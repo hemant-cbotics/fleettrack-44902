@@ -12,6 +12,7 @@ import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
 import { OrganizationVehicle } from "../../../api/types/Admin";
 import { routeUrls } from "../../../navigation/routeUrls";
+import { TSelectboxOption } from "../../../components/admin/formFields";
 
 const columns = [
   "Sr. No",
@@ -105,13 +106,13 @@ const ScreenDashboardAdminDrivers = () => {
           {!isFetchingOrgDrivers && (
             <Pagination
               pageSize={orgDriversQueryParams.page_size}
-              handlePageSizeChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                setOrgDriversQueryParams((prev) => { return {
-                  ...prev,
-                  page: 1,
-                  page_size: parseInt(e.target.value)
-                }})
-              }}
+              handlePageSizeChange={(e: TSelectboxOption | null) => {
+                  setOrgDriversQueryParams((prev) => { return {
+                    ...prev,
+                    page: 1,
+                    page_size: parseInt(`${e?.value}`)
+                  }})
+                }}
               totalPages={count ? Math.ceil(count / orgDriversQueryParams.page_size) : 1}
               forcePage={orgDriversQueryParams.page - 1}
               handlePageClick={(data: TPaginationSelected) => {

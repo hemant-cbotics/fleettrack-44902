@@ -56,7 +56,9 @@ const ScreenAdminDetailAccount = () => {
                   errors={errors}
                   touched={touched}
                   handleChange={handleChange}
+                  formikSetValue={formik.setFieldValue}
                   handleBlur={handleBlur}
+                  formikSetTouched={formik.setFieldTouched}
                   userCanEdit={userCanEdit}
                 />
               </Accordian>
