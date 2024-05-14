@@ -16,6 +16,7 @@ import { ListingResponse } from "../types/Listing";
 import { TUserRole } from "../types/UserRole";
 import { TLoggedInUser } from "../types/User";
 import { OrganizationVehicle } from "../types/Vehicle";
+import { OrganizationDriver } from "../types/Drivers";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
@@ -216,7 +217,7 @@ export const AdminAPIs = createApi({
     }),
 
     // organization drivers
-    organizationDrivers: builder.query<ListingResponse<any[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+    organizationDrivers: builder.query<ListingResponse<OrganizationDriver[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_DRIVERS,
@@ -234,7 +235,7 @@ export const AdminAPIs = createApi({
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
       },
-      transformResponse: (response: ListingResponse<any[]>) => {
+      transformResponse: (response: ListingResponse<OrganizationDriver[]>) => {
         return response;
       },
     }),

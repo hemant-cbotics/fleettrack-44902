@@ -10,9 +10,9 @@ import { useDebouncedCallback } from "use-debounce";
 import { useOrganizationDriversQuery } from "../../../api/network/adminApiServices";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
-import { OrganizationVehicle } from "../../../api/types/Vehicle";
+import { OrganizationVehicle } from "../../../api/types/Admin";
 import { routeUrls } from "../../../navigation/routeUrls";
-import { TSelectboxOption } from "../../../components/admin/formFields";
+import { OrganizationDriver } from "../../../api/types/Drivers";
 
 const columns = [
   "Sr. No",
@@ -64,7 +64,7 @@ const ScreenDashboardAdminDrivers = () => {
   const { count, next, previous, results } = dataOrgDrivers || {};
 
   const tableData: TAdminTableRowData[] = !!results
-    ? (results || [] as OrganizationVehicle[]).map((item: OrganizationVehicle, index: number) => (
+    ? (results || [] as OrganizationDriver[]).map((item: OrganizationDriver, index: number) => (
       {
         navLink: `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`,
         cellData: [
@@ -106,13 +106,13 @@ const ScreenDashboardAdminDrivers = () => {
           {!isFetchingOrgDrivers && (
             <Pagination
               pageSize={orgDriversQueryParams.page_size}
-              handlePageSizeChange={(e: TSelectboxOption | null) => {
-                  setOrgDriversQueryParams((prev) => { return {
-                    ...prev,
-                    page: 1,
-                    page_size: parseInt(`${e?.value}`)
-                  }})
-                }}
+              handlePageSizeChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setOrgDriversQueryParams((prev) => { return {
+                  ...prev,
+                  page: 1,
+                  page_size: parseInt(e.target.value)
+                }})
+              }}
               totalPages={count ? Math.ceil(count / orgDriversQueryParams.page_size) : 1}
               forcePage={orgDriversQueryParams.page - 1}
               handlePageClick={(data: TPaginationSelected) => {
