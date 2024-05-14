@@ -37,7 +37,8 @@ module.exports = {
             bright: '#0E88FF',
             dark: '#005B90',
             text: '#3D78B1',
-          }
+          },
+          green: '#22c55d'
         }
       }
     },

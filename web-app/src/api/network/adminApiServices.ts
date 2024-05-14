@@ -21,6 +21,7 @@ export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
   USER_MODIFIED = 'USER_MODIFIED',
   USER_DELETED = 'USER_DELETED',
+  USER_SINGLE = 'USER_SINGLE',
 
   VEHICLE_CREATED = 'VEHICLE_CREATED',
   VEHICLE_MODIFIED = 'VEHICLE_MODIFIED',
@@ -37,6 +38,7 @@ export const AdminAPIs = createApi({
     AdminApiTags.USER_CREATED,
     AdminApiTags.USER_MODIFIED,
     AdminApiTags.USER_DELETED,
+    AdminApiTags.USER_SINGLE,
 
     AdminApiTags.VEHICLE_CREATED,
     AdminApiTags.VEHICLE_MODIFIED,
@@ -123,6 +125,7 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
+      providesTags: [AdminApiTags.USER_SINGLE],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -141,7 +144,7 @@ export const AdminAPIs = createApi({
           body: params.data
         }
       },
-      invalidatesTags: [AdminApiTags.USER_MODIFIED],
+      invalidatesTags: [AdminApiTags.USER_MODIFIED, AdminApiTags.USER_SINGLE],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;

@@ -147,7 +147,7 @@ const AdminsVehiclesCreateNew = () => {
                 <AdminFormFieldSubmit
                   label={tMain('cancel')}
                   type="button"
-                  variant="danger"
+                  variant="danger-transparent"
                   disabled={isSubmitting /* || isLoading*/}
                   onClick={hideModal}
                 />

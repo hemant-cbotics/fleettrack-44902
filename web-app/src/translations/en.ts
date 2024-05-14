@@ -179,6 +179,7 @@ export const language_en = {
   no_items_found: "No items found",
   admins: {
     refresh_data: "Refresh Data",
+    completeCreation: "Please fill the form a click SAVE to complete the process",
     filters: {
       active: "Active",
       inactive: "Inactive",
@@ -213,6 +214,9 @@ export const language_en = {
         accord_general_details: "General Details",
         accord_authorized_groups: "Authorized Groups",
         accord_user_access_control: "User Access Control",
+        toast: {
+          user_updated: "User has been updated successfully.",
+        }
       }
     },
     vehicles: {
@@ -262,6 +266,7 @@ export const language_en = {
   sms: "SMS",
   command: "Command",
   delete: "Delete",
+  save: "Save",
   fourZeroFourScreen: {
     heading: "Page Not Found",
     sub_heading: "The page you are looking for does not exist.",

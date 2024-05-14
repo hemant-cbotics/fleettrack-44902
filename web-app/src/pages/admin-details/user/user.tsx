@@ -27,30 +27,38 @@ import { routeUrls } from "../../../navigation/routeUrls";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useDebouncedCallback } from "use-debounce";
 import AppSearchBox from "../../../components/searchBox";
+import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { toast } from "react-toastify";
 
 const ScreenAdminDetailUser = () => {
-  const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
   const { userId } = useParams<{ userId: any }>();
-  const { state: locationState } = useLocation();
+  const { state: locationState } = useLocation(); // OrganizationEntityListingPayload | { new: true }
   const { t: tMain } = useTranslation();
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.users" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.users.detailsPage" });
   const navigate = useNavigate();
 
+  const isNewEntity = React.useRef<boolean>(!!locationState?.new); // TODO: remove true
+  const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState<OrganizationEntityListingPayload>(
-    (locationState as OrganizationEntityListingPayload)
-    ?? {
-      organization_id: thisUserOrganizationId,
-      page: 1,
-      page_size: 10,
-      search: "",
-    });
+    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
+      ? locationState
+      : {
+        organization_id: thisUserOrganizationId,
+        page: 1,
+        page_size: 10,
+        search: "",
+      }) as OrganizationEntityListingPayload);
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgUsersQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
-  const { data: dataOrgUsers, isLoading, error } = useOrganizationUsersQuery(orgUsersQueryParams);
+  const {
+    data: dataOrgUsers,
+    isFetching: isFetchingOrgUsers,
+    error
+  } = useOrganizationUsersQuery(orgUsersQueryParams);
 
   const {
     data: dataSingleUser,
@@ -58,7 +66,7 @@ const ScreenAdminDetailUser = () => {
     error: errorSingleUser,
   } = useSingleOrganizationUserQuery({ user_id: parseInt(userId) },{ skip: !userId });
 
-  const [ editOrganizationUserApiTrigger , { isLoading : isLoadingEditUser } ] = useEditOrganizationUserMutation();
+  const [ editOrganizationUserApiTrigger, { isLoading: isLoadingEditUser }] = useEditOrganizationUserMutation();
   const [ deleteSingleUserApiTrigger, { isLoading: isLoadingDeleteUser }] = useDeleteSingleUserMutation();
   const { results } = dataOrgUsers || {};
 
@@ -90,6 +98,14 @@ const ScreenAdminDetailUser = () => {
         }
       }
       editOrganizationUserApiTrigger({data})
+        .unwrap()
+        .then(() => {
+          toast.success(t("toast.user_updated"));
+          navigate(routeUrls.dashboardChildren.adminChildren.users);
+        })
+        .catch((error) => {
+          console.error("Error: ", error);
+        });
     },
   });
 
@@ -150,8 +166,8 @@ const ScreenAdminDetailUser = () => {
             {t("sub_heading")}
           </p>
         </div>
-        <div className="lg:grid lg:grid-cols-12 mt-8 py-2">
-          <div className="lg:col-span-3 space-y-4">
+        <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
+          <div className={`lg:col-span-3 space-y-4${isFetchingOrgUsers ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
             <div className="font-bold text-lg leading-6">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={tAdmin('search_placeholder')}
@@ -186,22 +202,51 @@ const ScreenAdminDetailUser = () => {
               ))}
             </div>
           </div>
-          <div className="lg:col-span-9 px-4">
-            <div className="flex justify-end space-x-4">
-              <button className="rounded-full px-6 py-2 border border-red-500">
-                <p className="font-medium text-lg leading-6 text-red-500" onClick={handleDeleteUser}>
-                  {tMain("delete")}
-                </p>
-              </button>
-              <button className="rounded-full bg-blue-200 px-6 py-2" onClick={() => setUserCanEdit(!userCanEdit)}>
-                <p className="font-medium text-lg leading-6 text-blue-900" onClick={handleEditUser}>
-                  {userCanEdit ? tMain("update") : tMain("edit")}
-                </p>
-              </button>
+          <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'lg:col-span-9'}`}>
+            <div className="flex items-center gap-4">
+              {isNewEntity?.current ? (
+                <>
+                  <p className="font-semibold text-blue-900 text-base leading-6">
+                    {tMain('admins.completeCreation')}
+                  </p>
+                  <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="submit"
+                      variant="success"
+                      label={tMain("save")}
+                      onClick={handleEditUser}
+                      disabled={isLoadingEditUser}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="danger"
+                      label={tMain("delete")}
+                      onClick={handleDeleteUser}
+                      disabled={isLoadingEditUser}
+                    />
+                  </div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="primary"
+                      label={userCanEdit ? tMain("update") : tMain("edit")}
+                      onClick={userCanEdit ? handleEditUser : () => setUserCanEdit(!userCanEdit)}
+                      disabled={isLoadingEditUser}
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleUser || isLoadingEditUser || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
-                <Accordian title={t("accord_general_details")}>
+                <Accordian title={t("accord_general_details")} openByDefault={true}>
                   <UserGeneralDetailForm
                     values={values}
                     errors={errors}

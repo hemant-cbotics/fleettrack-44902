@@ -75,7 +75,7 @@ const ScreenDashboardAdminVehicles = () => {
         cellData: [
           index + 1, // "Sr. No",
           item?.id ?? "-", // "Vehicle Id",
-          item?.vehicle_description ?? "-", // "Description",
+          `${item?.vehicle_model} ${item?.vehicle_make}`, // "Description",
           item?.euipment_type ?? "-", // "Equipment Type (VIN)",
           item?.vin ?? "-", // "ECM VIN",
           item?.server_id ?? "-", // "Server ID",

@@ -6,10 +6,11 @@ import CollapseIcon from "../assets/svg/collapse-icon.svg";
 interface AccordianProps {
   title: string;
   children: React.ReactNode;
+  openByDefault?: boolean;
 }
 
-const Accordian: FC<AccordianProps> = ({ title, children }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const Accordian: FC<AccordianProps> = ({ title, children, openByDefault = false }) => {
+    const [isOpen, setIsOpen] = useState(openByDefault);
 
     return (
       <div className="border-b border-gray-200">
