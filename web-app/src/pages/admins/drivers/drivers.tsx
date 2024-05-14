@@ -112,11 +112,11 @@ const ScreenDashboardAdminDrivers = () => {
           {!isFetchingOrgDrivers && (
             <Pagination
               pageSize={orgDriversQueryParams.page_size}
-              handlePageSizeChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              handlePageSizeChange={(e: TSelectboxOption | null) => {
                 setOrgDriversQueryParams((prev) => { return {
                   ...prev,
                   page: 1,
-                  page_size: parseInt(e.target.value)
+                  page_size: parseInt(`${e?.value}`)
                 }})
               }}
               totalPages={count ? Math.ceil(count / orgDriversQueryParams.page_size) : 1}
