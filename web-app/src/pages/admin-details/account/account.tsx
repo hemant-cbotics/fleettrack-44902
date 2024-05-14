@@ -9,11 +9,14 @@ import {
 } from "./validation";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { routeUrls } from "../../../navigation/routeUrls";
 
 const ScreenAdminDetailAccount = () => {
   const [userCanEdit, setUserCanEdit] = useState(false);
   const { t: tmain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'dashboard.profile.account' });
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: accountGeneralDetailsInitialValues,
@@ -37,7 +40,7 @@ const ScreenAdminDetailAccount = () => {
 
   return (
     <>
-      <HeaderView title={t("heading")} />
+      <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboard)} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center font-semibold text-blue-900 text-lg leading-6">
           {t("sub_heading")}

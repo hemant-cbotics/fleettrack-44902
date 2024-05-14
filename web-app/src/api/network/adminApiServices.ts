@@ -3,6 +3,7 @@ import { API_ENDPOINTS, API_SERVER_URL } from "./endpoints";
 import {
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
+  CreateOrganizationVehiclePayload,
   EditOrganizationUserPayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
@@ -14,15 +15,36 @@ import { sessionStorageKeys } from "../../utils/sessionStorageItems";
 import { ListingResponse } from "../types/Listing";
 import { TUserRole } from "../types/UserRole";
 import { TLoggedInUser } from "../types/User";
+import { OrganizationVehicle } from "../types/Vehicle";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
+  USER_MODIFIED = 'USER_MODIFIED',
+  USER_DELETED = 'USER_DELETED',
+
+  VEHICLE_CREATED = 'VEHICLE_CREATED',
+  VEHICLE_MODIFIED = 'VEHICLE_MODIFIED',
+  VEHICLE_DELETED = 'VEHICLE_DELETED',
+
+  DRIVER_CREATED = 'DRIVER_CREATED',
+  DRIVER_MODIFIED = 'DRIVER_MODIFIED',
+  DRIVER_DELETED = 'DRIVER_DELETED',
 }
 
 export const AdminAPIs = createApi({
   reducerPath: "adminAPI",
   tagTypes: [
     AdminApiTags.USER_CREATED,
+    AdminApiTags.USER_MODIFIED,
+    AdminApiTags.USER_DELETED,
+
+    AdminApiTags.VEHICLE_CREATED,
+    AdminApiTags.VEHICLE_MODIFIED,
+    AdminApiTags.VEHICLE_DELETED,
+
+    AdminApiTags.DRIVER_CREATED,
+    AdminApiTags.DRIVER_MODIFIED,
+    AdminApiTags.DRIVER_DELETED,
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API_SERVER_URL,
@@ -83,7 +105,7 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
-      providesTags: [AdminApiTags.USER_CREATED],
+      providesTags: [AdminApiTags.USER_CREATED, AdminApiTags.USER_MODIFIED, AdminApiTags.USER_DELETED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -101,7 +123,6 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
-      providesTags: [AdminApiTags.USER_CREATED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -120,7 +141,7 @@ export const AdminAPIs = createApi({
           body: params.data
         }
       },
-      invalidatesTags: [AdminApiTags.USER_CREATED],
+      invalidatesTags: [AdminApiTags.USER_MODIFIED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -138,7 +159,7 @@ export const AdminAPIs = createApi({
           method: API_METHODS.DELETE,
         };
       },
-      invalidatesTags: [AdminApiTags.USER_CREATED],
+      invalidatesTags: [AdminApiTags.USER_DELETED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -149,7 +170,7 @@ export const AdminAPIs = createApi({
     }),
 
     // organization vehicles
-    organizationVehicles: builder.query<ListingResponse<OrganizationUser[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+    organizationVehicles: builder.query<ListingResponse<OrganizationVehicle[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_VEHICLES,
@@ -162,17 +183,37 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
+      providesTags: [AdminApiTags.VEHICLE_CREATED, AdminApiTags.VEHICLE_MODIFIED, AdminApiTags.VEHICLE_DELETED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
       },
-      transformResponse: (response: ListingResponse<OrganizationUser[]>) => {
+      transformResponse: (response: ListingResponse<OrganizationVehicle[]>) => {
+        return response;
+      },
+    }),
+
+    // create organization vehicle
+    createOrganizationVehicle: builder.mutation<OrganizationVehicle, CreateOrganizationVehiclePayload>({
+      query: (params: CreateOrganizationVehiclePayload) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_VEHICLES,
+          method: API_METHODS.POST,
+          body: params
+        }
+      },
+      invalidatesTags: [AdminApiTags.VEHICLE_CREATED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationVehicle) => {
         return response;
       },
     }),
 
     // organization drivers
-    organizationDrivers: builder.query<ListingResponse<OrganizationUser[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+    organizationDrivers: builder.query<ListingResponse<any[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_DRIVERS,
@@ -185,11 +226,12 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
+      providesTags: [AdminApiTags.DRIVER_CREATED, AdminApiTags.DRIVER_MODIFIED, AdminApiTags.DRIVER_DELETED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
       },
-      transformResponse: (response: ListingResponse<OrganizationUser[]>) => {
+      transformResponse: (response: ListingResponse<any[]>) => {
         return response;
       },
     }),
@@ -205,5 +247,6 @@ export const {
   useEditOrganizationUserMutation,
   useDeleteSingleUserMutation,
   useOrganizationVehiclesQuery,
+  useCreateOrganizationVehicleMutation,
   useOrganizationDriversQuery,
 } = AdminAPIs;

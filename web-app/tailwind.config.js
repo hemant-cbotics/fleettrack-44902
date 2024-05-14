@@ -17,6 +17,7 @@ module.exports = {
           gray666: '#666666'
         },
         field: {
+          success: '#009006',
           error: {
             dark: '#D0021B',
             border: '#DD9999',

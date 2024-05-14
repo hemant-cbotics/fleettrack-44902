@@ -194,8 +194,7 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   );
 };
 
-// type AdminFormFieldChecboxProps = Omit<AdminFormFieldInputProps, "value"> & {
-type AdminFormFieldChecboxProps = AdminFormFieldInputProps & {
+type AdminFormFieldChecboxProps = Omit<AdminFormFieldInputProps, "value"> & {
   checked?: boolean;
 };
 

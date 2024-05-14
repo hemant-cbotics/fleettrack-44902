@@ -8,9 +8,10 @@ import { APP_CONFIG } from "../../constants/constants";
 interface HeaderViewProps {
   title: string;
   showBackButton?: boolean;
+  backButtonCallback?: () => void;
 }
 
-const HeaderView: FC<HeaderViewProps> = ({ title, showBackButton = false }) => {
+const HeaderView: FC<HeaderViewProps> = ({ title, showBackButton = false, backButtonCallback }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins" });
   const navigate = useNavigate();
 
@@ -22,7 +23,10 @@ const HeaderView: FC<HeaderViewProps> = ({ title, showBackButton = false }) => {
             src={LeftArrowIcon}
             alt="left-arrow-icon"
             className="mr-4 p-2 bg-blue-200 rounded-full cursor-pointer"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if(!!backButtonCallback) backButtonCallback();
+              else navigate(-1)
+            }}
           />}
           <h1 className="font-bold text-blue-900 text-3xl leading-9">
             {title}

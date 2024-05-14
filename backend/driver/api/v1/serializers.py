@@ -12,5 +12,7 @@ class DriverSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('added_by', )
         extra_kwargs = {
-            'organization': {'required': True}
+            'organization': {'required': True},
+            'email': {'required': True},
+            'phone': {'required': True},
         }

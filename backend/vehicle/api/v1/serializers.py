@@ -12,5 +12,8 @@ class VehicleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('added_by', )
         extra_kwargs = {
-            'organization': {'required': True}
+            'organization': {'required': True},
+            'vehicle_make': {'required': True},
+            'vehicle_model': {'required': True},
+            'vin': {'required': True},
         }
