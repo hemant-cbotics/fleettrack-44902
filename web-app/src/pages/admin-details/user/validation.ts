@@ -22,4 +22,6 @@ export const userDetailsInitialValues = {
   maximum_access_level: "",
 }
 
-export const userDetailsYupValidationSchema = Yup.object().shape({});
+export const userDetailsYupValidationSchema = Yup.object().shape({
+  contact_name: Yup.string().required("Contact Name is required"),
+});

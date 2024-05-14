@@ -16,6 +16,7 @@ import { OrganizationUser } from "../../../api/types/Admin";
 import { useDebouncedCallback } from 'use-debounce';
 import { routeUrls } from "../../../navigation/routeUrls";
 import { useLoggedInUserData } from "../../../utils/user";
+import { TSelectboxOption } from "../../../components/admin/formFields";
 
 const columns = [
   "Sr. No",
@@ -100,13 +101,13 @@ const ScreenDashboardAdminUsers = () => {
           {!isFetchingOrgUsers && (
             <Pagination
               pageSize={orgUsersQueryParams.page_size}
-              handlePageSizeChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                setOrgUsersQueryParams((prev) => { return {
-                  ...prev,
-                  page: 1,
-                  page_size: parseInt(e.target.value)
-                }})
-              }}
+              handlePageSizeChange={(e: TSelectboxOption | null) => {
+                  setOrgUsersQueryParams((prev) => { return {
+                    ...prev,
+                    page: 1,
+                    page_size: parseInt(`${e?.value}`)
+                  }})
+                }}
               totalPages={count ? Math.ceil(count / orgUsersQueryParams.page_size) : 1}
               forcePage={orgUsersQueryParams.page - 1}
               handlePageClick={(data: TPaginationSelected) => {

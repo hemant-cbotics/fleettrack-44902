@@ -1,4 +1,5 @@
 import { ChangeEvent, FC, useState } from "react";
+import Select from "react-select";
 
 type AdminFormFieldInputProps = {
   label: string;
@@ -12,6 +13,7 @@ type AdminFormFieldInputProps = {
   touched?: boolean;
   error?: string;
   disabled?: boolean;
+  readOnly?: boolean;
   customInputClass?: string;
   customWrapperClass?: string;
 };
@@ -28,6 +30,7 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
   touched,
   error,
   disabled = false,
+  readOnly = false,
   customInputClass = "",
   customWrapperClass = "col-span-6",
 }) => {
@@ -62,9 +65,10 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
         onBlur={onBlur}
         value={value}
         disabled={disabled}
-        className={`mt-1 w-full h-11 px-3 rounded-md bg-white text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${
+        readOnly={readOnly}
+        className={`mt-1 w-full h-11 px-3 rounded-md text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${
           touched ? " touched" : ""
-        } ${disabled ? "bg-gray-400" : ""} ${inputClass} ${customInputClass}`}
+        } ${disabled || readOnly ? "bg-gray-100" : "bg-white"} ${inputClass} ${customInputClass}`}
       />
       {touched && !!error && (
         <p
@@ -89,13 +93,15 @@ type AdminFormFieldDropdownProps = {
   id: string;
   name: string;
   placeholder?: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  // onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange?: (e: TSelectboxOption | null) => void;
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
   value: string;
   options?: TSelectboxOption[];
   touched?: boolean;
   error?: string;
   disabled?: boolean;
+  readOnly?: boolean;
   customSelectboxClass?: string;
 };
 
@@ -111,6 +117,8 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   touched,
   error,
   disabled = false,
+  readOnly = false,
+
   customSelectboxClass = "",
 }) => {
   let wrapperClass = touched && !!error ? "" : "";
@@ -123,8 +131,8 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   const floatingError = false;
 
   const [selected, setSelected] = useState(value);
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelected(e.target.value);
+  const handleChange = (e: TSelectboxOption | null) => {
+    setSelected(`${e?.value}`);
     onChange?.(e)
   }
 
@@ -139,7 +147,23 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
         {label}
       </label>}
 
-      <select
+      <Select
+        classNames={{
+          control: (state) =>
+            `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none ${
+              state.isFocused ? 'border-red-600' : 'border-grey-300'
+            } ${
+                state.isDisabled ? 'bg-gray-400' : ''
+              } ${inputClass} ${customSelectboxClass}`,
+        }}
+        placeholder={placeholder}
+        options={options}
+        defaultValue={options.find(optItem => optItem.value === selected)}
+        onChange={handleChange}
+        isDisabled={disabled || readOnly}
+        // onBlur={onBlur}
+      />
+      {/* <select
         value={selected}
         onChange={handleChange}
         onBlur={onBlur}
@@ -154,7 +178,7 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
             {option.label}
           </option>
         ))}
-      </select>
+      </select> */}
       {touched && !!error && (
         <p
           className={`${
@@ -168,23 +192,24 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   );
 };
 
-export const AdminFormFieldCheckbox: FC<AdminFormFieldInputProps> = ({
+// type AdminFormFieldChecboxProps = Omit<AdminFormFieldInputProps, "value"> & {
+type AdminFormFieldChecboxProps = AdminFormFieldInputProps & {
+  checked?: boolean;
+};
+
+export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
   label,
   id,
   type,
   name,
-  value,
+  checked = false,
   onChange,
   onBlur,
   touched,
   error,
   disabled = false,
 }) => {
-
-  const [checked, setChecked] = useState(value);
-
   const handleChange = (e:any) => {
-    setChecked(e.target.checked);
     onChange?.(e)
   }
   
@@ -201,12 +226,23 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldInputProps> = ({
           id={id}
           name={name}
           checked={checked}
-          value={value}
           onChange={handleChange}
           onBlur={onBlur}
           className="mt-1 w-full h-11 px-3 rounded-md text-sm shadow-sm sr-only peer focus-visible:outline-4 focus-visible:shadow-none"
         />
-        <div onClick={() => disabled ? () => {} : handleChange({ target: { checked: !checked, value: !checked ? true : false, name: name } })} className="relative w-12 h-6 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+        <div
+          onClick={() =>
+            disabled
+            ? () => {}
+            : handleChange({
+              target: {
+                checked: !checked,
+                value: !checked ? true : false,
+                name: name
+              }
+            })}
+          className="relative w-12 h-7 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:start-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"
+        ></div>
       </div>
     </div>
   );
