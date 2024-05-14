@@ -17,6 +17,7 @@ import { VerifyEmailOtpResponseSuccess } from "../../api/types/Onboarding";
 import AdminsDropdown from "./adminsDropdown";
 import { sessionStorageKeys, useSessionStorage } from "../../utils/sessionStorageItems";
 import { TUser } from "../../api/types/User";
+import AppSearchBox from "../searchBox";
 
 interface IconWithCounterProps {
   src: string;
@@ -52,17 +53,11 @@ const DashboardHeader = () => {
 
   return (
     <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-4 lg:grid lg:grid-cols-12`}>
-      <div className="relative lg:col-span-4 flex items-center">
-        <input
-          type="text"
-          id="search"
+      <div className="lg:col-span-4 flex items-center">
+        <AppSearchBox
+          wrapperClassName="w-64 max-w-full"
           placeholder={t("type_here_to_search")}
-          className="w-full p-2 pl-10 rounded-md border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-        />
-        <img
-          src={SearchIcon}
-          alt="search-icon"
-          className="absolute size-5 left-3 top-1/2 transform -translate-y-1/2"
+          onChange={() => {}}
         />
       </div>
       <div className="lg:col-span-8 flex justify-end">
