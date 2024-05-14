@@ -201,7 +201,7 @@ const ScreenAdminDetailUser = () => {
             </div>
             <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleUser || isLoadingEditUser || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
-                <Accordian title={t("accord_general_details")}>
+                <Accordian title={t("accord_general_details")} openByDefault={true}>
                   <UserGeneralDetailForm
                     values={values}
                     errors={errors}
