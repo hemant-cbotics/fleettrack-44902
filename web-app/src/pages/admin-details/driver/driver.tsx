@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
 import HeaderView from "../../../components/admin/headerView";
@@ -18,6 +18,9 @@ import {
   DriverLicenseDetailForm,
   DriverMedicalDetailForm,
 } from "./driver-form";
+import { useOrganizationDriversQuery } from "../../../api/network/adminApiServices";
+import { TListData } from "./type";
+import { OrganizationDriver } from "../../../api/types/Driver";
 
 const listData = [
   {
@@ -35,20 +38,24 @@ const listData = [
 ];
 
 const ScreenAdminDetailDriver = () => {
-  const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
   const { driverId } = useParams<{ driverId: any }>();
   const { state: locationState } = useLocation();
-  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
+  const navigate = useNavigate();
 
+  const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
+  const isNewEntity = useRef<boolean>(!!locationState?.new);
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgDriversQueryParams, setOrgDriversQueryParams] = useState<
     OrganizationEntityListingPayload
   >(
-    (locationState as OrganizationEntityListingPayload) ?? {
-      organization_id: thisUserOrganizationId,
-      page: 1,
-      page_size: 10,
-      search: "",
-    }
+    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
+      ? locationState
+      : {
+          organization_id: thisUserOrganizationId,
+          page: 1,
+          page_size: 10,
+          search: "",
+        }) as OrganizationEntityListingPayload
   );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
@@ -57,7 +64,26 @@ const ScreenAdminDetailDriver = () => {
     });
   }, 500);
 
-  const navigate = useNavigate();
+  const {
+    data: dataOrgDrivers,
+    isFetching: isFetchingOrgDrivers,
+    error,
+  } = useOrganizationDriversQuery(orgDriversQueryParams);
+
+  const { results } = dataOrgDrivers || {};
+
+  const listData: TListData[] = !!results
+    ? (results || ([] as OrganizationDriver[])).map(
+        (item: OrganizationDriver, index: number) => ({
+          id: item?.id,
+          name: item?.name,
+          badge_employee_id: item?.badge_employee_id || "Not available",
+          email: item?.email,
+          phone: item?.phone,
+        })
+      )
+    : [];
+
   const formik = useFormik({
     initialValues: driverDetailsInitialValues,
     validationSchema: driverDetailsYupValidationSchema,
@@ -85,7 +111,13 @@ const ScreenAdminDetailDriver = () => {
 
   return (
     <>
-      <HeaderView title="Driver Specific View" showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.drivers)} />
+      <HeaderView
+        title="Driver Specific View"
+        showBackButton={true}
+        backButtonCallback={() =>
+          navigate(routeUrls.dashboardChildren.adminChildren.drivers)
+        }
+      />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">
@@ -106,29 +138,29 @@ const ScreenAdminDetailDriver = () => {
                 <div
                   key={index}
                   className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    parseInt(driverId) === item.user_id ? "bg-blue-200" : ""
+                    parseInt(driverId) === item.id ? "bg-blue-200" : ""
                   }`}
                   onClick={() =>
                     navigate(
-                      `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.driver_id}`
+                      `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`
                     )
                   }
                 >
                   <div className="grid grid-cols-4">
                     <div className="col-span-3">
                       <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.driver_id}
+                        {item.name}
                       </p>
                       <p className="font-normal text-xs leading-6 text-gray-500">
-                        {item.driver_description}
+                        {item.badge_employee_id}
                       </p>
                     </div>
                     <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                      {item.driver_role}
+                      {item.phone}
                     </div>
                   </div>
                   <p className="font-normal text-base leading-6 text-gray-700">
-                    {item.driver_email}
+                    {item.email}
                   </p>
                 </div>
               ))}
