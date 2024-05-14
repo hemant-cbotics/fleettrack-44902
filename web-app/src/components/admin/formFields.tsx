@@ -103,6 +103,7 @@ type AdminFormFieldDropdownProps = {
   disabled?: boolean;
   readOnly?: boolean;
   customSelectboxClass?: string;
+  customWrapperClass?: string;
 };
 
 export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
@@ -120,6 +121,7 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   readOnly = false,
 
   customSelectboxClass = "",
+  customWrapperClass = "col-span-6",
 }) => {
   let wrapperClass = touched && !!error ? "" : "";
   let labelClass =
@@ -137,9 +139,9 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   }
 
   return (
-    <div className={`col-span-6${
+    <div className={`${
       floatingError ? ` relative pb-4` : ""
-    } ${wrapperClass}`}>
+    } ${wrapperClass} ${customWrapperClass}`}>
       {!!label && <label
         htmlFor={id}
         className={`block text-sm font-display font-semibold ${labelClass}`}
@@ -168,9 +170,9 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
         onChange={handleChange}
         onBlur={onBlur}
         disabled={disabled}
-        className={`mt-1 w-full h-11 px-3 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none${
+        className={`mt-1 w-full h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none${
           touched ? " touched" : ""
-        } ${disabled ? "bg-gray-400" : ""} ${inputClass} ${customSelectboxClass}`}
+        } ${inputClass} ${customSelectboxClass}`}
       >
         {!!placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
@@ -228,7 +230,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
           checked={checked}
           onChange={handleChange}
           onBlur={onBlur}
-          className="mt-1 w-full h-11 px-3 rounded-md text-sm shadow-sm sr-only peer focus-visible:outline-4 focus-visible:shadow-none"
+          className="mt-1 w-full h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md text-sm shadow-sm sr-only peer focus-visible:outline-4 focus-visible:shadow-none"
         />
         <div
           onClick={() =>
