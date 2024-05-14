@@ -66,7 +66,7 @@ const ScreenDashboardAdminDrivers = () => {
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationVehicle[]).map((item: OrganizationVehicle, index: number) => (
       {
-        navLink: `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`,
+        navLink: `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`,
         cellData: [
           index + 1, // "Sr. No",
           "-", // "Vehicle Id",
