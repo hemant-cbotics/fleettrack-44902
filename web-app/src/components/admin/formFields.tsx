@@ -251,7 +251,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
 
 type AdminFormFieldSubmitProps = {
   type?: 'submit' | 'button';
-  variant?: 'primary' | 'secondary' | 'danger-transparent' | 'danger' | 'success';
+  variant?: 'primary' | 'primary-like' | 'secondary' | 'danger-transparent' | 'danger' | 'success';
   label: string | ReactNode;
   onClick?: () => void;
   disabled?: boolean;
@@ -271,7 +271,13 @@ export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'su
       variantClass =
         disabled
         ? disabledClass
-        : "border-accent-blue-pale bg-accent-blue-pale text-accent-blue-dark enabled:hover:bg-accent-blue-dark enabled:hover:text-white enabled:hover:bg-accent-blue-dark active:bg-accent-blue-pale";
+        : "border-accent-blue-pale bg-accent-blue-pale text-accent-blue-dark enabled:hover:bg-accent-blue-dark enabled:hover:text-white active:bg-accent-blue-pale";
+      break;
+    case "primary-like": // opacity on hover
+      variantClass =
+        disabled
+        ? disabledClass
+        : "border-accent-blue-pale bg-accent-blue-pale text-accent-blue-dark enabled:hover:opacity-80 active:bg-accent-blue-pale";
       break;
     case "danger-transparent":
       variantClass =

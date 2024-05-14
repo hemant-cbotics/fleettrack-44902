@@ -9,6 +9,7 @@ export const APP_CONFIG = {
     NUMERIC: /^[0-9]*$/,
     YEAR: /^[0-9]{4}$/,
     LICENSE_PLATE: /^[a-zA-Z0-9 ]*$/,
+    PHONE_NUMBER: /^[0-9]{10}$/,
   },
   LISTINGS: {
     PAGE_SIZES: [10, 20, 50, 100],

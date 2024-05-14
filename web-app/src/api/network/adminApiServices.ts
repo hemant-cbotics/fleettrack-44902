@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS, API_SERVER_URL } from "./endpoints";
 import {
+  CreateOrganizationDriverPayload,
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   CreateOrganizationVehiclePayload,
@@ -16,7 +17,7 @@ import { ListingResponse } from "../types/Listing";
 import { TUserRole } from "../types/UserRole";
 import { TLoggedInUser } from "../types/User";
 import { OrganizationVehicle } from "../types/Vehicle";
-import { OrganizationDriver } from "../types/Drivers";
+import { OrganizationDriver } from "../types/Driver";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
@@ -240,6 +241,25 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    // create organization driver
+    createOrganizationDriver: builder.mutation<OrganizationDriver, CreateOrganizationDriverPayload>({
+      query: (params: CreateOrganizationDriverPayload) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_DRIVERS,
+          method: API_METHODS.POST,
+          body: params
+        }
+      },
+      invalidatesTags: [AdminApiTags.DRIVER_CREATED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationDriver) => {
+        return response;
+      },
+    }),
+
   }),
 });
 
@@ -253,4 +273,5 @@ export const {
   useOrganizationVehiclesQuery,
   useCreateOrganizationVehicleMutation,
   useOrganizationDriversQuery,
+  useCreateOrganizationDriverMutation,
 } = AdminAPIs;
