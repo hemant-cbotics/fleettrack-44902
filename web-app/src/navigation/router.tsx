@@ -23,6 +23,7 @@ import ScreenDashboardAdminUsers from "../pages/admins/users/users"
 import ScreenDashboardAdminVehicles from "../pages/admins/vehicles/vehicles"
 import ScreenAdminDetailAccount from "../pages/admin-details/account/account"
 import ScreenDashboardAdminDrivers from "../pages/admins/drivers/drivers"
+import ScreenAdminDetailDriver from "../pages/admin-details/driver/driver"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -168,6 +169,10 @@ const routes: RouteObject[] = [
           {
             path: routeUrls.dashboardChildren.adminChildren.drivers,
             element: <ScreenDashboardAdminDrivers />
+          },
+          {
+            path: routeUrls.dashboardChildren.adminChildren.drivers + "/:driverId",
+            element: <ScreenAdminDetailDriver />
           },
           {
             path: routeUrls.dashboardChildren.adminChildren.geozones,

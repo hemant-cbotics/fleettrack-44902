@@ -7,7 +7,8 @@ from generics.utils import CustomPagination
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from generics.custom_permissions import IsPassedOrganizationPermission
-
+# from vehicle.models import VehicleAndDriverMapping
+from rest_framework.response import Response
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
@@ -27,10 +28,28 @@ class VehicleViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(organization=organization_id)
     
     def perform_create(self, serializer):
-        serializer.save(added_by=self.request.user)
+        try:
+            instance = serializer.save(added_by=self.request.user)
+            driver_id = self.request.data.get('driver')
+            if driver_id:
+                from driver.models import Driver
+                driver = Driver.objects.get(id=driver_id)
+                driver.vehicle_assigned = instance
+                driver.save()
+        except Exception as e:
+            return Response({"message": str(e)}, status=400)
 
     def perform_update(self, serializer):
-        serializer.save(added_by=self.request.user)
+        try:
+            instance = serializer.save(added_by=self.request.user)
+            driver_id = self.request.data.get('driver')
+            if driver_id:
+                from driver.models import Driver
+                driver = Driver.objects.get(id=driver_id)
+                driver.vehicle_assigned = instance
+                driver.save()
+        except Exception as e:
+            return Response({"message": str(e)}, status=400)
 
     def perform_destroy(self, instance):
         instance.delete()

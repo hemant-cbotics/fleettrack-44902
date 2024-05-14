@@ -48,8 +48,27 @@ class Vehicle(UUIDModel):
     organization = models.ForeignKey('organization.Organization', on_delete=models.CASCADE, related_name='vehicles', default=None, null=True, blank=True)
 
     def __str__(self):
-        return self.short_name
+        return self.licence_plate
 
     class Meta:
         verbose_name = "Vehicle"
         verbose_name_plural = "Vehicles"
+
+
+# class VehicleAndDriverMapping(UUIDModel):
+#     """
+#         This model is responsible to store vehicle and driver mapping.
+#     """
+#     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='vehicle_driver_mapping')
+#     driver = models.ForeignKey('driver.Driver', on_delete=models.CASCADE, related_name='driver_vehicle_mapping')
+#     start_date = models.DateTimeField(default=None, null=True, blank=True)
+#     end_date = models.DateTimeField(default=None, null=True, blank=True)
+#     is_active = models.BooleanField(default=True)
+#     added_by = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='vehicle_driver_mapping')
+
+#     def __str__(self):
+#         return self.vehicle.licence_plate + " - " + self.driver.name
+
+#     class Meta:
+#         verbose_name = "Vehicle and Driver Mapping"
+#         verbose_name_plural = "Vehicles and Drivers Mapping"
