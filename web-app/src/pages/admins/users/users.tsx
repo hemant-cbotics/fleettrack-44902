@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { useOrganizationUsersQuery } from "../../../api/network/adminApiServices";
 import { TAdminTableRowData } from "../components/types";
-import { useSessionStorage } from "../../../utils/sessionStorageItems";
 import { OrganizationUser } from "../../../api/types/Admin";
 import { useDebouncedCallback } from 'use-debounce';
 import { routeUrls } from "../../../navigation/routeUrls";
@@ -34,7 +33,6 @@ const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
-  const { getSessionStorageItem } = useSessionStorage();
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState({

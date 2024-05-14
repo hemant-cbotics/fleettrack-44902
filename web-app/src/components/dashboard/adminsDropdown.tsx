@@ -23,7 +23,7 @@ const AdminsDropdown = () => {
       <div className="relative flex items-center justify-center z-[850]">
         <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
           <button
-            className="px-4 py-2 flex text-sm/none text-gray-600 hover:bg-gray-50 hover:text-gray-700 cursor-pointer"
+            className="px-4 py-2 flex text-sm/none text-gray-600 hover:bg-gray-200 hover:text-gray-700 cursor-pointer"
             onClick={() => toggleAdminsDropdown(modalsState?.showAdminsDropdown ? false : true)}
           >
             Admins...
@@ -52,7 +52,7 @@ const AdminsDropdown = () => {
                 const title = t(`admins.${item.slug}`);
                 return (
                   <a
-                    className="flex gap-3 rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 cursor-pointer"
+                    className="flex gap-3 rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700 cursor-pointer"
                     role="menuitem"
                     key={index}
                     onClick={() => {

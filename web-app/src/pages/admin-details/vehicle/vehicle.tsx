@@ -5,6 +5,8 @@ import { VehicleDetailForm, VehicleGroupMembershipForm } from "./vehicle-form";
 import { useTranslation } from "react-i18next";
 import { APP_CONFIG } from "../../../constants/constants";
 import AppSearchBox from "../../../components/searchBox";
+import { useNavigate } from "react-router-dom";
+import { routeUrls } from "../../../navigation/routeUrls";
 
 const data = [
   {
@@ -55,10 +57,11 @@ const ScreenAdminDetailVehicle = () => {
   const { t: tMain } = useTranslation();
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.vehicles" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage" });
+  const navigate = useNavigate();
 
   return (
     <>
-      <HeaderView title={t("heading")} />
+      <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.vehicles)} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">

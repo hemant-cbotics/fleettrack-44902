@@ -54,12 +54,12 @@ const ScreenAdminDetailUser = () => {
 
   const {
     data: dataSingleUser,
-    isLoading: isLoadingSingleUser,
+    isFetching: isFetchingSingleUser,
     error: errorSingleUser,
   } = useSingleOrganizationUserQuery({ user_id: parseInt(userId) },{ skip: !userId });
 
-  const [ editOrganizationUserApiTrigger , {isLoading : isLoadingEditUser } ] = useEditOrganizationUserMutation();
-  const [ deleteSingleUserApiTrigger, {isLoading: isLoadingDeleteUser}] = useDeleteSingleUserMutation();
+  const [ editOrganizationUserApiTrigger , { isLoading : isLoadingEditUser } ] = useEditOrganizationUserMutation();
+  const [ deleteSingleUserApiTrigger, { isLoading: isLoadingDeleteUser }] = useDeleteSingleUserMutation();
   const { results } = dataOrgUsers || {};
 
   const formik = useFormik({
@@ -143,7 +143,7 @@ const ScreenAdminDetailUser = () => {
   }
   return (
     <>
-      <HeaderView title={t("heading")} />
+      <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.users)} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">
@@ -199,7 +199,7 @@ const ScreenAdminDetailUser = () => {
                 </p>
               </button>
             </div>
-            <div className="rounded-lg mt-2 bg-blue-200">
+            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleUser || isLoadingEditUser || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
                 <Accordian title={t("accord_general_details")}>
                   <UserGeneralDetailForm
