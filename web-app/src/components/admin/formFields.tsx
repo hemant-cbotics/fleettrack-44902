@@ -62,9 +62,9 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
         onBlur={onBlur}
         value={value}
         disabled={disabled}
-        className={`mt-1 w-full h-11 px-3 rounded-md bg-white text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${
+        className={`mt-1 w-full h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md bg-white text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${
           touched ? " touched" : ""
-        } ${disabled ? "bg-gray-400" : ""} ${inputClass} ${customInputClass}`}
+        } ${inputClass} ${customInputClass}`}
       />
       {touched && !!error && (
         <p
@@ -97,6 +97,7 @@ type AdminFormFieldDropdownProps = {
   error?: string;
   disabled?: boolean;
   customSelectboxClass?: string;
+  customWrapperClass?: string;
 };
 
 export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
@@ -112,6 +113,7 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   error,
   disabled = false,
   customSelectboxClass = "",
+  customWrapperClass = "col-span-6",
 }) => {
   let wrapperClass = touched && !!error ? "" : "";
   let labelClass =
@@ -129,9 +131,9 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
   }
 
   return (
-    <div className={`col-span-6${
+    <div className={`${
       floatingError ? ` relative pb-4` : ""
-    } ${wrapperClass}`}>
+    } ${wrapperClass} ${customWrapperClass}`}>
       {!!label && <label
         htmlFor={id}
         className={`block text-sm font-display font-semibold ${labelClass}`}
@@ -144,9 +146,9 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
         onChange={handleChange}
         onBlur={onBlur}
         disabled={disabled}
-        className={`mt-1 w-full h-11 px-3 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none${
+        className={`mt-1 w-full h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none${
           touched ? " touched" : ""
-        } ${disabled ? "bg-gray-400" : ""} ${inputClass} ${customSelectboxClass}`}
+        } ${inputClass} ${customSelectboxClass}`}
       >
         {!!placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
@@ -204,7 +206,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldInputProps> = ({
           value={value}
           onChange={handleChange}
           onBlur={onBlur}
-          className="mt-1 w-full h-11 px-3 rounded-md text-sm shadow-sm sr-only peer focus-visible:outline-4 focus-visible:shadow-none"
+          className="mt-1 w-full h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md text-sm shadow-sm sr-only peer focus-visible:outline-4 focus-visible:shadow-none"
         />
         <div onClick={() => disabled ? () => {} : handleChange({ target: { checked: !checked, value: !checked ? true : false, name: name } })} className="relative w-12 h-6 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
       </div>
