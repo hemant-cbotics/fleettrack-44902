@@ -71,3 +71,10 @@ export type CreateOrganizationVehiclePayload = {
   vin: string;
   licence_plate: string; // should be license_plate
 }
+
+export type CreateOrganizationDriverPayload = {
+  organization: number;
+  name: string;
+  email: string;
+  phone: string;
+}

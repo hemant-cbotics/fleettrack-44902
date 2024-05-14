@@ -13,6 +13,9 @@ import { TAdminTableRowData } from "../components/types";
 import { OrganizationVehicle } from "../../../api/types/Vehicle";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TSelectboxOption } from "../../../components/admin/formFields";
+import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
+import AdminsDriversCreateNew from "./createNewDriver";
 
 const columns = [
   "Sr. No",
@@ -27,6 +30,8 @@ const columns = [
 const ScreenDashboardAdminDrivers = () => {
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.drivers'});
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const dispatch = useDispatch();
 
   const filters: TListingFilters[] = [
     {
@@ -87,7 +92,9 @@ const ScreenDashboardAdminDrivers = () => {
         <ListingPageSubHeader
           heading={t("sub_heading")}
           buttonText={t("add_new")}
-          buttonCallback={() => console.log("Add new button clicked")}
+          buttonCallback={() => {
+            dispatch(setModalsData({ ...modalsState, showCreateDriver: true }))
+          }}
         />
         <ListingTableHeader
           heading={t("listing_heading")}
@@ -125,6 +132,7 @@ const ScreenDashboardAdminDrivers = () => {
           )}
         </div>
       </div>
+      <AdminsDriversCreateNew />
     </>
   );
 };
