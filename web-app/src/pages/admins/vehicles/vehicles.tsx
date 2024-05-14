@@ -10,9 +10,12 @@ import { useDebouncedCallback } from "use-debounce";
 import { useOrganizationVehiclesQuery } from "../../../api/network/adminApiServices";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
-import { OrganizationVehicle } from "../../../api/types/Admin";
+import { OrganizationVehicle } from "../../../api/types/Vehicle";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TSelectboxOption } from "../../../components/admin/formFields";
+import AdminsVehiclesCreateNew from "./createNewVehicle";
+import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
   "Sr. No",
@@ -27,6 +30,8 @@ const columns = [
 const ScreenDashboardAdminVehicles = () => {
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.vehicles'});
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const dispatch = useDispatch();
 
   const filters: TListingFilters[] = [
     {
@@ -69,13 +74,14 @@ const ScreenDashboardAdminVehicles = () => {
         navLink: `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`,
         cellData: [
           index + 1, // "Sr. No",
-          "-", // "Vehicle Id",
-          "-", // "Description",
-          "-", // "Equipment Type (VIN)",
-          "-", // "ECM VIN",
-          "-", // "Server ID",
-          "-", // "Active"
-          "2021-09-01 12:00:00" // last_login: 
+          item?.id ?? "-", // "Vehicle Id",
+          item?.vehicle_description ?? "-", // "Description",
+          item?.euipment_type ?? "-", // "Equipment Type (VIN)",
+          item?.vin ?? "-", // "ECM VIN",
+          item?.server_id ?? "-", // "Server ID",
+          item?.is_active
+            ? <span className="text-field-success">Yes</span>
+            : <span className="text-field-error-dark">No</span>, // "Active"
         ]
       }))
     : [];
@@ -87,7 +93,9 @@ const ScreenDashboardAdminVehicles = () => {
         <ListingPageSubHeader
           heading={t("sub_heading")}
           buttonText={t("add_new")}
-          buttonCallback={() => console.log("Add new button clicked")}
+          buttonCallback={() => {
+            dispatch(setModalsData({ ...modalsState, showCreateVehicle: true }))
+          }}
         />
         <ListingTableHeader
           heading={t("listing_heading")}
@@ -125,6 +133,7 @@ const ScreenDashboardAdminVehicles = () => {
           )}
         </div>
       </div>
+      <AdminsVehiclesCreateNew /> 
     </>
   );
 };

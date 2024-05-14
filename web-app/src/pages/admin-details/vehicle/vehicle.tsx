@@ -61,7 +61,7 @@ const ScreenAdminDetailVehicle = () => {
 
   return (
     <>
-      <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.users)} />
+      <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.vehicles)} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">

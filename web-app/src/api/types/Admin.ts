@@ -41,7 +41,7 @@ export type EditOrganizationUserPayload = {
 }
 
 export type TEditOrganizationUserPayloadData = {
-  user : {
+  user: {
     id: number;
     is_active: boolean;
   }
@@ -64,4 +64,10 @@ export type TEditOrganizationUserPayloadData = {
   }
 }
 
-export type OrganizationVehicle = any;
+export type CreateOrganizationVehiclePayload = {
+  organization: number;
+  vehicle_make: string;
+  vehicle_model: string;
+  vin: string;
+  licence_plate: string; // should be license_plate
+}

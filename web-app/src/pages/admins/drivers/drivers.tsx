@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useOrganizationDriversQuery } from "../../../api/network/adminApiServices";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
-import { OrganizationVehicle } from "../../../api/types/Admin";
+import { OrganizationVehicle } from "../../../api/types/Vehicle";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TSelectboxOption } from "../../../components/admin/formFields";
 
