@@ -28,7 +28,6 @@ export const routeUrls = {
       fleettags: "/dashboard/admins/fleet-tags",
       drivers: "/dashboard/admins/drivers",
       geozones: "/dashboard/admins/geozones",
-      account: "/dashboard/admins/account",
     },
 
     // under development
@@ -39,5 +38,8 @@ export const routeUrls = {
     group_admin: "/dashboard/group-admin",
     manage_rule_alert: "/dashboard/manage-rule-alert",
     camera_admin: "/dashboard/camera-admin",
+
+    //profile
+    account: "/dashboard/account",
   },
 }

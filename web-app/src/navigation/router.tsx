@@ -172,10 +172,6 @@ const routes: RouteObject[] = [
           {
             path: routeUrls.dashboardChildren.adminChildren.geozones,
             element: <TemporaryRoute />
-          },
-          {
-            path: routeUrls.dashboardChildren.adminChildren.account,
-            element: <ScreenAdminDetailAccount />
           }
         ]
       },
@@ -186,6 +182,10 @@ const routes: RouteObject[] = [
       {
         path: routeUrls.dashboardChildren.camera_admin,
         element: <TemporaryRoute />
+      },
+      {
+        path: routeUrls.dashboardChildren.account,
+        element: <ScreenAdminDetailAccount />
       }
     ]
   },
