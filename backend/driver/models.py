@@ -25,7 +25,7 @@ class Driver(CommonModel):
     twic = models.CharField(max_length=255, null=True, blank=True)
     twic_expiry = models.DateTimeField(default=None, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
-    vehicle = models.OneToOneField('vehicle.Vehicle', on_delete=models.SET_NULL, related_name='driver', null=True, blank=True)
+    vehicle_assigned = models.OneToOneField('vehicle.Vehicle', on_delete=models.SET_NULL, related_name='driver', null=True, blank=True)
     added_by = models.ForeignKey('users.User', on_delete=models.SET_NULL, related_name='added_drivers', null=True, blank=True)
     organization = models.ForeignKey('organization.Organization', on_delete=models.CASCADE, related_name='drivers', default=None, null=True, blank=True)
 

@@ -17,7 +17,7 @@ class DriverViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     filter_backends = [ SearchFilter, OrderingFilter]
     filterset_fields = ['name', 'email', 'nick_name']
-    search_fields = ['name', 'email', 'added_by__name', 'added_by__email', 'nick_name']
+    search_fields = ['name', 'email', 'added_by__name', 'added_by__email', 'nick_name', 'card_id', 'id']
     ordering_fields = ['name', 'email', 'nick_name']
     ordering = ['name', 'email', 'nick_name']
 
