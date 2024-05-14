@@ -10,9 +10,12 @@ import { useDebouncedCallback } from "use-debounce";
 import { useOrganizationDriversQuery } from "../../../api/network/adminApiServices";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
-import { OrganizationVehicle } from "../../../api/types/Vehicle";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TSelectboxOption } from "../../../components/admin/formFields";
+import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
+import AdminsDriversCreateNew from "./createNewDriver";
+import { OrganizationDriver } from "../../../api/types/Driver";
 
 const columns = [
   "Sr. No",
@@ -27,6 +30,8 @@ const columns = [
 const ScreenDashboardAdminDrivers = () => {
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.drivers'});
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const dispatch = useDispatch();
 
   const filters: TListingFilters[] = [
     {
@@ -64,18 +69,17 @@ const ScreenDashboardAdminDrivers = () => {
   const { count, next, previous, results } = dataOrgDrivers || {};
 
   const tableData: TAdminTableRowData[] = !!results
-    ? (results || [] as OrganizationVehicle[]).map((item: OrganizationVehicle, index: number) => (
+    ? (results || [] as OrganizationDriver[]).map((item: OrganizationDriver, index: number) => (
       {
-        navLink: `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`,
+        navLink: `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`,
         cellData: [
           index + 1, // "Sr. No",
-          "-", // "Vehicle Id",
+          item?.name, // "Driver Id",
           "-", // "Description",
-          "-", // "Equipment Type (VIN)",
-          "-", // "ECM VIN",
-          "-", // "Server ID",
-          "-", // "Active"
-          "2021-09-01 12:00:00" // last_login: 
+          item?.phone ?? "-", // "Phone",
+          item?.email ?? "-", // "Email",
+          item?.badge_employee_id ?? "-", // "Badge/Employee ID",
+          item?.card_id ?? "-", // "Card ID"
         ]
       }))
     : [];
@@ -87,7 +91,9 @@ const ScreenDashboardAdminDrivers = () => {
         <ListingPageSubHeader
           heading={t("sub_heading")}
           buttonText={t("add_new")}
-          buttonCallback={() => console.log("Add new button clicked")}
+          buttonCallback={() => {
+            dispatch(setModalsData({ ...modalsState, showCreateDriver: true }))
+          }}
         />
         <ListingTableHeader
           heading={t("listing_heading")}
@@ -125,6 +131,7 @@ const ScreenDashboardAdminDrivers = () => {
           )}
         </div>
       </div>
+      <AdminsDriversCreateNew />
     </>
   );
 };

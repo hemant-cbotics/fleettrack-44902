@@ -85,7 +85,7 @@ const ScreenAdminDetailDriver = () => {
 
   return (
     <>
-      <HeaderView title="Driver Specific View" />
+      <HeaderView title="Driver Specific View" showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.drivers)} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">

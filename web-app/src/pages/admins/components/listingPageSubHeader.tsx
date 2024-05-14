@@ -17,7 +17,7 @@ const ListingPageSubHeader: FC<TListingPageSubHeaderProps> = ({ heading, buttonT
       <div className="w-44">
         <AdminFormFieldSubmit
           type="button"
-          variant="primary"
+          variant="primary-like"
           label={<span className="flex justify-center whitespace-nowrap">
             {buttonText}
             <img
