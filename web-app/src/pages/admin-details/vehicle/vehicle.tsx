@@ -104,7 +104,7 @@ const ScreenAdminDetailVehicle = () => {
               <ActionButton text={tMain("command")} />
             </div>
             <div className="rounded-lg mt-2 bg-blue-200">
-              <Accordian title={t("accord_details")}>
+              <Accordian title={t("accord_details")} openByDefault={true}>
                 <VehicleDetailForm vehicle={""} onSubmit={() => {}} />
               </Accordian>
               <Accordian title={t("accord_camera_id")}>
