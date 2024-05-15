@@ -159,11 +159,17 @@ class OrganizationUserEditView(APIView):
                     user.save()
         if 'profile' in request_data:
             profile_data = request_data.pop('profile')
+            print(profile_data)
             from users.api.v1.serializers import UserProfileSerialzer
             from users.models import UserProfile
             serializer = UserProfileSerialzer(data=profile_data, partial=True)
             profile = UserProfile.objects.get(id=profile_data['id'])
             if serializer.is_valid(raise_exception=True):
+                if 'group_ids' in profile_data:
+                    group_ids = profile_data.pop('group_ids')
+                    profile.groups.clear()
+                    for group_id in group_ids:
+                        profile.groups.add(group_id)
                 serializer.update(profile, serializer.validated_data)
         if 'role_and_permission' in request_data:
             roles_and_permission = request_data.pop('role_and_permission')

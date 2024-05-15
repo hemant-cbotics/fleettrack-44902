@@ -41,9 +41,17 @@ class UserRoleAndPermissionUpdateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class UserProfileSerialzer(serializers.ModelSerializer):
+    groups = serializers.SerializerMethodField()
     class Meta:
         model = UserProfile
         fields = "__all__"
+
+    def get_groups(self, obj):
+        try:
+            from group.api.v1.serializers import SimpleGroupSerializer
+            return SimpleGroupSerializer(obj.groups, many=True).data
+        except:
+            return None
 
 class OrganizationUsersSerializer(serializers.ModelSerializer):
     #user = UserSerializer()
