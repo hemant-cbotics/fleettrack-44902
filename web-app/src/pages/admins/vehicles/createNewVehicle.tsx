@@ -9,12 +9,15 @@ import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { useLoggedInUserData } from "../../../utils/user";
 import { formInitialValues, TFormFieldNames, YupValidationSchema } from "./validation";
+import { useNavigate } from "react-router-dom";
+import { routeUrls } from "../../../navigation/routeUrls";
 
 const AdminsVehiclesCreateNew = () => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.vehicles.create_new'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
@@ -47,10 +50,10 @@ const AdminsVehiclesCreateNew = () => {
               })
                 .unwrap()
                 .then((data) => {
-                  console.log('>>>', data);
                   if(!!data?.id && !!data?.organization) {
                     dispatch(setModalsData({ ...modalsState, showCreateVehicle: false }));
                     toast.success(t('create_success'), { autoClose: 10000 });
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.vehicles}/${data?.id}`, { state: { new: true } });
                   } else {
                     toast.error(tMain('toast.general_error'));
                   }

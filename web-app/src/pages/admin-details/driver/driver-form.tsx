@@ -207,7 +207,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         type="date"
         id="license_expiry_date"
         name="license_expiry_date"
-        value={values.license_expiry_date}
+        value={values.license_expiry_date ? new Date(values.license_expiry_date).toISOString().slice(0, 10) : ""}
         onChange={(e) => {formikSetValue("license_expiry_date", e?.target?.value); }}
         onBlur={(e) => { formikSetTouched("license_expiry_date", true); handleBlur(e); }}
         error={errors.license_expiry_date}
@@ -266,7 +266,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         type="date"
         id="medical_card_expiry_date"
         name="medical_card_expiry_date"
-        value={values.medical_card_expiry_date}
+        value={values.medical_card_expiry_date ? new Date(values.medical_card_expiry_date).toISOString().slice(0, 10) : ""}
         onChange={(e) => {formikSetValue("medical_card_expiry_date", e?.target?.value); }}
         onBlur={(e) => { formikSetTouched("medical_card_expiry_date", true); handleBlur(e); }}
         error={errors.medical_card_expiry_date}
@@ -307,7 +307,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         type="date"
         id="twic_expiry_date"
         name="twic_expiry_date"
-        value={values.twic_expiry_date}
+        value={values.twic_expiry_date ? new Date(values.twic_expiry_date).toISOString().slice(0, 10) : ""}
         onChange={(e) => {formikSetValue("twic_expiry_date", e?.target?.value); }}
         onBlur={(e) => { formikSetTouched("twic_expiry_date", true); handleBlur(e); }}
         error={errors.twic_expiry_date}

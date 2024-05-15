@@ -45,6 +45,8 @@ export const API_ENDPOINTS = {
     EDIT_ORGANIZATION_USER: `/organization/edit-user/`,
 
     ORGANIZATION_VEHICLES: `/vehicle/ap1/v1/`,
+    SINGLE_ORGANIZATION_VEHICLE: (vehicle_id: string) => `/vehicle/ap1/v1/${vehicle_id}/`,
+    EDIT_ORGANIZATION_VEHICLE: (vehicle_id: string) => `/vehicle/ap1/v1/${vehicle_id}/`,
 
     ORGANIZATION_DRIVERS: `/driver/ap1/v1/`,
     SINGLE_ORGANIZATION_DRIVER: (driver_id: number) => `/driver/ap1/v1/${driver_id}/`,
