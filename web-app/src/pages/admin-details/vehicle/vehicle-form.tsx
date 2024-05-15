@@ -54,7 +54,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         type="datetime-local"
         id="creation_date"
         name="creation_date"
-        value={values.creation_date}
+        value={values?.creation_date ? new Date(values.creation_date).toISOString().slice(0, 16): ""}
         onChange={(e) => {
           formikSetValue("creation_date", e.target.value);
         }}
@@ -124,7 +124,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         type="date"
         id="unique_id_last_change"
         name="unique_id_last_change"
-        value={values.unique_id_last_change}
+        value={values.unique_id_last_change ? new Date(values.unique_id_last_change).toISOString().slice(0, 10) : ""}
         onChange={(e) => {
           formikSetValue("unique_id_last_change", e.target.value);
         }}
@@ -235,7 +235,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         type="date"
         id="license_expiration"
         name="license_expiration"
-        value={values.license_expiration}
+        value={values.license_expiration ? new Date(values.license_expiration).toISOString().slice(0, 10) : ""}
         onChange={(e) => {
           formikSetValue("license_expiration", e.target.value);
         }}
@@ -603,7 +603,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         type="date"
         id="recorder_id_last_changed"
         name="recorder_id_last_changed"
-        value={values.recorder_id_last_changed}
+        value={values.recorder_id_last_changed ? new Date(values.recorder_id_last_changed).toISOString().slice(0, 10) : ""}
         onChange={(e) => { formikSetValue("recorder_id_last_changed", e.target.value); }}
         onBlur={(e) => { formikSetTouched("recorder_id_last_changed", true); handleBlur(e); }}
         error={errors.recorder_id_last_changed}

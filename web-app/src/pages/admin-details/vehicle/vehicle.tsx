@@ -114,7 +114,7 @@ const ScreenAdminDetailVehicle = () => {
         prev_recorder_id: values.previous_recorder_id,
         prev_unique_id: values.previous_unique_id,
         recorder_id: values.recorder_id,
-        recorder_id_last_changed: new Date(values.recorder_id_last_changed).toISOString,
+        recorder_id_last_changed: new Date(values.recorder_id_last_changed).toISOString(),
         recorder_on: values.recorder_on,
         recorder_type: values.recorder_type,
         serial_number: values.serial_number,
