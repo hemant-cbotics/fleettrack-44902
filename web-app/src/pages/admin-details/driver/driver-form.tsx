@@ -208,8 +208,8 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_expiry_date"
         name="license_expiry_date"
         value={values.license_expiry_date}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => {formikSetValue("license_expiry_date", e?.target?.value); }}
+        onBlur={(e) => { formikSetTouched("license_expiry_date", true); handleBlur(e); }}
         error={errors.license_expiry_date}
         touched={touched.license_expiry_date}
         disabled={!userCanEdit}
@@ -267,8 +267,8 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="medical_card_expiry_date"
         name="medical_card_expiry_date"
         value={values.medical_card_expiry_date}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => {formikSetValue("medical_card_expiry_date", e?.target?.value); }}
+        onBlur={(e) => { formikSetTouched("medical_card_expiry_date", true); handleBlur(e); }}
         error={errors.medical_card_expiry_date}
         touched={touched.medical_card_expiry_date}
         disabled={!userCanEdit}
@@ -308,8 +308,8 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="twic_expiry_date"
         name="twic_expiry_date"
         value={values.twic_expiry_date}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => {formikSetValue("twic_expiry_date", e?.target?.value); }}
+        onBlur={(e) => { formikSetTouched("twic_expiry_date", true); handleBlur(e); }}
         error={errors.twic_expiry_date}
         touched={touched.twic_expiry_date}
         disabled={!userCanEdit}
