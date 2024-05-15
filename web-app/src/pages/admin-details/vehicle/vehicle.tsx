@@ -80,7 +80,7 @@ const ScreenAdminDetailVehicle = () => {
           name: item?.short_name || "-",
           description: item?.vehicle_description || "-",
           vin: item?.vin || "-",
-          equipment_type: item?.equipment_type || "-",
+          equipment_type: item?.euipment_type || "-",
         })
       )
     : [];
@@ -89,6 +89,7 @@ const ScreenAdminDetailVehicle = () => {
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
+      console.log("Formik Values: ", values);
       const data = {
         id: values.vehicle_id,
         asset_type: values.asset_type,
@@ -162,9 +163,9 @@ const ScreenAdminDetailVehicle = () => {
         vin: dataSingleVehicle?.vin || "",
         vehicle_make: dataSingleVehicle?.vehicle_make || "",
         vehicle_model: dataSingleVehicle?.vehicle_model || 0,
-        license_plate: dataSingleVehicle?.license_plate || "",
-        license_expiration: dataSingleVehicle?.license_expiry || "",
-        equipment_type: dataSingleVehicle?.equipment_type || "",
+        license_plate: dataSingleVehicle?.licence_plate || "",
+        license_expiration: dataSingleVehicle?.licence_expiry || "",
+        equipment_type: dataSingleVehicle?.euipment_type || "",
         equipment_status: dataSingleVehicle?.equipment_status || "",
         asset_type: dataSingleVehicle?.asset_type || "",
         vehicle_class: dataSingleVehicle?.vehicle_class || "",

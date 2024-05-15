@@ -12,7 +12,7 @@ export type OrganizationVehicle = {
   created_at: string;
   email: string | null;
   equipment_status: string | null;
-  equipment_type: string | null;
+  euipment_type: string | null;
   firmware_version: string | null;
   fuel_capacity: number | null;
   fuel_cost: number | null;
@@ -22,8 +22,8 @@ export type OrganizationVehicle = {
   ignition_input: string | null;
   imei_or_esn_number: number | null;
   is_active: boolean;
-  license_expiry: string | null;
-  license_plate: string;
+  licence_expiry: string | null;
+  licence_plate: string;
   map_route_color: string | null;
   maximum_speed: number | null;
   organization: number;
