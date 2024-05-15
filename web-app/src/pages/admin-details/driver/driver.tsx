@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
 import HeaderView from "../../../components/admin/headerView";
@@ -18,7 +18,7 @@ import {
   DriverLicenseDetailForm,
   DriverMedicalDetailForm,
 } from "./driver-form";
-import { useOrganizationDriversQuery } from "../../../api/network/adminApiServices";
+import { useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
 import { OrganizationDriver } from "../../../api/types/Driver";
 
@@ -69,8 +69,9 @@ const ScreenAdminDetailDriver = () => {
     isFetching: isFetchingOrgDrivers,
     error,
   } = useOrganizationDriversQuery(orgDriversQueryParams);
-
   const { results } = dataOrgDrivers || {};
+
+  const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { driver_id: parseInt(driverId) }, { skip: !driverId });
 
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationDriver[])).map(
@@ -91,6 +92,33 @@ const ScreenAdminDetailDriver = () => {
       console.log(values);
     },
   });
+
+  useEffect(() => {
+    if (dataSingleDriver) {
+      formik.setValues({
+        driver_id: dataSingleDriver?.id,
+        driver_name: dataSingleDriver?.name,
+        nick_name: dataSingleDriver?.nick_name || "",
+        contact_phone: dataSingleDriver?.phone,
+        contact_email: dataSingleDriver?.email,
+        badge_employee_id: dataSingleDriver?.badge_employee_id || "",
+        card_id: dataSingleDriver?.card_id || "",
+        is_active: dataSingleDriver?.is_active || false,
+        license_type: dataSingleDriver?.licence_type || "",
+        license_state: dataSingleDriver?.licence_state || "",
+        license_number: dataSingleDriver?.licence_number || "",
+        license_expiration: dataSingleDriver?.licence_expiry || "",
+        license_status: dataSingleDriver?.licence_status || "",
+        medical_card_no: dataSingleDriver?.medical_card_no || "",
+        medical_card_expiration: dataSingleDriver?.medical_card_expiry || "",
+        hazmat_certified: dataSingleDriver?.is_hazmat_certified || false,
+        twic: dataSingleDriver?.twic || "",
+        twic_expiration: dataSingleDriver?.twic_expiry || "",
+        address: dataSingleDriver?.address || "",
+        vehicle_id: dataSingleDriver?.vehicle_assigned || "",
+      });
+    }
+  }, [dataSingleDriver, driverId])
 
   const {
     values,

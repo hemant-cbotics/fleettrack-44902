@@ -8,6 +8,7 @@ import {
   EditOrganizationUserPayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
+  SingleOrganizationDriverPayload,
   SingleOrganizationUserPayload,
 } from "../types/Admin";
 import { API_METHODS } from "./constants";
@@ -32,6 +33,7 @@ export enum AdminApiTags {
   DRIVER_CREATED = 'DRIVER_CREATED',
   DRIVER_MODIFIED = 'DRIVER_MODIFIED',
   DRIVER_DELETED = 'DRIVER_DELETED',
+  DRIVER_SINGLE = 'DRIVER_SINGLE',
 }
 
 export const AdminAPIs = createApi({
@@ -49,6 +51,7 @@ export const AdminAPIs = createApi({
     AdminApiTags.DRIVER_CREATED,
     AdminApiTags.DRIVER_MODIFIED,
     AdminApiTags.DRIVER_DELETED,
+    AdminApiTags.DRIVER_SINGLE,
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API_SERVER_URL,
@@ -260,6 +263,24 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    // single organization driver
+    singleOrganizationDriver: builder.query<OrganizationDriver, SingleOrganizationDriverPayload>({
+      query: ({ driver_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_DRIVER(driver_id),
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.DRIVER_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationDriver) => {
+        return response;
+      },
+    }),
+
   }),
 });
 
@@ -274,4 +295,5 @@ export const {
   useCreateOrganizationVehicleMutation,
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
+  useSingleOrganizationDriverQuery,
 } = AdminAPIs;

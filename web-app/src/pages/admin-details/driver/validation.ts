@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 export const driverDetailsInitialValues = {
-  driver_id: "",
+  driver_id: 0,
   driver_name: "",
   nick_name: "",
   contact_phone: "",

@@ -24,7 +24,7 @@ export type OrganizationDriver = {
   name: string,
   nick_name: string | null,
   organization: number,
-  phone: string | number,
+  phone: any,
   twic: string | null,
   twic_expiry: string | null,
   updated_at: string,
