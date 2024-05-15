@@ -4,6 +4,10 @@ from rest_framework import serializers
 from users.api.v1.serializers import UserSerializer
 from driver.api.v1.serializers import DriverSerializer
 
+class VehicleForGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vehicle
+        fields = '__all__'
 
 class VehicleSerializer(serializers.ModelSerializer):
     added_by = UserSerializer(read_only=True)
