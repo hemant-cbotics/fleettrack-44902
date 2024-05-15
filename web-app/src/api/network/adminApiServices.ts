@@ -264,6 +264,25 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    //delete organization vehicle
+    deleteSingleVehicle: builder.mutation<void, SingleOrganizationVehiclePayload>({
+      query: ({ organization_id, vehicle_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_VEHICLE(vehicle_id),
+          params: { organization_id },
+          method: API_METHODS.DELETE,
+        };
+      },
+      invalidatesTags: [AdminApiTags.VEHICLE_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: void) => {
+        return response;
+      },
+    }),
+
     // organization drivers
     organizationDrivers: builder.query<ListingResponse<OrganizationDriver[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
@@ -378,6 +397,7 @@ export const {
   useCreateOrganizationVehicleMutation,
   useSingleOrganizationVehicleQuery,
   useEditOrganizationVehicleMutation,
+  useDeleteSingleVehicleMutation,
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,
