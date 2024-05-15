@@ -247,6 +247,10 @@ export const language_en = {
         accord_details: "Details",
         accord_camera_id: "Camera ID",
         accord_group_membership: "Group Membership",
+        toast: {
+          vehicle_updated: "Vehicle has been updated successfully.",
+          vehicle_deleted: "Vehicle has been deleted successfully.",
+        },
         form: {
           vehicle_id: "Vehicle ID",
           creation_date: "Creation Date",

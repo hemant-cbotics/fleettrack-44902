@@ -7,6 +7,7 @@ import {
   CreateOrganizationVehiclePayload,
   EditOrganizationDriverPayload,
   EditOrganizationUserPayload,
+  EditOrganizationVehiclePayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
   SingleOrganizationDriverPayload,
@@ -243,6 +244,26 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    //edit organization vehicle
+    editOrganizationVehicle: builder.mutation<OrganizationVehicle, EditOrganizationVehiclePayload>({ // TODO: change the type
+      query: ({ organization_id, vehicle_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_VEHICLE(vehicle_id),
+          params: { organization_id },
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      invalidatesTags: [AdminApiTags.VEHICLE_MODIFIED, AdminApiTags.VEHICLE_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationVehicle) => {
+        return response;
+      },
+    }),
+
     // organization drivers
     organizationDrivers: builder.query<ListingResponse<OrganizationDriver[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
@@ -356,6 +377,7 @@ export const {
   useOrganizationVehiclesQuery,
   useCreateOrganizationVehicleMutation,
   useSingleOrganizationVehicleQuery,
+  useEditOrganizationVehicleMutation,
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,
