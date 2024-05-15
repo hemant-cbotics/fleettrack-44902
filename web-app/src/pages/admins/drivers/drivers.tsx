@@ -20,7 +20,7 @@ import { OrganizationDriver } from "../../../api/types/Driver";
 const columns = [
   "Sr. No",
   "Driver Id",
-  "Description",
+  "Name",
   "Phone",
   "Email",
   "Badge/Employee ID",
@@ -74,8 +74,8 @@ const ScreenDashboardAdminDrivers = () => {
         navLink: `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`,
         cellData: [
           index + 1, // "Sr. No",
-          item?.name, // "Driver Id",
-          "-", // "Description",
+          item?.id, // "Driver Id",
+          item?.name, // "Driver Name",
           item?.phone ?? "-", // "Phone",
           item?.email ?? "-", // "Email",
           item?.badge_employee_id ?? "-", // "Badge/Employee ID",
