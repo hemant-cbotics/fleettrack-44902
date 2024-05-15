@@ -80,6 +80,7 @@ export type CreateOrganizationDriverPayload = {
 }
 
 export type SingleOrganizationDriverPayload = {
+  organization_id: number | null;
   driver_id: number;
 }
 

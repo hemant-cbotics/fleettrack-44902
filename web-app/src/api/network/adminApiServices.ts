@@ -302,6 +302,24 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    //delete organization driver
+    deleteSingleDriver: builder.mutation<void, SingleOrganizationDriverPayload>({
+      query: ({ organization_id, driver_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_DRIVER(driver_id),
+          params: { organization_id },
+          method: API_METHODS.DELETE,
+        };
+      },
+      invalidatesTags: [AdminApiTags.DRIVER_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: void) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -318,4 +336,5 @@ export const {
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,
   useEditOrganizationDriverMutation,
+  useDeleteSingleDriverMutation,
 } = AdminAPIs;

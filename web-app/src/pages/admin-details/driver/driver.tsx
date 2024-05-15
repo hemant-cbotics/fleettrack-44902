@@ -18,7 +18,7 @@ import {
   DriverLicenseDetailForm,
   DriverMedicalDetailForm,
 } from "./driver-form";
-import { useEditOrganizationDriverMutation, useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
+import { useDeleteSingleDriverMutation, useEditOrganizationDriverMutation, useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
 import { OrganizationDriver } from "../../../api/types/Driver";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
@@ -73,8 +73,9 @@ const ScreenAdminDetailDriver = () => {
   } = useOrganizationDriversQuery(orgDriversQueryParams);
   const { results } = dataOrgDrivers || {};
 
-  const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { driver_id: parseInt(driverId) }, { skip: !driverId });
+  const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { organization_id: thisUserOrganizationId, driver_id: parseInt(driverId) }, { skip: !driverId });
   const [ editOrganizationDriverApiTrigger , {isLoading: isLoadingEditDriver}] = useEditOrganizationDriverMutation();
+  const [ deleteSingleDriverApiTrigger, {isLoading: isLoadingDeleteDriver}] = useDeleteSingleDriverMutation()
 
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationDriver[])).map(
@@ -118,7 +119,7 @@ const ScreenAdminDetailDriver = () => {
       .unwrap()
       .then(() => {
         toast.success("Driver updated successfully");
-        navigate(routeUrls.dashboardChildren.adminChildren.users);
+        navigate(routeUrls.dashboardChildren.adminChildren.drivers);
       })
       .catch((error) => {
         console.error("Error: ", error);
@@ -162,16 +163,23 @@ const ScreenAdminDetailDriver = () => {
     handleSubmit,
   } = formik;
 
-  const handleDeleteUser = () => {
-    console.log("Delete User");
+  const handleDeleteDriver = () => {
+    deleteSingleDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId)})
+    .unwrap()
+    .then(() => {
+      toast.success("Driver deleted successfully");
+      navigate(routeUrls.dashboardChildren.adminChildren.drivers);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
   };
 
-  const handleEditUser = () => {
+  const handleEditDriver = () => {
     if(userCanEdit){
       formik.handleSubmit();
     }
   };
-  const isLoadingDeleteUser = isFetchingSingleDriver;
 
   return (
     <>
@@ -243,7 +251,7 @@ const ScreenAdminDetailDriver = () => {
                       type="submit"
                       variant="success"
                       label={"Save"}
-                      onClick={handleEditUser}
+                      onClick={handleEditDriver}
                       disabled={isLoadingEditDriver}
                     />
                   </div>
@@ -256,7 +264,7 @@ const ScreenAdminDetailDriver = () => {
                       type="button"
                       variant="danger"
                       label={"Delete"}
-                      onClick={handleDeleteUser}
+                      onClick={handleDeleteDriver}
                       disabled={isLoadingEditDriver}
                     />
                   </div>
@@ -265,14 +273,14 @@ const ScreenAdminDetailDriver = () => {
                       type="button"
                       variant="primary"
                       label={userCanEdit ? "Update" : "Edit"}
-                      onClick={userCanEdit ? handleEditUser : () => setUserCanEdit(!userCanEdit)}
+                      onClick={userCanEdit ? handleEditDriver : () => setUserCanEdit(!userCanEdit)}
                       disabled={isLoadingEditDriver}
                     />
                   </div>
                 </>
               )}
             </div>
-            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditDriver || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
+            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditDriver || isLoadingDeleteDriver ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
                 <Accordian title="Details" openByDefault={true}>
                   <DriverGeneralDetailForm
