@@ -216,6 +216,7 @@ export const language_en = {
         accord_user_access_control: "User Access Control",
         toast: {
           user_updated: "User has been updated successfully.",
+          user_deleted: "User has been deleted successfully.",
         }
       }
     },

@@ -156,7 +156,15 @@ const ScreenAdminDetailUser = () => {
   }
 
   const handleDeleteUser = () => {
-    deleteSingleUserApiTrigger({user_id: parseInt(userId)});
+    deleteSingleUserApiTrigger({user_id: parseInt(userId)})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.user_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.users);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
   }
   return (
     <>
