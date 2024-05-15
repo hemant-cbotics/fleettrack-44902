@@ -23,25 +23,14 @@ import { TListData } from "./type";
 import { OrganizationDriver } from "../../../api/types/Driver";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { toast } from "react-toastify";
-
-const listData = [
-  {
-    driver_id: 1,
-    driver_description: "Driver 1",
-    driver_role: "Driver",
-    driver_email: "abc@gmail.com",
-  },
-  {
-    driver_id: 2,
-    driver_description: "Driver 2",
-    driver_role: "Driver",
-    driver_email: "abc@gmail.com",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const ScreenAdminDetailDriver = () => {
   const { driverId } = useParams<{ driverId: any }>();
   const { state: locationState } = useLocation();
+  const { t: tMain } = useTranslation();
+  const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.drivers" });
+  const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage" });
   const navigate = useNavigate();
 
   const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
@@ -118,7 +107,7 @@ const ScreenAdminDetailDriver = () => {
       editOrganizationDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId), data: data})
       .unwrap()
       .then(() => {
-        toast.success("Driver updated successfully");
+        toast.success(t("toast.driver_updated"));
         navigate(routeUrls.dashboardChildren.adminChildren.drivers);
       })
       .catch((error) => {
@@ -167,7 +156,7 @@ const ScreenAdminDetailDriver = () => {
     deleteSingleDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId)})
     .unwrap()
     .then(() => {
-      toast.success("Driver deleted successfully");
+      toast.success(t("toast.driver_deleted"));
       navigate(routeUrls.dashboardChildren.adminChildren.drivers);
     })
     .catch((error) => {
@@ -184,7 +173,7 @@ const ScreenAdminDetailDriver = () => {
   return (
     <>
       <HeaderView
-        title="Driver Specific View"
+        title={t("heading")}
         showBackButton={true}
         backButtonCallback={() =>
           navigate(routeUrls.dashboardChildren.adminChildren.drivers)
@@ -193,14 +182,14 @@ const ScreenAdminDetailDriver = () => {
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">
-            Add and Delete driver information
+            {t("sub_heading")}
           </p>
         </div>
         <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
           <div className={`lg:col-span-3 space-y-4${isFetchingOrgDrivers ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
-            <div className="font-bold text-lg leading-6">Drivers</div>
+            <div className="font-bold text-lg leading-6">{t("listing_heading")}</div>
             <AppSearchBox
-              placeholder="Search Driver here"
+              placeholder={tAdmin("search_placeholder")}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
@@ -243,14 +232,14 @@ const ScreenAdminDetailDriver = () => {
               { isNewEntity?.current ? (
                 <>
                   <p className="font-semibold text-blue-900 text-base leading-6">
-                    Complete the form below to add a new driver
+                    {tMain("admins.completeCreation")}
                   </p>
                   <div className="flex-grow"></div>
                   <div className="w-24">
                     <AdminFormFieldSubmit
                       type="submit"
                       variant="success"
-                      label={"Save"}
+                      label={tMain("save")}
                       onClick={handleEditDriver}
                       disabled={isLoadingEditDriver}
                     />
@@ -263,7 +252,7 @@ const ScreenAdminDetailDriver = () => {
                     <AdminFormFieldSubmit
                       type="button"
                       variant="danger"
-                      label={"Delete"}
+                      label={tMain("delete")}
                       onClick={handleDeleteDriver}
                       disabled={isLoadingEditDriver}
                     />
@@ -272,7 +261,7 @@ const ScreenAdminDetailDriver = () => {
                     <AdminFormFieldSubmit
                       type="button"
                       variant="primary"
-                      label={userCanEdit ? "Update" : "Edit"}
+                      label={userCanEdit ? tMain("update") : tMain("edit")}
                       onClick={userCanEdit ? handleEditDriver : () => setUserCanEdit(!userCanEdit)}
                       disabled={isLoadingEditDriver}
                     />
@@ -282,7 +271,7 @@ const ScreenAdminDetailDriver = () => {
             </div>
             <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditDriver || isLoadingDeleteDriver ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
-                <Accordian title="Details" openByDefault={true}>
+                <Accordian title={t("accord_details")} openByDefault={true}>
                   <DriverGeneralDetailForm
                     values={values}
                     errors={errors}
@@ -294,7 +283,7 @@ const ScreenAdminDetailDriver = () => {
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
-                <Accordian title="License Details">
+                <Accordian title={t("accord_license_details")} >
                   <DriverLicenseDetailForm
                     values={values}
                     errors={errors}
@@ -306,7 +295,7 @@ const ScreenAdminDetailDriver = () => {
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
-                <Accordian title="Medical and Other Details">
+                <Accordian title={t("accord_medical_and_other_details")} >
                   <DriverMedicalDetailForm
                     values={values}
                     errors={errors}

@@ -4,6 +4,7 @@ import {
   AdminFormFieldDropdown,
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
+import { useTranslation } from "react-i18next";
 
 interface DriverGeneralDetailFormProps {
   values: any;
@@ -30,10 +31,11 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldInput
-        label="Driver ID"
+        label={t("driver_id")}
         type="text"
         id="driver_id"
         name="driver_id"
@@ -46,7 +48,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Driver Name"
+        label={t("driver_name")}
         type="text"
         id="driver_name"
         name="driver_name"
@@ -59,7 +61,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Nickname"
+        label={t("nick_name")}
         type="text"
         id="nick_name"
         name="nick_name"
@@ -72,7 +74,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Contact Phone"
+        label={t("contact_phone")}
         type="text"
         id="contact_phone"
         name="contact_phone"
@@ -84,7 +86,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         disabled={!userCanEdit}
       />
       <AdminFormFieldInput
-        label="Contact Email"
+        label={t("contact_email")}
         type="text"
         id="contact_email"
         name="contact_email"
@@ -98,7 +100,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Badge/Employee ID"
+        label={t("badge_employee_id")}
         type="text"
         id="badge_employee_id"
         name="badge_employee_id"
@@ -111,7 +113,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Card ID"
+        label={t("card_id")}
         type="text"
         id="card_id"
         name="card_id"
@@ -124,7 +126,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
       <div className="col-span-12 grid grid-cols-8">
         <AdminFormFieldCheckbox
-          label="Is Active"
+          label={t("is_active")}
           id="is_active"
           type="checkbox"
           name="is_active"
@@ -150,10 +152,11 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldDropdown
-        label="License Type"
+        label={t("license_type")}
         id="license_type"
         name="license_type"
         value={values.license_type}
@@ -170,7 +173,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
-        label="License State"
+        label={t("license_state")}
         id="license_state"
         name="license_state"
         value={values.license_state}
@@ -187,7 +190,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="License Number"
+        label={t("license_number")}
         type="text"
         id="license_number"
         name="license_number"
@@ -200,7 +203,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="License Expiration"
+        label={t("license_expiry_date")}
         type="date"
         id="license_expiry_date"
         name="license_expiry_date"
@@ -213,7 +216,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
-        label="License Status"
+        label={t("license_status")}
         id="license_status"
         name="license_status"
         value={values.license_status}
@@ -242,10 +245,11 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldInput
-        label="Medical Card No"
+        label={t("medical_card_no")}
         type="text"
         id="medical_card_no"
         name="medical_card_no"
@@ -258,7 +262,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Medical Card Expiration"
+        label={t("medical_card_expiry_date")}
         type="date"
         id="medical_card_expiry_date"
         name="medical_card_expiry_date"
@@ -272,7 +276,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
 
       <div className="col-span-12 grid grid-cols-8">
         <AdminFormFieldCheckbox
-          label="Hazmat Certified"
+          label={t("hazmat_certified")}
           id="hazmat_certified"
           type="checkbox"
           name="hazmat_certified"
@@ -286,7 +290,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
       </div>
 
       <AdminFormFieldInput
-        label="Trans Worker ID cred (TWIC)"
+        label={t("twic")}
         type="text"
         id="twic"
         name="twic"
@@ -299,7 +303,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="TWIC Expiration"
+        label={t("twic_expiry_date")}
         type="date"
         id="twic_expiry_date"
         name="twic_expiry_date"
@@ -312,7 +316,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label="Address"
+        label={t("address")}
         type="text"
         id="address"
         name="address"
@@ -326,7 +330,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
-        label="Vehicle ID"
+        label={t("vehicle_id")}
         id="vehicle_id"
         name="vehicle_id"
         value={values.vehicle_id}
