@@ -139,7 +139,7 @@ const ScreenAdminDetailUser = () => {
     ? (results || ([] as OrganizationUser[])).map(
         (item: OrganizationUser, index: number) => ({
           user_id: item?.user?.id,
-          user_description: item?.user?.profile?.description || "Not available",
+          user_description: item?.user?.profile?.description || "-",
           user_email: item?.user?.email,
           user_role: item?.user?.role_and_permission?.role?.name,
         })

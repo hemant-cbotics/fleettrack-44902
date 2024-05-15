@@ -82,7 +82,7 @@ const ScreenAdminDetailDriver = () => {
         (item: OrganizationDriver, index: number) => ({
           id: item?.id,
           name: item?.name,
-          badge_employee_id: item?.badge_employee_id || "Not available",
+          badge_employee_id: item?.badge_employee_id || "-",
           email: item?.email,
           phone: item?.phone,
         })
