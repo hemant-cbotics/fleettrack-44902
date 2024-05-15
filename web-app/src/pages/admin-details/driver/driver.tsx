@@ -33,8 +33,8 @@ const ScreenAdminDetailDriver = () => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage" });
   const navigate = useNavigate();
 
-  const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
   const isNewEntity = useRef<boolean>(!!locationState?.new);
+  const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgDriversQueryParams, setOrgDriversQueryParams] = useState<
     OrganizationEntityListingPayload
