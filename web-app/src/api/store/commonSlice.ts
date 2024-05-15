@@ -11,6 +11,7 @@ export type TModalsState = {
   showCreateUser: boolean;
   showCreateVehicle: boolean;
   showCreateDriver: boolean;
+  showCreateGroup: boolean;
 }
 
 export type TAppCommonState = {
@@ -26,7 +27,8 @@ const initialState: TAppCommonState = {
     showCreateUser: false,
     showAdminsDropdown: false,
     showCreateVehicle: false,
-    showCreateDriver: false
+    showCreateDriver: false,
+    showCreateGroup: false
   }
 }
 
