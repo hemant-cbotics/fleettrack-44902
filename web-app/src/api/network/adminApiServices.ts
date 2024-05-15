@@ -11,6 +11,7 @@ import {
   OrganizationUser,
   SingleOrganizationDriverPayload,
   SingleOrganizationUserPayload,
+  SingleOrganizationVehiclePayload,
 } from "../types/Admin";
 import { API_METHODS } from "./constants";
 import { handleAuthErrorCode } from "./errorCodes";
@@ -30,6 +31,7 @@ export enum AdminApiTags {
   VEHICLE_CREATED = 'VEHICLE_CREATED',
   VEHICLE_MODIFIED = 'VEHICLE_MODIFIED',
   VEHICLE_DELETED = 'VEHICLE_DELETED',
+  VEHICLE_SINGLE = 'VEHICLE_SINGLE',
 
   DRIVER_CREATED = 'DRIVER_CREATED',
   DRIVER_MODIFIED = 'DRIVER_MODIFIED',
@@ -48,6 +50,7 @@ export const AdminAPIs = createApi({
     AdminApiTags.VEHICLE_CREATED,
     AdminApiTags.VEHICLE_MODIFIED,
     AdminApiTags.VEHICLE_DELETED,
+    AdminApiTags.VEHICLE_SINGLE,
 
     AdminApiTags.DRIVER_CREATED,
     AdminApiTags.DRIVER_MODIFIED,
@@ -221,6 +224,25 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    // single organization vehicle
+    singleOrganizationVehicle: builder.query<OrganizationVehicle, SingleOrganizationVehiclePayload>({
+      query: ({ organization_id, vehicle_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_VEHICLE(vehicle_id),
+          params: { organization_id },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.VEHICLE_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationVehicle) => {
+        return response;
+      },
+    }),
+
     // organization drivers
     organizationDrivers: builder.query<ListingResponse<OrganizationDriver[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
@@ -333,6 +355,7 @@ export const {
   useDeleteSingleUserMutation,
   useOrganizationVehiclesQuery,
   useCreateOrganizationVehicleMutation,
+  useSingleOrganizationVehicleQuery,
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,

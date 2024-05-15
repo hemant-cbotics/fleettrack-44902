@@ -89,3 +89,8 @@ export type EditOrganizationDriverPayload = {
   driver_id: number;
   data: any;
 }
+
+export type SingleOrganizationVehiclePayload = {
+  organization_id: number | null;
+  vehicle_id: string;
+}

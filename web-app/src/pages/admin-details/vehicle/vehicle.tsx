@@ -1,5 +1,5 @@
 import HeaderView from "../../../components/admin/headerView";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import Accordian from "../../../components/accordian";
 import { VehicleCameraIdDetailForm, VehicleDetailForm, VehicleGroupMembershipForm } from "./vehicle-form";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ import { useLoggedInUserData } from "../../../utils/user";
 import { OrganizationEntityListingPayload } from "../../../api/types/Admin";
 import { useDebouncedCallback } from "use-debounce";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
-import { useOrganizationVehiclesQuery } from "../../../api/network/adminApiServices";
+import { useOrganizationVehiclesQuery, useSingleOrganizationVehicleQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
 import { OrganizationVehicle } from "../../../api/types/Vehicle";
 
@@ -53,6 +53,8 @@ const ScreenAdminDetailVehicle = () => {
   } = useOrganizationVehiclesQuery(orgVehiclesQueryParams);
   const { results } = dataOrgVehicles || {};
 
+  const { data: dataSingleVehicle, isFetching: isFetchingSingleVehicle } = useSingleOrganizationVehicleQuery( { organization_id: thisUserOrganizationId, vehicle_id: vehicleId }, { skip: !vehicleId });
+
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationVehicle[])).map(
         (item: OrganizationVehicle, index: number) => ({
@@ -60,7 +62,7 @@ const ScreenAdminDetailVehicle = () => {
           name: item?.short_name || "-",
           description: item?.vehicle_description || "-",
           vin: item?.vin || "-",
-          equipment_type: item?.euipment_type || "-",
+          equipment_type: item?.equipment_type || "-",
         })
       )
     : [];
@@ -72,6 +74,55 @@ const ScreenAdminDetailVehicle = () => {
       console.log(values);
     },
   })
+
+  useEffect(() => {
+    if(dataSingleVehicle){
+      formik.setValues({
+        vehicle_id: dataSingleVehicle?.id,
+        creation_date: dataSingleVehicle?.created_at || "",
+        server_id: dataSingleVehicle?.server_id || "",
+        firmware_version: dataSingleVehicle?.firmware_version || "",
+        unique_id: dataSingleVehicle?.unique_id || "",
+        previous_unique_id: dataSingleVehicle?.prev_unique_id || "",
+        unique_id_last_change: dataSingleVehicle?.unique_id_last_change || "",
+        is_active: dataSingleVehicle?.is_active || false,
+        vehicle_description: dataSingleVehicle?.vehicle_description || "",
+        short_name: dataSingleVehicle?.short_name || "",
+        vin: dataSingleVehicle?.vin || "",
+        vehicle_make: dataSingleVehicle?.vehicle_make || "",
+        vehicle_model: dataSingleVehicle?.vehicle_model || 0,
+        license_plate: dataSingleVehicle?.license_plate || "",
+        license_expiration: dataSingleVehicle?.license_expiry || "",
+        equipment_type: dataSingleVehicle?.equipment_type || "",
+        equipment_status: dataSingleVehicle?.equipment_status || "",
+        asset_type: dataSingleVehicle?.asset_type || "",
+        vehicle_class: dataSingleVehicle?.vehicle_class || "",
+        imei_number: dataSingleVehicle?.imei_or_esn_number || "",
+        serial_number: dataSingleVehicle?.serial_number || "",
+        phone_number: dataSingleVehicle?.phone || "",
+        email: dataSingleVehicle?.email || "",
+        group_pushpin_id: dataSingleVehicle?.group_pushin_id || "",
+        map_route_color: dataSingleVehicle?.map_route_color || "",
+        ignition_input: dataSingleVehicle?.ignition_input || "",
+        maximum_speed: dataSingleVehicle?.maximum_speed || "",
+        driver_id: dataSingleVehicle?.driver?.id || 0,
+        driver_name: dataSingleVehicle?.driver?.name || "",
+        driver_phone_number: dataSingleVehicle?.driver?.phone_number || "",
+        fuel_type: dataSingleVehicle?.fuel_type || "",
+        fuel_capacity: dataSingleVehicle?.fuel_capacity || "",
+        fuel_economy: dataSingleVehicle?.fuel_economy || "",
+        fuel_cost: dataSingleVehicle?.fuel_cost || "",
+        recorder_id: dataSingleVehicle?.recorder_id || "",
+        recorder_on: dataSingleVehicle?.recorder_on || "",
+        recorder_type: dataSingleVehicle?.recorder_type || "",
+        previous_recorder_id: dataSingleVehicle?.prev_recorder_id || "",
+        recorder_id_last_changed: dataSingleVehicle?.recorder_id_last_changed || "",
+        list_of_groups: dataSingleVehicle?.list_of_groups || false,
+        all_vehicles: dataSingleVehicle?.all_vehicles || false,
+      })
+    }
+  }, [dataSingleVehicle, vehicleId])
+
   const {
     values,
     errors,
@@ -93,7 +144,6 @@ const ScreenAdminDetailVehicle = () => {
     console.log("Command Vehicle");
   }
   const isLoadingEditVehicle = false;
-  const isFetchingSingleVehicle = false;
   return (
     <>
       <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.vehicles)} />

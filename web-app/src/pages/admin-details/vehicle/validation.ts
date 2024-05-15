@@ -13,7 +13,7 @@ export const vehicleFormInitialValues = {
   short_name: "",
   vin: "",
   vehicle_make: "",
-  vehicle_model: "",
+  vehicle_model: 0,
   license_plate: "",
   license_expiration: "",
   equipment_type: "",
@@ -28,7 +28,7 @@ export const vehicleFormInitialValues = {
   map_route_color: "",
   ignition_input: "",
   maximum_speed: "",
-  driver_id: "",
+  driver_id: 0,
   driver_name: "",
   driver_phone_number: "",
   fuel_type: "",
@@ -40,8 +40,8 @@ export const vehicleFormInitialValues = {
   recorder_type: "",
   previous_recorder_id: "",
   recorder_id_last_changed: "",
-  list_of_groups: "",
-  all_vehicles: "",
+  list_of_groups: false,
+  all_vehicles: false,
 }
 
 export const vehicleFormValidationSchema = Yup.object().shape({});
