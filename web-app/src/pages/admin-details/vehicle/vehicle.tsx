@@ -13,43 +13,9 @@ import { useLoggedInUserData } from "../../../utils/user";
 import { OrganizationEntityListingPayload } from "../../../api/types/Admin";
 import { useDebouncedCallback } from "use-debounce";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
-
-const data = [
-  {
-    vehicle_id: "1010101010",
-    description: "10022 Cheery Covalt",
-    vin: "2G1WB5EK5A1196138",
-    equipment_type: "Car Compact",
-  },
-  {
-    vehicle_id: "1010101010",
-    description: "10022 Cheery Covalt",
-    vin: "2G1WB5EK5A1196138",
-    equipment_type: "Car Compact",
-  },
-  {
-    vehicle_id: "1010101010",
-    description: "10022 Cheery Covalt",
-    vin: "2G1WB5EK5A1196138",
-    equipment_type: "Car Compact",
-  },
-  {
-    vehicle_id: "1010101010",
-    description: "10022 Cheery Covalt",
-    vin: "2G1WB5EK5A1196138",
-    equipment_type: "Car Compact",
-  },
-  {
-    vehicle_id: "1010101010",
-    description: "10022 Cheery Covalt",
-    vin: "2G1WB5EK5A1196138",
-    equipment_type: "Car Compact",
-  },
-];
-
-interface ActionButtonProps {
-  text: string;
-}
+import { useOrganizationVehiclesQuery } from "../../../api/network/adminApiServices";
+import { TListData } from "./type";
+import { OrganizationVehicle } from "../../../api/types/Vehicle";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
@@ -74,12 +40,30 @@ const ScreenAdminDetailVehicle = () => {
           search: "",
         }) as OrganizationEntityListingPayload
   );
-
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgVehiclesQueryParams((prev) => {
       return { ...prev, page: 1, search: value };
     });
   }, 500);
+
+  const {
+    data: dataOrgVehicles,
+    isFetching: isFetchingOrgVehicles,
+    error,
+  } = useOrganizationVehiclesQuery(orgVehiclesQueryParams);
+  const { results } = dataOrgVehicles || {};
+
+  const listData: TListData[] = !!results
+    ? (results || ([] as OrganizationVehicle[])).map(
+        (item: OrganizationVehicle, index: number) => ({
+          id: item?.id,
+          name: item?.short_name || "-",
+          description: item?.vehicle_description || "-",
+          vin: item?.vin || "-",
+          equipment_type: item?.euipment_type || "-",
+        })
+      )
+    : [];
 
   const formik = useFormik({
     initialValues: vehicleFormInitialValues,
@@ -110,7 +94,6 @@ const ScreenAdminDetailVehicle = () => {
   }
   const isLoadingEditVehicle = false;
   const isFetchingSingleVehicle = false;
-  const isFetchingOrgVehicles = false;
   return (
     <>
       <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.vehicles)} />
@@ -128,12 +111,18 @@ const ScreenAdminDetailVehicle = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
             />
             <div>
-              {data.map((item: any, index: number) => (
-                <div key={index} className="border-b px-3 py-2 border-gray-200">
+              {listData.map((item: any, index: number) => (
+                <div key={index} className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
+                  vehicleId === item.id ? "bg-blue-200" : ""
+                }`} onClick={() =>
+                  navigate(
+                    `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`
+                  )
+                }>
                   <div className="grid grid-cols-4">
                     <div className="col-span-3">
                       <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.vehicle_id}
+                        {item.name}
                       </p>
                       <p className="font-normal text-xs leading-6 text-gray-500">
                         {item.description}
