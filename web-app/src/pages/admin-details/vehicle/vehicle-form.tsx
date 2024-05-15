@@ -600,12 +600,12 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
 
       <AdminFormFieldInput
         label={t("recorder_id_last_changed")}
-        type="text"
+        type="date"
         id="recorder_id_last_changed"
         name="recorder_id_last_changed"
         value={values.recorder_id_last_changed}
-        onChange={handleChange}
-        onBlur={handleBlur}
+        onChange={(e) => { formikSetValue("recorder_id_last_changed", e.target.value); }}
+        onBlur={(e) => { formikSetTouched("recorder_id_last_changed", true); handleBlur(e); }}
         error={errors.recorder_id_last_changed}
         touched={touched.recorder_id_last_changed}
         disabled={!userCanEdit}
