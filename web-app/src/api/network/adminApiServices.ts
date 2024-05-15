@@ -266,9 +266,10 @@ export const AdminAPIs = createApi({
 
     // single organization driver
     singleOrganizationDriver: builder.query<OrganizationDriver, SingleOrganizationDriverPayload>({
-      query: ({ driver_id }) => {
+      query: ({ organization_id, driver_id }) => {
         return {
           url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_DRIVER(driver_id),
+          params: { organization_id },
           method: API_METHODS.GET,
         };
       },
