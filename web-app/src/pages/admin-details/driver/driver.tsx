@@ -18,10 +18,11 @@ import {
   DriverLicenseDetailForm,
   DriverMedicalDetailForm,
 } from "./driver-form";
-import { useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
+import { useEditOrganizationDriverMutation, useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
 import { OrganizationDriver } from "../../../api/types/Driver";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { toast } from "react-toastify";
 
 const listData = [
   {
@@ -73,6 +74,7 @@ const ScreenAdminDetailDriver = () => {
   const { results } = dataOrgDrivers || {};
 
   const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { driver_id: parseInt(driverId) }, { skip: !driverId });
+  const [ editOrganizationDriverApiTrigger , {isLoading: isLoadingEditDriver}] = useEditOrganizationDriverMutation();
 
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationDriver[])).map(
@@ -90,7 +92,37 @@ const ScreenAdminDetailDriver = () => {
     initialValues: driverDetailsInitialValues,
     validationSchema: driverDetailsYupValidationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      const data = {
+        id: values.driver_id,
+        address: values.address,
+        badge_employee_id: values.badge_employee_id,
+        card_id: values.card_id,
+        email: values.contact_email,
+        is_active: values.is_active,
+        is_hazmat_certified: values.hazmat_certified,
+        licence_expiry: values.license_expiration,
+        licence_number: values.license_number,
+        licence_state: values.license_state,
+        licence_status: values.license_status,
+        licence_type: values.license_type,
+        medical_card_expiry: values.medical_card_expiration,
+        medical_card_no: values.medical_card_no,
+        name: values.driver_name,
+        nick_name: values.nick_name,
+        phone: values.contact_phone,
+        twic: values.twic,
+        twic_expiry: values.twic_expiration,
+        vehicle_assigned: values.vehicle_id,
+      };
+      editOrganizationDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId), data: data})
+      .unwrap()
+      .then(() => {
+        toast.success("Driver updated successfully");
+        navigate(routeUrls.dashboardChildren.adminChildren.users);
+      })
+      .catch((error) => {
+        console.error("Error: ", error);
+      });
     },
   });
 
@@ -135,10 +167,10 @@ const ScreenAdminDetailDriver = () => {
   };
 
   const handleEditUser = () => {
-    setUserCanEdit(!userCanEdit);
+    if(userCanEdit){
+      formik.handleSubmit();
+    }
   };
-
-  const isLoadingEditUser = isFetchingSingleDriver;
   const isLoadingDeleteUser = isFetchingSingleDriver;
 
   return (
@@ -212,7 +244,7 @@ const ScreenAdminDetailDriver = () => {
                       variant="success"
                       label={"Save"}
                       onClick={handleEditUser}
-                      disabled={isLoadingEditUser}
+                      disabled={isLoadingEditDriver}
                     />
                   </div>
                 </>
@@ -225,7 +257,7 @@ const ScreenAdminDetailDriver = () => {
                       variant="danger"
                       label={"Delete"}
                       onClick={handleDeleteUser}
-                      disabled={isLoadingEditUser}
+                      disabled={isLoadingEditDriver}
                     />
                   </div>
                   <div className="w-24">
@@ -234,13 +266,13 @@ const ScreenAdminDetailDriver = () => {
                       variant="primary"
                       label={userCanEdit ? "Update" : "Edit"}
                       onClick={userCanEdit ? handleEditUser : () => setUserCanEdit(!userCanEdit)}
-                      disabled={isLoadingEditUser}
+                      disabled={isLoadingEditDriver}
                     />
                   </div>
                 </>
               )}
             </div>
-            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditUser || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
+            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditDriver || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
                 <Accordian title="Details" openByDefault={true}>
                   <DriverGeneralDetailForm

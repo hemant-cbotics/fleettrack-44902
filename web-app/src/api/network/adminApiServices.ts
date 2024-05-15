@@ -5,6 +5,7 @@ import {
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   CreateOrganizationVehiclePayload,
+  EditOrganizationDriverPayload,
   EditOrganizationUserPayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
@@ -281,6 +282,26 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    //edit organization driver
+    editOrganizationDriver: builder.mutation<OrganizationDriver, EditOrganizationDriverPayload>({
+      query: ({ organization_id, driver_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_DRIVER(driver_id),
+          params: { organization_id },
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      invalidatesTags: [AdminApiTags.DRIVER_MODIFIED, AdminApiTags.DRIVER_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationDriver) => {
+        return response;
+      },
+    }),
+
   }),
 });
 
@@ -296,4 +317,5 @@ export const {
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,
+  useEditOrganizationDriverMutation,
 } = AdminAPIs;
