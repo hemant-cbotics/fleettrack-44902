@@ -25,6 +25,7 @@ import ScreenAdminDetailAccount from "../pages/admin-details/account/account"
 import ScreenDashboardAdminDrivers from "../pages/admins/drivers/drivers"
 import ScreenAdminDetailDriver from "../pages/admin-details/driver/driver"
 import ScreenDashboardAdminGroups from "../pages/admins/groups/groups"
+import ScreenDashboardAdminFleetTags from "../pages/admins/fleettag/fleettag"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -165,6 +166,10 @@ const routes: RouteObject[] = [
           },
           {
             path: routeUrls.dashboardChildren.adminChildren.fleettags,
+            element: <ScreenDashboardAdminFleetTags />
+          },
+          {
+            path: routeUrls.dashboardChildren.adminChildren.fleettags + "/:fleettagId",
             element: <TemporaryRoute />
           },
           {

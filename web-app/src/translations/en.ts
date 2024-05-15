@@ -333,6 +333,25 @@ export const language_en = {
         create_success: "Driver has been created successfully.",
       },
     },
+    fleettags: {
+      heading: "Fleet Tags",
+      sub_heading: "Manage your fleet tags",
+      add_new: "Add New Fleet Tag",
+      listing_heading: "Fleet Tag Listing",
+      search_placeholder: "Search fleet tags here...",
+      create_new: {
+        heading: "Add New Fleet Tag",
+        sub_heading: "Please provide the information below to create a New Fleet Tag",
+        name: "Fleet Tag Name",
+        name_placeholder: "Please provide a name for the fleet tag",
+        submit_button: "Create New Fleet Tag",
+        create_failed: "Failed to create fleet tag. Please check the information that you have entered.",
+        create_success: "Fleet Tag has been created successfully.",
+      },
+      detailsPage: {
+        // ...
+      }
+    },
   },
   active: "Active",
   inactive: "Inactive",
