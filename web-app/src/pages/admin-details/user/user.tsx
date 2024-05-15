@@ -139,6 +139,7 @@ const ScreenAdminDetailUser = () => {
     ? (results || ([] as OrganizationUser[])).map(
         (item: OrganizationUser, index: number) => ({
           user_id: item?.user?.id,
+          user_name: item?.user?.name || "-",
           user_description: item?.user?.profile?.description || "-",
           user_email: item?.user?.email,
           user_role: item?.user?.role_and_permission?.role?.name,
@@ -185,7 +186,7 @@ const ScreenAdminDetailUser = () => {
                   <div className="grid grid-cols-4">
                     <div className="col-span-3">
                       <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.user_id}
+                        {item.user_name}
                       </p>
                       <p className="font-normal text-xs leading-6 text-gray-500">
                         {item.user_description}
