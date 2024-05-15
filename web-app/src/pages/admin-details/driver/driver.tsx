@@ -21,6 +21,7 @@ import {
 import { useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
 import { OrganizationDriver } from "../../../api/types/Driver";
+import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 
 const listData = [
   {
@@ -137,6 +138,9 @@ const ScreenAdminDetailDriver = () => {
     setUserCanEdit(!userCanEdit);
   };
 
+  const isLoadingEditUser = isFetchingSingleDriver;
+  const isLoadingDeleteUser = isFetchingSingleDriver;
+
   return (
     <>
       <HeaderView
@@ -152,8 +156,8 @@ const ScreenAdminDetailDriver = () => {
             Add and Delete driver information
           </p>
         </div>
-        <div className="lg:grid lg:grid-cols-12 mt-8 py-2">
-          <div className="lg:col-span-3 space-y-4">
+        <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
+          <div className={`lg:col-span-3 space-y-4${isFetchingOrgDrivers ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
             <div className="font-bold text-lg leading-6">Drivers</div>
             <AppSearchBox
               placeholder="Search Driver here"
@@ -194,31 +198,51 @@ const ScreenAdminDetailDriver = () => {
               ))}
             </div>
           </div>
-          <div className="lg:col-span-9 px-4">
-            <div className="flex justify-end space-x-4">
-              <button className="rounded-full px-6 py-2 border border-red-500">
-                <p
-                  className="font-medium text-lg leading-6 text-red-500"
-                  onClick={handleDeleteUser}
-                >
-                  Delete
-                </p>
-              </button>
-              <button
-                className="rounded-full bg-blue-200 px-6 py-2"
-                onClick={() => setUserCanEdit(!userCanEdit)}
-              >
-                <p
-                  className="font-medium text-lg leading-6 text-blue-900"
-                  onClick={handleEditUser}
-                >
-                  {userCanEdit ? "Update" : "Edit"}
-                </p>
-              </button>
+          <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'lg:col-span-9'}`}>
+            <div className="flex items-center gap-4">
+              { isNewEntity?.current ? (
+                <>
+                  <p className="font-semibold text-blue-900 text-base leading-6">
+                    Complete the form below to add a new driver
+                  </p>
+                  <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="submit"
+                      variant="success"
+                      label={"Save"}
+                      onClick={handleEditUser}
+                      disabled={isLoadingEditUser}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="danger"
+                      label={"Delete"}
+                      onClick={handleDeleteUser}
+                      disabled={isLoadingEditUser}
+                    />
+                  </div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="primary"
+                      label={userCanEdit ? "Update" : "Edit"}
+                      onClick={userCanEdit ? handleEditUser : () => setUserCanEdit(!userCanEdit)}
+                      disabled={isLoadingEditUser}
+                    />
+                  </div>
+                </>
+              )}
             </div>
-            <div className="rounded-lg mt-2 bg-blue-200">
+            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditUser || isLoadingDeleteUser ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
-                <Accordian title="Details">
+                <Accordian title="Details" openByDefault={true}>
                   <DriverGeneralDetailForm
                     values={values}
                     errors={errors}
