@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 export const driverDetailsInitialValues = {
-  driver_id: "",
+  driver_id: 0,
   driver_name: "",
   nick_name: "",
   contact_phone: "",
@@ -12,13 +12,13 @@ export const driverDetailsInitialValues = {
   license_type: "",
   license_state: "",
   license_number: "",
-  license_expiration: "",
+  license_expiry_date: "",
   license_status: "",
   medical_card_no: "",
-  medical_card_expiration: "",
+  medical_card_expiry_date: "",
   hazmat_certified: false,
   twic: "",
-  twic_expiration: "",
+  twic_expiry_date: "",
   address: "",
   vehicle_id: "",
 }

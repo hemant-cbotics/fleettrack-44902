@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
 import HeaderView from "../../../components/admin/headerView";
@@ -18,37 +18,35 @@ import {
   DriverLicenseDetailForm,
   DriverMedicalDetailForm,
 } from "./driver-form";
-
-const listData = [
-  {
-    driver_id: 1,
-    driver_description: "Driver 1",
-    driver_role: "Driver",
-    driver_email: "abc@gmail.com",
-  },
-  {
-    driver_id: 2,
-    driver_description: "Driver 2",
-    driver_role: "Driver",
-    driver_email: "abc@gmail.com",
-  },
-];
+import { useDeleteSingleDriverMutation, useEditOrganizationDriverMutation, useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
+import { TListData } from "./type";
+import { OrganizationDriver } from "../../../api/types/Driver";
+import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const ScreenAdminDetailDriver = () => {
-  const [userCanEdit, setUserCanEdit] = useState<boolean>(false);
   const { driverId } = useParams<{ driverId: any }>();
   const { state: locationState } = useLocation();
-  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
+  const { t: tMain } = useTranslation();
+  const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.drivers" });
+  const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage" });
+  const navigate = useNavigate();
 
+  const isNewEntity = useRef<boolean>(!!locationState?.new);
+  const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgDriversQueryParams, setOrgDriversQueryParams] = useState<
     OrganizationEntityListingPayload
   >(
-    (locationState as OrganizationEntityListingPayload) ?? {
-      organization_id: thisUserOrganizationId,
-      page: 1,
-      page_size: 10,
-      search: "",
-    }
+    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
+      ? locationState
+      : {
+          organization_id: thisUserOrganizationId,
+          page: 1,
+          page_size: 10,
+          search: "",
+        }) as OrganizationEntityListingPayload
   );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
@@ -57,14 +55,93 @@ const ScreenAdminDetailDriver = () => {
     });
   }, 500);
 
-  const navigate = useNavigate();
+  const {
+    data: dataOrgDrivers,
+    isFetching: isFetchingOrgDrivers,
+    error,
+  } = useOrganizationDriversQuery(orgDriversQueryParams);
+  const { results } = dataOrgDrivers || {};
+
+  const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { organization_id: thisUserOrganizationId, driver_id: parseInt(driverId) }, { skip: !driverId });
+  const [ editOrganizationDriverApiTrigger , {isLoading: isLoadingEditDriver}] = useEditOrganizationDriverMutation();
+  const [ deleteSingleDriverApiTrigger, {isLoading: isLoadingDeleteDriver}] = useDeleteSingleDriverMutation()
+
+  const listData: TListData[] = !!results
+    ? (results || ([] as OrganizationDriver[])).map(
+        (item: OrganizationDriver, index: number) => ({
+          id: item?.id,
+          name: item?.name,
+          badge_employee_id: item?.badge_employee_id || "-",
+          email: item?.email,
+          phone: item?.phone,
+        })
+      )
+    : [];
+
   const formik = useFormik({
     initialValues: driverDetailsInitialValues,
     validationSchema: driverDetailsYupValidationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      const data = {
+        id: values.driver_id,
+        address: values.address,
+        badge_employee_id: values.badge_employee_id,
+        card_id: values.card_id,
+        email: values.contact_email,
+        is_active: values.is_active,
+        is_hazmat_certified: values.hazmat_certified,
+        licence_expiry: new Date(values.license_expiry_date).toISOString(),
+        licence_number: values.license_number,
+        licence_state: values.license_state,
+        licence_status: values.license_status,
+        licence_type: values.license_type,
+        medical_card_expiry: new Date(values.medical_card_expiry_date).toISOString(),
+        medical_card_no: values.medical_card_no,
+        name: values.driver_name,
+        nick_name: values.nick_name,
+        phone: values.contact_phone,
+        twic: values.twic,
+        twic_expiry: new Date(values.twic_expiry_date).toISOString(),
+        vehicle_assigned: values.vehicle_id,
+      };
+      editOrganizationDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId), data: data})
+      .unwrap()
+      .then(() => {
+        toast.success(t("toast.driver_updated"));
+        navigate(routeUrls.dashboardChildren.adminChildren.drivers);
+      })
+      .catch((error) => {
+        console.error("Error: ", error);
+      });
     },
   });
+
+  useEffect(() => {
+    if (dataSingleDriver) {
+      formik.setValues({
+        driver_id: dataSingleDriver?.id,
+        driver_name: dataSingleDriver?.name,
+        nick_name: dataSingleDriver?.nick_name || "",
+        contact_phone: dataSingleDriver?.phone,
+        contact_email: dataSingleDriver?.email,
+        badge_employee_id: dataSingleDriver?.badge_employee_id || "",
+        card_id: dataSingleDriver?.card_id || "",
+        is_active: dataSingleDriver?.is_active || false,
+        license_type: dataSingleDriver?.licence_type || "",
+        license_state: dataSingleDriver?.licence_state || "",
+        license_number: dataSingleDriver?.licence_number || "",
+        license_expiry_date: dataSingleDriver?.licence_expiry || "",
+        license_status: dataSingleDriver?.licence_status || "",
+        medical_card_no: dataSingleDriver?.medical_card_no || "",
+        medical_card_expiry_date: dataSingleDriver?.medical_card_expiry || "",
+        hazmat_certified: dataSingleDriver?.is_hazmat_certified || false,
+        twic: dataSingleDriver?.twic || "",
+        twic_expiry_date: dataSingleDriver?.twic_expiry || "",
+        address: dataSingleDriver?.address || "",
+        vehicle_id: dataSingleDriver?.vehicle_assigned || "",
+      });
+    }
+  }, [dataSingleDriver, driverId])
 
   const {
     values,
@@ -75,28 +152,44 @@ const ScreenAdminDetailDriver = () => {
     handleSubmit,
   } = formik;
 
-  const handleDeleteUser = () => {
-    console.log("Delete User");
+  const handleDeleteDriver = () => {
+    deleteSingleDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId)})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.driver_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.drivers);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
   };
 
-  const handleEditUser = () => {
-    setUserCanEdit(!userCanEdit);
+  const handleEditDriver = () => {
+    if(userCanEdit){
+      formik.handleSubmit();
+    }
   };
 
   return (
     <>
-      <HeaderView title="Driver Specific View" showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.drivers)} />
+      <HeaderView
+        title={t("heading")}
+        showBackButton={true}
+        backButtonCallback={() =>
+          navigate(routeUrls.dashboardChildren.adminChildren.drivers)
+        }
+      />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex items-center">
           <p className="font-semibold text-blue-900 text-lg leading-6">
-            Add and Delete driver information
+            {t("sub_heading")}
           </p>
         </div>
-        <div className="lg:grid lg:grid-cols-12 mt-8 py-2">
-          <div className="lg:col-span-3 space-y-4">
-            <div className="font-bold text-lg leading-6">Drivers</div>
+        <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
+          <div className={`lg:col-span-3 space-y-4${isFetchingOrgDrivers ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
+            <div className="font-bold text-lg leading-6">{t("listing_heading")}</div>
             <AppSearchBox
-              placeholder="Search Driver here"
+              placeholder={tAdmin("search_placeholder")}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
@@ -106,59 +199,79 @@ const ScreenAdminDetailDriver = () => {
                 <div
                   key={index}
                   className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    parseInt(driverId) === item.user_id ? "bg-blue-200" : ""
+                    parseInt(driverId) === item.id ? "bg-blue-200" : ""
                   }`}
                   onClick={() =>
                     navigate(
-                      `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.driver_id}`
+                      `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`
                     )
                   }
                 >
                   <div className="grid grid-cols-4">
                     <div className="col-span-3">
                       <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.driver_id}
+                        {item.name}
                       </p>
                       <p className="font-normal text-xs leading-6 text-gray-500">
-                        {item.driver_description}
+                        {item.badge_employee_id}
                       </p>
                     </div>
                     <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                      {item.driver_role}
+                      {item.phone}
                     </div>
                   </div>
                   <p className="font-normal text-base leading-6 text-gray-700">
-                    {item.driver_email}
+                    {item.email}
                   </p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="lg:col-span-9 px-4">
-            <div className="flex justify-end space-x-4">
-              <button className="rounded-full px-6 py-2 border border-red-500">
-                <p
-                  className="font-medium text-lg leading-6 text-red-500"
-                  onClick={handleDeleteUser}
-                >
-                  Delete
-                </p>
-              </button>
-              <button
-                className="rounded-full bg-blue-200 px-6 py-2"
-                onClick={() => setUserCanEdit(!userCanEdit)}
-              >
-                <p
-                  className="font-medium text-lg leading-6 text-blue-900"
-                  onClick={handleEditUser}
-                >
-                  {userCanEdit ? "Update" : "Edit"}
-                </p>
-              </button>
+          <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'lg:col-span-9'}`}>
+            <div className="flex items-center gap-4">
+              { isNewEntity?.current ? (
+                <>
+                  <p className="font-semibold text-blue-900 text-base leading-6">
+                    {tMain("admins.completeCreation")}
+                  </p>
+                  <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="submit"
+                      variant="success"
+                      label={tMain("save")}
+                      onClick={handleEditDriver}
+                      disabled={isLoadingEditDriver}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="danger"
+                      label={tMain("delete")}
+                      onClick={handleDeleteDriver}
+                      disabled={isLoadingEditDriver}
+                    />
+                  </div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="primary"
+                      label={userCanEdit ? tMain("update") : tMain("edit")}
+                      onClick={userCanEdit ? handleEditDriver : () => setUserCanEdit(!userCanEdit)}
+                      disabled={isLoadingEditDriver}
+                    />
+                  </div>
+                </>
+              )}
             </div>
-            <div className="rounded-lg mt-2 bg-blue-200">
+            <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleDriver || isLoadingEditDriver || isLoadingDeleteDriver ? 'opacity-40' : ''}`}>
               <form onSubmit={handleSubmit}>
-                <Accordian title="Details">
+                <Accordian title={t("accord_details")} openByDefault={true}>
                   <DriverGeneralDetailForm
                     values={values}
                     errors={errors}
@@ -170,7 +283,7 @@ const ScreenAdminDetailDriver = () => {
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
-                <Accordian title="License Details">
+                <Accordian title={t("accord_license_details")} >
                   <DriverLicenseDetailForm
                     values={values}
                     errors={errors}
@@ -182,7 +295,7 @@ const ScreenAdminDetailDriver = () => {
                     userCanEdit={userCanEdit}
                   />
                 </Accordian>
-                <Accordian title="Medical and Other Details">
+                <Accordian title={t("accord_medical_and_other_details")} >
                   <DriverMedicalDetailForm
                     values={values}
                     errors={errors}

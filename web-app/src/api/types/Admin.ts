@@ -78,3 +78,14 @@ export type CreateOrganizationDriverPayload = {
   email: string;
   phone: string;
 }
+
+export type SingleOrganizationDriverPayload = {
+  organization_id: number | null;
+  driver_id: number;
+}
+
+export type EditOrganizationDriverPayload = {
+  organization_id: number | null;
+  driver_id: number;
+  data: any;
+}

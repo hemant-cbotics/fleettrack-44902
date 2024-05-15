@@ -5,9 +5,11 @@ import {
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   CreateOrganizationVehiclePayload,
+  EditOrganizationDriverPayload,
   EditOrganizationUserPayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
+  SingleOrganizationDriverPayload,
   SingleOrganizationUserPayload,
 } from "../types/Admin";
 import { API_METHODS } from "./constants";
@@ -32,6 +34,7 @@ export enum AdminApiTags {
   DRIVER_CREATED = 'DRIVER_CREATED',
   DRIVER_MODIFIED = 'DRIVER_MODIFIED',
   DRIVER_DELETED = 'DRIVER_DELETED',
+  DRIVER_SINGLE = 'DRIVER_SINGLE',
 }
 
 export const AdminAPIs = createApi({
@@ -49,6 +52,7 @@ export const AdminAPIs = createApi({
     AdminApiTags.DRIVER_CREATED,
     AdminApiTags.DRIVER_MODIFIED,
     AdminApiTags.DRIVER_DELETED,
+    AdminApiTags.DRIVER_SINGLE,
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API_SERVER_URL,
@@ -218,7 +222,7 @@ export const AdminAPIs = createApi({
     }),
 
     // organization drivers
-    organizationDrivers: builder.query<ListingResponse<any[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+    organizationDrivers: builder.query<ListingResponse<OrganizationDriver[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_DRIVERS,
@@ -236,7 +240,7 @@ export const AdminAPIs = createApi({
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
       },
-      transformResponse: (response: ListingResponse<any[]>) => {
+      transformResponse: (response: ListingResponse<OrganizationDriver[]>) => {
         return response;
       },
     }),
@@ -260,6 +264,63 @@ export const AdminAPIs = createApi({
       },
     }),
 
+    // single organization driver
+    singleOrganizationDriver: builder.query<OrganizationDriver, SingleOrganizationDriverPayload>({
+      query: ({ organization_id, driver_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_DRIVER(driver_id),
+          params: { organization_id },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.DRIVER_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationDriver) => {
+        return response;
+      },
+    }),
+
+    //edit organization driver
+    editOrganizationDriver: builder.mutation<OrganizationDriver, EditOrganizationDriverPayload>({
+      query: ({ organization_id, driver_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_DRIVER(driver_id),
+          params: { organization_id },
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      invalidatesTags: [AdminApiTags.DRIVER_MODIFIED, AdminApiTags.DRIVER_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationDriver) => {
+        return response;
+      },
+    }),
+
+    //delete organization driver
+    deleteSingleDriver: builder.mutation<void, SingleOrganizationDriverPayload>({
+      query: ({ organization_id, driver_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_DRIVER(driver_id),
+          params: { organization_id },
+          method: API_METHODS.DELETE,
+        };
+      },
+      invalidatesTags: [AdminApiTags.DRIVER_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: void) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -274,4 +335,7 @@ export const {
   useCreateOrganizationVehicleMutation,
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
+  useSingleOrganizationDriverQuery,
+  useEditOrganizationDriverMutation,
+  useDeleteSingleDriverMutation,
 } = AdminAPIs;

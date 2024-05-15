@@ -62,13 +62,13 @@ const ScreenDashboardAdminUsers = () => {
         cellData: [
           index + 1, // SrNo: 
           item?.user?.id, // id: 
-          item?.user?.profile?.description || "Not available", // description: 
-          item?.user?.role_and_permission?.role?.name || "Not available", // role: 
-          item?.user?.name || "Not available", // name: 
+          item?.user?.profile?.description || "-", // description: 
+          item?.user?.role_and_permission?.role?.name || "-", // role: 
+          item?.user?.name || "-", // name: 
           item?.user?.email, // email: 
-          item?.user?.profile?.timezone || "Not available", // timezone: 
+          item?.user?.profile?.timezone || "-", // timezone: 
           item?.user?.profile?.is_active, // active: 
-          "2021-09-01 12:00:00" // last_login: 
+          "-" // last_login: 
         ]
       }))
     : [];
