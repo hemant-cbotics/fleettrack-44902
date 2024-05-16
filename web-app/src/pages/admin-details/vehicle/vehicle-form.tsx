@@ -7,6 +7,7 @@ import {
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
+import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
 
 interface VehicleDetailFormProps {
   values: any;
@@ -33,6 +34,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
+  
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
@@ -266,6 +268,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="equipment_status"
         name="equipment_status"
         value={values.equipment_status}
+        options={EQUIPMENT_STATUS_OPTIONS}
         onChange={(e) => {
           formikSetValue("equipment_status", e?.value);
         }}
@@ -283,6 +286,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="asset_type"
         name="asset_type"
         value={values.asset_type}
+        options={ASSET_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("asset_type", e?.value);
         }}
@@ -300,6 +304,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="vehicle_class"
         name="vehicle_class"
         value={values.vehicle_class}
+        options={VEHICLE_CLASS_OPTIONS}
         onChange={(e) => {
           formikSetValue("vehicle_class", e?.value);
         }}
@@ -382,6 +387,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="map_route_color"
         name="map_route_color"
         value={values.map_route_color}
+        options={MAP_ROUTE_COLOR_OPTIONS}
         onChange={(e) => {
           formikSetValue("map_route_color", e?.value);
         }}
@@ -399,6 +405,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="ignition_input"
         name="ignition_input"
         value={values.ignition_input}
+        options={IGNITION_INPUT_OPTIONS}
         onChange={(e) => {
           formikSetValue("ignition_input", e?.value);
         }}
@@ -471,6 +478,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="fuel_type"
         name="fuel_type"
         value={values.fuel_type}
+        options={FUEL_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("fuel_type", e?.value);
         }}
@@ -556,6 +564,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         id="recorder_on"
         name="recorder_on"
         value={values.recorder_on}
+        options={RECORDER_ON_OPTIONS}
         onChange={(e) => {
           formikSetValue("recorder_on", e?.value);
         }}
@@ -573,6 +582,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         id="recorder_type"
         name="recorder_type"
         value={values.recorder_type}
+        options={RECORDER_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("recorder_type", e?.value);
         }}
