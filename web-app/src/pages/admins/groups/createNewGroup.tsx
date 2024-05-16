@@ -4,13 +4,13 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useCreateOrganizationDriverMutation, useOrganizationRolesPermissionsQuery } from "../../../api/network/adminApiServices";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { useLoggedInUserData } from "../../../utils/user";
 import { formInitialValues, TFormFieldNames, YupValidationSchema } from "./validation";
+import { useCreateOrganizationGroupMutation } from "../../../api/network/adminApiServices";
 
 const AdminsGroupsCreateNew = () => {
   const { t: tMain } = useTranslation();
@@ -21,7 +21,7 @@ const AdminsGroupsCreateNew = () => {
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
-  const [createOrgDriverAPITrigger] = useCreateOrganizationDriverMutation();
+  const [createOrgGroupAPITrigger] = useCreateOrganizationGroupMutation();
 
   const hideModal = () => {
     dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
@@ -40,30 +40,29 @@ const AdminsGroupsCreateNew = () => {
             initialValues={formInitialValues}
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              // createOrgDriverAPITrigger({
-              //   organization: thisUserOrganizationId ?? 0,
-              //   name: values.name,
-              //   email: values.email,
-              //   phone: values.phone,
-              // })
-              //   .unwrap()
-              //   .then((data) => {
-              //     console.log('>>>', data);
-              //     if(!!data?.created_at) {
-              //       dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
-              //       toast.success(t('create_success'), { autoClose: 10000 });
-              //       navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${data?.id}`, { state: { new: true } });
-              //     } else {
-              //       toast.error(tMain('toast.general_error'));
-              //     }
-              //   })
-              //   .catch((error) => {
-              //     const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('create_failed')];
-              //     toast.error(errors?.join(' '));
-              //   })
-              //   .finally(() => {
-              //     setSubmitting(false);
-              //   });
+              createOrgGroupAPITrigger({
+                organization: thisUserOrganizationId ?? 0,
+                name: values.name,
+                description: values.description,
+              })
+                .unwrap()
+                .then((data) => {
+                  console.log('>>>', data);
+                  if(!!data?.created_at) {
+                    dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
+                    toast.success(t('create_success'), { autoClose: 10000 });
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${data?.id}`, { state: { new: true } });
+                  } else {
+                    toast.error(tMain('toast.general_error'));
+                  }
+                })
+                .catch((error) => {
+                  const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('create_failed')];
+                  toast.error(errors?.join(' '));
+                })
+                .finally(() => {
+                  setSubmitting(false);
+                });
             }}
           >{({
             values,
