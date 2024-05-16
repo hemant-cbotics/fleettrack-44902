@@ -166,6 +166,11 @@ const ScreenDashboardAdminGroups = () => {
       console.error("Error: ", error);
     });
   }
+  const [text, setText] = React.useState("");
+
+  const handleAllVehicleSearchChange = (e: any) => {
+    setText(e.target.value);
+  }
 
 
   return (
@@ -190,7 +195,7 @@ const ScreenDashboardAdminGroups = () => {
               label={t("group")}
               id="GroupSelector"
               name="group"
-              value={groupId}
+              value={groupId.toString()}
               options={groupData}
               onChange={(e) => { navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${e?.value}`) }}
               // onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
@@ -235,13 +240,13 @@ const ScreenDashboardAdminGroups = () => {
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
-              onChange={() => {}}
+              onChange={handleAllVehicleSearchChange}
             />
             <div className="h-96 mt-4 p-2 border border-gray-500 rounded-lg overflow-y-auto">
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {currentAllVehicleList?.map((grpItem) => {
+                  {currentAllVehicleList?.filter((groupItem) => groupItem.name.includes(text))?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
                         key={grpItem.id}
