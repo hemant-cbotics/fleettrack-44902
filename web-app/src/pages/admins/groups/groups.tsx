@@ -166,11 +166,6 @@ const ScreenDashboardAdminGroups = () => {
       console.error("Error: ", error);
     });
   }
-  const [text, setText] = React.useState("");
-
-  const handleAllVehicleSearchChange = (e: any) => {
-    setText(e.target.value);
-  }
 
 
   return (
@@ -246,7 +241,7 @@ const ScreenDashboardAdminGroups = () => {
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {currentAllVehicleList?.filter((groupItem) => groupItem.name.includes(text))?.map((grpItem) => {
+                  {currentAllVehicleList?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
                         key={grpItem.id}
