@@ -53,6 +53,7 @@ const AdminsGroupsHeader: FC<TAdminsGroupsHeaderProps> = ({
         variant="danger"
         label={tMain("delete")}
         onClick={deleteButtonCallback}
+        disabled={disabled}
       />
     </div>
   )

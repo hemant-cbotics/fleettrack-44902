@@ -17,13 +17,6 @@ import { routeUrls } from "../../../navigation/routeUrls";
 import { toast } from "react-toastify";
 import { OrganizationVehicle } from "../../../api/types/Vehicle";
 
-const tempGroupData = [
-  { value: "1", label: "Group 1" },
-  { value: "2", label: "Group 2" },
-  { value: "3", label: "Group 3" },
-  { value: "4", label: "Group 4" },
-  { value: "5", label: "Group 5" }
-]
 
 const ScreenDashboardAdminGroups = () => {
   const { groupId } = useParams<{ groupId: any }>();
@@ -193,7 +186,7 @@ const ScreenDashboardAdminGroups = () => {
             dispatch(setModalsData({ ...modalsState, showCreateGroup: true }))
           }}
           deleteButtonCallback={handleDeleteGroup}
-          disabled={isLoadingDeleteGroup || isLoadingEditGroup || isFetchingSingleGroup}
+          disabled={isLoadingDeleteGroup || isLoadingEditGroup || isFetchingSingleGroup || !groupId}
         />
         <div className={`grid grid-cols-12 gap-4 items-end ${isFetchingOrgGroups ? 'opacity-40 pointer-events-none': ""}`}>
           <div className="col-span-4">
@@ -300,7 +293,7 @@ const ScreenDashboardAdminGroups = () => {
               variant="success"
               label={tMain("save")}
               onClick={handleEditGroup}
-              disabled={currentGroupVehicleList.length === 0}
+              disabled={currentGroupVehicleList.length === 0 || !groupId}
             />
           </div>
 
