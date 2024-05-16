@@ -201,7 +201,7 @@ const ScreenDashboardAdminGroups = () => {
               label={t("group")}
               id="GroupSelector"
               name="group"
-              value={groupId.toString()}
+              value={groupId?.toString() ?? ""}
               options={groupData}
               onChange={(e) => { navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${e?.value}`) }}
               // onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
