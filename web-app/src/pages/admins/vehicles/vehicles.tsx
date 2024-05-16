@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
   "Sr. No",
-  "Vehicle Id",
+  "Vehicle Name",
   "Description",
   "Equipment Type (VIN)",
   "ECM VIN",
@@ -74,7 +74,7 @@ const ScreenDashboardAdminVehicles = () => {
         navLink: `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`,
         cellData: [
           index + 1, // "Sr. No",
-          item?.id ?? "-", // "Vehicle Id",
+          item?.vehicle_model + " " + item?.vehicle_make ?? "-", // "Vehicle Id",
           item?.vehicle_description ?? "-", // "Description",
           item?.euipment_type ?? "-", // "Equipment Type (VIN)",
           item?.vin ?? "-", // "ECM VIN",

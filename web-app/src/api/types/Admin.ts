@@ -100,3 +100,20 @@ export type EditOrganizationVehiclePayload = {
   vehicle_id: string;
   data: any;
 }
+
+export type CreateOrganizationGroupPayload = {
+  organization: number | null;
+  name: string;
+  description: string;
+}
+
+export type SingleOrganizationGroupPayload = {
+  organization_id: number | null;
+  group_id: number;
+}
+
+export type EditOrganizationGroupPayload = {
+  organization_id: number | null;
+  group_id: number;
+  data: any;
+}

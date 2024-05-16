@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
@@ -9,22 +9,168 @@ import { APP_CONFIG } from "../../../constants/constants";
 import AdminsGroupsCreateNew from "./createNewGroup";
 import AdminsGroupsHeader from "./header";
 import GroupVehicleItem from "./vehicleItem";
+import { useLoggedInUserData } from "../../../utils/user";
+import { useDeleteSingleGroupMutation, useEditOrganizationGroupMutation, useOrganizationGroupsQuery, useOrganizationVehiclesQuery, useSingleOrganizationGroupQuery } from "../../../api/network/adminApiServices";
+import { OrganizationGroup } from "../../../api/types/Group";
+import { useNavigate, useParams } from "react-router-dom";
+import { routeUrls } from "../../../navigation/routeUrls";
+import { toast } from "react-toastify";
+import { OrganizationVehicle } from "../../../api/types/Vehicle";
 
-const tempGroupData = [
-  { value: "1", label: "Group 1" },
-  { value: "2", label: "Group 2" },
-  { value: "3", label: "Group 3" },
-  { value: "4", label: "Group 4" },
-  { value: "5", label: "Group 5" }
-]
 
 const ScreenDashboardAdminGroups = () => {
+  const { groupId } = useParams<{ groupId: any }>();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.groups'});
   const { t: tMain } = useTranslation();
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [currentAllVehicleList, setCurrentAllVehicleList] = React.useState<any[]>([]);
+  const [currentGroupVehicleList, setCurrentGroupVehicleList] = React.useState<any[]>([]);
+
+  const [leftSelectedVehicles, setleftSelectedVehicles] = React.useState<any[]>([]);
+  const [rightSelectedVehicles, setrightSelectedVehicles] = React.useState<any[]>([]);
+
+  const [leftSearchText, setLeftSearchText] = React.useState<string>("");
+  const [rightSearchText, setRightSearchText] = React.useState<string>("");
+
+  const [currentDescription, setCurrentDescription] = React.useState<string>("");
 
   const [showInactiveGroups, setShowInactiveGroups] = React.useState(false);
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+  const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
+    organization_id: thisUserOrganizationId ?? 0,
+    page: 1,
+    page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+    search: ""
+  });
+
+  const {
+    data: dataOrgGroups,
+    isFetching: isFetchingOrgGroups,
+    error
+  } =
+    useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  const { data: dataSingleGroup, isFetching: isFetchingSingleGroup } = useSingleOrganizationGroupQuery( { organization_id: thisUserOrganizationId, group_id: parseInt(groupId) }, { skip: !groupId });
+  const [ editOrganizationGroupApiTrigger , {isLoading: isLoadingEditGroup}] = useEditOrganizationGroupMutation();
+  const [ deleteSingleGroupApiTrigger, {isLoading: isLoadingDeleteGroup}] = useDeleteSingleGroupMutation();
+
+  const {data: dataOrgVehicles, isFetching: isFetchingOrgVehicles} = useOrganizationVehiclesQuery(orgGroupsQueryParams);
+  const { results: allVehicles } = dataOrgVehicles ?? {};
+  const { results } = dataOrgGroups ?? {};
+  const { vehicles: groupVehicles } = dataSingleGroup ?? {};
+
+  const groupData = !!results
+  ? (results || ([] as OrganizationGroup[])).map(
+      (item: OrganizationGroup, index: number) => ({
+        value: item?.id.toString(),
+        label: item?.name,
+      })
+    )
+  : [];
+
+  const allVehicleList = !!allVehicles
+  ? (allVehicles || ([] as OrganizationVehicle[])).map(
+      (item: OrganizationVehicle, index: number) => ({
+        id: item?.id,
+        name: item?.vehicle_model + " " + item?.vehicle_make,
+      })
+    )
+  : [];
+
+  const groupVehicleList  = !!groupVehicles
+  ? (groupVehicles || ([] as OrganizationVehicle[])).map(
+      (item: OrganizationVehicle, index: number) => ({
+        id: item?.id,
+        name: item?.vehicle_model + " " + item?.vehicle_make,
+      })
+    )
+  : [];
+
+  useEffect(() => {
+    setCurrentDescription(dataSingleGroup?.description ?? "");
+    setCurrentGroupVehicleList(groupVehicleList);
+    setCurrentAllVehicleList(allVehicleList.filter((allVehicleItem) => !groupVehicleList.some((groupVehicleItem) => allVehicleItem.id === groupVehicleItem.id)))
+  }, [dataSingleGroup, dataOrgVehicles])
+
+  const handleLeftCheckboxChange = ({ item, isChecked }: { item: any; isChecked: boolean }) => {
+    if(isChecked) {
+      setleftSelectedVehicles([...leftSelectedVehicles, item]);
+    } else {
+      setleftSelectedVehicles(leftSelectedVehicles.filter((group) => group.id !== item.id));
+    }
+  }
+
+  const handleRightCheckboxChange = ({ item, isChecked }: { item: any; isChecked: boolean }) => {
+    if(isChecked) {
+      setrightSelectedVehicles([...rightSelectedVehicles, item]);
+    } else {
+      setrightSelectedVehicles(rightSelectedVehicles.filter((group) => group.id !== item.id));
+    }
+  }
+
+  const handleAddSelected = () => {
+    setCurrentGroupVehicleList([...currentGroupVehicleList, ...leftSelectedVehicles]);
+    setCurrentAllVehicleList(currentAllVehicleList.filter((item) => !leftSelectedVehicles.some((group) => group.id === item.id)));
+    setleftSelectedVehicles([]);
+  }
+
+  const handleRemoveSelected = () => {
+    setCurrentAllVehicleList([...currentAllVehicleList, ...rightSelectedVehicles]);
+    setCurrentGroupVehicleList(currentGroupVehicleList.filter((item) => !rightSelectedVehicles.some((group) => group.id === item.id)));
+    setrightSelectedVehicles([]);
+  }
+
+  const handleAddAll = () => {
+    setCurrentGroupVehicleList([...currentGroupVehicleList, ...currentAllVehicleList]);
+    setCurrentAllVehicleList([]);
+    setleftSelectedVehicles([]);
+  }
+
+  const handleRemoveAll = () => {
+    setCurrentAllVehicleList([...currentAllVehicleList, ...currentGroupVehicleList]);
+    setCurrentGroupVehicleList([]);
+    setrightSelectedVehicles([]);
+  }
+
+  const handleLeftSearchChange = (e: any) => {
+    setLeftSearchText(e.target.value);
+  }
+
+  const handleRightSearchChange = (e: any) => {
+    setRightSearchText(e.target.value);
+  }
+
+  const handleEditGroup = () => {
+    const data = {
+      description: currentDescription,
+      vehicle_ids: currentGroupVehicleList.map((vehicle) => vehicle.id).join(',')
+    }
+    editOrganizationGroupApiTrigger({organization_id: thisUserOrganizationId, group_id: parseInt(groupId), data: data})
+      .unwrap()
+      .then(() => {
+        toast.success(t("toast.group_updated"));
+        navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${groupId}`);
+      })
+      .catch((error) => {
+        console.error("Error: ", error);
+      });
+  }
+
+  const handleDeleteGroup = () => {
+    deleteSingleGroupApiTrigger({organization_id: thisUserOrganizationId, group_id: parseInt(groupId)})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.group_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.groups);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
+  }
+
 
   return (
     <>
@@ -39,16 +185,18 @@ const ScreenDashboardAdminGroups = () => {
           addNewButtonCallback={() => {
             dispatch(setModalsData({ ...modalsState, showCreateGroup: true }))
           }}
+          deleteButtonCallback={handleDeleteGroup}
+          disabled={isLoadingDeleteGroup || isLoadingEditGroup || isFetchingSingleGroup || !groupId}
         />
-        <div className="grid grid-cols-12 gap-4 items-end">
+        <div className={`grid grid-cols-12 gap-4 items-end ${isFetchingOrgGroups ? 'opacity-40 pointer-events-none': ""}`}>
           <div className="col-span-4">
             <AdminFormFieldDropdown
               label={t("group")}
               id="GroupSelector"
               name="group"
-              value={tempGroupData[0].value}
-              options={tempGroupData}
-              // onChange={(e) => { formikSetValue("timezone", e?.value); }}
+              value={groupId?.toString() ?? ""}
+              options={groupData}
+              onChange={(e) => { navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${e?.value}`) }}
               // onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
             />
           </div>
@@ -72,15 +220,15 @@ const ScreenDashboardAdminGroups = () => {
               id="GroupDescription"
               name="group_description"
               placeholder={t("group_description_placeholder")}
-              // value={values.user_id}
-              // onChange={handleChange}
+              value={currentDescription}
+              onChange={(e) => { setCurrentDescription(e.target.value) }}
               // onBlur={handleBlur}
               // touched={touched.user_id}
               // error={errors.user_id}
             />
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-4">
+        <div className={`grid grid-cols-12 gap-4 ${(isLoadingEditGroup || isLoadingDeleteGroup || isFetchingOrgVehicles || isFetchingSingleGroup) ? "opacity-40" : "" }`}>
 
           {/* ---- LEFT SIDE ---- */}
           <div className="col-span-5">
@@ -91,18 +239,19 @@ const ScreenDashboardAdminGroups = () => {
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
-              onChange={() => {}}
+              onChange={handleLeftSearchChange}
             />
             <div className="h-96 mt-4 p-2 border border-gray-500 rounded-lg overflow-y-auto">
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {[1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((grpItem, i) => {
+                  {currentAllVehicleList?.filter((groupItem) => groupItem.name.includes(leftSearchText))?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
-                        key={i}
-                        id={grpItem}
-                        title={`Vehicle #${grpItem}`}
+                        key={grpItem.id}
+                        id={grpItem.id}
+                        title={grpItem.name}
+                        handleChange={(e) => {handleLeftCheckboxChange({item: grpItem, isChecked: e.target.checked})}}
                       />
                     )
                   })}
@@ -118,32 +267,33 @@ const ScreenDashboardAdminGroups = () => {
               type="button"
               variant="primary-like"
               label={t("add_all")}
-              onClick={() => {}}
+              onClick={handleAddAll}
             />
             <AdminFormFieldSubmit
               type="button"
               variant="secondary"
               label={t("add_selected")}
-              onClick={() => {}}
+              onClick={handleAddSelected}
             />
             <AdminFormFieldSubmit
               type="button"
               variant="secondary"
               label={t("remove_selected")}
-              onClick={() => {}}
+              onClick={handleRemoveSelected}
             />
             <AdminFormFieldSubmit
               type="button"
               variant="primary-like"
               label={t("remove_all")}
-              onClick={() => {}}
+              onClick={handleRemoveAll}
             />
             <div className="flex-grow"></div>
             <AdminFormFieldSubmit
               type="button"
               variant="success"
               label={tMain("save")}
-              onClick={() => {}}
+              onClick={handleEditGroup}
+              disabled={currentGroupVehicleList.length === 0 || !groupId}
             />
           </div>
 
@@ -159,18 +309,19 @@ const ScreenDashboardAdminGroups = () => {
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
-              onChange={() => {}}
+              onChange={handleRightSearchChange}
             />
             <div className="h-96 mt-4 p-2 border border-gray-500 rounded-lg overflow-y-auto">
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {[5, 6].map((grpItem, i) => {
+                  {currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText))?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
-                        key={i}
-                        id={grpItem}
-                        title={`Vehicle #${grpItem}`}
+                        key={grpItem.id}
+                        id={grpItem.id}
+                        title={grpItem.name}
+                        handleChange={(e) => {handleRightCheckboxChange({item: grpItem, isChecked: e.target.checked})}}
                       />
                     )
                   })}

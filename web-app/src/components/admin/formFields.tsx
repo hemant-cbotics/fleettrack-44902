@@ -160,7 +160,7 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
         }}
         placeholder={placeholder}
         options={options}
-        defaultValue={options.find(optItem => optItem.value === selected)}
+        value={options.find(optItem => optItem.value === selected)}
         onChange={handleChange}
         isDisabled={disabled || readOnly}
         // onBlur={onBlur}

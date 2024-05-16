@@ -1,11 +1,12 @@
 import React, { FC } from "react";
 
 type GroupVehicleItemProps = {
-  id: number;
+  id: string;
   title: string;
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title }) => {
+const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title, handleChange }) => {
   return (
     <label
       htmlFor={`GroupVehicleItem_${id}`}
@@ -16,7 +17,9 @@ const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title }) => {
         <input
           type="checkbox"
           className="size-4 rounded border-gray-300"
-          id={`GroupVehicleItem_${id}`} />
+          id={`GroupVehicleItem_${id}`} 
+          onChange={handleChange}
+          />
       </div>
 
       <strong className="text-sm font-normal text-gray-900">
