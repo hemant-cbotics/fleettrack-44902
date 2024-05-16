@@ -77,7 +77,7 @@ const ScreenAdminDetailVehicle = () => {
     ? (results || ([] as OrganizationVehicle[])).map(
         (item: OrganizationVehicle, index: number) => ({
           id: item?.id,
-          name: item?.short_name || "-",
+          name: item?.vehicle_model + " " + item?.vehicle_make || "-",
           description: item?.vehicle_description || "-",
           vin: item?.vin || "-",
           equipment_type: item?.euipment_type || "-",
