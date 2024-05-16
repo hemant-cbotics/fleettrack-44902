@@ -9,6 +9,7 @@ type TAdminsGroupsHeaderProps = {
   addNewButtonCallback?: () => void;
   helpButtonCallback?: () => void;
   deleteButtonCallback?: () => void;
+  disabled: boolean;
 };
 
 const AdminsGroupsHeader: FC<TAdminsGroupsHeaderProps> = ({
@@ -17,6 +18,7 @@ const AdminsGroupsHeader: FC<TAdminsGroupsHeaderProps> = ({
   addNewButtonCallback = () => {},
   helpButtonCallback = () => {},
   deleteButtonCallback = () => {},
+  disabled = false
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.groups'});
   const { t: tMain } = useTranslation();
