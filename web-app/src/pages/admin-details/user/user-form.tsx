@@ -5,6 +5,7 @@ import {
   AdminFormFieldDropdown,
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
+import CloseIcon from "../../../assets/svg/close-icon.svg";
 
 interface UserGeneralDetailFormProps {
   values: any;
@@ -228,6 +229,15 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
   );
 };
 
+const tempAuthGroupOptions = [
+  { value: '1', label: 'Admin' },
+  { value: '2', label: 'User' },
+  { value: '3', label: 'Guest' },
+  { value: '4', label: 'Super Admin'},
+  { value: '5', label: 'Super User'},
+]
+
+
 export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   values,
   errors,
@@ -239,6 +249,14 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
 }) => {
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
+      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex flex-wrap">
+        {tempAuthGroupOptions?.map((option) => (
+          <div className="flex bg-gray-200 rounded-lg gap-3 py-1 px-2">
+            <span className="font-normal text-base leading-5 tracking-tighter">{option.label}</span>
+            <img src={CloseIcon} alt={option.label} className="cursor-pointer" onClick={() => {}}/>
+          </div>
+        ))}
+      </div>
       <AdminFormFieldDropdown
         label="Authorized Group No.1"
         id="authorized_group_1"
