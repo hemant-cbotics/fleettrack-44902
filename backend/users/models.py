@@ -56,6 +56,7 @@ class UserProfile(CommonModel):
     user_state = models.CharField(max_length=255, null=True, blank=True)
     session_timeout = models.IntegerField(null=True, blank=True)
     first_login_page = models.CharField(max_length=255, null=True, blank=True)
+    groups = models.ManyToManyField('group.Group', related_name='users', blank=True, null=True)
 
     def __str__(self) -> str:
         return self.user.email
