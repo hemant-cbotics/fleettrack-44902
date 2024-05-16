@@ -1,6 +1,6 @@
 from django.db import models
 from generics.common_models import CommonModel
-
+from generics.CONSTANTS import DriverConstants
 # Create your models here.
 
 class Driver(CommonModel):
@@ -14,11 +14,11 @@ class Driver(CommonModel):
     badge_employee_id = models.CharField(max_length=255, null=True, blank=True)
     card_id = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    licence_type = models.CharField(max_length=255, null=True, blank=True)
-    licence_state = models.CharField(max_length=255, null=True, blank=True)
+    licence_type = models.CharField(max_length=20, choices=DriverConstants.LicenceType.choices(), default=DriverConstants.LicenceType.NA.value)
+    licence_state = models.CharField(max_length=20, choices=DriverConstants.LicenceState.choices(), default=DriverConstants.LicenceState.AL.value)
     licence_number = models.CharField(max_length=255, null=True, blank=True)
     licence_expiry = models.DateTimeField(default=None, null=True, blank=True)
-    licence_status = models.CharField(max_length=255, null=True, blank=True)
+    licence_status = models.CharField(max_length=20, choices=DriverConstants.LicenceStatus.choices(), default=DriverConstants.LicenceStatus.INVALID_DATA.value)
     medical_card_no = models.CharField(max_length=255, null=True, blank=True)
     medical_card_expiry = models.DateTimeField(default=None, null=True, blank=True)
     is_hazmat_certified = models.BooleanField(default=False)
