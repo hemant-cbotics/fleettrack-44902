@@ -2,15 +2,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS, API_SERVER_URL } from "./endpoints";
 import {
   CreateOrganizationDriverPayload,
+  CreateOrganizationGroupPayload,
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   CreateOrganizationVehiclePayload,
   EditOrganizationDriverPayload,
+  EditOrganizationGroupPayload,
   EditOrganizationUserPayload,
   EditOrganizationVehiclePayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
   SingleOrganizationDriverPayload,
+  SingleOrganizationGroupPayload,
   SingleOrganizationUserPayload,
   SingleOrganizationVehiclePayload,
 } from "../types/Admin";
@@ -22,6 +25,7 @@ import { TUserRole } from "../types/UserRole";
 import { TLoggedInUser } from "../types/User";
 import { OrganizationVehicle } from "../types/Vehicle";
 import { OrganizationDriver } from "../types/Driver";
+import { OrganizationGroup } from "../types/Group";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
@@ -38,6 +42,11 @@ export enum AdminApiTags {
   DRIVER_MODIFIED = 'DRIVER_MODIFIED',
   DRIVER_DELETED = 'DRIVER_DELETED',
   DRIVER_SINGLE = 'DRIVER_SINGLE',
+
+  GROUP_CREATED = 'GROUP_CREATED',
+  GROUP_MODIFIED = 'GROUP_MODIFIED',
+  GROUP_DELETED = 'GROUP_DELETED',
+  GROUP_SINGLE = 'GROUP_SINGLE',
 }
 
 export const AdminAPIs = createApi({
@@ -57,6 +66,11 @@ export const AdminAPIs = createApi({
     AdminApiTags.DRIVER_MODIFIED,
     AdminApiTags.DRIVER_DELETED,
     AdminApiTags.DRIVER_SINGLE,
+
+    AdminApiTags.GROUP_CREATED,
+    AdminApiTags.GROUP_MODIFIED,
+    AdminApiTags.GROUP_DELETED,
+    AdminApiTags.GROUP_SINGLE,
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API_SERVER_URL,
@@ -383,6 +397,107 @@ export const AdminAPIs = createApi({
         return response;
       },
     }),
+
+    // organization groups
+    organizationGroups: builder.query<ListingResponse<OrganizationGroup[]>, OrganizationEntityListingPayload>({
+      query: ({organization_id, page, page_size, search}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_GROUPS,
+          params: {
+            organization_id,
+            page,
+            page_size,
+            search
+          },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.GROUP_CREATED, AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: ListingResponse<OrganizationGroup[]>) => {
+        return response;
+      },
+    }),
+
+    // create organization group
+    createOrganizationGroup: builder.mutation<OrganizationGroup, CreateOrganizationGroupPayload>({
+      query: (params: CreateOrganizationGroupPayload) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_GROUPS,
+          method: API_METHODS.POST,
+          body: params
+        }
+      },
+      invalidatesTags: [AdminApiTags.GROUP_CREATED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationGroup) => {
+        return response;
+      },
+    }),
+
+    // single organization group
+    singleOrganizationGroup: builder.query<OrganizationGroup, SingleOrganizationGroupPayload>({
+      query: ({ organization_id, group_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_GROUP(group_id),
+          params: { organization_id },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.GROUP_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationGroup) => {
+        return response;
+      },
+    }),
+
+    //edit organization group
+    editOrganizationGroup: builder.mutation<OrganizationGroup, EditOrganizationGroupPayload>({
+      query: ({organization_id, group_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_GROUP(group_id),
+          params: { organization_id },
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      invalidatesTags: [AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationGroup) => {
+        return response;
+      },
+    }),
+
+    //delete organization group
+    deleteSingleGroup: builder.mutation<void, SingleOrganizationGroupPayload>({
+      query: ({ organization_id, group_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_GROUP(group_id),
+          params: { organization_id },
+          method: API_METHODS.DELETE,
+        };
+      },
+      invalidatesTags: [AdminApiTags.GROUP_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: void) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -403,4 +518,9 @@ export const {
   useSingleOrganizationDriverQuery,
   useEditOrganizationDriverMutation,
   useDeleteSingleDriverMutation,
+  useOrganizationGroupsQuery,
+  useCreateOrganizationGroupMutation,
+  useSingleOrganizationGroupQuery,
+  useEditOrganizationGroupMutation,
+  useDeleteSingleGroupMutation,
 } = AdminAPIs;

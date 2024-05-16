@@ -51,5 +51,9 @@ export const API_ENDPOINTS = {
     ORGANIZATION_DRIVERS: `/driver/ap1/v1/`,
     SINGLE_ORGANIZATION_DRIVER: (driver_id: number) => `/driver/ap1/v1/${driver_id}/`,
     EDIT_ORGANIZATION_DRIVER: (driver_id: number) => `/driver/ap1/v1/${driver_id}/`,
+
+    ORGANIZATION_GROUPS: `/group/ap1/v1/`,
+    SINGLE_ORGANIZATION_GROUP: (group_id: number) => `/group/ap1/v1/${group_id}/`,
+    EDIT_ORGANIZATION_GROUP: (group_id: number) => `/group/ap1/v1/${group_id}/`,
   }
 }
