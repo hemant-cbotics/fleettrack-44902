@@ -34,8 +34,9 @@ class GroupViewset(viewsets.ModelViewSet):
             instance = self.get_object()
             instance.vehicles.clear()
             try:
-                v_id_arr = vehicle_ids.split(',').repalce(' ', '')
+                v_id_arr = vehicle_ids.split(',')
                 for id in v_id_arr:
+                    id = id.replace(' ', '')
                     try:
                         vehicle = Vehicle.objects.get(id=id)
                         instance.vehicles.add(vehicle)
