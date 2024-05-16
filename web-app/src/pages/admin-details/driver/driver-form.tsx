@@ -5,6 +5,7 @@ import {
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
+import { LICENSE_STATE_OPTIONS, LICENSE_STATUS_OPTIONS, LICENSE_TYPE_OPTIONS } from "./constants";
 
 interface DriverGeneralDetailFormProps {
   values: any;
@@ -160,6 +161,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_type"
         name="license_type"
         value={values.license_type}
+        options={LICENSE_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("license_type", e?.value);
         }}
@@ -177,6 +179,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_state"
         name="license_state"
         value={values.license_state}
+        options={LICENSE_STATE_OPTIONS}
         onChange={(e) => {
           formikSetValue("license_state", e?.value);
         }}
@@ -220,6 +223,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_status"
         name="license_status"
         value={values.license_status}
+        options={LICENSE_STATUS_OPTIONS}
         onChange={(e) => {
           formikSetValue("license_status", e?.value);
         }}
