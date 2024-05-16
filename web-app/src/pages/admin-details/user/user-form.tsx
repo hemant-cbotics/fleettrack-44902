@@ -6,6 +6,7 @@ import {
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
+import { DEFAULT_OVERLAY_OPTIONS, FIRST_LOGIN_PAGE_OPTIONS, TIMEZONE_OPTIONS, USER_STATE_OPTIONS } from "./constants";
 
 interface UserGeneralDetailFormProps {
   values: any;
@@ -155,6 +156,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="timezone"
         name="timezone"
         value={values.timezone}
+        options={TIMEZONE_OPTIONS}
         onChange={(e) => { formikSetValue("timezone", e?.value); }}
         onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
         touched={touched.timezone}
@@ -182,6 +184,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="default_overlay"
         name="default_overlay"
         value={values.default_overlay}
+        options={DEFAULT_OVERLAY_OPTIONS}
         onChange={(e) => { formikSetValue("default_overlay", e?.value); }}
         onBlur={(e) => { formikSetTouched("default_overlay", true); handleBlur(e); }}
         touched={touched.default_overlay}
@@ -194,6 +197,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="user_state"
         name="user_state"
         value={values.user_state}
+        options={USER_STATE_OPTIONS}
         onChange={(e) => { formikSetValue("user_state", e?.value); }}
         onBlur={(e) => { formikSetTouched("user_state", true); handleBlur(e); }}
         touched={touched.user_state}
@@ -219,6 +223,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         id="first_login_page"
         name="first_login_page"
         value={values.first_login_page}
+        options={FIRST_LOGIN_PAGE_OPTIONS}
         onChange={(e) => { formikSetValue("first_login_page", e?.value); }}
         onBlur={(e) => { formikSetTouched("first_login_page", true); handleBlur(e); }}
         touched={touched.first_login_page}
