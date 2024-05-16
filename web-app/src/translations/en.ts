@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export const language_en = {
   email_address: "Email address",
   email_address_placeholder: "Enter email address",
@@ -369,6 +371,10 @@ export const language_en = {
       add_selected: "Add Selected",
       remove_selected: "Remove Selected",
       remove_all: "Remove All",
+      toast: {
+        group_updated: "Group has been updated successfully.",
+        group_deleted: "Group has been deleted successfully.",
+      },
       create_new: {
         heading: "Add New Group",
         sub_heading: "Please provide the information below to create a New Group",
