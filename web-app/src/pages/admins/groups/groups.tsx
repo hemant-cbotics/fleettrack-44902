@@ -39,6 +39,9 @@ const ScreenDashboardAdminGroups = () => {
   const [leftSelectedVehicles, setleftSelectedVehicles] = React.useState<any[]>([]);
   const [rightSelectedVehicles, setrightSelectedVehicles] = React.useState<any[]>([]);
 
+  const [leftSearchText, setLeftSearchText] = React.useState<string>("");
+  const [rightSearchText, setRightSearchText] = React.useState<string>("");
+
   const [currentDescription, setCurrentDescription] = React.useState<string>("");
 
   const [showInactiveGroups, setShowInactiveGroups] = React.useState(false);
@@ -139,6 +142,14 @@ const ScreenDashboardAdminGroups = () => {
     setrightSelectedVehicles([]);
   }
 
+  const handleLeftSearchChange = (e: any) => {
+    setLeftSearchText(e.target.value);
+  }
+
+  const handleRightSearchChange = (e: any) => {
+    setRightSearchText(e.target.value);
+  }
+
   const handleEditGroup = () => {
     const data = {
       description: currentDescription,
@@ -235,13 +246,13 @@ const ScreenDashboardAdminGroups = () => {
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
-              onChange={handleAllVehicleSearchChange}
+              onChange={handleLeftSearchChange}
             />
             <div className="h-96 mt-4 p-2 border border-gray-500 rounded-lg overflow-y-auto">
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {currentAllVehicleList?.map((grpItem) => {
+                  {currentAllVehicleList?.filter((groupItem) => groupItem.name.includes(leftSearchText))?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
                         key={grpItem.id}
@@ -305,13 +316,13 @@ const ScreenDashboardAdminGroups = () => {
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
-              onChange={() => {}}
+              onChange={handleRightSearchChange}
             />
             <div className="h-96 mt-4 p-2 border border-gray-500 rounded-lg overflow-y-auto">
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {currentGroupVehicleList.map((grpItem) => {
+                  {currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText))?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
                         key={grpItem.id}
