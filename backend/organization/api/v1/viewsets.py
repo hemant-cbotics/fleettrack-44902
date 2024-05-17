@@ -159,7 +159,6 @@ class OrganizationUserEditView(APIView):
                     user.save()
         if 'profile' in request_data:
             profile_data = request_data.pop('profile')
-            print(profile_data)
             from users.api.v1.serializers import UserProfileSerialzer
             from users.models import UserProfile
             serializer = UserProfileSerialzer(data=profile_data, partial=True)
