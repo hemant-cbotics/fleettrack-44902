@@ -54,7 +54,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
                 groups = Group.objects.filter(vehicles=instance)
                 for s_group in groups:
                     s_group.vehicles.remove(instance)
-                group_ids = self.request.data.get('group_ids')
+                group_ids = self.request.data.pop('group_ids')
                 for group_id in group_ids:
                     group = Group.objects.get(id=group_id)
                     group.vehicles.add(instance.id)
