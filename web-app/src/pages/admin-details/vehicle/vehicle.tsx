@@ -21,6 +21,7 @@ import { OrganizationEntityListingPayload } from "../../../api/types/Admin";
 import { useDebouncedCallback } from "use-debounce";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import {
+  useDeleteSingleVehicleMutation,
   useEditOrganizationVehicleMutation,
   useOrganizationVehiclesQuery,
   useSingleOrganizationVehicleQuery,
@@ -73,6 +74,7 @@ const ScreenAdminDetailVehicle = () => {
 
   const { data: dataSingleVehicle, isFetching: isFetchingSingleVehicle, } = useSingleOrganizationVehicleQuery({ organization_id: thisUserOrganizationId, vehicle_id: vehicleId },{ skip: !vehicleId });
   const [ editOrganizationVehicleApiTrigger , {isLoading: isLoadingEditVehicle}] = useEditOrganizationVehicleMutation();
+  const [ deleteSingleVehicleApiTrigger , {isLoading: isLoadingDeleteVehicle}] = useDeleteSingleVehicleMutation();
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationVehicle[])).map(
         (item: OrganizationVehicle, index: number) => ({
@@ -203,6 +205,18 @@ const ScreenAdminDetailVehicle = () => {
     handleSubmit,
   } = formik;
 
+  const handleDeleteVehicle = () => {
+    deleteSingleVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.vehicle_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.vehicles);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
+  }
+
   const handleEditVehicle = () => {
     if (userCanEdit) {
       formik.handleSubmit();
@@ -304,6 +318,15 @@ const ScreenAdminDetailVehicle = () => {
               ) : (
                 <>
                   <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="danger"
+                      label={tMain("delete")}
+                      onClick={handleDeleteVehicle}
+                      disabled={isLoadingDeleteVehicle}
+                    />
+                  </div>
                   <div className="w-24">
                     <AdminFormFieldSubmit
                       type="button"
