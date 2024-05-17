@@ -17,7 +17,7 @@ import {
   vehicleFormValidationSchema,
 } from "./validation";
 import { useLoggedInUserData } from "../../../utils/user";
-import { OrganizationEntityListingPayload } from "../../../api/types/Admin";
+import { OrganizationEntityListingPayload, TEditOrganizationVehiclePayloadData } from "../../../api/types/Admin";
 import { useDebouncedCallback } from "use-debounce";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import {
@@ -91,7 +91,7 @@ const ScreenAdminDetailVehicle = () => {
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
-      const data = {
+      const data : TEditOrganizationVehiclePayloadData = {
         id: values.vehicle_id,
         asset_type: values.asset_type,
         created_at: values.creation_date,
@@ -128,7 +128,7 @@ const ScreenAdminDetailVehicle = () => {
         vehicle_make: values.vehicle_make,
         vehicle_model: values.vehicle_model,
         vin: values.vin,
-        list_of_groups: values.list_of_groups,
+        group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)) || [],
         all_vehicles: values.all_vehicles,
         driver: {
           id: values.driver_id,
@@ -190,7 +190,7 @@ const ScreenAdminDetailVehicle = () => {
         recorder_type: dataSingleVehicle?.recorder_type || "",
         previous_recorder_id: dataSingleVehicle?.prev_recorder_id || "",
         recorder_id_last_changed:dataSingleVehicle?.recorder_id_last_changed || "",
-        list_of_groups: dataSingleVehicle?.list_of_groups || false,
+        list_of_groups: dataSingleVehicle?.groups || [],
         all_vehicles: dataSingleVehicle?.all_vehicles || false,
       });
     }

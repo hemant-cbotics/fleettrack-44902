@@ -45,7 +45,7 @@ export type OrganizationVehicle = {
   vehicle_make: string;
   vehicle_model: number;
   vin: string;
-  list_of_groups: boolean;
+  groups: any[];
   all_vehicles: boolean;
   driver: {
     id: number;
