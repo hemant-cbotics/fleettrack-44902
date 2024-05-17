@@ -326,7 +326,7 @@ const ScreenDashboardAdminGroups = () => {
               variant="success"
               label={tMain("save")}
               onClick={handleEditGroup}
-              disabled={currentGroupVehicleList.length === 0 || !groupId}
+              disabled={!groupId}
             />
           </div>
 
