@@ -89,7 +89,6 @@ const ScreenAdminDetailVehicle = () => {
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
-      console.log("Formik Values: ", values);
       const data = {
         id: values.vehicle_id,
         asset_type: values.asset_type,
@@ -132,7 +131,7 @@ const ScreenAdminDetailVehicle = () => {
         driver: {
           id: values.driver_id,
           name: values.driver_name,
-          phone_number: values.driver_phone_number,
+          phone: values.driver_phone_number,
         }
       };
       editOrganizationVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId, data})
@@ -179,7 +178,7 @@ const ScreenAdminDetailVehicle = () => {
         maximum_speed: dataSingleVehicle?.maximum_speed || 0,
         driver_id: dataSingleVehicle?.driver?.id || 0,
         driver_name: dataSingleVehicle?.driver?.name || "",
-        driver_phone_number: dataSingleVehicle?.driver?.phone_number || "",
+        driver_phone_number: dataSingleVehicle?.driver?.phone || "",
         fuel_type: dataSingleVehicle?.fuel_type || "",
         fuel_capacity: dataSingleVehicle?.fuel_capacity || 0,
         fuel_economy: dataSingleVehicle?.fuel_economy || 0,
