@@ -167,6 +167,7 @@ const ScreenDashboardAdminGroups = () => {
     deleteSingleGroupApiTrigger({organization_id: thisUserOrganizationId, group_id: parseInt(groupId)})
     .unwrap()
     .then(() => {
+      setCurrentDescription("");
       toast.success(t("toast.group_deleted"));
       navigate(routeUrls.dashboardChildren.adminChildren.groups);
     })
