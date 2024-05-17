@@ -43,10 +43,12 @@ export type EditOrganizationUserPayload = {
 export type TEditOrganizationUserPayloadData = {
   user: {
     id: number;
+    name: string;
     is_active: boolean;
   }
   profile: {
     id: number;
+    group_ids: number[];
     description: string;
     mobile: string;
     timezone: string;

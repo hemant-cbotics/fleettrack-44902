@@ -19,4 +19,5 @@ export type TUserProfile = {
   session_timeout: number;
   first_login_page: string;
   user: number;
+  groups: any[];
 }

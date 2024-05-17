@@ -16,8 +16,7 @@ export const userDetailsInitialValues = {
   user_state: "",
   session_timeout: 0,
   first_login_page: "",
-  authorized_group_1: "",
-  authorized_group_2: "",
+  authorized_groups: [{}],
   default_acl_role: "",
   maximum_access_level: "",
 }

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 
 import {
   AdminFormFieldCheckbox,
@@ -7,6 +7,9 @@ import {
 } from "../../../components/admin/formFields";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import { DEFAULT_OVERLAY_OPTIONS, FIRST_LOGIN_PAGE_OPTIONS, TIMEZONE_OPTIONS, USER_STATE_OPTIONS } from "./constants";
+import { useLoggedInUserData } from "../../../utils/user";
+import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
+import { OrganizationGroup } from "../../../api/types/Group";
 
 interface UserGeneralDetailFormProps {
   values: any;
@@ -234,15 +237,6 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
   );
 };
 
-const tempAuthGroupOptions = [
-  { value: '1', label: 'Admin' },
-  { value: '2', label: 'User' },
-  { value: '3', label: 'Guest' },
-  { value: '4', label: 'Super Admin'},
-  { value: '5', label: 'Super User'},
-]
-
-
 export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   values,
   errors,
@@ -252,37 +246,69 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
+
+const [selectedGroups, setSelectedGroups] = React.useState(values.authorized_groups);
+const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
+const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
+  organization_id: thisUserOrganizationId ?? 0,
+  page: 1,
+  page_size: 100,
+  search: ""
+});
+
+const {
+  data: dataOrgGroups,
+} =
+  useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  const { results } = dataOrgGroups ?? {};
+  const groupData = !!results
+  ? (results || ([] as OrganizationGroup[])).map(
+      (item: OrganizationGroup, index: number) => ({
+        value: item?.id.toString(),
+        label: item?.name,
+      })
+    )
+  : [];
+
+  useEffect(() => {
+    setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
+    formikSetValue('authorized_groups', selectedGroups);
+  }, [selectedGroups, dataOrgGroups])
+
+  const handleChangeGroup = (e: any) => {
+    if(e?.value){
+      setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
+    }
+  }
+
+  const onRemoveFromGroup = (option: any) => {
+    setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
+    formikSetValue('authorized_groups', selectedGroups);
+  }
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex flex-wrap">
-        {tempAuthGroupOptions?.map((option) => (
-          <div className="flex bg-gray-200 rounded-lg gap-3 py-1 px-2">
-            <span className="font-normal text-base leading-5 tracking-tighter">{option.label}</span>
-            <img src={CloseIcon} alt={option.label} className="cursor-pointer" onClick={() => {}}/>
+        {selectedGroups?.map((option:any) => (
+          <div className="flex bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
+            <span className="font-normal text-base leading-5 tracking-tighter">{option.name}</span>
+            <img src={CloseIcon} alt={option.label} className="cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
           </div>
         ))}
       </div>
       <AdminFormFieldDropdown
-        label="Authorized Group No.1"
-        id="authorized_group_1"
-        name="authorized_group_1"
-        value={values.authorized_group_1}
-        onChange={(e) => { formikSetValue('authorized_group_1', e?.value); }}
-        onBlur={(e) => { formikSetTouched("authorized_group_1", true); handleBlur(e); }}
+        label="Authorized Groups"
+        id="authorized_groups"
+        name="authorized_groups"
+        value={filteredGroupData?.[0]?.value}
+        options={filteredGroupData}
+        onChange={handleChangeGroup}
+        // onChange={(e) => {console.log(e?.value)}}
+        onBlur={(e) => { formikSetTouched("authorized_groups", true); handleBlur(e); }}
         touched={touched.authorized_group_1}
         error={errors.authorized_group_1}
-        disabled={!userCanEdit}
-      />
-
-      <AdminFormFieldDropdown
-        label="Authorized Group.2"
-        id="authorized_group_2"
-        name="authorized_group_2"
-        value={values.authorized_group_2}
-        onChange={(e) => { formikSetValue('authorized_group_2', e?.value); }}
-        onBlur={(e) => { formikSetTouched("authorized_group_2", true); handleBlur(e); }}
-        touched={touched.authorized_group_2}
-        error={errors.authorized_group_2}
         disabled={!userCanEdit}
       />
     </div>
