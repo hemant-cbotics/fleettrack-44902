@@ -8,10 +8,6 @@ import {
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
 import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
-import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
-import { useLoggedInUserData } from "../../../utils/user";
-import { OrganizationGroup } from "../../../api/types/Group";
-import CloseIcon from "../../../assets/svg/close-icon.svg";
 
 interface VehicleDetailFormProps {
   values: any;
@@ -639,69 +635,9 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
   userCanEdit,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
-const [selectedGroups, setSelectedGroups] = useState(values.list_of_groups);
-const [filteredGroupData, setFilteredGroupData] = useState<any[]>([]);
-const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-const [orgGroupsQueryParams, setOrgGroupsQueryParams] = useState({
-  organization_id: thisUserOrganizationId ?? 0,
-  page: 1,
-  page_size: 100,
-  search: ""
-});
-
-const {
-  data: dataOrgGroups,
-} =
-  useOrganizationGroupsQuery(orgGroupsQueryParams);
-
-  const { results } = dataOrgGroups ?? {};
-  const groupData = !!results
-  ? (results || ([] as OrganizationGroup[])).map(
-      (item: OrganizationGroup, index: number) => ({
-        value: item?.id.toString(),
-        label: item?.name,
-      })
-    )
-  : [];
-
-  useEffect(() => {
-    setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
-    formikSetValue('list_of_groups', selectedGroups);
-  }, [selectedGroups, dataOrgGroups])
-
-  const handleChangeGroup = (e: any) => {
-    if(e?.value){
-      setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
-    }
-  }
-
-  const onRemoveFromGroup = (option: any) => {
-    setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
-    formikSetValue('list_of_groups', selectedGroups);
-  }
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex flex-wrap">
-        {selectedGroups?.map((option:any) => (
-          <div className="flex bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
-            <span className="font-normal text-base leading-5 tracking-tighter">{option.name}</span>
-            <img src={CloseIcon} alt={option.label} className="cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
-          </div>
-        ))}
-      </div>
-      <AdminFormFieldDropdown
-        label={t("list_of_groups")}
-        id="list_of_groups"
-        name="list_of_groups"
-        value={filteredGroupData?.[0]?.value}
-        options={filteredGroupData}
-        onChange={handleChangeGroup}
-        onBlur={handleBlur}
-        error={errors.list_of_groups}
-        touched={touched.list_of_groups}
-        disabled={!userCanEdit}
-      />
-      {/* <div className="grid grid-cols-8 col-span-12 gap-4">
+      <div className="grid grid-cols-8 col-span-12 gap-4">
         <AdminFormFieldCheckbox
           label={t("list_of_groups")}
           id="list_of_groups"
@@ -726,7 +662,7 @@ const {
           touched={touched.all_vehicles}
           disabled={!userCanEdit}
         />
-      </div> */}
+      </div>
     </div>
   );
 };
