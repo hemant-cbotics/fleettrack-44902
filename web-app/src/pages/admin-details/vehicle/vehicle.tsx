@@ -17,10 +17,11 @@ import {
   vehicleFormValidationSchema,
 } from "./validation";
 import { useLoggedInUserData } from "../../../utils/user";
-import { OrganizationEntityListingPayload } from "../../../api/types/Admin";
+import { OrganizationEntityListingPayload, TEditOrganizationVehiclePayloadData } from "../../../api/types/Admin";
 import { useDebouncedCallback } from "use-debounce";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import {
+  useDeleteSingleVehicleMutation,
   useEditOrganizationVehicleMutation,
   useOrganizationVehiclesQuery,
   useSingleOrganizationVehicleQuery,
@@ -73,6 +74,7 @@ const ScreenAdminDetailVehicle = () => {
 
   const { data: dataSingleVehicle, isFetching: isFetchingSingleVehicle, } = useSingleOrganizationVehicleQuery({ organization_id: thisUserOrganizationId, vehicle_id: vehicleId },{ skip: !vehicleId });
   const [ editOrganizationVehicleApiTrigger , {isLoading: isLoadingEditVehicle}] = useEditOrganizationVehicleMutation();
+  const [ deleteSingleVehicleApiTrigger , {isLoading: isLoadingDeleteVehicle}] = useDeleteSingleVehicleMutation();
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationVehicle[])).map(
         (item: OrganizationVehicle, index: number) => ({
@@ -89,8 +91,7 @@ const ScreenAdminDetailVehicle = () => {
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
-      console.log("Formik Values: ", values);
-      const data = {
+      const data : TEditOrganizationVehiclePayloadData = {
         id: values.vehicle_id,
         asset_type: values.asset_type,
         created_at: values.creation_date,
@@ -127,12 +128,12 @@ const ScreenAdminDetailVehicle = () => {
         vehicle_make: values.vehicle_make,
         vehicle_model: values.vehicle_model,
         vin: values.vin,
-        list_of_groups: values.list_of_groups,
+        group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)) || [],
         all_vehicles: values.all_vehicles,
         driver: {
           id: values.driver_id,
           name: values.driver_name,
-          phone_number: values.driver_phone_number,
+          phone: values.driver_phone_number,
         }
       };
       editOrganizationVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId, data})
@@ -179,7 +180,7 @@ const ScreenAdminDetailVehicle = () => {
         maximum_speed: dataSingleVehicle?.maximum_speed || 0,
         driver_id: dataSingleVehicle?.driver?.id || 0,
         driver_name: dataSingleVehicle?.driver?.name || "",
-        driver_phone_number: dataSingleVehicle?.driver?.phone_number || "",
+        driver_phone_number: dataSingleVehicle?.driver?.phone || "",
         fuel_type: dataSingleVehicle?.fuel_type || "",
         fuel_capacity: dataSingleVehicle?.fuel_capacity || 0,
         fuel_economy: dataSingleVehicle?.fuel_economy || 0,
@@ -189,7 +190,7 @@ const ScreenAdminDetailVehicle = () => {
         recorder_type: dataSingleVehicle?.recorder_type || "",
         previous_recorder_id: dataSingleVehicle?.prev_recorder_id || "",
         recorder_id_last_changed:dataSingleVehicle?.recorder_id_last_changed || "",
-        list_of_groups: dataSingleVehicle?.list_of_groups || false,
+        list_of_groups: dataSingleVehicle?.groups || [],
         all_vehicles: dataSingleVehicle?.all_vehicles || false,
       });
     }
@@ -203,6 +204,18 @@ const ScreenAdminDetailVehicle = () => {
     handleBlur,
     handleSubmit,
   } = formik;
+
+  const handleDeleteVehicle = () => {
+    deleteSingleVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.vehicle_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.vehicles);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
+  }
 
   const handleEditVehicle = () => {
     if (userCanEdit) {
@@ -305,6 +318,15 @@ const ScreenAdminDetailVehicle = () => {
               ) : (
                 <>
                   <div className="flex-grow"></div>
+                  <div className="w-24">
+                    <AdminFormFieldSubmit
+                      type="button"
+                      variant="danger"
+                      label={tMain("delete")}
+                      onClick={handleDeleteVehicle}
+                      disabled={isLoadingDeleteVehicle}
+                    />
+                  </div>
                   <div className="w-24">
                     <AdminFormFieldSubmit
                       type="button"

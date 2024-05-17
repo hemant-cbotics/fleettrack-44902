@@ -7,6 +7,11 @@ import {
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
+import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
+import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
+import { useLoggedInUserData } from "../../../utils/user";
+import { OrganizationGroup } from "../../../api/types/Group";
+import CloseIcon from "../../../assets/svg/close-icon.svg";
 
 interface VehicleDetailFormProps {
   values: any;
@@ -33,6 +38,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
+  
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
@@ -266,6 +272,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="equipment_status"
         name="equipment_status"
         value={values.equipment_status}
+        options={EQUIPMENT_STATUS_OPTIONS}
         onChange={(e) => {
           formikSetValue("equipment_status", e?.value);
         }}
@@ -283,6 +290,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="asset_type"
         name="asset_type"
         value={values.asset_type}
+        options={ASSET_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("asset_type", e?.value);
         }}
@@ -300,6 +308,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="vehicle_class"
         name="vehicle_class"
         value={values.vehicle_class}
+        options={VEHICLE_CLASS_OPTIONS}
         onChange={(e) => {
           formikSetValue("vehicle_class", e?.value);
         }}
@@ -382,6 +391,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="map_route_color"
         name="map_route_color"
         value={values.map_route_color}
+        options={MAP_ROUTE_COLOR_OPTIONS}
         onChange={(e) => {
           formikSetValue("map_route_color", e?.value);
         }}
@@ -399,6 +409,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="ignition_input"
         name="ignition_input"
         value={values.ignition_input}
+        options={IGNITION_INPUT_OPTIONS}
         onChange={(e) => {
           formikSetValue("ignition_input", e?.value);
         }}
@@ -471,6 +482,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         id="fuel_type"
         name="fuel_type"
         value={values.fuel_type}
+        options={FUEL_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("fuel_type", e?.value);
         }}
@@ -556,6 +568,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         id="recorder_on"
         name="recorder_on"
         value={values.recorder_on}
+        options={RECORDER_ON_OPTIONS}
         onChange={(e) => {
           formikSetValue("recorder_on", e?.value);
         }}
@@ -573,6 +586,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         id="recorder_type"
         name="recorder_type"
         value={values.recorder_type}
+        options={RECORDER_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("recorder_type", e?.value);
         }}
@@ -625,9 +639,69 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
   userCanEdit,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
+const [selectedGroups, setSelectedGroups] = useState(values.list_of_groups);
+const [filteredGroupData, setFilteredGroupData] = useState<any[]>([]);
+const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+const [orgGroupsQueryParams, setOrgGroupsQueryParams] = useState({
+  organization_id: thisUserOrganizationId ?? 0,
+  page: 1,
+  page_size: 100,
+  search: ""
+});
+
+const {
+  data: dataOrgGroups,
+} =
+  useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  const { results } = dataOrgGroups ?? {};
+  const groupData = !!results
+  ? (results || ([] as OrganizationGroup[])).map(
+      (item: OrganizationGroup, index: number) => ({
+        value: item?.id.toString(),
+        label: item?.name,
+      })
+    )
+  : [];
+
+  useEffect(() => {
+    setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
+    formikSetValue('list_of_groups', selectedGroups);
+  }, [selectedGroups, dataOrgGroups])
+
+  const handleChangeGroup = (e: any) => {
+    if(e?.value){
+      setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
+    }
+  }
+
+  const onRemoveFromGroup = (option: any) => {
+    setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
+    formikSetValue('list_of_groups', selectedGroups);
+  }
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      <div className="grid grid-cols-8 col-span-12 gap-4">
+      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex flex-wrap">
+        {selectedGroups?.map((option:any) => (
+          <div className="flex bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
+            <span className="font-normal text-base leading-5 tracking-tighter">{option.name}</span>
+            <img src={CloseIcon} alt={option.label} className="cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
+          </div>
+        ))}
+      </div>
+      <AdminFormFieldDropdown
+        label={t("list_of_groups")}
+        id="list_of_groups"
+        name="list_of_groups"
+        value={filteredGroupData?.[0]?.value}
+        options={filteredGroupData}
+        onChange={handleChangeGroup}
+        onBlur={handleBlur}
+        error={errors.list_of_groups}
+        touched={touched.list_of_groups}
+        disabled={!userCanEdit}
+      />
+      {/* <div className="grid grid-cols-8 col-span-12 gap-4">
         <AdminFormFieldCheckbox
           label={t("list_of_groups")}
           id="list_of_groups"
@@ -652,7 +726,7 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
           touched={touched.all_vehicles}
           disabled={!userCanEdit}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

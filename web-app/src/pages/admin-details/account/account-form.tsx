@@ -1,9 +1,4 @@
-import { Formik } from "formik";
-import { FC, useState } from "react";
-import {
-  accountGeneralDetailsInitialValues,
-  accountGeneralDetailsYupValidationSchema,
-} from "./validation";
+import { FC } from "react";
 import {
   AdminFormFieldCheckbox,
   AdminFormFieldDropdown,
@@ -18,7 +13,11 @@ interface AccountGeneralDetailFormProps {
   handleChange: (event: React.ChangeEvent<any>) => void;
   formikSetValue: (field: string, value: any, shouldValidate?: boolean) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
-  formikSetTouched: (field: string, isTouched?: boolean, shouldValidate?: boolean) => void;
+  formikSetTouched: (
+    field: string,
+    isTouched?: boolean,
+    shouldValidate?: boolean
+  ) => void;
   userCanEdit: boolean;
 }
 
@@ -32,7 +31,9 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
   formikSetTouched,
   userCanEdit,
 }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "dashboard.profile.account.form" });
+  const { t } = useTranslation("translation", {
+    keyPrefix: "dashboard.profile.account.form",
+  });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldInput
@@ -174,8 +175,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           id="enable_map_clustering"
           name="enable_map_clustering"
           value={values.enable_map_clustering}
-          onChange={(e) => { formikSetValue("enable_map_clustering", e?.value); }}
-          onBlur={(e) => { formikSetTouched("enable_map_clustering", true); handleBlur(e); }}
+          onChange={(e) => {
+            formikSetValue("enable_map_clustering", e?.value);
+          }}
+          onBlur={(e) => {
+            formikSetTouched("enable_map_clustering", true);
+            handleBlur(e);
+          }}
           touched={touched.enable_map_clustering}
           error={errors.enable_map_clustering}
           disabled={!userCanEdit}
@@ -240,8 +246,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="timezone"
         name="timezone"
         value={values.timezone}
-        onChange={(e) => { formikSetValue("timezone", e?.value); }}
-        onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("timezone", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("timezone", true);
+          handleBlur(e);
+        }}
         touched={touched.timezone}
         error={errors.timezone}
         disabled={!userCanEdit}
@@ -252,8 +263,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="speed_units"
         name="speed_units"
         value={values.speed_units}
-        onChange={(e) => { formikSetValue("speed_units", e?.value); }}
-        onBlur={(e) => { formikSetTouched("speed_units", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("speed_units", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("speed_units", true);
+          handleBlur(e);
+        }}
         touched={touched.speed_units}
         error={errors.speed_units}
         disabled={!userCanEdit}
@@ -264,8 +280,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="distance_units"
         name="distance_units"
         value={values.distance_units}
-        onChange={(e) => { formikSetValue("distance_units", e?.value); }}
-        onBlur={(e) => { formikSetTouched("distance_units", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("distance_units", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("distance_units", true);
+          handleBlur(e);
+        }}
         touched={touched.distance_units}
         error={errors.distance_units}
         disabled={!userCanEdit}
@@ -276,8 +297,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="volume_units"
         name="volume_units"
         value={values.volume_units}
-        onChange={(e) => { formikSetValue("volume_units", e?.value); }}
-        onBlur={(e) => { formikSetTouched("volume_units", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("volume_units", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("volume_units", true);
+          handleBlur(e);
+        }}
         touched={touched.volume_units}
         error={errors.volume_units}
         disabled={!userCanEdit}
@@ -288,8 +314,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="economy_units"
         name="economy_units"
         value={values.economy_units}
-        onChange={(e) => { formikSetValue("economy_units", e?.value); }}
-        onBlur={(e) => { formikSetTouched("economy_units", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("economy_units", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("economy_units", true);
+          handleBlur(e);
+        }}
         touched={touched.economy_units}
         error={errors.economy_units}
         disabled={!userCanEdit}
@@ -300,8 +331,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="pressure_units"
         name="pressure_units"
         value={values.pressure_units}
-        onChange={(e) => { formikSetValue("pressure_units", e?.value); }}
-        onBlur={(e) => { formikSetTouched("pressure_units", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("pressure_units", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("pressure_units", true);
+          handleBlur(e);
+        }}
         touched={touched.pressure_units}
         error={errors.pressure_units}
         disabled={!userCanEdit}
@@ -312,8 +348,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="temperature_units"
         name="temperature_units"
         value={values.temperature_units}
-        onChange={(e) => { formikSetValue("temperature_units", e?.value); }}
-        onBlur={(e) => { formikSetTouched("temperature_units", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("temperature_units", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("temperature_units", true);
+          handleBlur(e);
+        }}
         touched={touched.temperature_units}
         error={errors.temperature_units}
         disabled={!userCanEdit}
@@ -324,8 +365,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="latitude_longitude_format"
         name="latitude_longitude_format"
         value={values.latitude_longitude_format}
-        onChange={(e) => { formikSetValue("latitude_longitude_format", e?.value); }}
-        onBlur={(e) => { formikSetTouched("latitude_longitude_format", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("latitude_longitude_format", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("latitude_longitude_format", true);
+          handleBlur(e);
+        }}
         touched={touched.latitude_longitude_format}
         error={errors.latitude_longitude_format}
         disabled={!userCanEdit}
@@ -351,8 +397,13 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="route_line_thickness"
         name="route_line_thickness"
         value={values.route_line_thickness}
-        onChange={(e) => { formikSetValue("route_line_thickness", e?.value); }}
-        onBlur={(e) => { formikSetTouched("route_line_thickness", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("route_line_thickness", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("route_line_thickness", true);
+          handleBlur(e);
+        }}
         touched={touched.route_line_thickness}
         error={errors.route_line_thickness}
         disabled={!userCanEdit}
@@ -424,6 +475,32 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
+        label={t("address_title")}
+        type="text"
+        id="address_title"
+        name="address_title"
+        value={values.address_title}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.address_title}
+        touched={touched.address_title}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("address_title_plural")}
+        type="text"
+        id="address_title_plural"
+        name="address_title_plural"
+        value={values.address_title_plural}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.address_title_plural}
+        touched={touched.address_title_plural}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
         label={t("default_login_userId")}
         type="text"
         id="default_login_userId"
@@ -440,10 +517,567 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         id="default_overlay"
         name="default_overlay"
         value={values.default_overlay}
-        onChange={(e) => { formikSetValue("default_overlay", e?.value); }}
-        onBlur={(e) => { formikSetTouched("default_overlay", true); handleBlur(e); }}
+        onChange={(e) => {
+          formikSetValue("default_overlay", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("default_overlay", true);
+          handleBlur(e);
+        }}
         touched={touched.default_overlay}
         error={errors.default_overlay}
+        disabled={!userCanEdit}
+      />
+    </div>
+  );
+};
+
+export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormProps> = ({
+  values,
+  errors,
+  touched,
+  handleChange,
+  formikSetValue,
+  handleBlur,
+  formikSetTouched,
+  userCanEdit,
+}) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "dashboard.profile.account.form",
+  });
+  return (
+    <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
+      <AdminFormFieldInput
+        label={t("last_maintenance_1")}
+        type="text"
+        id="last_maintenance_1"
+        name="last_maintenance_1"
+        value={values.last_maintenance_1}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_1}
+        touched={touched.last_maintenance_1}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_2")}
+        type="text"
+        id="last_maintenance_2"
+        name="last_maintenance_2"
+        value={values.last_maintenance_2}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_2}
+        touched={touched.last_maintenance_2}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_3")}
+        type="text"
+        id="last_maintenance_3"
+        name="last_maintenance_3"
+        value={values.last_maintenance_3}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_3}
+        touched={touched.last_maintenance_3}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_4")}
+        type="text"
+        id="last_maintenance_4"
+        name="last_maintenance_4"
+        value={values.last_maintenance_4}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_4}
+        touched={touched.last_maintenance_4}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_5")}
+        type="text"
+        id="last_maintenance_5"
+        name="last_maintenance_5"
+        value={values.last_maintenance_5}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_5}
+        touched={touched.last_maintenance_5}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_6")}
+        type="text"
+        id="last_maintenance_6"
+        name="last_maintenance_6"
+        value={values.last_maintenance_6}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_6}
+        touched={touched.last_maintenance_6}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_7")}
+        type="text"
+        id="last_maintenance_7"
+        name="last_maintenance_7"
+        value={values.last_maintenance_7}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_7}
+        touched={touched.last_maintenance_7}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_8")}
+        type="text"
+        id="last_maintenance_8"
+        name="last_maintenance_8"
+        value={values.last_maintenance_8}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_8}
+        touched={touched.last_maintenance_8}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_9")}
+        type="text"
+        id="last_maintenance_9"
+        name="last_maintenance_9"
+        value={values.last_maintenance_9}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_9}
+        touched={touched.last_maintenance_9}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_maintenance_10")}
+        type="text"
+        id="last_maintenance_10"
+        name="last_maintenance_10"
+        value={values.last_maintenance_10}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_maintenance_10}
+        touched={touched.last_maintenance_10}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_eng_hours_maint_1")}
+        type="text"
+        id="last_eng_hours_maint_1"
+        name="last_eng_hours_maint_1"
+        value={values.last_eng_hours_maint_1}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_eng_hours_maint_1}
+        touched={touched.last_eng_hours_maint_1}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_eng_hours_maint_2")}
+        type="text"
+        id="last_eng_hours_maint_2"
+        name="last_eng_hours_maint_2"
+        value={values.last_eng_hours_maint_2}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_eng_hours_maint_2}
+        touched={touched.last_eng_hours_maint_2}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_eng_hours_maint_3")}
+        type="text"
+        id="last_eng_hours_maint_3"
+        name="last_eng_hours_maint_3"
+        value={values.last_eng_hours_maint_3}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_eng_hours_maint_3}
+        touched={touched.last_eng_hours_maint_3}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_eng_hours_maint_4")}
+        type="text"
+        id="last_eng_hours_maint_4"
+        name="last_eng_hours_maint_4"
+        value={values.last_eng_hours_maint_4}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_eng_hours_maint_4}
+        touched={touched.last_eng_hours_maint_4}
+        disabled={!userCanEdit}
+      />
+      <div className="col-span-12 grid grid-cols-12 gap-4">
+        <AdminFormFieldInput
+          label={t("last_eng_hours_maint_5")}
+          type="text"
+          id="last_eng_hours_maint_5"
+          name="last_eng_hours_maint_5"
+          value={values.last_eng_hours_maint_5}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={errors.last_eng_hours_maint_5}
+          touched={touched.last_eng_hours_maint_5}
+          disabled={!userCanEdit}
+        />
+      </div>
+
+      <AdminFormFieldInput
+        label={t("last_service_time_1")}
+        type="text"
+        id="last_service_time_1"
+        name="last_service_time_1"
+        value={values.last_service_time_1}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_service_time_1}
+        touched={touched.last_service_time_1}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_service_time_2")}
+        type="text"
+        id="last_service_time_2"
+        name="last_service_time_2"
+        value={values.last_service_time_2}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_service_time_2}
+        touched={touched.last_service_time_2}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_service_time_3")}
+        type="text"
+        id="last_service_time_3"
+        name="last_service_time_3"
+        value={values.last_service_time_3}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_service_time_3}
+        touched={touched.last_service_time_3}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_service_time_4")}
+        type="text"
+        id="last_service_time_4"
+        name="last_service_time_4"
+        value={values.last_service_time_4}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_service_time_4}
+        touched={touched.last_service_time_4}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldInput
+        label={t("last_service_time_5")}
+        type="text"
+        id="last_service_time_5"
+        name="last_service_time_5"
+        value={values.last_service_time_5}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={errors.last_service_time_5}
+        touched={touched.last_service_time_5}
+        disabled={!userCanEdit}
+      />
+    </div>
+  );
+};
+
+export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps> = ({
+  values,
+  errors,
+  touched,
+  handleChange,
+  formikSetValue,
+  handleBlur,
+  formikSetTouched,
+  userCanEdit,
+}) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "dashboard.profile.account.form",
+  });
+  return (
+    <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
+      <AdminFormFieldDropdown
+        label={t("harsh_braking")}
+        id="harsh_braking"
+        name="harsh_braking"
+        value={values.harsh_braking}
+        onChange={(e) => {
+          formikSetValue("harsh_braking", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("harsh_braking", true);
+          handleBlur(e);
+        }}
+        touched={touched.harsh_braking}
+        error={errors.harsh_braking}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("harsh_acceleration")}
+        id="harsh_acceleration"
+        name="harsh_acceleration"
+        value={values.harsh_acceleration}
+        onChange={(e) => {
+          formikSetValue("harsh_acceleration", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("harsh_acceleration", true);
+          handleBlur(e);
+        }}
+        touched={touched.harsh_acceleration}
+        error={errors.harsh_acceleration}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("speeding")}
+        id="speeding"
+        name="speeding"
+        value={values.speeding}
+        onChange={(e) => {
+          formikSetValue("speeding", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("speeding", true);
+          handleBlur(e);
+        }}
+        touched={touched.speeding}
+        error={errors.speeding}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("reverse")}
+        id="reverse"
+        name="reverse"
+        value={values.reverse}
+        onChange={(e) => {
+          formikSetValue("reverse", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("reverse", true);
+          handleBlur(e);
+        }}
+        touched={touched.reverse}
+        error={errors.reverse}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("seatbelt_off")}
+        id="seatbelt_off"
+        name="seatbelt_off"
+        value={values.seatbelt_off}
+        onChange={(e) => {
+          formikSetValue("seatbelt_off", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("seatbelt_off", true);
+          handleBlur(e);
+        }}
+        touched={touched.seatbelt_off}
+        error={errors.seatbelt_off}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("harsh_cornering")}
+        id="harsh_cornering"
+        name="harsh_cornering"
+        value={values.harsh_cornering}
+        onChange={(e) => {
+          formikSetValue("harsh_cornering", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("harsh_cornering", true);
+          handleBlur(e);
+        }}
+        touched={touched.harsh_cornering}
+        error={errors.harsh_cornering}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("idle_ratio")}
+        id="idle_ratio"
+        name="idle_ratio"
+        value={values.idle_ratio}
+        onChange={(e) => {
+          formikSetValue("idle_ratio", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("idle_ratio", true);
+          handleBlur(e);
+        }}
+        touched={touched.idle_ratio}
+        error={errors.idle_ratio}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("impact_crash_ai")}
+        id="impact_crash_ai"
+        name="impact_crash_ai"
+        value={values.impact_crash_ai}
+        onChange={(e) => {
+          formikSetValue("impact_crash_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("impact_crash_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.impact_crash_ai}
+        error={errors.impact_crash_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("cellphone_use_ai")}
+        id="cellphone_use_ai"
+        name="cellphone_use_ai"
+        value={values.cellphone_use_ai}
+        onChange={(e) => {
+          formikSetValue("cellphone_use_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("cellphone_use_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.cellphone_use_ai}
+        error={errors.cellphone_use_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("distracted_driving_ai")}
+        id="distracted_driving_ai"
+        name="distracted_driving_ai"
+        value={values.distracted_driving_ai}
+        onChange={(e) => {
+          formikSetValue("distracted_driving_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("distracted_driving_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.distracted_driving_ai}
+        error={errors.distracted_driving_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("drinking_eating_ai")}
+        id="drinking_eating_ai"
+        name="drinking_eating_ai"
+        value={values.drinking_eating_ai}
+        onChange={(e) => {
+          formikSetValue("drinking_eating_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("drinking_eating_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.drinking_eating_ai}
+        error={errors.drinking_eating_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("smoking_ai")}
+        id="smoking_ai"
+        name="smoking_ai"
+        value={values.smoking_ai}
+        onChange={(e) => {
+          formikSetValue("smoking_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("smoking_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.smoking_ai}
+        error={errors.smoking_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("possible_fatiuge_ai")}
+        id="possible_fatiuge_ai"
+        name="possible_fatiuge_ai"
+        value={values.possible_fatiuge_ai}
+        onChange={(e) => {
+          formikSetValue("possible_fatiuge_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("possible_fatiuge_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.possible_fatiuge_ai}
+        error={errors.possible_fatiuge_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("obstructed_camera_ai")}
+        id="obstructed_camera_ai"
+        name="obstructed_camera_ai"
+        value={values.obstructed_camera_ai}
+        onChange={(e) => {
+          formikSetValue("obstructed_camera_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("obstructed_camera_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.obstructed_camera_ai}
+        error={errors.obstructed_camera_ai}
+        disabled={!userCanEdit}
+      />
+
+      <AdminFormFieldDropdown
+        label={t("tailgating_ai")}
+        id="tailgating_ai"
+        name="tailgating_ai"
+        value={values.tailgating_ai}
+        onChange={(e) => {
+          formikSetValue("tailgating_ai", e?.value);
+        }}
+        onBlur={(e) => {
+          formikSetTouched("tailgating_ai", true);
+          handleBlur(e);
+        }}
+        touched={touched.tailgating_ai}
+        error={errors.tailgating_ai}
         disabled={!userCanEdit}
       />
     </div>

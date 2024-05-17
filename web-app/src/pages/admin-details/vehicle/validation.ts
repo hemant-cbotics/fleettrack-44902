@@ -40,7 +40,7 @@ export const vehicleFormInitialValues = {
   recorder_type: "",
   previous_recorder_id: "",
   recorder_id_last_changed: "",
-  list_of_groups: false,
+  list_of_groups: [{}],
   all_vehicles: false,
 }
 

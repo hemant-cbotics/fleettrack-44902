@@ -77,6 +77,7 @@ const ScreenAdminDetailUser = () => {
       const data: TEditOrganizationUserPayloadData = {
         user: {
           id: values.user_id,
+          name: values.contact_name,
           is_active: values.is_active,
         },
         profile: {
@@ -91,6 +92,7 @@ const ScreenAdminDetailUser = () => {
           user_state: values.user_state,
           session_timeout: values.session_timeout,
           first_login_page: values.first_login_page,
+          group_ids: values.authorized_groups?.map((item: any) => item.id) || [],
         },
         role_and_permission: {
           id: dataSingleUser?.role_and_permission?.id || 0,
@@ -127,8 +129,7 @@ const ScreenAdminDetailUser = () => {
         user_state: dataSingleUser?.profile?.user_state || "",
         session_timeout: dataSingleUser?.profile?.session_timeout || 0,
         first_login_page: dataSingleUser?.profile?.first_login_page || "",
-        authorized_group_1: "",
-        authorized_group_2: "",
+        authorized_groups: dataSingleUser?.profile?.groups || [{}],
         default_acl_role: "",
         maximum_access_level: "",
       });

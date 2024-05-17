@@ -5,6 +5,10 @@ import {
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
+import { LICENSE_STATE_OPTIONS, LICENSE_STATUS_OPTIONS, LICENSE_TYPE_OPTIONS } from "./constants";
+import { useLoggedInUserData } from "../../../utils/user";
+import { useOrganizationVehiclesQuery } from "../../../api/network/adminApiServices";
+import { OrganizationVehicle } from "../../../api/types/Vehicle";
 
 interface DriverGeneralDetailFormProps {
   values: any;
@@ -160,6 +164,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_type"
         name="license_type"
         value={values.license_type}
+        options={LICENSE_TYPE_OPTIONS}
         onChange={(e) => {
           formikSetValue("license_type", e?.value);
         }}
@@ -177,6 +182,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_state"
         name="license_state"
         value={values.license_state}
+        options={LICENSE_STATE_OPTIONS}
         onChange={(e) => {
           formikSetValue("license_state", e?.value);
         }}
@@ -220,6 +226,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="license_status"
         name="license_status"
         value={values.license_status}
+        options={LICENSE_STATUS_OPTIONS}
         onChange={(e) => {
           formikSetValue("license_status", e?.value);
         }}
@@ -246,6 +253,19 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
   userCanEdit,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage.form" });
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+  const orgVehiclesQueryParams = {organization_id: thisUserOrganizationId ?? 0, page: 1, page_size: 100};
+  const {data: dataOrgVehicles} = useOrganizationVehiclesQuery(orgVehiclesQueryParams);
+  const { results: allVehicles } = dataOrgVehicles ?? {};
+  const allVehicleList = !!allVehicles
+  ? (allVehicles || ([] as OrganizationVehicle[])).map(
+      (item: OrganizationVehicle, index: number) => ({
+        value: item?.id,
+        label: item?.vehicle_model + " " + item?.vehicle_make,
+      })
+    )
+  : [];
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldInput
@@ -334,6 +354,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         id="vehicle_id"
         name="vehicle_id"
         value={values.vehicle_id}
+        options={allVehicleList}
         onChange={(e) => {
           formikSetValue("vehicle_id", e?.value);
         }}

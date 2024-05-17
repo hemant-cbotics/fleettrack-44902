@@ -16,6 +16,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { toast } from "react-toastify";
 import { OrganizationVehicle } from "../../../api/types/Vehicle";
+import FastForwardIcon from "../../../assets/svg/fast-forward-icon.svg";
+import ForwardIcon from "../../../assets/svg/forward-icon.svg";
+import FastBackwardIcon from "../../../assets/svg/fast-backward-icon.svg";
+import BackwardIcon from "../../../assets/svg/backward-icon.svg";
 
 
 const ScreenDashboardAdminGroups = () => {
@@ -163,6 +167,7 @@ const ScreenDashboardAdminGroups = () => {
     deleteSingleGroupApiTrigger({organization_id: thisUserOrganizationId, group_id: parseInt(groupId)})
     .unwrap()
     .then(() => {
+      setCurrentDescription("");
       toast.success(t("toast.group_deleted"));
       navigate(routeUrls.dashboardChildren.adminChildren.groups);
     })
@@ -263,37 +268,65 @@ const ScreenDashboardAdminGroups = () => {
           {/* ---- BUTTONS ---- */}
           <div className="col-span-2 flex flex-col space-y-2">
             <div className="hidden lg:block h-20"></div>
-            <AdminFormFieldSubmit
-              type="button"
-              variant="primary-like"
-              label={t("add_all")}
-              onClick={handleAddAll}
-            />
-            <AdminFormFieldSubmit
-              type="button"
-              variant="secondary"
-              label={t("add_selected")}
-              onClick={handleAddSelected}
-            />
-            <AdminFormFieldSubmit
-              type="button"
-              variant="secondary"
-              label={t("remove_selected")}
-              onClick={handleRemoveSelected}
-            />
-            <AdminFormFieldSubmit
-              type="button"
-              variant="primary-like"
-              label={t("remove_all")}
-              onClick={handleRemoveAll}
-            />
+            <div className="relative">
+              <AdminFormFieldSubmit
+                type="button"
+                variant="primary-like"
+                label={t("add_all")}
+                onClick={handleAddAll}
+              />
+              <img
+                src={FastForwardIcon}
+                alt="fast-forward-icon"
+                className="absolute size-5 right-8 top-1/2 transform -translate-y-1/2"
+              />
+            </div>
+            <div className="relative">
+              <AdminFormFieldSubmit
+                type="button"
+                variant="secondary"
+                label={t("add_selected")}
+                onClick={handleAddSelected}
+              />
+              <img
+                src={ForwardIcon}
+                alt="fast-forward-icon"
+                className="absolute size-5 right-4 top-1/2 transform -translate-y-1/2"
+              />
+            </div>
+            <div className="relative">
+              <AdminFormFieldSubmit
+                type="button"
+                variant="secondary"
+                label={t("remove_selected")}
+                onClick={handleRemoveSelected}
+              />
+              <img
+                src={BackwardIcon}
+                alt="fast-forward-icon"
+                className="absolute size-5 left-4 top-1/2 transform -translate-y-1/2"
+              />
+            </div>
+            <div className="relative">
+              <AdminFormFieldSubmit
+                type="button"
+                variant="primary-like"
+                label={t("remove_all")}
+                onClick={handleRemoveAll}
+              />
+              <img
+                src={FastBackwardIcon}
+                alt="fast-forward-icon"
+                className="absolute size-5 left-8 top-1/2 transform -translate-y-1/2"
+              />
+            </div>
             <div className="flex-grow"></div>
             <AdminFormFieldSubmit
               type="button"
               variant="success"
               label={tMain("save")}
               onClick={handleEditGroup}
-              disabled={currentGroupVehicleList.length === 0 || !groupId}
+              disabled={!groupId}
             />
           </div>
 
