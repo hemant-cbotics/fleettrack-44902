@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from generics.common_models import CommonModel
+from generics.CONSTANTS import UserConstants
 
 
 class User(AbstractUser):
@@ -51,11 +52,11 @@ class UserProfile(CommonModel):
     enable_sso_vistrack = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     is_phone_verified = models.BooleanField(default=False)
-    timezone = models.CharField(max_length=50, null=True, blank=True)
-    default_overlay = models.CharField(max_length=255, null=True, blank=True)
-    user_state = models.CharField(max_length=255, null=True, blank=True)
+    timezone = models.CharField(max_length=20, choices=UserConstants.TimeZones.choices(), default=None, null=True, blank=True)
+    default_overlay = models.CharField(max_length=30, choices=UserConstants.DefaultOverlay.choices(), default=None, null=True, blank=True)
+    user_state = models.CharField(max_length=20, choices=UserConstants.UserState.choices(), default=None, null=True, blank=True)
     session_timeout = models.IntegerField(null=True, blank=True)
-    first_login_page = models.CharField(max_length=255, null=True, blank=True)
+    first_login_page = models.CharField(max_length=20, choices=UserConstants.FirstLoginPage.choices(), default=None, null=True, blank=True)
     groups = models.ManyToManyField('group.Group', related_name='users', blank=True, null=True)
 
     def __str__(self) -> str:

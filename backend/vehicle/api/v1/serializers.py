@@ -12,6 +12,7 @@ class VehicleForGroupSerializer(serializers.ModelSerializer):
 class VehicleSerializer(serializers.ModelSerializer):
     added_by = UserSerializer(read_only=True)
     driver = serializers.SerializerMethodField()
+    groups = serializers.SerializerMethodField()
 
     class Meta:
         model = Vehicle
@@ -27,5 +28,12 @@ class VehicleSerializer(serializers.ModelSerializer):
     def get_driver(self, obj):
         try:
             return DriverSerializer(obj.driver).data
+        except:
+            return None
+        
+    def get_groups(self, obj):
+        try:
+            from group.api.v1.serializers import SimpleGroupSerializer
+            return SimpleGroupSerializer(obj.groups, many=True).data
         except:
             return None
