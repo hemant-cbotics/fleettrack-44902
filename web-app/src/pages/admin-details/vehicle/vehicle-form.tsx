@@ -700,6 +700,7 @@ const {
         error={errors.list_of_groups}
         touched={touched.list_of_groups}
         disabled={!userCanEdit}
+        menuPlacement="top"
       />
       {/* <div className="grid grid-cols-8 col-span-12 gap-4">
         <AdminFormFieldCheckbox
