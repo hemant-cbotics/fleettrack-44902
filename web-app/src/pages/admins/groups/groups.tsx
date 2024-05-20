@@ -177,10 +177,10 @@ const ScreenDashboardAdminGroups = () => {
   }
 
   useEffect(() => {
-    if(!groupId)  {
+    if(!groupId && !!groupData)  {
       window.location.href = `${routeUrls.dashboardChildren.adminChildren.groups}/${groupData?.[0]?.value}`;
     }
-  }, [groupId])
+  }, [groupId, groupData])
 
   return (
     <>
