@@ -87,6 +87,12 @@ const ScreenAdminDetailVehicle = () => {
       )
     : [];
 
+  const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
+  useEffect(() => {
+    if(isFetchingSingleVehicle) {
+      setFormikValuesReady(false);
+    }
+  }, [isFetchingSingleVehicle]);
   const formik = useFormik({
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
@@ -150,6 +156,7 @@ const ScreenAdminDetailVehicle = () => {
 
   useEffect(() => {
     if (dataSingleVehicle) {
+      setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
         vehicle_id: dataSingleVehicle?.id,
         creation_date: dataSingleVehicle?.created_at || "",
@@ -193,6 +200,7 @@ const ScreenAdminDetailVehicle = () => {
         list_of_groups: dataSingleVehicle?.groups || [],
         all_vehicles: dataSingleVehicle?.all_vehicles || false,
       });
+      setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [dataSingleVehicle, vehicleId]);
 
@@ -378,6 +386,7 @@ const ScreenAdminDetailVehicle = () => {
                   handleBlur={handleBlur}
                   formikSetTouched={formik.setFieldTouched}
                   userCanEdit={userCanEdit}
+                  loadingData={isFetchingSingleVehicle || !formikValuesReady}
                 />
               </Accordian>
               <Accordian title={t("accord_camera_id")}>
@@ -390,6 +399,7 @@ const ScreenAdminDetailVehicle = () => {
                   handleBlur={handleBlur}
                   formikSetTouched={formik.setFieldTouched}
                   userCanEdit={userCanEdit}
+                  loadingData={isFetchingSingleVehicle || !formikValuesReady}
                 />
               </Accordian>
               <Accordian title={t("accord_group_membership")}>
@@ -402,6 +412,7 @@ const ScreenAdminDetailVehicle = () => {
                   handleBlur={handleBlur}
                   formikSetTouched={formik.setFieldTouched}
                   userCanEdit={userCanEdit}
+                  loadingData={isFetchingSingleVehicle || !formikValuesReady}
                 />
               </Accordian>
             </div>

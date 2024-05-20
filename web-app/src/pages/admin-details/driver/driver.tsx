@@ -78,7 +78,13 @@ const ScreenAdminDetailDriver = () => {
       )
     : [];
 
-  const formik = useFormik({
+    const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
+    useEffect(() => {
+      if(isFetchingSingleDriver) {
+        setFormikValuesReady(false);
+      }
+    }, [isFetchingSingleDriver]);
+    const formik = useFormik({
     initialValues: driverDetailsInitialValues,
     validationSchema: driverDetailsYupValidationSchema,
     onSubmit: (values) => {
@@ -118,6 +124,7 @@ const ScreenAdminDetailDriver = () => {
 
   useEffect(() => {
     if (dataSingleDriver) {
+      setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
         driver_id: dataSingleDriver?.id,
         driver_name: dataSingleDriver?.name,
@@ -140,6 +147,7 @@ const ScreenAdminDetailDriver = () => {
         address: dataSingleDriver?.address || "",
         vehicle_id: dataSingleDriver?.vehicle_assigned || "",
       });
+      setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [dataSingleDriver, driverId])
 
@@ -281,6 +289,7 @@ const ScreenAdminDetailDriver = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
+                    loadingData={isFetchingSingleDriver || !formikValuesReady}
                   />
                 </Accordian>
                 <Accordian title={t("accord_license_details")} >
@@ -293,6 +302,7 @@ const ScreenAdminDetailDriver = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
+                    loadingData={isFetchingSingleDriver || !formikValuesReady}
                   />
                 </Accordian>
                 <Accordian title={t("accord_medical_and_other_details")} >
@@ -305,6 +315,7 @@ const ScreenAdminDetailDriver = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
+                    loadingData={isFetchingSingleDriver || !formikValuesReady}
                   />
                 </Accordian>
               </form>

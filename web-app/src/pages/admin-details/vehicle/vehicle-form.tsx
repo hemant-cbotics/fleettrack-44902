@@ -26,6 +26,7 @@ interface VehicleDetailFormProps {
     shouldValidate?: boolean
   ) => void;
   userCanEdit: boolean;
+  loadingData: boolean;
 }
 
 export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
@@ -37,6 +38,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
@@ -268,6 +270,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("equipment_status")}
         id="equipment_status"
         name="equipment_status"
@@ -286,6 +289,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("asset_type")}
         id="asset_type"
         name="asset_type"
@@ -304,6 +308,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("vehicle_class")}
         id="vehicle_class"
         name="vehicle_class"
@@ -387,6 +392,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("map_route_color")}
         id="map_route_color"
         name="map_route_color"
@@ -405,6 +411,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("ignition_input")}
         id="ignition_input"
         name="ignition_input"
@@ -478,6 +485,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("fuel_type")}
         id="fuel_type"
         name="fuel_type"
@@ -546,6 +554,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
   return (
@@ -564,6 +573,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("recorder_on")}
         id="recorder_on"
         name="recorder_on"
@@ -582,6 +592,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("recorder_type")}
         id="recorder_type"
         name="recorder_type"
@@ -637,6 +648,7 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
 const [selectedGroups, setSelectedGroups] = useState(values.list_of_groups);
@@ -690,6 +702,7 @@ const {
         ))}
       </div>
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("list_of_groups")}
         id="list_of_groups"
         name="list_of_groups"
