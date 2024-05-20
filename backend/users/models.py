@@ -61,3 +61,40 @@ class UserProfile(CommonModel):
 
     def __str__(self) -> str:
         return self.user.email
+    
+class UserAccount(CommonModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
+    description = models.TextField(null=True, blank=True)
+    contact_name = models.CharField(max_length=255, null=True, blank=True)
+    contact_phone = models.CharField(max_length=15, null=True, blank=True)
+    private_cost = models.FloatField(null=True, blank=True, default=0.0)
+    idle_gas_usage = models.FloatField(null=True, blank=True, default=0.0)
+    distance_gas_usage = models.FloatField(null=True, blank=True, default=0.0)
+    auto_update_interval_for_maps = models.IntegerField(null=True, blank=True, help_text="In seconds")
+    drivers_assigned_to_devices = models.BooleanField(default=False)
+    enable_map_clustering = models.CharField(max_length=40, choices=UserConstants.MapClustering.choices(), default=UserConstants.MapClustering.OFF.value, null=True, blank=True)
+    open_reports_in_new_tab = models.BooleanField(default=False)
+    sync_driver_id_from_driver_admin = models.BooleanField(default=False)
+    has_snowplows = models.BooleanField(default=False)
+    hide_total_rows_in_csv = models.BooleanField(default=False)
+    timezone = models.CharField(max_length=20, choices=UserConstants.TimeZones.choices(), default=None, null=True, blank=True)
+    speed_units = models.CharField(max_length=20, choices=UserConstants.SpeedUnits.choices(), default=UserConstants.SpeedUnits.MPH.value, null=True, blank=True)
+    distance_units = models.CharField(max_length=20, choices=UserConstants.DistanceUnits.choices(), default=UserConstants.DistanceUnits.MILES.value, null=True, blank=True)
+    volume_units = models.CharField(max_length=20, choices=UserConstants.VolumeUnits.choices(), default=UserConstants.VolumeUnits.GALLONS.value, null=True, blank=True)
+    economy_units = models.CharField(max_length=20, choices=UserConstants.EconomyUnits.choices(), default=UserConstants.EconomyUnits.MPG.value, null=True, blank=True)
+    pressure_units = models.CharField(max_length=20, choices=UserConstants.PressureUnits.choices(), default=UserConstants.PressureUnits.KPA.value, null=True, blank=True)
+    temperature_units = models.CharField(max_length=20, choices=UserConstants.TemperatureUnits.choices(), default=UserConstants.TemperatureUnits.FAHRENHEIT.value, null=True, blank=True)
+    lat_lan_format = models.CharField(max_length=20, choices=UserConstants.LatLonFormat.choices(), default=UserConstants.LatLonFormat.DEGREES.value, null=True, blank=True)
+    route_segment_color_rule = models.CharField(max_length=255, null=True, blank=True, default=None)
+    route_line_thickness = models.CharField(max_length=20, choices=UserConstants.RouteLineThickness.choices(), default=UserConstants.RouteLineThickness.TWO.value, null=True, blank=True)
+    device_title = models.CharField(max_length=255, null=True, blank=True)
+    device_title_plural = models.CharField(max_length=255, null=True, blank=True)
+    device_group_title = models.CharField(max_length=255, null=True, blank=True)
+    device_group_title_plural = models.CharField(max_length=255, null=True, blank=True)
+    address_title = models.CharField(max_length=255, null=True, blank=True)
+    address_title_plural = models.CharField(max_length=255, null=True, blank=True)
+    default_login_user_id = models.CharField(max_length=255, null=True, blank=True)
+    default_overlay = models.CharField(max_length=30, choices=UserConstants.DefaultOverlay.choices(), default=None, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.user.email

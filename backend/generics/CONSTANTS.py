@@ -390,3 +390,65 @@ class UserConstants:
         FLEET_MAP = "Fleet Map"
         DETAIL_REPORTS = "Detail Reports"
         FLEET_REPORTS = "Fleet Reports"
+
+    @unique
+    class MapClustering(BaseEnum):
+        OFF = "Off"
+        ON = "On"
+        ALWAYS = "Always show all pushpins"
+
+    @unique
+    class SpeedUnits(BaseEnum):
+        MPH = "Mph"
+        KMH = "Km/h"
+        KNOTS = "Knots"
+
+    @unique
+    class DistanceUnits(BaseEnum):
+        MILES = "Miles"
+        KM = "Km"
+        NAUTICAL_MILES = "Nautical Miles"
+
+    @unique
+    class VolumeUnits(BaseEnum):
+        GALLONS = "Gallons"
+        LITERS = "Liters"
+        IMPERIAL_GALLONS = "Imperial Gallons"
+        FT_3 = "Ft^3"
+
+    @unique
+    class EconomyUnits(BaseEnum):
+        MPG = "Mpg"
+        KML = "Km/l"
+        KPG = "Kpg"
+        L_100KM = "L/100km"
+
+    @unique
+    class PressureUnits(BaseEnum):
+        KPA = "kPa"
+        PSI = "psi"
+        MMHG = "mmHg"
+        BAR = "bar"
+
+    @unique
+    class TemperatureUnits(BaseEnum):
+        CELSIUS = "Celsius"
+        FAHRENHEIT = "Fahrenheit"
+
+    @unique
+    class LatLonFormat(BaseEnum):
+        DEGREES = "Degrees"
+        DEG_MIN_SEC = "Deg:Min:Sec"
+        DEG_MIN = "Deg:Min"
+
+
+    @unique
+    class RouteLineThickness(BaseEnum):
+        ONE = "1 (Thinnest)"
+        TWO = "2 (Default)"
+        THREE = "3"
+        FOUR = "4"
+        FIVE = "5"
+        SIX = "6"
+        SEVEN = "7"
+        EIGHT = "8 (Widest)"
