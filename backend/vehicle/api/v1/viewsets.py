@@ -20,8 +20,8 @@ class VehicleViewSet(viewsets.ModelViewSet):
     filter_backends = [ SearchFilter, OrderingFilter]
     filterset_fields = ['short_name', 'email']
     search_fields = ['short_name', 'email', 'added_by__name', 'added_by__email']
-    ordering_fields = ['short_name', 'email']
-    ordering = ['short_name']
+    ordering_fields = ['short_name', 'email', 'id']
+    ordering = ['-created_at']
 
     def get_queryset(self):
         organization_id = self.request.GET.get('organization_id')
