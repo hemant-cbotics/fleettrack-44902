@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
-from .models import UserRoleAndPermission, UserProfile
+from .models import UserRoleAndPermission, UserProfile, UserAccount
 from users.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
@@ -18,3 +18,4 @@ class UserAdmin(auth_admin.UserAdmin):
 
 admin.site.register(UserRoleAndPermission)   
 admin.site.register(UserProfile)
+admin.site.register(UserAccount)
