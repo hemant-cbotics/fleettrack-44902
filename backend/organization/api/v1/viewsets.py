@@ -94,6 +94,7 @@ class OrganizationRoleViewset(ModelViewSet):
     queryset = OrganizationRole.objects.all()
     filter_backends = [filters.SearchFilter] # search filter
     search_fields = ['name', 'organization__name'] # search by name and organization name
+    ordering = ['-created_at']
 
     def get_queryset(self):
         return super().get_queryset().filter(organization__owner=self.request.user)
@@ -108,7 +109,7 @@ class OrganizationUsersView(APIView):
         organization_id = kwargs.get('organization_id')
         search_query = request.query_params.get('search', '')
         #user = self.request.user
-        user_role_permission = UserRoleAndPermission.objects.filter(role__organization__id=organization_id).filter(Q(user__name__icontains=search_query) | Q(user__email__icontains=search_query))
+        user_role_permission = UserRoleAndPermission.objects.filter(role__organization__id=organization_id).filter(Q(user__name__icontains=search_query) | Q(user__email__icontains=search_query)).order_by('-created_at')
         paginator = self.pagination_class()
         paginated_users = paginator.paginate_queryset(user_role_permission, request)
         serializer = OrganizationUsersSerializer(paginated_users, many=True)
