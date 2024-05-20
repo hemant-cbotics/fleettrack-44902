@@ -78,7 +78,7 @@ const AdminsGeozonesCreateNew = () => {
                   label={t("city")}
                   id="city"
                   name="city"
-                  value={values.city}
+                  // value={values.city}
                   onChange={(e) => setFieldValue("city", e)}
                   onBlur={(e) => {setTouched({city: true}); handleBlur(e)}}
                   error={errors.city}
@@ -89,7 +89,7 @@ const AdminsGeozonesCreateNew = () => {
                   label={t("type")}
                   id="type"
                   name="type"
-                  value={values.type}
+                  // value={values.type}
                   onChange={(e) => setFieldValue("type", e)}
                   onBlur={(e) => {setTouched({type: true}); handleBlur(e)}}
                   error={errors.type}
