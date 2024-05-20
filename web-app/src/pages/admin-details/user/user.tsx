@@ -70,6 +70,12 @@ const ScreenAdminDetailUser = () => {
   const [ deleteSingleUserApiTrigger, { isLoading: isLoadingDeleteUser }] = useDeleteSingleUserMutation();
   const { results } = dataOrgUsers || {};
 
+  const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
+  useEffect(() => {
+    if(isFetchingSingleUser) {
+      setFormikValuesReady(false);
+    }
+  }, [isFetchingSingleUser]);
   const formik = useFormik({
     initialValues: userDetailsInitialValues,
     validationSchema: userDetailsYupValidationSchema,
@@ -113,6 +119,7 @@ const ScreenAdminDetailUser = () => {
 
   useEffect(() => {
     if (dataSingleUser) {
+      setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
         user_id: dataSingleUser?.id,
         password: "",
@@ -133,6 +140,7 @@ const ScreenAdminDetailUser = () => {
         default_acl_role: "",
         maximum_access_level: "",
       });
+      setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [dataSingleUser, userId]);
 
@@ -266,7 +274,7 @@ const ScreenAdminDetailUser = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
-                    loadingData={isFetchingSingleUser}
+                    loadingData={isFetchingSingleUser || !formikValuesReady}
                   />
                 </Accordian>
                 <Accordian title={t("accord_authorized_groups")}>
@@ -279,7 +287,7 @@ const ScreenAdminDetailUser = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
-                    loadingData={isFetchingSingleUser}
+                    loadingData={isFetchingSingleUser || !formikValuesReady}
                   />
                 </Accordian>
                 <Accordian title={t("accord_user_access_control")}>
@@ -292,7 +300,7 @@ const ScreenAdminDetailUser = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
-                    loadingData={isFetchingSingleUser}
+                    loadingData={isFetchingSingleUser || !formikValuesReady}
                   />
                 </Accordian>
               </form>
