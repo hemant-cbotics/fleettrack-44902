@@ -177,7 +177,7 @@ const ScreenDashboardAdminGroups = () => {
   }
 
   useEffect(() => {
-    if(!groupId && !!groupData)  {
+    if(!groupId && !!groupData && groupData.length > 0)  {
       window.location.href = `${routeUrls.dashboardChildren.adminChildren.groups}/${groupData?.[0]?.value}`;
     }
   }, [groupId, groupData])
@@ -205,7 +205,7 @@ const ScreenDashboardAdminGroups = () => {
               label={t("group")}
               id="GroupSelector"
               name="group"
-              value={groupData?.find((group) => group.value === `${groupId}`)}
+              value={`${groupId}`}
               options={groupData}
               onChange={(e) => { navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${e?.value}`) }}
               // onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}

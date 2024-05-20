@@ -161,7 +161,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         label="Timezone"
         id="timezone"
         name="timezone"
-        {...(!!values.timezone ? { value: TIMEZONE_OPTIONS.find(optItem => optItem.value === values?.timezone) } : {})}
+        value={values.timezone}
         options={TIMEZONE_OPTIONS}
         onChange={(e: any) => { formikSetValue("timezone", e?.value); }}
         onBlur={(e: any) => { formikSetTouched("timezone", true); handleBlur(e); }}
