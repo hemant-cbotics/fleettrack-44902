@@ -97,7 +97,7 @@ type AdminFormFieldDropdownProps = {
   // onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onChange?: (e: TSelectboxOption | null) => void;
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
-  value?: TSelectboxOption | null;
+  value?: string | null;
   options?: TSelectboxOption[];
   touched?: boolean;
   error?: string;
@@ -158,9 +158,9 @@ const RealSelect: FC<AdminFormFieldDropdownProps> = ({
       : "border-gray-200 text-field-label-valid";
   const floatingError = false;
 
-  const [selected, setSelected] = useState<TSelectboxOption | null>(!!value?.value ? value : null);
+  const [selected, setSelected] = useState<string | null>(value ?? '');
   const handleChange = (e: TSelectboxOption | null) => {
-    setSelected(options.find(item => item.value === e?.value) ?? null);
+    setSelected(`${e?.value}`);
     onChange?.(e)
   }
 
@@ -186,7 +186,7 @@ const RealSelect: FC<AdminFormFieldDropdownProps> = ({
         }}
         placeholder={placeholder}
         options={options}
-        {...(!!selected?.value ? { value: options.find(optItem => optItem.value === selected?.value) } : {})}
+        value={options.find(optItem => optItem.value === selected)}
         onChange={handleChange}
         isDisabled={disabled || readOnly}
         // onBlur={onBlur}

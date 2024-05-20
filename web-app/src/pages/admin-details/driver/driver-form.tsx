@@ -23,6 +23,7 @@ interface DriverGeneralDetailFormProps {
     shouldValidate?: boolean
   ) => void;
   userCanEdit: boolean;
+  loadingData: boolean;
 }
 
 export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
@@ -155,11 +156,13 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("license_type")}
         id="license_type"
         name="license_type"
@@ -178,6 +181,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("license_state")}
         id="license_state"
         name="license_state"
@@ -222,6 +226,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("license_status")}
         id="license_status"
         name="license_status"
@@ -251,6 +256,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage.form" });
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
@@ -350,6 +356,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("vehicle_id")}
         id="vehicle_id"
         name="vehicle_id"
