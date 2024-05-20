@@ -28,6 +28,7 @@ import ScreenDashboardAdminGroups from "../pages/admins/groups/groups"
 import ScreenDashboardAdminFleetTags from "../pages/admins/fleettag/fleettag"
 import ScreenDashboardAdminGeozones from "../pages/admins/geozones/geozones"
 import ScreenAdminDetailGeozone from "../pages/admin-details/geozone/geozone"
+import ScreenAdminDetailFleettag from "../pages/admin-details/fleettag/fleettag"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -176,7 +177,7 @@ const routes: RouteObject[] = [
           },
           {
             path: routeUrls.dashboardChildren.adminChildren.fleettags + "/:fleettagId",
-            element: <TemporaryRoute />
+            element: <ScreenAdminDetailFleettag />
           },
           {
             path: routeUrls.dashboardChildren.adminChildren.drivers,
