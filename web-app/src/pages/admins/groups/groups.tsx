@@ -176,6 +176,11 @@ const ScreenDashboardAdminGroups = () => {
     });
   }
 
+  useEffect(() => {
+    if(!groupId)  {
+      window.location.href = `${routeUrls.dashboardChildren.adminChildren.groups}/${groupData?.[0]?.value}`;
+    }
+  }, [groupId])
 
   return (
     <>
@@ -196,10 +201,11 @@ const ScreenDashboardAdminGroups = () => {
         <div className={`grid grid-cols-12 gap-4 items-end ${isFetchingOrgGroups ? 'opacity-40 pointer-events-none': ""}`}>
           <div className="col-span-4">
             <AdminFormFieldDropdown
+              loadingData={!(!!dataOrgGroups && !!groupId)}
               label={t("group")}
               id="GroupSelector"
               name="group"
-              value={groupId?.toString() ?? ""}
+              value={groupData?.find((group) => group.value === `${groupId}`)}
               options={groupData}
               onChange={(e) => { navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${e?.value}`) }}
               // onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}

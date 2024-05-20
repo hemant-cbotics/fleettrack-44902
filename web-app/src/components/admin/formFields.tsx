@@ -89,6 +89,7 @@ export type TSelectboxOption = {
 };
 
 type AdminFormFieldDropdownProps = {
+  loadingData?: boolean;
   label: string | false;
   id: string;
   name: string;
@@ -96,7 +97,7 @@ type AdminFormFieldDropdownProps = {
   // onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onChange?: (e: TSelectboxOption | null) => void;
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
-  value: string;
+  value?: TSelectboxOption | null;
   options?: TSelectboxOption[];
   touched?: boolean;
   error?: string;
@@ -104,9 +105,32 @@ type AdminFormFieldDropdownProps = {
   readOnly?: boolean;
   customSelectboxClass?: string;
   customWrapperClass?: string;
+
+  menuPlacement?: "auto" | "top" | "bottom";
 };
 
-export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
+const PseudoSelect: FC<{
+  label: string | false;
+}> = ({ label }) => {
+  return (
+    <div className="col-span-6">
+      <label
+        className={`block text-sm font-display font-semibold`}
+      >
+        {label}
+      </label>
+      <div className="mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none¯ overflow-hidden">
+        <div className="animate-pulse flex space-x-4">
+          <div className="flex-1 space-y-4 py-1">
+            <div className="h-9 bg-gray-200 rounded w-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RealSelect: FC<AdminFormFieldDropdownProps> = ({
   label,
   id,
   name,
@@ -122,6 +146,8 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
 
   customSelectboxClass = "",
   customWrapperClass = "col-span-6",
+
+  menuPlacement = "auto",
 }) => {
   let wrapperClass = touched && !!error ? "" : "";
   let labelClass =
@@ -132,9 +158,9 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
       : "border-gray-200 text-field-label-valid";
   const floatingError = false;
 
-  const [selected, setSelected] = useState(value);
+  const [selected, setSelected] = useState<TSelectboxOption | null>(!!value?.value ? value : null);
   const handleChange = (e: TSelectboxOption | null) => {
-    setSelected(`${e?.value}`);
+    setSelected(options.find(item => item.value === e?.value) ?? null);
     onChange?.(e)
   }
 
@@ -160,27 +186,12 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
         }}
         placeholder={placeholder}
         options={options}
-        value={options.find(optItem => optItem.value === selected)}
+        {...(!!selected?.value ? { value: options.find(optItem => optItem.value === selected?.value) } : {})}
         onChange={handleChange}
         isDisabled={disabled || readOnly}
         // onBlur={onBlur}
+        menuPlacement={menuPlacement}
       />
-      {/* <select
-        value={selected}
-        onChange={handleChange}
-        onBlur={onBlur}
-        disabled={disabled}
-        className={`mt-1 w-full h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none${
-          touched ? " touched" : ""
-        } ${inputClass} ${customSelectboxClass}`}
-      >
-        {!!placeholder && <option value="">{placeholder}</option>}
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select> */}
       {touched && !!error && (
         <p
           className={`${
@@ -191,6 +202,18 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = ({
         </p>
       )}
     </div>
+  );
+};
+
+export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = (props) => {
+  return (
+    <>
+      {props?.loadingData ? (
+        <PseudoSelect label={props.label} />
+      ) : (
+        <RealSelect {...props} />
+      )}
+    </>
   );
 };
 

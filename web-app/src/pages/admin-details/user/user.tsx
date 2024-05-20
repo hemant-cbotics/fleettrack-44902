@@ -266,6 +266,7 @@ const ScreenAdminDetailUser = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
+                    loadingData={isFetchingSingleUser}
                   />
                 </Accordian>
                 <Accordian title={t("accord_authorized_groups")}>
@@ -278,6 +279,7 @@ const ScreenAdminDetailUser = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
+                    loadingData={isFetchingSingleUser}
                   />
                 </Accordian>
                 <Accordian title={t("accord_user_access_control")}>
@@ -290,6 +292,7 @@ const ScreenAdminDetailUser = () => {
                     handleBlur={handleBlur}
                     formikSetTouched={formik.setFieldTouched}
                     userCanEdit={userCanEdit}
+                    loadingData={isFetchingSingleUser}
                   />
                 </Accordian>
               </form>

@@ -20,6 +20,7 @@ interface UserGeneralDetailFormProps {
   handleBlur: (event: React.FocusEvent<any>) => void;
   formikSetTouched: (field: string, isTouched?: boolean, shouldValidate?: boolean) => void;
   userCanEdit: boolean;
+  loadingData: boolean;
 }
 
 export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
@@ -31,6 +32,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
@@ -155,13 +157,14 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="Timezone"
         id="timezone"
         name="timezone"
-        value={values.timezone}
+        {...(!!values.timezone ? { value: TIMEZONE_OPTIONS.find(optItem => optItem.value === values?.timezone) } : {})}
         options={TIMEZONE_OPTIONS}
-        onChange={(e) => { formikSetValue("timezone", e?.value); }}
-        onBlur={(e) => { formikSetTouched("timezone", true); handleBlur(e); }}
+        onChange={(e: any) => { formikSetValue("timezone", e?.value); }}
+        onBlur={(e: any) => { formikSetTouched("timezone", true); handleBlur(e); }}
         touched={touched.timezone}
         error={errors.timezone}
         disabled={!userCanEdit}
@@ -183,6 +186,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
       </div>
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="Default Overlay"
         id="default_overlay"
         name="default_overlay"
@@ -196,6 +200,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="User State"
         id="user_state"
         name="user_state"
@@ -222,6 +227,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="First Login Page"
         id="first_login_page"
         name="first_login_page"
@@ -245,6 +251,7 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
 
 const [selectedGroups, setSelectedGroups] = React.useState(values.authorized_groups);
@@ -299,6 +306,7 @@ const {
         ))}
       </div>
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="Authorized Groups"
         id="authorized_groups"
         name="authorized_groups"
@@ -323,10 +331,12 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="Default ACL Role"
         id="default_acl_role"
         name="default_acl_role"
@@ -339,6 +349,7 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label="Maximum Access Level"
         id="maximum_access_level"
         name="maximum_access_level"

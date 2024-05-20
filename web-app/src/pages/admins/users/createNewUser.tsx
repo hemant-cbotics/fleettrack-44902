@@ -127,7 +127,9 @@ const AdminsUsersCreateNew = () => {
                     setFieldValue('acl_role', `${e?.value}`)
                   }}
                   onBlur={handleBlur}
-                  value={values.acl_role}
+                  value={dataOrgRolesPermissions?.results?.filter((item: TUserRole) => item.id === parseInt(values.acl_role))?.map((item: TUserRole) => {
+                    return { value: `${item.id}`, label: item.name }
+                  })?.[0] ?? null}
                   options={dataOrgRolesPermissions?.results?.map((item: TUserRole) => {
                     return { value: `${item.id}`, label: item.name }
                   }) || []}
