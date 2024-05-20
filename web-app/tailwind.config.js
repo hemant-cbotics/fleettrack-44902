@@ -30,6 +30,10 @@ module.exports = {
             text: '#2B363B'
           }
         },
+        sidemenu: {
+          text: '#555555',
+          "text-active": '#304674',
+        },
         accent: {
           blue: {
             paleO66: '#C2DCF266',
