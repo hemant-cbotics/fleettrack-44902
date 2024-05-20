@@ -443,6 +443,41 @@ export const language_en = {
         // ...
       }
     },
+    geozones: {
+      heading: "Geozones",
+      sub_heading: "Add and Delete Geozones Information",
+      add_new: "Add New Zone",
+      listing_heading: "Geozone Listing",
+      search_placeholder: "Search Geozone here...",
+      create_new: {
+        heading: "Add New Geozone",
+        sub_heading: "Please provide the information below to create a New Geozone",
+        id: "Zone Id",
+        id_placeholder: "Please provide the zone id",
+        city: "City",
+        type: "Zone Type(Shape)",
+        submit_button: "Create New Geozone",
+      },
+      detailsPage: {
+        heading: "Geozone Details",
+        listing_heading: "Geozone Listing",
+        accord_details: "Details",
+        form: {
+          description: "Description(Address)",
+          city: "City",
+          zone_type: "Zone Type(Shape)",
+          geocode: "Geocode",
+          latitude_longitude: "Latitude/Longitude",
+          overlap_priority: "Overlap Priority",
+          assign_group: "Assign Group",
+          reverse_geocode: "Reverse Geocode",
+          arrival_zone: "Arrival Zone",
+          departure_zone: "Departure Zone",
+          zone_color: "Zone Color",
+          speed_limit: "Speed Limit",
+        }
+      },
+    },
   },
   active: "Active",
   inactive: "Inactive",
