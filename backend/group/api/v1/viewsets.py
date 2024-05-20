@@ -19,7 +19,7 @@ class GroupViewset(viewsets.ModelViewSet):
     filterset_fields = ['name', 'id']
     search_fields = ['name', 'description', 'created_by__name', 'created_by__email', 'id']
     ordering_fields = ['name']
-    ordering = ['name']
+    ordering = ['-created_at']
 
     def get_queryset(self):
         organization_id = self.request.GET.get('organization_id')
