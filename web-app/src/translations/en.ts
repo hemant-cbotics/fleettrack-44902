@@ -440,7 +440,24 @@ export const language_en = {
         create_success: "Fleet Tag has been created successfully.",
       },
       detailsPage: {
-        // ...
+        heading: "Fleet Tags",
+        listing_heading: "Fleet Tag Listing",
+        accord_details: "Details",
+        form: {
+          fleet_tag_id: "Fleet Tag ID",
+          fleet_tag_name: "Fleet Tag Name",
+          last_event_time: "Last Event Time",
+          last_status_code: "Last Status Code",
+          in_range: "In Range",
+          in_range_device_id: "In Range Device ID",
+          last_location: "Last Location",
+          last_address: "Last Address",
+          last_altitude: "Last Altitude",
+          distance_travelled: "Distance Travelled",
+          tag_signal_strength: "Tag Signal Strength",
+          tag_battery_level: "Tag Battery Level",
+          temprature: "Temperature",
+        }
       }
     },
     geozones: {
