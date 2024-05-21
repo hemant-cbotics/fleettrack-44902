@@ -16,8 +16,9 @@ import { useDebouncedCallback } from 'use-debounce';
 import { routeUrls } from "../../../navigation/routeUrls";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TSelectboxOption } from "../../../components/admin/formFields";
+import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
-const columns = [
+const all_columns = [
   "Sr. No",
   "User Id",
   "Description",
@@ -33,6 +34,12 @@ const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+  const [columns, setColumns] = React.useState<TListingColumn[]>(all_columns.map((item, index) => {
+    return {
+      name: item,
+      show: true
+    }
+  }));
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState({
@@ -69,7 +76,7 @@ const ScreenDashboardAdminUsers = () => {
           item?.user?.profile?.timezone || "-", // timezone: 
           item?.user?.profile?.is_active, // active: 
           "-" // last_login: 
-        ]
+        ].filter((item, index) => columns[index].show)
       }))
     : [];
 
@@ -89,9 +96,14 @@ const ScreenDashboardAdminUsers = () => {
           searchBoxPlaceholder={t("search_placeholder")}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
-        <div className="py-4 mt-4">
+        <EditListingColumnsModal
+          columns={columns}
+          setColumns={setColumns}
+        />
+        <div className="py-4 mt-4 relative">
+          <EditListingColumnsButton />
           <AdminTable
-            columns={columns}
+            columns={columns.filter(item => item.show).map((item) => item.name)}
             data={tableData}
             isLoading={isFetchingOrgUsers}
             listingQueryParams={orgUsersQueryParams}

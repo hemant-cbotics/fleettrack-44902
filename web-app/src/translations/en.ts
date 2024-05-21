@@ -221,6 +221,11 @@ export const language_en = {
   admins: {
     refresh_data: "Refresh Data",
     completeCreation: "Please fill the form a click SAVE to complete the process",
+    edit_columns: {
+      heading: "Edit Columns",
+      sub_heading: "Edit the selection of your columns. See the information that is most relevant to your business",
+      submit_button: "Update Selection",
+    },
     filters: {
       active: "Active",
       inactive: "Inactive",
