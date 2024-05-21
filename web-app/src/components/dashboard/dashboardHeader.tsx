@@ -18,6 +18,8 @@ import AdminsDropdown from "./adminsDropdown";
 import { sessionStorageKeys, useSessionStorage } from "../../utils/sessionStorageItems";
 import { TUser } from "../../api/types/User";
 import AppSearchBox from "../searchBox";
+import { useLogoutMutation } from "../../api/network/userApiService";
+import { sideEffectLogOut } from "../../utils/common";
 
 interface IconWithCounterProps {
   src: string;
@@ -27,7 +29,7 @@ interface IconWithCounterProps {
 
 const IconWithCounter: React.FC<IconWithCounterProps> = ({src, alt, counter = null}) => (
   <li className="relative cursor-pointer p-3">
-    <img src={src} alt={alt} className={`block size-8 max-w-8${alt === 'chat-icon' ? ' translate-y-1' : ''}`} />
+    <img src={src} alt={alt} className={`block size-6 max-w-6${alt === 'chat-icon' ? ' translate-y-1' : ''}`} />
     {counter !== null && <span className="absolute top-0 right-0 bg-white rounded-full shadow-md size-5 text-xs flex items-center justify-center">
       {counter}
     </span>}
@@ -36,6 +38,7 @@ const IconWithCounter: React.FC<IconWithCounterProps> = ({src, alt, counter = nu
 
 const DashboardHeader = () => {
   const { t } = useTranslation();
+  const { t: tTop } = useTranslation("translation", { keyPrefix: "dashboard.top" });
   const navigate = useNavigate();
   const { getSessionStorageItem } = useSessionStorage();
 
@@ -45,60 +48,100 @@ const DashboardHeader = () => {
   const { pathname } = useLocation();
   const adminsMenuActive = pathname.indexOf(routeUrls.dashboardChildren.admins) > -1;
 
+  const [logoutAPITrigger, { isLoading }] = useLogoutMutation()
+
+  const handleLogout = () => {
+    logoutAPITrigger()
+      .then(() => {
+        sideEffectLogOut()
+      })
+  }
+
+  const [showProfileDropdown, setShowProfileDropdown] = React.useState(false)
   const handleClickProfileIcon = () => {
-    // TODO: Implement the logic to open the profile dropdown
-    // Temporary redirect to change password page
-    navigate(routeUrls.changePassword);
+    setShowProfileDropdown(!showProfileDropdown)
+  }
+
+  const handleNavigateTo = (page: 'account' | 'change_password') => {
+    setShowProfileDropdown(false)
+    switch(page) {
+      case 'account':
+        navigate(routeUrls.dashboardChildren.account)
+        break;
+      case 'change_password':
+        navigate(routeUrls.changePassword)
+        break;
+    }
   }
 
   return (
-    <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-4 lg:grid lg:grid-cols-12`}>
-      <div className="lg:col-span-4 flex items-center">
-        <AppSearchBox
-          wrapperClassName="w-64 max-w-full"
-          placeholder={t("type_here_to_search")}
-          onChange={() => {}}
-        />
-      </div>
-      <div className="lg:col-span-8 flex justify-end">
-        {!adminsMenuActive && <AdminsDropdown />}
-        {/* <AdminFormFieldDropdown
-          label={false}
-          id="admins"
-          name="admins"
-          value=""
-          options={[
-            { value: "", label: t("dashboard.top.admins") },
-            ...(Object.keys(routeUrls.dashboardChildren.adminChildren)
-            .map(item => {
-              return {
-                value: item,
-                label: t(`dashboard.sidemenu.admins.${item}`)
-              };
-            }))
-          ]}
-          onChange={(e) => {
-            const routeSlug = e.target.value;
-            if(routeSlug)
-              navigate(routeUrls.dashboardChildren.adminChildren
-                ?.[routeSlug as 'users']
-              );
-          }}
-          customSelectboxClass={`h-10 mt-2 self-center`}
-        /> */}
-        <div className="ml-5">
-          <ul className="flex items-center space-x-2">
-            <IconWithCounter src={HelpIcon} alt="help-icon" />
-            <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} />
-            <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} />
-            <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} />
-          </ul>
+    <>
+      <div
+        className={`fixed top-0 left-0 w-full h-screen z-overlay bg-modal-overlay${showProfileDropdown ? '' : ' hidden'}`}
+        onClick={handleClickProfileIcon}></div>
+      <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-4 lg:grid lg:grid-cols-12`}>
+        <div className="lg:col-span-4 flex items-center">
+          <AppSearchBox
+            wrapperClassName="w-64 max-w-full"
+            placeholder={t("type_here_to_search")}
+            onChange={() => {}}
+          />
         </div>
-        <div className="flex items-center justify-center ml-5 cursor-pointer" onClick={handleClickProfileIcon}>
-          <AppAvatar initials={getUserIntials(loggedInUser?.name ?? loggedInUser?.email)} />
+        <div className="lg:col-span-8 flex justify-end">
+          {!adminsMenuActive && <AdminsDropdown />}
+          <div className="ml-5">
+            <ul className="flex items-center space-x-2">
+              <IconWithCounter src={HelpIcon} alt="help-icon" />
+              <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} />
+              <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} />
+              <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} />
+            </ul>
+          </div>
+
+          {/* Profile Icon */}
+          <div className={`relative select-none${showProfileDropdown ? " z-modal" : ""}`}>
+            <button type="button" className="flex items-center justify-center ml-5 cursor-pointer relative" onClick={handleClickProfileIcon}>
+              <AppAvatar initials={getUserIntials(loggedInUser?.name ?? loggedInUser?.email)} />
+            </button>
+            <div
+              className={`absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg z-modal${showProfileDropdown ? '' : ' hidden'}`}
+              role="menu"
+            >
+              <div className="p-2">
+                <a
+                  href="#"
+                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                  role="menuitem"
+                  onClick={() => handleNavigateTo('account')}
+                >
+                  {tTop("account")}
+                </a>
+
+                <a
+                  href="#"
+                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                  role="menuitem"
+                  onClick={() => handleNavigateTo('change_password')}
+                >
+                  {tTop("change_password")}
+                </a>
+              </div>
+
+              <div className="p-2">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-100"
+                  role="menuitem"
+                  onClick={handleLogout}
+                >
+                  {tTop("logout")}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
