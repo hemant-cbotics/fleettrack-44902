@@ -1,11 +1,15 @@
 from rest_framework import serializers
 from organization.api.v1.serializers import OrganizationRoleSerializer
 from users.models import UserRoleAndPermission, UserProfile, User, UserAccount
-# from users.api.v1.serializers import UserSerializer
 
+class UserDefaultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # fields = "__all__"
+        exclude = ('password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions')
 
 class AccountSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True)
+    user = UserDefaultSerializer(read_only=True)
 
     class Meta:
         model = UserAccount
