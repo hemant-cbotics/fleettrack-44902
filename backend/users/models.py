@@ -87,6 +87,7 @@ class UserAccount(CommonModel):
     lat_lan_format = models.CharField(max_length=20, choices=UserConstants.LatLonFormat.choices(), default=UserConstants.LatLonFormat.DEGREES.value, null=True, blank=True)
     route_segment_color_rule = models.CharField(max_length=255, null=True, blank=True, default=None)
     route_line_thickness = models.CharField(max_length=20, choices=UserConstants.RouteLineThickness.choices(), default=UserConstants.RouteLineThickness.TWO.value, null=True, blank=True)
+    multi_vehicle_map_name = models.CharField(max_length=255, null=True, blank=True)
     device_title = models.CharField(max_length=255, null=True, blank=True)
     device_title_plural = models.CharField(max_length=255, null=True, blank=True)
     device_group_title = models.CharField(max_length=255, null=True, blank=True)
