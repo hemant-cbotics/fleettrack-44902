@@ -5,6 +5,7 @@ import {
   AdminFormFieldInput,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
+import { DEFAULT_OVERLAY_OPTIONS, DISTANCE_UNITS_OPTIONS, ECONOMY_UNITS_OPTIONS, ENABLE_MAP_CLUSTERING_OPTIONS, LATITUDE_LONGITUDE_FORMAT_OPTIONS, PRESSURE_UNITS_OPTIONS, ROUTE_LINE_THICKNESS_OPTIONS, SPEED_UNITS_OPTIONS, TEMPRATURE_UNITS_OPTIONS, TIMEZONE_OPTIONS, VOLUME_UNITS_OPTIONS } from "./constants";
 
 interface AccountGeneralDetailFormProps {
   values: any;
@@ -19,6 +20,7 @@ interface AccountGeneralDetailFormProps {
     shouldValidate?: boolean
   ) => void;
   userCanEdit: boolean;
+  loadingData: boolean;
 }
 
 export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
@@ -30,6 +32,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
 }) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "dashboard.profile.account.form",
@@ -171,10 +174,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
 
       <div className="col-span-12 grid grid-cols-12">
         <AdminFormFieldDropdown
+          loadingData={loadingData}
           label={t("enable_map_clustering")}
           id="enable_map_clustering"
           name="enable_map_clustering"
           value={values.enable_map_clustering}
+          options={ENABLE_MAP_CLUSTERING_OPTIONS}
           onChange={(e) => {
             formikSetValue("enable_map_clustering", e?.value);
           }}
@@ -242,10 +247,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         />
       </div>
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("timezone")}
         id="timezone"
         name="timezone"
         value={values.timezone}
+        options={TIMEZONE_OPTIONS}
         onChange={(e) => {
           formikSetValue("timezone", e?.value);
         }}
@@ -259,10 +266,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("speed_units")}
         id="speed_units"
         name="speed_units"
         value={values.speed_units}
+        options={SPEED_UNITS_OPTIONS}
         onChange={(e) => {
           formikSetValue("speed_units", e?.value);
         }}
@@ -276,10 +285,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("distance_units")}
         id="distance_units"
         name="distance_units"
         value={values.distance_units}
+        options={DISTANCE_UNITS_OPTIONS}
         onChange={(e) => {
           formikSetValue("distance_units", e?.value);
         }}
@@ -293,10 +304,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("volume_units")}
         id="volume_units"
         name="volume_units"
         value={values.volume_units}
+        options={VOLUME_UNITS_OPTIONS}
         onChange={(e) => {
           formikSetValue("volume_units", e?.value);
         }}
@@ -310,10 +323,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("economy_units")}
         id="economy_units"
         name="economy_units"
         value={values.economy_units}
+        options={ECONOMY_UNITS_OPTIONS}
         onChange={(e) => {
           formikSetValue("economy_units", e?.value);
         }}
@@ -327,10 +342,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("pressure_units")}
         id="pressure_units"
         name="pressure_units"
         value={values.pressure_units}
+        options={PRESSURE_UNITS_OPTIONS}
         onChange={(e) => {
           formikSetValue("pressure_units", e?.value);
         }}
@@ -344,10 +361,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("temperature_units")}
         id="temperature_units"
         name="temperature_units"
         value={values.temperature_units}
+        options={TEMPRATURE_UNITS_OPTIONS}
         onChange={(e) => {
           formikSetValue("temperature_units", e?.value);
         }}
@@ -361,10 +380,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("latitude_longitude_format")}
         id="latitude_longitude_format"
         name="latitude_longitude_format"
         value={values.latitude_longitude_format}
+        options={LATITUDE_LONGITUDE_FORMAT_OPTIONS}
         onChange={(e) => {
           formikSetValue("latitude_longitude_format", e?.value);
         }}
@@ -393,10 +414,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
       </div>
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("route_line_thickness")}
         id="route_line_thickness"
         name="route_line_thickness"
         value={values.route_line_thickness}
+        options={ROUTE_LINE_THICKNESS_OPTIONS}
         onChange={(e) => {
           formikSetValue("route_line_thickness", e?.value);
         }}
@@ -513,10 +536,12 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         disabled={!userCanEdit}
       />
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("default_overlay")}
         id="default_overlay"
         name="default_overlay"
         value={values.default_overlay}
+        options={DEFAULT_OVERLAY_OPTIONS}
         onChange={(e) => {
           formikSetValue("default_overlay", e?.value);
         }}
@@ -820,6 +845,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData
 }) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "dashboard.profile.account.form",
@@ -827,6 +853,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("harsh_braking")}
         id="harsh_braking"
         name="harsh_braking"
@@ -844,6 +871,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("harsh_acceleration")}
         id="harsh_acceleration"
         name="harsh_acceleration"
@@ -861,6 +889,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("speeding")}
         id="speeding"
         name="speeding"
@@ -878,6 +907,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("reverse")}
         id="reverse"
         name="reverse"
@@ -895,6 +925,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("seatbelt_off")}
         id="seatbelt_off"
         name="seatbelt_off"
@@ -912,6 +943,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("harsh_cornering")}
         id="harsh_cornering"
         name="harsh_cornering"
@@ -929,6 +961,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("idle_ratio")}
         id="idle_ratio"
         name="idle_ratio"
@@ -946,6 +979,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("impact_crash_ai")}
         id="impact_crash_ai"
         name="impact_crash_ai"
@@ -963,6 +997,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("cellphone_use_ai")}
         id="cellphone_use_ai"
         name="cellphone_use_ai"
@@ -980,6 +1015,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("distracted_driving_ai")}
         id="distracted_driving_ai"
         name="distracted_driving_ai"
@@ -997,6 +1033,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("drinking_eating_ai")}
         id="drinking_eating_ai"
         name="drinking_eating_ai"
@@ -1014,6 +1051,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("smoking_ai")}
         id="smoking_ai"
         name="smoking_ai"
@@ -1031,6 +1069,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("possible_fatiuge_ai")}
         id="possible_fatiuge_ai"
         name="possible_fatiuge_ai"
@@ -1048,6 +1087,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("obstructed_camera_ai")}
         id="obstructed_camera_ai"
         name="obstructed_camera_ai"
@@ -1065,6 +1105,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("tailgating_ai")}
         id="tailgating_ai"
         name="tailgating_ai"

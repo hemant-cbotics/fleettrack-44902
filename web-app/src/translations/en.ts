@@ -137,6 +137,9 @@ export const language_en = {
         accord_general_details: "General Details",
         accord_maintenance_interval_labels: "Maintenance Interval Labels",
         accord_scorecard_weight_factors: "Scorecard Weight Factors",
+        toast: {
+          account_updated: "Account has been updated successfully.",
+        },
         form : {
           account_id: "Account ID",
           account_description: "Account Description",
