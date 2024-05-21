@@ -38,6 +38,7 @@ code {
   /* --tw-shadow: 0 0 #0000; */
 }
 
+/* Disabled these password styles
 [type="password"] {
   font-size: 32px;
   line-height: 20px;
@@ -47,7 +48,7 @@ code {
   font-size: 14px;
   line-height: 20px;
   transform: translateY(-7px)
-}
+} */
 
 [type=checkbox], [type=radio] {
   -webkit-appearance: none;
