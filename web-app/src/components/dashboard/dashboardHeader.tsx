@@ -75,68 +75,73 @@ const DashboardHeader = () => {
   }
 
   return (
-    <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-4 lg:grid lg:grid-cols-12`}>
-      <div className="lg:col-span-4 flex items-center">
-        <AppSearchBox
-          wrapperClassName="w-64 max-w-full"
-          placeholder={t("type_here_to_search")}
-          onChange={() => {}}
-        />
-      </div>
-      <div className="lg:col-span-8 flex justify-end">
-        {!adminsMenuActive && <AdminsDropdown />}
-        <div className="ml-5">
-          <ul className="flex items-center space-x-2">
-            <IconWithCounter src={HelpIcon} alt="help-icon" />
-            <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} />
-            <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} />
-            <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} />
-          </ul>
+    <>
+      <div
+        className={`fixed top-0 left-0 w-full h-screen z-overlay bg-modal-overlay${showProfileDropdown ? '' : ' hidden'}`}
+        onClick={handleClickProfileIcon}></div>
+      <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-4 lg:grid lg:grid-cols-12`}>
+        <div className="lg:col-span-4 flex items-center">
+          <AppSearchBox
+            wrapperClassName="w-64 max-w-full"
+            placeholder={t("type_here_to_search")}
+            onChange={() => {}}
+          />
         </div>
-
-        {/* Profile Icon */}
-        <div className="relative select-none">
-          <div className="flex items-center justify-center ml-5 cursor-pointer" onClick={handleClickProfileIcon}>
-            <AppAvatar initials={getUserIntials(loggedInUser?.name ?? loggedInUser?.email)} />
+        <div className="lg:col-span-8 flex justify-end">
+          {!adminsMenuActive && <AdminsDropdown />}
+          <div className="ml-5">
+            <ul className="flex items-center space-x-2">
+              <IconWithCounter src={HelpIcon} alt="help-icon" />
+              <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} />
+              <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} />
+              <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} />
+            </ul>
           </div>
-          <div
-            className={`absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg${showProfileDropdown ? '' : ' hidden'}`}
-            role="menu"
-          >
-            <div className="p-2">
-              <a
-                href="#"
-                className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                role="menuitem"
-                onClick={() => handleNavigateTo('account')}
-              >
-                {tTop("account")}
-              </a>
 
-              <a
-                href="#"
-                className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                role="menuitem"
-                onClick={() => handleNavigateTo('change_password')}
-              >
-                {tTop("change_password")}
-              </a>
-            </div>
+          {/* Profile Icon */}
+          <div className={`relative select-none${showProfileDropdown ? " z-modal" : ""}`}>
+            <button type="button" className="flex items-center justify-center ml-5 cursor-pointer relative" onClick={handleClickProfileIcon}>
+              <AppAvatar initials={getUserIntials(loggedInUser?.name ?? loggedInUser?.email)} />
+            </button>
+            <div
+              className={`absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg z-modal${showProfileDropdown ? '' : ' hidden'}`}
+              role="menu"
+            >
+              <div className="p-2">
+                <a
+                  href="#"
+                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                  role="menuitem"
+                  onClick={() => handleNavigateTo('account')}
+                >
+                  {tTop("account")}
+                </a>
 
-            <div className="p-2">
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
-                role="menuitem"
-                onClick={handleLogout}
-              >
-                {tTop("logout")}
-              </button>
+                <a
+                  href="#"
+                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                  role="menuitem"
+                  onClick={() => handleNavigateTo('change_password')}
+                >
+                  {tTop("change_password")}
+                </a>
+              </div>
+
+              <div className="p-2">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-100"
+                  role="menuitem"
+                  onClick={handleLogout}
+                >
+                  {tTop("logout")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
