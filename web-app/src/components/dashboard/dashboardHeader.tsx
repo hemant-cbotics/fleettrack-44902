@@ -109,8 +109,7 @@ const DashboardHeader = () => {
             >
               <div className="p-2">
                 <a
-                  href="#"
-                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 cursor-pointer hover:bg-gray-200 hover:text-gray-700"
                   role="menuitem"
                   onClick={() => handleNavigateTo('account')}
                 >
@@ -118,8 +117,7 @@ const DashboardHeader = () => {
                 </a>
 
                 <a
-                  href="#"
-                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 cursor-pointer hover:bg-gray-200 hover:text-gray-700"
                   role="menuitem"
                   onClick={() => handleNavigateTo('change_password')}
                 >
@@ -130,7 +128,7 @@ const DashboardHeader = () => {
               <div className="p-2">
                 <button
                   type="button"
-                  className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-100"
+                  className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 cursor-pointer hover:bg-red-100"
                   role="menuitem"
                   onClick={handleLogout}
                 >

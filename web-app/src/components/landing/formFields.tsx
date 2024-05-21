@@ -36,6 +36,7 @@ export const LandingFormFieldInput: FC<LandingFormFieldInputProps> = ({ label, t
       </label>
 
       <input
+        {...(type === 'password' && { autoComplete: 'off' })}
         type={type}
         id={id}
         name={name}
