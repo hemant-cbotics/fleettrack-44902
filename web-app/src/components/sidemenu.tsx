@@ -19,7 +19,9 @@ const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboar
   const handleClick = (path: string) => {
     navigate(path);
   };
-  const active = pathname === dashboardMenuItem.path;
+  const active =
+    pathname === dashboardMenuItem.path ||
+    (pathname.includes(routeUrls.dashboardChildren.admins) && pathname.includes(dashboardMenuItem.path));
   const title = t(dashboardMenuItem.slug);
   return (
     <li
