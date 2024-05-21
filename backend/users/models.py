@@ -96,6 +96,20 @@ class UserAccount(CommonModel):
     address_title_plural = models.CharField(max_length=255, null=True, blank=True)
     default_login_user_id = models.CharField(max_length=255, null=True, blank=True)
     default_overlay = models.CharField(max_length=30, choices=UserConstants.DefaultOverlay.choices(), default=None, null=True, blank=True)
+    maintenance_intervals = models.JSONField(default=UserConstants.UserAccountJSON.MAINTENANCE_INTERVAL_TIMINGS, null=True, blank=True)
+    harsh_braking = models.CharField(max_length=255, null=True, blank=True)
+    harsh_acceleration = models.CharField(max_length=255, null=True, blank=True)
+    speeding = models.CharField(max_length=255, null=True, blank=True)
+    reverse = models.CharField(max_length=255, null=True, blank=True)
+    seatbelt_off = models.CharField(max_length=255, null=True, blank=True)
+    harsh_cornering = models.CharField(max_length=255, null=True, blank=True)
+    idle_ratio = models.CharField(max_length=255, null=True, blank=True)
+    impact_crash_ai = models.CharField(max_length=255, null=True, blank=True)
+    cellphone_use_ai = models.CharField(max_length=255, null=True, blank=True)
+    distracted_driving_ai = models.CharField(max_length=255, null=True, blank=True)
+    smoking_ai = models.CharField(max_length=255, null=True, blank=True)
+    possible_fatigue_ai = models.CharField(max_length=255, null=True, blank=True)
+    obstructed_camera_ai = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.user.email
