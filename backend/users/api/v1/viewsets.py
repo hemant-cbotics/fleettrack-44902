@@ -18,7 +18,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     queryset = UserAccount.objects.all()
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
-    http_method_names = ['put', 'patch', 'delete']
+    http_method_names = ['put', 'patch', 'delete', 'get']
     # pagination_class = CustomPagination
     # filter_backends = [ SearchFilter, OrderingFilter]
     # filterset_fields = ['name', 'email', 'nick_name']

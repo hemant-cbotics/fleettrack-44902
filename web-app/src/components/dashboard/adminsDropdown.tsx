@@ -18,9 +18,9 @@ const AdminsDropdown = () => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 w-full h-screen z-[800] bg-slate-50 opacity-40${modalsState?.showAdminsDropdown ? '' : ' hidden'}`}
+        className={`fixed top-0 left-0 w-full h-screen z-overlay bg-modal-overlay${modalsState?.showAdminsDropdown ? '' : ' hidden'}`}
         onClick={() => toggleAdminsDropdown(false)}></div>
-      <div className="relative flex items-center justify-center z-[850]">
+      <div className={`relative flex items-center justify-center${modalsState?.showAdminsDropdown ? ' z-modal' : ''}`}>
         <div className="inline-flex items-center overflow-hidden rounded-md border bg-white">
           <button
             className="px-4 py-2 flex text-sm/none text-gray-600 hover:bg-gray-200 hover:text-gray-700 cursor-pointer"
@@ -44,7 +44,7 @@ const AdminsDropdown = () => {
           </button>
 
           <div
-            className={`absolute top-full end-0 z-10 w-56 rounded-md border border-gray-100 bg-white shadow-lg${modalsState.showAdminsDropdown ? '' : ' hidden'}`}
+            className={`absolute top-full end-0 w-56 rounded-md border border-gray-100 bg-white shadow-lg z-modal${modalsState.showAdminsDropdown ? '' : ' hidden'}`}
             role="menu"
           >
             <div className="p-2">

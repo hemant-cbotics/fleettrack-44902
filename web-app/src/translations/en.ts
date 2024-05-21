@@ -116,7 +116,6 @@ export const language_en = {
       manage_rule_alert: "Manage Rule/Alert",
       camera_admin: "Camera Admin",
       main_menu: "Main Menu",
-      logout: "Logout",
       admins: {
         users: "Users",
         roles: "Roles",
@@ -129,6 +128,9 @@ export const language_en = {
     },
     top: {
       admins: "Admins",
+      account: "Account",
+      change_password: "Change Password",
+      logout: "Logout",
     },
     profile: {
       account: {
