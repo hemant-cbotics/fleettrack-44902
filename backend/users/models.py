@@ -110,6 +110,8 @@ class UserAccount(CommonModel):
     smoking_ai = models.CharField(max_length=255, null=True, blank=True)
     possible_fatigue_ai = models.CharField(max_length=255, null=True, blank=True)
     obstructed_camera_ai = models.CharField(max_length=255, null=True, blank=True)
+    drinking_eating_ai = models.CharField(max_length=255, null=True, blank=True)
+    tailgating_ai = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.user.email
