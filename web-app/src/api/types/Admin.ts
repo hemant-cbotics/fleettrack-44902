@@ -165,3 +165,9 @@ export type TEditOrganizationVehiclePayloadData = {
     phone: string;
   };
 };
+
+export type EditOrganizationAccountPayload = {
+  account_id: number;
+  data: any;
+};
+

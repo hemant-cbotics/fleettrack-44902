@@ -6,6 +6,7 @@ import {
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   CreateOrganizationVehiclePayload,
+  EditOrganizationAccountPayload,
   EditOrganizationDriverPayload,
   EditOrganizationGroupPayload,
   EditOrganizationUserPayload,
@@ -26,6 +27,7 @@ import { TLoggedInUser } from "../types/User";
 import { OrganizationVehicle } from "../types/Vehicle";
 import { OrganizationDriver } from "../types/Driver";
 import { OrganizationGroup } from "../types/Group";
+import { OrganizationAccount } from "../types/Account";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
@@ -498,29 +500,58 @@ export const AdminAPIs = createApi({
         return response;
       },
     }),
+
+    //edit organization account
+    editOrganizationAccount: builder.mutation<OrganizationAccount, EditOrganizationAccountPayload>({
+      query: ({account_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_ACCOUNT(account_id),
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationAccount) => {
+        return response;
+      },
+    }),
   }),
 });
 
 export const {
   useOrganizationRolesPermissionsQuery,
+
+  //user admin
   useCreateOrganizationUserMutation,
   useOrganizationUsersQuery,
   useSingleOrganizationUserQuery,
   useEditOrganizationUserMutation,
   useDeleteSingleUserMutation,
+
+  //vehicle admin
   useOrganizationVehiclesQuery,
   useCreateOrganizationVehicleMutation,
   useSingleOrganizationVehicleQuery,
   useEditOrganizationVehicleMutation,
   useDeleteSingleVehicleMutation,
+
+  //driver admin
   useOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,
   useEditOrganizationDriverMutation,
   useDeleteSingleDriverMutation,
+
+  //group admin
   useOrganizationGroupsQuery,
   useCreateOrganizationGroupMutation,
   useSingleOrganizationGroupQuery,
   useEditOrganizationGroupMutation,
   useDeleteSingleGroupMutation,
+
+  //account admin
+  useEditOrganizationAccountMutation,
 } = AdminAPIs;
