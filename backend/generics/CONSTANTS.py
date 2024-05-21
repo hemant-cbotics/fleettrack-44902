@@ -452,3 +452,27 @@ class UserConstants:
         SIX = "6"
         SEVEN = "7"
         EIGHT = "8 (Widest)"
+
+    class UserAccountJSON():
+        MAINTENANCE_INTERVAL_TIMINGS = {
+            "last_maintenance_1": 0,
+            "last_maintenance_2": 0,
+            "last_maintenance_3": 0,
+            "last_maintenance_4": 0,
+            "last_maintenance_5": 0,
+            "last_maintenance_6": 0,
+            "last_maintenance_7": 0,
+            "last_maintenance_8": 0,
+            "last_maintenance_9": 0,
+            "last_maintenance_10": 0,
+            "last_eng_hours_maintenance_1": 0,
+            "last_eng_hours_maintenance_2": 0,
+            "last_eng_hours_maintenance_3": 0,
+            "last_eng_hours_maintenance_4": 0,
+            "last_eng_hours_maintenance_5": 0,
+            "last_service_time_1": 0,
+            "last_service_time_2": 0,
+            "last_service_time_3": 0,
+            "last_service_time_4": 0,
+            "last_service_time_5": 0
+        }
