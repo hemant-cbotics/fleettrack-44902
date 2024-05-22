@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,7 @@ import AdminsDriversCreateNew from "./createNewDriver";
 import { OrganizationDriver } from "../../../api/types/Driver";
 import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
+import { FilterType } from "../../../api/types/Admin";
 
 const all_columns = [
   "Driver Id",
@@ -65,14 +66,19 @@ const ScreenDashboardAdminDrivers = () => {
       title: tFilters("both"),
     },
   ];
-  const [activeFilterSlug, setActiveFilterSlug] = React.useState<string>("active");
+  const [activeFilterSlug, setActiveFilterSlug] = React.useState<FilterType>("active");
+  
+  useEffect(() => {
+    setOrgDriversQueryParams((prev) => { return { ...prev, is_active: activeFilterSlug }});
+  }, [activeFilterSlug])
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgDriversQueryParams, setOrgDriversQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
+    search: "",
+    is_active: activeFilterSlug,
   });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgDriversQueryParams((prev) => { return { ...prev, page: 1, search: value }});
