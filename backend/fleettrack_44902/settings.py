@@ -85,6 +85,7 @@ LOCAL_APPS = [
     'vehicle.apps.VehicleConfig',
     'driver.apps.DriverConfig',
     'group.apps.GroupConfig',
+    'fleet_tag.apps.FleetTagConfig',
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
