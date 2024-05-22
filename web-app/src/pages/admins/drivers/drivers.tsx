@@ -103,7 +103,7 @@ const ScreenDashboardAdminDrivers = () => {
           item?.card_id ?? "-", // "Card Id",
           item?.licence_number ?? "-", // "License Number",
           item?.licence_type ?? "-", // "License Type",
-          item?.licence_expiry ?? "-", // "License Expiry",
+          item?.licence_expiry?.slice(0,10) ?? "-", // "License Expiry",
           item?.is_hazmat_certified
             ? <span className="text-field-success">{tMain('yes')}</span>
             : <span className="text-field-error-dark">{tMain('no')}</span>, // "Hazmat Certified",
