@@ -55,7 +55,7 @@ export const EditListingColumnsModal: FC<TEditListingColumnsModalProps> = ({ col
   return (
     <>
       <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="fixed w-full h-screen bg-modal-overlay z-overlay" onClick={hideModal}></div>
+        <div className="fixed w-full h-screen bg-modal-overlay z-overlay"></div>
         <div className="relative my-6 mx-auto max-w-[calc(100vw-4rem)] w-[560px] z-modal">
           
           <form className="p-8 bg-white grid grid-cols-6 gap-6 rounded-3xl shadow-2xl" onSubmit={handleSubmit}>
@@ -95,12 +95,12 @@ export const EditListingColumnsModal: FC<TEditListingColumnsModalProps> = ({ col
               onClick={handleSubmit}
             />
           
-            <AdminFormFieldSubmit
+            {/* <AdminFormFieldSubmit
               label={tMain('cancel')}
               type="button"
               variant="danger-transparent"
               onClick={hideModal}
-            />
+            /> */}
           </form>
         </div>
       </div>

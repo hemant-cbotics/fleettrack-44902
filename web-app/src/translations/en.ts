@@ -227,7 +227,7 @@ export const language_en = {
     edit_columns: {
       heading: "Edit Columns",
       sub_heading: "Edit the selection of your columns. See the information that is most relevant to your business",
-      submit_button: "Update Selection",
+      submit_button: "Save & Close",
     },
     filters: {
       active: "Active",
