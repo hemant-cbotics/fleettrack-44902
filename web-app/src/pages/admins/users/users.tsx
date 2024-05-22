@@ -17,6 +17,7 @@ import { routeUrls } from "../../../navigation/routeUrls";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TSelectboxOption } from "../../../components/admin/formFields";
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
+import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
 
 const all_columns = [
   "Sr. No",
@@ -34,12 +35,17 @@ const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
-  const [columns, setColumns] = React.useState<TListingColumn[]>(all_columns.map((item, index) => {
-    return {
-      name: item,
-      show: true
-    }
-  }));
+  const { getLocalStorageItem } = useLocalStorage();
+  const savedColumns = getLocalStorageItem(localStorageKeys.columns.Users);
+  const [columns, setColumns] = React.useState<TListingColumn[]>(
+    all_columns
+      .map((colItem, _) => {
+        return {
+          name: colItem,
+          show: !!savedColumns ? savedColumns.includes(colItem) : true
+        }
+      })
+    );
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState({
@@ -99,6 +105,7 @@ const ScreenDashboardAdminUsers = () => {
         <EditListingColumnsModal
           columns={columns}
           setColumns={setColumns}
+          lsKey={localStorageKeys.columns.Users}
         />
         <div className="py-4 mt-4 relative">
           <EditListingColumnsButton />

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setModalsData, TModalsState } from "../api/store/commonSlice";
 import EditIcon from "../assets/svg/edit-icon.svg";
+import { useLocalStorage } from "../utils/localStorageItems";
 import { AdminFormFieldSubmit } from "./admin/formFields";
 import CheckableListItem from "./checkableListItem";
 
@@ -29,16 +30,20 @@ export type TListingColumn = {
 type TEditListingColumnsModalProps = {
   columns: TListingColumn[];
   setColumns: (columns: TListingColumn[]) => void;
+  lsKey: string;
 }
 
-export const EditListingColumnsModal: FC<TEditListingColumnsModalProps> = ({ columns, setColumns }) => {
+export const EditListingColumnsModal: FC<TEditListingColumnsModalProps> = ({ columns, setColumns, lsKey }) => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.edit_columns'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+  const { setLocalStorageItem } = useLocalStorage();
 
   const handleSubmit = () => {
     hideModal();
+    const selectedColumnsToSave = columns.filter((colItem) => colItem.show).map((colItem) => colItem.name);
+    setLocalStorageItem(lsKey, selectedColumnsToSave);
   }
 
   const hideModal = () => {
@@ -65,9 +70,8 @@ export const EditListingColumnsModal: FC<TEditListingColumnsModalProps> = ({ col
 
             <div className="col-span-6 grid grid-cols-6 gap-2">
             {columns.map((column, index) => (
-              <div className="col-span-6">
+              <div className="col-span-6" key={index}>
                 <CheckableListItem
-                  key={index}
                   id={`edit_col_checkbox_${index}`}
                   title={column.name}
                   checked={column.show}
