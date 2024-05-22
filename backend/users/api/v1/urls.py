@@ -3,11 +3,13 @@ from rest_framework.routers import DefaultRouter
 
 from users.api.v1.viewsets import (
     ChangePasswordViewSet,
-    LogoutViewset
+    LogoutViewset,
+    AccountViewSet
     # CustomLogoutView,
 )
 
 router = DefaultRouter()
+router.register("account", AccountViewSet, basename="account")
 
 
 urlpatterns = [

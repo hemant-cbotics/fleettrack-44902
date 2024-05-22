@@ -1,3 +1,4 @@
+import { OrganizationAccount } from "./Account"
 import { TUserProfile } from "./UserProfile"
 import { TUserRole } from "./UserRole"
 
@@ -8,7 +9,8 @@ export type TUser = {
   role_and_permission: {
     assigned_role: TUserRole,
     assigned_permissions: string[]
-  }
+  },
+  account: OrganizationAccount,
 }
 
 export type TLoggedInUserOrganization = {

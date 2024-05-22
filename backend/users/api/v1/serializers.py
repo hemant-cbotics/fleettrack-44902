@@ -1,14 +1,33 @@
 from rest_framework import serializers
 from organization.api.v1.serializers import OrganizationRoleSerializer
-from users.models import UserRoleAndPermission, UserProfile, User
+from users.models import UserRoleAndPermission, UserProfile, User, UserAccount
 
+class UserDefaultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # fields = "__all__"
+        exclude = ('password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'groups', 'user_permissions')
+
+class AccountSerializer(serializers.ModelSerializer):
+    user = UserDefaultSerializer(read_only=True)
+
+    class Meta:
+        model = UserAccount
+        fields = '__all__'
+        read_only_fields = ('user', )
+        extra_kwargs = {
+            # 'organization': {'required': True},
+            # 'email': {'required': True},
+            'phone': {'required': True},
+        }
 
 class UserSerializer(serializers.ModelSerializer):
     role_and_permission = serializers.SerializerMethodField()
     profile = serializers.SerializerMethodField()
+    account = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ["id", "email", "name", "role_and_permission", "profile", "is_active"]
+        fields = ["id", "email", "name", "role_and_permission", "profile", "account", "is_active"]
 
     def get_role_and_permission(self, obj):
         try:
@@ -19,6 +38,12 @@ class UserSerializer(serializers.ModelSerializer):
     def get_profile(self, obj):
         try:
             return UserProfileSerialzer(obj.profile).data
+        except:
+            return None
+        
+    def get_account(self, obj):
+        try:
+            return AccountSerializer(obj.account).data
         except:
             return None
 

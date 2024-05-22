@@ -2,13 +2,42 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 # from rest_auth.views import LogoutView
-from users.api.v1.serializers import ChangePasswordSerializer
+from users.api.v1.serializers import ChangePasswordSerializer, AccountSerializer
 from rest_framework.views import APIView
 from django.conf import settings
 from django.contrib.auth import logout as django_logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
+from rest_framework import viewsets
+from users.models import UserAccount
+from rest_framework.permissions import IsAuthenticated
 
+
+class AccountViewSet(viewsets.ModelViewSet):
+    serializer_class = AccountSerializer
+    queryset = UserAccount.objects.all()
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    http_method_names = ['put', 'patch', 'delete', 'get']
+    # pagination_class = CustomPagination
+    # filter_backends = [ SearchFilter, OrderingFilter]
+    # filterset_fields = ['name', 'email', 'nick_name']
+    # search_fields = ['name', 'email', 'added_by__name', 'added_by__email', 'nick_name', 'card_id', 'id']
+    # ordering_fields = ['name', 'email', 'nick_name']
+    # ordering = ['name', 'email', 'nick_name']
+
+    # def get_queryset(self):
+    #     organization_id = self.request.GET.get('organization_id')
+    #     return self.queryset.filter(organization=organization_id)
+    
+    # def perform_create(self, serializer):
+    #     serializer.save(added_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(added_by=self.request.user)
+
+    def perform_destroy(self, instance):
+        instance.delete()
 
 class ChangePasswordViewSet(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]

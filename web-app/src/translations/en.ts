@@ -139,6 +139,9 @@ export const language_en = {
         accord_general_details: "General Details",
         accord_maintenance_interval_labels: "Maintenance Interval Labels",
         accord_scorecard_weight_factors: "Scorecard Weight Factors",
+        toast: {
+          account_updated: "Account has been updated successfully.",
+        },
         form : {
           account_id: "Account ID",
           account_description: "Account Description",
@@ -447,7 +450,24 @@ export const language_en = {
         create_success: "Fleet Tag has been created successfully.",
       },
       detailsPage: {
-        // ...
+        heading: "Fleet Tags",
+        listing_heading: "Fleet Tag Listing",
+        accord_details: "Details",
+        form: {
+          fleet_tag_id: "Fleet Tag ID",
+          fleet_tag_name: "Fleet Tag Name",
+          last_event_time: "Last Event Time",
+          last_status_code: "Last Status Code",
+          in_range: "In Range",
+          in_range_device_id: "In Range Device ID",
+          last_location: "Last Location",
+          last_address: "Last Address",
+          last_altitude: "Last Altitude",
+          distance_travelled: "Distance Travelled",
+          tag_signal_strength: "Tag Signal Strength",
+          tag_battery_level: "Tag Battery Level",
+          temprature: "Temperature",
+        }
       }
     },
     geozones: {

@@ -1,7 +1,7 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.conf import settings
-from users.models import UserProfile, User, UserRoleAndPermission
+from users.models import UserProfile, User, UserRoleAndPermission, UserAccount
 from organization.models import Organization, OrganizationRole, UserPermission, InvitedUser
 import logging
 from generics.utils import Email, generate_random_password
@@ -58,7 +58,6 @@ def create_user(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        try:
-            UserProfile.objects.create(user=instance)
-        except Exception as e:
-            pass
+        print("123123123")
+        UserProfile.objects.create(user=instance)
+        UserAccount.objects.create(user=instance)
