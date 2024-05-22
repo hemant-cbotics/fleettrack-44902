@@ -1,9 +1,10 @@
 import React, { FC } from "react";
 import SearchIcon from "../../../assets/svg/search-icon.svg";
 import AppSearchBox from "../../../components/searchBox";
+import { FilterType } from "../../../api/types/Admin";
 
 export type TListingFilters = {
-  slug: string;
+  slug: FilterType;
   title: string;
 };
 
@@ -13,7 +14,7 @@ type TListingTableHeaderProps = {
   searchBoxOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   filters?: TListingFilters[];
   activeFilterSlug?: string;
-  handleFilterChange?: (slug: string) => void;
+  handleFilterChange?: (slug: FilterType) => void;
 };
 
 const ListingTableHeader: FC<TListingTableHeaderProps> = ({
