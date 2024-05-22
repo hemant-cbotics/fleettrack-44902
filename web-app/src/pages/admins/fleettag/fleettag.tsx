@@ -16,8 +16,10 @@ import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AdminsFleetTagsCreateNew from "./createNewFleettag";
 import { OrganizationDriver } from "../../../api/types/Driver";
+import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
+import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
-const columns = [
+const all_columns = [
   "Sr. No",
   "Fleet Tag ID",
   "Description",
@@ -31,6 +33,19 @@ const ScreenDashboardAdminFleetTags = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.fleettags'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+
+  // columns
+  const { getLocalStorageItem } = useLocalStorage();
+  const savedColumns = getLocalStorageItem(localStorageKeys.columns.Fleettags);
+  const [columns, setColumns] = React.useState<TListingColumn[]>(
+    all_columns
+      .map((colItem, _) => {
+        return {
+          name: colItem,
+          show: !!savedColumns ? savedColumns.includes(colItem) : true
+        }
+      })
+    );
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   // TODO: Start - Change the following line to use the correct API call for fleet tags
@@ -64,7 +79,7 @@ const ScreenDashboardAdminFleetTags = () => {
           '-', // "In Range",
           '-', // "Last Connected/Disconnected Address",
           '-', // "Timestamp"
-        ]
+        ].filter((_, index) => columns[index].show)
       }))
     : [];
 
@@ -84,9 +99,15 @@ const ScreenDashboardAdminFleetTags = () => {
           searchBoxPlaceholder={t("search_placeholder")}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
-        <div className="py-4 mt-4">
+        <EditListingColumnsModal
+          columns={columns}
+          setColumns={setColumns}
+          lsKey={localStorageKeys.columns.Fleettags}
+        />
+        <div className="py-4 mt-4 relative">
+          <EditListingColumnsButton />
           <AdminTable
-            columns={columns}
+            columns={columns.filter(item => item.show).map((item) => item.name)}
             data={tableData}
             isLoading={isFetchingOrgFleetTags}
           />

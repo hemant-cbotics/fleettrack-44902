@@ -16,8 +16,10 @@ import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AdminsDriversCreateNew from "./createNewDriver";
 import { OrganizationDriver } from "../../../api/types/Driver";
+import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
+import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
-const columns = [
+const all_columns = [
   "Sr. No",
   "Driver Id",
   "Name",
@@ -32,6 +34,19 @@ const ScreenDashboardAdminDrivers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.drivers'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+
+  // columns
+  const { getLocalStorageItem } = useLocalStorage();
+  const savedColumns = getLocalStorageItem(localStorageKeys.columns.Drivers);
+  const [columns, setColumns] = React.useState<TListingColumn[]>(
+    all_columns
+      .map((colItem, _) => {
+        return {
+          name: colItem,
+          show: !!savedColumns ? savedColumns.includes(colItem) : true
+        }
+      })
+    );
 
   const filters: TListingFilters[] = [
     {
@@ -80,7 +95,7 @@ const ScreenDashboardAdminDrivers = () => {
           item?.email ?? "-", // "Email",
           item?.badge_employee_id ?? "-", // "Badge/Employee ID",
           item?.card_id ?? "-", // "Card ID"
-        ]
+        ].filter((_, index) => columns[index].show)
       }))
     : [];
 
@@ -103,9 +118,15 @@ const ScreenDashboardAdminDrivers = () => {
           activeFilterSlug={activeFilterSlug}
           handleFilterChange={(slug) => setActiveFilterSlug(slug)}
         />
-        <div className="py-4 mt-4">
+        <EditListingColumnsModal
+          columns={columns}
+          setColumns={setColumns}
+          lsKey={localStorageKeys.columns.Drivers}
+        />
+        <div className="py-4 mt-4 relative">
+          <EditListingColumnsButton />
           <AdminTable
-            columns={columns}
+            columns={columns.filter(item => item.show).map((item) => item.name)}
             data={tableData}
             isLoading={isFetchingOrgDrivers}
           />

@@ -1,3 +1,4 @@
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderView from "../../../components/admin/headerView";
 import { APP_CONFIG } from "../../../constants/constants";
@@ -12,9 +13,10 @@ import Pagination, { TPaginationSelected } from "../components/pagination";
 import { TSelectboxOption } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
 import AdminsGeozonesCreateNew from "./createNewGeozone";
+import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
+import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
-
-const columns = [
+const all_columns = [
   "Geozone Id",
   "Description",
   "Overlap Priority",
@@ -26,8 +28,21 @@ const columns = [
 
 const ScreenDashboardAdminGeozones = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.geozones'});
-  const dispatch = useDispatch();
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const dispatch = useDispatch();
+
+  // columns
+  const { getLocalStorageItem } = useLocalStorage();
+  const savedColumns = getLocalStorageItem(localStorageKeys.columns.Geozones);
+  const [columns, setColumns] = React.useState<TListingColumn[]>(
+    all_columns
+      .map((colItem, _) => {
+        return {
+          name: colItem,
+          show: !!savedColumns ? savedColumns.includes(colItem) : true
+        }
+      })
+    );
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGeozonesQueryParams, setOrgGeozonesQueryParams] = useState({
@@ -58,9 +73,15 @@ const ScreenDashboardAdminGeozones = () => {
           searchBoxPlaceholder={t("search_placeholder")}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
-        <div className="py-4 mt-4">
+        <EditListingColumnsModal
+          columns={columns}
+          setColumns={setColumns}
+          lsKey={localStorageKeys.columns.Geozones}
+        />
+        <div className="py-4 mt-4 relative">
+          <EditListingColumnsButton />
           <AdminTable
-            columns={columns}
+            columns={columns.filter(item => item.show).map((item) => item.name)}
             data={[]}
             isLoading={isFetchingOrgGeozones}
           />
