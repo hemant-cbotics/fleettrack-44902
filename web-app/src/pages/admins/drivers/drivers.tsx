@@ -20,16 +20,19 @@ import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageIt
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
 const all_columns = [
-  "Sr. No",
   "Driver Id",
-  "Name",
-  "Phone",
-  "Email",
+  "Driver Name",
   "Badge/Employee ID",
-  "Card ID"
+  "Card ID",
+  "License Number",
+  "License Type",
+  "License Expiry",
+  "Hazmat Certified",
+  "Active",
 ]
 
 const ScreenDashboardAdminDrivers = () => {
+  const { t: tMain } = useTranslation();
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.drivers'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
@@ -88,13 +91,19 @@ const ScreenDashboardAdminDrivers = () => {
       {
         navLink: `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`,
         cellData: [
-          index + 1, // "Sr. No",
           item?.id, // "Driver Id",
           item?.name, // "Driver Name",
-          item?.phone ?? "-", // "Phone",
-          item?.email ?? "-", // "Email",
           item?.badge_employee_id ?? "-", // "Badge/Employee ID",
-          item?.card_id ?? "-", // "Card ID"
+          item?.card_id ?? "-", // "Card Id",
+          item?.licence_number ?? "-", // "License Number",
+          item?.licence_type ?? "-", // "License Type",
+          item?.licence_expiry ?? "-", // "License Expiry",
+          item?.is_hazmat_certified
+            ? <span className="text-field-success">{tMain('yes')}</span>
+            : <span className="text-field-error-dark">{tMain('no')}</span>, // "Hazmat Certified",
+          item?.is_active
+            ? <span className="text-field-success">{tMain('yes')}</span>
+            : <span className="text-field-error-dark">{tMain('no')}</span>, // "Active"
         ].filter((_, index) => columns[index].show)
       }))
     : [];
