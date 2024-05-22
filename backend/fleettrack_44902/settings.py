@@ -102,6 +102,7 @@ THIRD_PARTY_APPS = [
     'storages',
     'import_export',
     'corsheaders',
+    'django_filters'
 ]
 MODULES_APPS = get_modules()
 
