@@ -200,14 +200,15 @@ export const AdminAPIs = createApi({
 
     // organization vehicles
     organizationVehicles: builder.query<ListingResponse<OrganizationVehicle[]>, OrganizationEntityListingPayload>({ // TODO: change the type
-      query: ({ organization_id, page, page_size, search }) => {
+      query: ({ organization_id, page, page_size, search, is_active }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_VEHICLES,
           params: {
             organization_id,
             page,
             page_size,
-            search
+            search,
+            ...(is_active === "both" ? {} : { is_active: is_active === "active" })
           },
           method: API_METHODS.GET,
         };
@@ -301,14 +302,15 @@ export const AdminAPIs = createApi({
 
     // organization drivers
     organizationDrivers: builder.query<ListingResponse<OrganizationDriver[]>, OrganizationEntityListingPayload>({ // TODO: change the type
-      query: ({ organization_id, page, page_size, search }) => {
+      query: ({ organization_id, page, page_size, search, is_active }) => {
         return {
           url: API_ENDPOINTS.ADMINS.ORGANIZATION_DRIVERS,
           params: {
             organization_id,
             page,
             page_size,
-            search
+            search,
+            ...(is_active === "both" ? {} : { is_active: is_active === "active" })
           },
           method: API_METHODS.GET,
         };
