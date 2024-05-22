@@ -20,12 +20,14 @@ import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageIt
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
 const all_columns = [
-  "Sr. No",
-  "Vehicle Name",
+  "Driver Id",
+  "Unique Id",
   "Description",
   "Equipment Type (VIN)",
-  "ECM VIN",
+  "SIM Phone Number",
   "Server ID",
+  "Ignition State",
+  "Recorder Id",
   "Active"
 ]
 
@@ -89,12 +91,14 @@ const ScreenDashboardAdminVehicles = () => {
       {
         navLink: `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`,
         cellData: [
-          index + 1, // "Sr. No",
-          item?.vehicle_model + " " + item?.vehicle_make ?? "-", // "Vehicle Id",
+          item?.driver?.id, // "Driver Id",
+          item?.unique_id ?? "-", // "Unique Id",
           item?.vehicle_description ?? "-", // "Description",
           item?.euipment_type ?? "-", // "Equipment Type (VIN)",
-          item?.vin ?? "-", // "ECM VIN",
+          item?.phone ?? "-", // "ECM VIN",
           item?.server_id ?? "-", // "Server ID",
+          item?.ignition_input ?? "-", // "Ignition State",
+          item?.recorder_id ?? "-", // "Recorder Id",
           item?.is_active
             ? <span className="text-field-success">{tMain('yes')}</span>
             : <span className="text-field-error-dark">{tMain('no')}</span>, // "Active"
