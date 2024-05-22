@@ -32,6 +32,7 @@ const all_columns = [
 const ScreenDashboardAdminVehicles = () => {
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.vehicles'});
+  const { t: tMain } = useTranslation();
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
 
@@ -95,8 +96,8 @@ const ScreenDashboardAdminVehicles = () => {
           item?.vin ?? "-", // "ECM VIN",
           item?.server_id ?? "-", // "Server ID",
           item?.is_active
-            ? <span className="text-field-success">Yes</span>
-            : <span className="text-field-error-dark">No</span>, // "Active"
+            ? <span className="text-field-success">{tMain('yes')}</span>
+            : <span className="text-field-error-dark">{tMain('no')}</span>, // "Active"
         ].filter((_, index) => columns[index].show)
       }))
     : [];

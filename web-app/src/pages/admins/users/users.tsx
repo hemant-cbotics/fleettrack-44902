@@ -33,6 +33,7 @@ const all_columns = [
 
 const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
+  const { t: tMain } = useTranslation();
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
 
@@ -82,7 +83,9 @@ const ScreenDashboardAdminUsers = () => {
           item?.user?.name || "-", // name: 
           item?.user?.email, // email: 
           item?.user?.profile?.timezone || "-", // timezone: 
-          item?.user?.profile?.is_active, // active: 
+          item?.user?.is_active
+          ? <span className="text-field-success">{tMain('yes')}</span>
+          : <span className="text-field-error-dark">{tMain('no')}</span>, // active: 
           "-" // last_login: 
         ].filter((_, index) => columns[index].show)
       }))

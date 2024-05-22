@@ -506,6 +506,8 @@ export const language_en = {
       },
     },
   },
+  yes: "Yes",
+  no: "No",
   active: "Active",
   inactive: "Inactive",
   both: "Both",
