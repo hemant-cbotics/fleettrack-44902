@@ -4,7 +4,7 @@ from vehicle.api.v1.serializers import VehicleSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from generics.utils import CustomPagination
-# from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from generics.custom_permissions import IsPassedOrganizationPermission
 # from vehicle.models import VehicleAndDriverMapping
@@ -17,8 +17,8 @@ class VehicleViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
     pagination_class = CustomPagination
-    filter_backends = [ SearchFilter, OrderingFilter]
-    filterset_fields = ['short_name', 'email']
+    filter_backends = [ SearchFilter, OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['short_name', 'email', 'is_active']
     search_fields = ['short_name', 'email', 'added_by__name', 'added_by__email']
     ordering_fields = ['short_name', 'email', 'id']
     ordering = ['-created_at']
