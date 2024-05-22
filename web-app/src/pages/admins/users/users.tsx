@@ -35,6 +35,8 @@ const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+
+  // columns
   const { getLocalStorageItem } = useLocalStorage();
   const savedColumns = getLocalStorageItem(localStorageKeys.columns.Users);
   const [columns, setColumns] = React.useState<TListingColumn[]>(
@@ -82,7 +84,7 @@ const ScreenDashboardAdminUsers = () => {
           item?.user?.profile?.timezone || "-", // timezone: 
           item?.user?.profile?.is_active, // active: 
           "-" // last_login: 
-        ].filter((item, index) => columns[index].show)
+        ].filter((_, index) => columns[index].show)
       }))
     : [];
 

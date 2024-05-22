@@ -16,8 +16,10 @@ import { TSelectboxOption } from "../../../components/admin/formFields";
 import AdminsVehiclesCreateNew from "./createNewVehicle";
 import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
+import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
 
-const columns = [
+const all_columns = [
   "Sr. No",
   "Vehicle Name",
   "Description",
@@ -32,6 +34,19 @@ const ScreenDashboardAdminVehicles = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.vehicles'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const dispatch = useDispatch();
+
+  // columns
+  const { getLocalStorageItem } = useLocalStorage();
+  const savedColumns = getLocalStorageItem(localStorageKeys.columns.Vehicles);
+  const [columns, setColumns] = React.useState<TListingColumn[]>(
+    all_columns
+      .map((colItem, _) => {
+        return {
+          name: colItem,
+          show: !!savedColumns ? savedColumns.includes(colItem) : true
+        }
+      })
+    );
 
   const filters: TListingFilters[] = [
     {
@@ -82,7 +97,7 @@ const ScreenDashboardAdminVehicles = () => {
           item?.is_active
             ? <span className="text-field-success">Yes</span>
             : <span className="text-field-error-dark">No</span>, // "Active"
-        ]
+        ].filter((_, index) => columns[index].show)
       }))
     : [];
 
@@ -105,9 +120,15 @@ const ScreenDashboardAdminVehicles = () => {
           activeFilterSlug={activeFilterSlug}
           handleFilterChange={(slug) => setActiveFilterSlug(slug)}
         />
-        <div className="py-4 mt-4">
+        <EditListingColumnsModal
+          columns={columns}
+          setColumns={setColumns}
+          lsKey={localStorageKeys.columns.Vehicles}
+        />
+        <div className="py-4 mt-4 relative">
+          <EditListingColumnsButton />
           <AdminTable
-            columns={columns}
+            columns={columns.filter(item => item.show).map((item) => item.name)}
             data={tableData}
             isLoading={isFetchingOrgVehicles}
           />
