@@ -22,7 +22,7 @@ const AdminsDropdown = () => {
       <div
         className={`fixed top-0 left-0 w-full h-screen z-overlay bg-modal-overlay${modalsState?.showAdminsDropdown ? '' : ' hidden'}`}
         onClick={() => toggleAdminsDropdown(false)}></div>
-      <div className={`relative flex items-center justify-center${modalsState?.showAdminsDropdown ? ' z-modal' : ''}`}>
+      <div className={`relative flex items-center justify-center bg-white rounded-lg px-1${modalsState?.showAdminsDropdown ? ' z-modal' : ''}`}>
         <div title={tTop("admins")}>
           <img 
             src={GearIcon} 
@@ -32,7 +32,7 @@ const AdminsDropdown = () => {
             />
           <span className="sr-only">Admins Menu</span>
           <div
-            className={`absolute top-full end-0 w-56 rounded-md border border-gray-100 bg-white shadow-lg z-modal${modalsState.showAdminsDropdown ? '' : ' hidden'}`}
+            className={`absolute top-full mt-2 end-0 w-56 rounded-md border border-gray-100 bg-white shadow-lg z-modal${modalsState.showAdminsDropdown ? '' : ' hidden'}`}
             role="menu"
           >
             <div className="p-2">
