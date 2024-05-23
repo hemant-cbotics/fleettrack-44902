@@ -94,6 +94,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.in_range}
         touched={touched.in_range}
         disabled={!userCanEdit}
+        customInputClass={values.in_range === "Yes" ? "text-green-500" : "text-red-500"}
       />
 
       <AdminFormFieldInput

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useCreateOrganizationDriverMutation, useOrganizationRolesPermissionsQuery } from "../../../api/network/adminApiServices";
+import { useCreateOrganizationFleettagMutation } from "../../../api/network/adminApiServices";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
@@ -21,7 +21,7 @@ const AdminsFleetTagsCreateNew = () => {
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
-  const [createOrgDriverAPITrigger] = useCreateOrganizationDriverMutation();
+  const [createOrgFleettagAPITrigger] = useCreateOrganizationFleettagMutation();
 
   const hideModal = () => {
     dispatch(setModalsData({ ...modalsState, showCreateFleetTag: false }));
@@ -39,30 +39,27 @@ const AdminsFleetTagsCreateNew = () => {
             initialValues={formInitialValues}
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              // createOrgDriverAPITrigger({
-              //   organization: thisUserOrganizationId ?? 0,
-              //   name: values.name,
-              //   email: values.email,
-              //   phone: values.phone,
-              // })
-              //   .unwrap()
-              //   .then((data) => {
-              //     console.log('>>>', data);
-              //     if(!!data?.created_at) {
-              //       dispatch(setModalsData({ ...modalsState, showCreateFleetTag: false }));
-              //       toast.success(t('create_success'), { autoClose: 10000 });
-              //       navigate(`${routeUrls.dashboardChildren.adminChildren.fleettags}/${data?.id}`, { state: { new: true } });
-              //     } else {
-              //       toast.error(tMain('toast.general_error'));
-              //     }
-              //   })
-              //   .catch((error) => {
-              //     const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('create_failed')];
-              //     toast.error(errors?.join(' '));
-              //   })
-              //   .finally(() => {
-              //     setSubmitting(false);
-              //   });
+              createOrgFleettagAPITrigger({
+                organization: thisUserOrganizationId ?? 0,
+                fleet_tag_name: values.name,
+              })
+                .unwrap()
+                .then((data) => {
+                  if(!!data?.created_at) {
+                    dispatch(setModalsData({ ...modalsState, showCreateFleetTag: false }));
+                    toast.success(t('create_success'), { autoClose: 10000 });
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.fleettags}/${data?.id}`, { state: { new: true } });
+                  } else {
+                    toast.error(tMain('toast.general_error'));
+                  }
+                })
+                .catch((error) => {
+                  const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('create_failed')];
+                  toast.error(errors?.join(' '));
+                })
+                .finally(() => {
+                  setSubmitting(false);
+                });
             }}
           >{({
             values,

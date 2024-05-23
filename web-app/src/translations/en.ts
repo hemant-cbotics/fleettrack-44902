@@ -461,6 +461,10 @@ export const language_en = {
         heading: "Fleet Tags",
         listing_heading: "Fleet Tag Listing",
         accord_details: "Details",
+        toast: {
+          fleettag_updated: "Fleet Tag has been updated successfully.",
+          fleettag_deleted: "Fleet Tag has been deleted successfully.",
+        },
         form: {
           fleet_tag_id: "Fleet Tag ID",
           fleet_tag_name: "Fleet Tag Name",

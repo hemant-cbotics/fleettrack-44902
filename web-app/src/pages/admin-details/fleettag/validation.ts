@@ -9,7 +9,7 @@ export const fleettagDetailsInitialValues = {
   in_range_device_id: "",
   last_location: "",
   last_address: "",
-  last_altitude: "",
+  last_altitude: 0,
   distance_travelled: "",
   tag_signal_strength: "",
   tag_battery_level: "",

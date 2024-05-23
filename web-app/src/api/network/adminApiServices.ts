@@ -2,18 +2,21 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS, API_SERVER_URL } from "./endpoints";
 import {
   CreateOrganizationDriverPayload,
+  CreateOrganizationFleettagPayload,
   CreateOrganizationGroupPayload,
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
   CreateOrganizationVehiclePayload,
   EditOrganizationAccountPayload,
   EditOrganizationDriverPayload,
+  EditOrganizationFleettagPayload,
   EditOrganizationGroupPayload,
   EditOrganizationUserPayload,
   EditOrganizationVehiclePayload,
   OrganizationEntityListingPayload,
   OrganizationUser,
   SingleOrganizationDriverPayload,
+  SingleOrganizationFleettagPayload,
   SingleOrganizationGroupPayload,
   SingleOrganizationUserPayload,
   SingleOrganizationVehiclePayload,
@@ -28,6 +31,7 @@ import { OrganizationVehicle } from "../types/Vehicle";
 import { OrganizationDriver } from "../types/Driver";
 import { OrganizationGroup } from "../types/Group";
 import { OrganizationAccount } from "../types/Account";
+import { OrganizationFleettag } from "../types/Fleettag";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
@@ -49,6 +53,11 @@ export enum AdminApiTags {
   GROUP_MODIFIED = 'GROUP_MODIFIED',
   GROUP_DELETED = 'GROUP_DELETED',
   GROUP_SINGLE = 'GROUP_SINGLE',
+
+  FLEETTAG_CREATED = 'FLEETTAG_CREATED',
+  FLEETTAG_MODIFIED = 'FLEETTAG_MODIFIED',
+  FLEETTAG_DELETED = 'FLEETTAG_DELETED',
+  FLEETTAG_SINGLE = 'FLEETTAG_SINGLE',
 }
 
 export const AdminAPIs = createApi({
@@ -73,6 +82,11 @@ export const AdminAPIs = createApi({
     AdminApiTags.GROUP_MODIFIED,
     AdminApiTags.GROUP_DELETED,
     AdminApiTags.GROUP_SINGLE,
+
+    AdminApiTags.FLEETTAG_CREATED,
+    AdminApiTags.FLEETTAG_MODIFIED,
+    AdminApiTags.FLEETTAG_DELETED,
+    AdminApiTags.FLEETTAG_SINGLE,
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API_SERVER_URL,
@@ -520,6 +534,109 @@ export const AdminAPIs = createApi({
         return response;
       },
     }),
+
+    //organization fleettag
+    organizationFleettags: builder.query<ListingResponse<OrganizationFleettag[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+      query: ({ organization_id, page, page_size, search }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_FLEETTAGS,
+          params: {
+            organization_id,
+            page,
+            page_size,
+            search,
+          },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.FLEETTAG_CREATED, AdminApiTags.FLEETTAG_MODIFIED, AdminApiTags.FLEETTAG_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: ListingResponse<OrganizationFleettag[]>) => {
+        return response;
+      },
+    }),
+
+    // create organization fleettag
+    createOrganizationFleettag: builder.mutation<OrganizationFleettag, CreateOrganizationFleettagPayload>({
+      query: (params: CreateOrganizationFleettagPayload) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_FLEETTAGS,
+          method: API_METHODS.POST,
+          body: params
+        }
+      },
+      invalidatesTags: [AdminApiTags.FLEETTAG_CREATED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationFleettag) => {
+        return response;
+      },
+    }),
+
+    // single organization fleettag
+    singleOrganizationFleettag: builder.query<OrganizationFleettag, SingleOrganizationFleettagPayload>({
+      query: ({ organization_id, fleettag_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_FLEETTAG(fleettag_id),
+          params: { organization_id },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.FLEETTAG_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationFleettag) => {
+        return response;
+      },
+    }),
+
+    //edit organization fleettag
+    editOrganizationFleettag: builder.mutation<OrganizationFleettag, EditOrganizationFleettagPayload>({
+      query: ({ organization_id, fleettag_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_FLEETTAG(fleettag_id),
+          params: { organization_id },
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      invalidatesTags: [AdminApiTags.FLEETTAG_MODIFIED, AdminApiTags.FLEETTAG_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationFleettag) => {
+        return response;
+      },
+    }),
+
+    //delete organization fleettag
+    deleteSingleFleettag: builder.mutation<void, SingleOrganizationFleettagPayload>({
+      query: ({ organization_id, fleettag_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_FLEETTAG(fleettag_id),
+          params: { organization_id },
+          method: API_METHODS.DELETE,
+        };
+      },
+      invalidatesTags: [AdminApiTags.FLEETTAG_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: void) => {
+        return response;
+      },
+    }),
+    
+
   }),
 });
 
@@ -556,4 +673,12 @@ export const {
 
   //account admin
   useEditOrganizationAccountMutation,
+
+  //fleettag admin
+  useOrganizationFleettagsQuery,
+  useCreateOrganizationFleettagMutation,
+  useSingleOrganizationFleettagQuery,
+  useEditOrganizationFleettagMutation,
+  useDeleteSingleFleettagMutation,
+  
 } = AdminAPIs;
