@@ -131,6 +131,10 @@ export const language_en = {
       account: "Account",
       change_password: "Change Password",
       logout: "Logout",
+      help: "Help",
+      chat: "Chat",
+      warning: "Warning",
+      notification: "Notification",
     },
     profile: {
       account: {

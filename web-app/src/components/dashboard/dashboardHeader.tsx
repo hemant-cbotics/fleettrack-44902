@@ -25,10 +25,11 @@ interface IconWithCounterProps {
   src: string;
   alt: string;
   counter?: number;
+  title: string;
 }
 
-const IconWithCounter: React.FC<IconWithCounterProps> = ({src, alt, counter = null}) => (
-  <li className="relative cursor-pointer p-3">
+const IconWithCounter: React.FC<IconWithCounterProps> = ({src, alt, counter = null, title}) => (
+  <li className="relative cursor-pointer p-3" title={title}>
     <img src={src} alt={alt} className={`block size-6 max-w-6${alt === 'chat-icon' ? ' translate-y-1' : ''}`} />
     {counter !== null && <span className="absolute top-0 right-0 bg-white rounded-full shadow-md size-5 text-xs flex items-center justify-center">
       {counter}
@@ -91,10 +92,10 @@ const DashboardHeader = () => {
           {!adminsMenuActive && <AdminsDropdown />}
           <div className="ml-5">
             <ul className="flex items-center space-x-2">
-              <IconWithCounter src={HelpIcon} alt="help-icon" />
-              <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} />
-              <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} />
-              <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} />
+              <IconWithCounter src={HelpIcon} alt="help-icon" title={tTop('help')} />
+              <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} title={tTop('chat')} />
+              <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} title={t('warning')} />
+              <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} title={t('notification')} />
             </ul>
           </div>
 
