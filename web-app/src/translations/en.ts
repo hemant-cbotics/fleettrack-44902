@@ -219,7 +219,7 @@ export const language_en = {
         }
       }
     }
-  },
+  }, 
   type_here_to_search: "Type here to search...",
   pagination: {
     number_of_items: "Number of items",
