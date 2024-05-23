@@ -54,7 +54,7 @@ const ScreenDashboardAdminGroups = () => {
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
-    page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+    page_size: APP_CONFIG.LISTINGS.LARGE_PAGE_SIZE,
     search: "",
     is_active: "both" as FilterType
   });
