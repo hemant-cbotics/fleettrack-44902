@@ -79,7 +79,7 @@ export const LandingFormFieldSubmit: FC<LandingFormFieldSubmitProps> = ({ type =
   return (
     <div className="col-span-6">
       <button
-        className={`h-12 w-full rounded-full border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
+        className={`h-12 w-full rounded-lg border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
         type={type}
         onClick={onClick}
         disabled={disabled}

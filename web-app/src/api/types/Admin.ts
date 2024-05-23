@@ -5,11 +5,14 @@ export type OrganizationUser = {
   user: TLoggedInUser;
 };
 
+export type FilterType = "active" | "inactive" | "both";
+
 export type OrganizationEntityListingPayload = {
   organization_id: number;
   page: number;
   page_size: number;
   search?: string;
+  is_active?: FilterType;
 };
 
 export type CreateOrganizationUserPayload = {

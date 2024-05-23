@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
 import { useTranslation } from "react-i18next";
@@ -18,18 +18,22 @@ import AdminsDriversCreateNew from "./createNewDriver";
 import { OrganizationDriver } from "../../../api/types/Driver";
 import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
+import { FilterType } from "../../../api/types/Admin";
 
 const all_columns = [
-  "Sr. No",
   "Driver Id",
-  "Name",
-  "Phone",
-  "Email",
+  "Driver Name",
   "Badge/Employee ID",
-  "Card ID"
+  "Card ID",
+  "License Number",
+  "License Type",
+  "License Expiry",
+  "Hazmat Certified",
+  "Active",
 ]
 
 const ScreenDashboardAdminDrivers = () => {
+  const { t: tMain } = useTranslation();
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.drivers'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
@@ -62,14 +66,19 @@ const ScreenDashboardAdminDrivers = () => {
       title: tFilters("both"),
     },
   ];
-  const [activeFilterSlug, setActiveFilterSlug] = React.useState<string>("active");
+  const [activeFilterSlug, setActiveFilterSlug] = React.useState<FilterType>("active");
+  
+  useEffect(() => {
+    setOrgDriversQueryParams((prev) => { return { ...prev, is_active: activeFilterSlug }});
+  }, [activeFilterSlug])
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgDriversQueryParams, setOrgDriversQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
+    search: "",
+    is_active: activeFilterSlug,
   });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgDriversQueryParams((prev) => { return { ...prev, page: 1, search: value }});
@@ -88,13 +97,19 @@ const ScreenDashboardAdminDrivers = () => {
       {
         navLink: `${routeUrls.dashboardChildren.adminChildren.drivers}/${item.id}`,
         cellData: [
-          index + 1, // "Sr. No",
           item?.id, // "Driver Id",
           item?.name, // "Driver Name",
-          item?.phone ?? "-", // "Phone",
-          item?.email ?? "-", // "Email",
           item?.badge_employee_id ?? "-", // "Badge/Employee ID",
-          item?.card_id ?? "-", // "Card ID"
+          item?.card_id ?? "-", // "Card Id",
+          item?.licence_number ?? "-", // "License Number",
+          item?.licence_type ?? "-", // "License Type",
+          item?.licence_expiry?.slice(0,10) ?? "-", // "License Expiry",
+          item?.is_hazmat_certified
+            ? <span className="text-field-success">{tMain('yes')}</span>
+            : <span className="text-field-error-dark">{tMain('no')}</span>, // "Hazmat Certified",
+          item?.is_active
+            ? <span className="text-field-success">{tMain('yes')}</span>
+            : <span className="text-field-error-dark">{tMain('no')}</span>, // "Active"
         ].filter((_, index) => columns[index].show)
       }))
     : [];

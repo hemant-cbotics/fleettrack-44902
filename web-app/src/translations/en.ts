@@ -131,6 +131,10 @@ export const language_en = {
       account: "Account",
       change_password: "Change Password",
       logout: "Logout",
+      help: "Help",
+      chat: "Chat",
+      warning: "Warning",
+      notification: "Notification",
     },
     profile: {
       account: {
@@ -233,6 +237,10 @@ export const language_en = {
       active: "Active",
       inactive: "Inactive",
       both: "Both",
+    },
+    delete_confirmation: {
+      heading: "Delete",
+      sub_heading: "Are you sure you want to delete?",
     },
     users: {
       heading: "Users",

@@ -24,6 +24,9 @@ import { OrganizationDriver } from "../../../api/types/Driver";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
+import { useDispatch, useSelector } from "react-redux";
+import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 
 const ScreenAdminDetailDriver = () => {
   const { driverId } = useParams<{ driverId: any }>();
@@ -32,7 +35,9 @@ const ScreenAdminDetailDriver = () => {
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.drivers" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage" });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const isNewEntity = useRef<boolean>(!!locationState?.new);
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
@@ -46,6 +51,7 @@ const ScreenAdminDetailDriver = () => {
           page: 1,
           page_size: 10,
           search: "",
+          is_active: "both",
         }) as OrganizationEntityListingPayload
   );
 
@@ -261,7 +267,7 @@ const ScreenAdminDetailDriver = () => {
                       type="button"
                       variant="danger"
                       label={tMain("delete")}
-                      onClick={handleDeleteDriver}
+                      onClick={() => {dispatch(setModalsData({ ...modalsState, showDeleteConfirmation: true }))}}
                       disabled={isLoadingEditDriver}
                     />
                   </div>
@@ -323,6 +329,7 @@ const ScreenAdminDetailDriver = () => {
           </div>
         </div>
       </div>
+      <DeleteConfirmation handleDeleteAdmin={handleDeleteDriver}/>
     </>
   );
 };

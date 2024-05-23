@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
 import { useTranslation } from "react-i18next";
@@ -18,14 +18,17 @@ import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
+import { FilterType } from "../../../api/types/Admin";
 
 const all_columns = [
-  "Sr. No",
-  "Vehicle Name",
+  "Driver Id",
+  "Unique Id",
   "Description",
   "Equipment Type (VIN)",
-  "ECM VIN",
+  "SIM Phone Number",
   "Server ID",
+  "Ignition State",
+  "Recorder Id",
   "Active"
 ]
 
@@ -63,14 +66,19 @@ const ScreenDashboardAdminVehicles = () => {
       title: tFilters("both"),
     },
   ];
-  const [activeFilterSlug, setActiveFilterSlug] = React.useState<string>("active");
+  const [activeFilterSlug, setActiveFilterSlug] = React.useState<FilterType>("active");
+  
+  useEffect(() => {
+    setOrgVehiclesQueryParams((prev) => { return { ...prev, is_active: activeFilterSlug }});
+  }, [activeFilterSlug])
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
+    search: "",
+    is_active: activeFilterSlug
   });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgVehiclesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
@@ -89,12 +97,14 @@ const ScreenDashboardAdminVehicles = () => {
       {
         navLink: `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`,
         cellData: [
-          index + 1, // "Sr. No",
-          item?.vehicle_model + " " + item?.vehicle_make ?? "-", // "Vehicle Id",
+          item?.driver?.id, // "Driver Id",
+          item?.unique_id ?? "-", // "Unique Id",
           item?.vehicle_description ?? "-", // "Description",
           item?.euipment_type ?? "-", // "Equipment Type (VIN)",
-          item?.vin ?? "-", // "ECM VIN",
+          item?.phone ?? "-", // "ECM VIN",
           item?.server_id ?? "-", // "Server ID",
+          item?.ignition_input ?? "-", // "Ignition State",
+          item?.recorder_id ?? "-", // "Recorder Id",
           item?.is_active
             ? <span className="text-field-success">{tMain('yes')}</span>
             : <span className="text-field-error-dark">{tMain('no')}</span>, // "Active"

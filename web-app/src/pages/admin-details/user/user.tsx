@@ -29,6 +29,9 @@ import { useDebouncedCallback } from "use-debounce";
 import AppSearchBox from "../../../components/searchBox";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 
 const ScreenAdminDetailUser = () => {
   const { userId } = useParams<{ userId: any }>();
@@ -37,6 +40,9 @@ const ScreenAdminDetailUser = () => {
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.users" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.users.detailsPage" });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
 
   const isNewEntity = React.useRef<boolean>(!!locationState?.new); // TODO: remove true
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
@@ -246,7 +252,7 @@ const ScreenAdminDetailUser = () => {
                       type="button"
                       variant="danger"
                       label={tMain("delete")}
-                      onClick={handleDeleteUser}
+                      onClick={() => {dispatch(setModalsData({ ...modalsState, showDeleteConfirmation: true }))}}
                       disabled={isLoadingEditUser}
                     />
                   </div>
@@ -308,6 +314,7 @@ const ScreenAdminDetailUser = () => {
           </div>
         </div>
       </div>
+      <DeleteConfirmation handleDeleteAdmin={handleDeleteUser} />
     </>
   );
 };
