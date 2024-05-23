@@ -21,6 +21,7 @@ import ForwardIcon from "../../../assets/svg/forward-icon.svg";
 import FastBackwardIcon from "../../../assets/svg/fast-backward-icon.svg";
 import BackwardIcon from "../../../assets/svg/backward-icon.svg";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
+import { FilterType } from "../../../api/types/Admin";
 
 
 const ScreenDashboardAdminGroups = () => {
@@ -31,8 +32,14 @@ const ScreenDashboardAdminGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [currentAllVehicleList, setCurrentAllVehicleList] = React.useState<any[]>([]);
-  const [currentGroupVehicleList, setCurrentGroupVehicleList] = React.useState<any[]>([]);
+  type TGroupListItem = {
+    id: string;
+    name: string;
+    sub_title: string;
+    is_active: boolean;
+  }
+  const [currentAllVehicleList, setCurrentAllVehicleList] = React.useState<TGroupListItem[]>([]);
+  const [currentGroupVehicleList, setCurrentGroupVehicleList] = React.useState<TGroupListItem[]>([]);
 
   const [leftSelectedVehicles, setleftSelectedVehicles] = React.useState<any[]>([]);
   const [rightSelectedVehicles, setrightSelectedVehicles] = React.useState<any[]>([]);
@@ -42,13 +49,14 @@ const ScreenDashboardAdminGroups = () => {
 
   const [currentDescription, setCurrentDescription] = React.useState<string>("");
 
-  const [showInactiveGroups, setShowInactiveGroups] = React.useState(false);
+  const [showInactiveVehicles, setShowInactiveVehicles] = React.useState(false);
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
-    page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
+    page_size: APP_CONFIG.LISTINGS.LARGE_PAGE_SIZE,
+    search: "",
+    is_active: "both" as FilterType
   });
 
   const {
@@ -76,20 +84,24 @@ const ScreenDashboardAdminGroups = () => {
     )
   : [];
 
-  const allVehicleList = !!allVehicles
+  const allVehicleList: TGroupListItem[] = !!allVehicles
   ? (allVehicles || ([] as OrganizationVehicle[])).map(
       (item: OrganizationVehicle, index: number) => ({
         id: item?.id,
-        name: item?.vehicle_model + " " + item?.vehicle_make,
+        name: `${item?.vehicle_model} ${item?.vehicle_make}`,
+        sub_title: item?.unique_id ?? '',
+        is_active: item?.is_active
       })
     )
   : [];
 
-  const groupVehicleList  = !!groupVehicles
+  const groupVehicleList: TGroupListItem[] = !!groupVehicles
   ? (groupVehicles || ([] as OrganizationVehicle[])).map(
       (item: OrganizationVehicle, index: number) => ({
         id: item?.id,
-        name: item?.vehicle_model + " " + item?.vehicle_make,
+        name: `${item?.vehicle_model} ${item?.vehicle_make}`,
+        sub_title: item?.unique_id ?? '',
+        is_active: item?.is_active
       })
     )
   : [];
@@ -185,7 +197,7 @@ const ScreenDashboardAdminGroups = () => {
 
   return (
     <>
-      <HeaderView title={t('heading')} showRefreshButton={false} />
+      <HeaderView title={t('heading')} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} pt-4 flex flex-col gap-6 pb-8`}>
         <AdminsGroupsHeader
           heading={t("sub_heading")}
@@ -215,12 +227,12 @@ const ScreenDashboardAdminGroups = () => {
           <div className="col-span-4"></div>
           <div className="col-span-4">
             <AdminFormFieldCheckbox
-              label={t("show_inactive_groups")}
-              id="ShowInactiveGroups"
+              label={t("show_inactive_vehicles")}
+              id="ShowInactiveVehicles"
               type="checkbox"
-              name="show_inactive_groups"
-              checked={showInactiveGroups}
-              onChange={(e) => { setShowInactiveGroups(e.target.checked); }}
+              name="show_inactive_vehicles"
+              checked={showInactiveVehicles}
+              onChange={(e) => { setShowInactiveVehicles(e.target.checked); }}
             />
           </div>
         </div>
@@ -263,7 +275,9 @@ const ScreenDashboardAdminGroups = () => {
                         key={grpItem.id}
                         id={grpItem.id}
                         title={grpItem.name}
+                        sub_title={grpItem.sub_title}
                         handleChange={(e) => {handleLeftCheckboxChange({item: grpItem, isChecked: e.target.checked})}}
+                        show={showInactiveVehicles ? true : grpItem.is_active}
                       />
                     )
                   })}
@@ -344,8 +358,10 @@ const ScreenDashboardAdminGroups = () => {
             >
               {t("in_selected_group")}
               <span className="flex-grow"></span>
-              <span className="text-sm text-accent-green">{t("active", { count: 2 })}</span>
-              <span className="text-sm text-field-error-border">{t("inactive", { count: 0 })}</span>
+              {currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText)).length > 0 && <>
+                <span className="text-sm text-accent-green">{t("active", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText) && groupItem.is_active).length })}</span>
+                <span className="text-sm text-field-error-border">{t("inactive", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText) && !groupItem.is_active).length })}</span>
+              </>}
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
@@ -361,7 +377,9 @@ const ScreenDashboardAdminGroups = () => {
                         key={grpItem.id}
                         id={grpItem.id}
                         title={grpItem.name}
+                        sub_title={grpItem.sub_title}
                         handleChange={(e) => {handleRightCheckboxChange({item: grpItem, isChecked: e.target.checked})}}
+                        show={showInactiveVehicles ? true : grpItem.is_active}
                       />
                     )
                   })}

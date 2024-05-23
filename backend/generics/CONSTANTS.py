@@ -476,3 +476,17 @@ class UserConstants:
             "last_service_time_4": 0,
             "last_service_time_5": 0
         }
+
+    @unique
+    class ZeroToTenInteger(BaseEnum):
+        Zero = 0
+        One = 1
+        Two = 2
+        Three = 3
+        Four = 4
+        Five = 5
+        Six = 6
+        Seven = 7
+        Eight = 8
+        Nine = 9
+        TEN = 10

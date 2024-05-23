@@ -262,11 +262,11 @@ const ScreenAdminDetailVehicle = () => {
         </div>
         <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
           <div
-            className={`lg:col-span-3 space-y-4${
+            className={`hidden xl:block lg:col-span-3 space-y-4${
               isFetchingOrgVehicles ? " opacity-40 pointer-events-none" : ""
             }${isNewEntity?.current ? " hidden" : ""}`}
           >
-            <div className="font-bold text-lg leading-6">
+            <div className="font-bold text-lg leading-6 mt-2 mb-3">
               {t("listing_heading")}
             </div>
             <AppSearchBox
@@ -310,7 +310,7 @@ const ScreenAdminDetailVehicle = () => {
           </div>
           <div
             className={`${
-              isNewEntity?.current ? "lg:col-span-12" : "lg:col-span-9"
+              isNewEntity?.current ? "lg:col-span-12" : "col-span-12 xl:col-span-9"
             }`}
           >
             <div className="flex items-center gap-4">
@@ -355,7 +355,7 @@ const ScreenAdminDetailVehicle = () => {
                       disabled={isLoadingEditVehicle}
                     />
                   </div>
-                  <div className="w-24">
+                  {/* <div className="w-24">
                     <AdminFormFieldSubmit
                       type="button"
                       variant="primary"
@@ -372,7 +372,7 @@ const ScreenAdminDetailVehicle = () => {
                       onClick={handleCommandVehicle}
                       disabled={isLoadingEditVehicle}
                     />
-                  </div>
+                  </div> */}
                 </>
               )}
             </div>

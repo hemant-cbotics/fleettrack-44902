@@ -82,8 +82,7 @@ const ScreenChangePassword = () => {
             onBlur={handleBlur}
             value={values.current_password}
             touched={touched.current_password}
-            error={errors.current_password}
-            customInputClass="tracking-widest placeholder-tracking-normal" />
+            error={errors.current_password} />
 
           <p className="col-span-6 mt-0 leading-relaxed text-gray-500">
             {t("sub_heading_2")}

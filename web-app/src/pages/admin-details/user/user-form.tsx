@@ -297,11 +297,11 @@ const {
 
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex flex-wrap">
+      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
         {selectedGroups?.map((option:any) => (
-          <div className="flex bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
-            <span className="font-normal text-base leading-5 tracking-tighter">{option.name}</span>
-            <img src={CloseIcon} alt={option.label} className="cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
+          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
+            <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
+            <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
           </div>
         ))}
       </div>
