@@ -7,7 +7,7 @@ import HeaderView from "../../../components/admin/headerView";
 import ListingPageSubHeader from "../components/listingPageSubHeader";
 import ListingTableHeader, { TListingFilters } from "../components/listingTableHeader";
 import { useDebouncedCallback } from "use-debounce";
-import { useOrganizationDriversQuery } from "../../../api/network/adminApiServices";
+import { useOrganizationFleettagsQuery } from "../../../api/network/adminApiServices";
 import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
 import { routeUrls } from "../../../navigation/routeUrls";
@@ -15,20 +15,24 @@ import { TSelectboxOption } from "../../../components/admin/formFields";
 import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AdminsFleetTagsCreateNew from "./createNewFleettag";
-import { OrganizationDriver } from "../../../api/types/Driver";
 import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
 import { EditListingColumnsButton, EditListingColumnsModal, TListingColumn } from "../../../components/editListingColumns";
+import { OrganizationFleettag } from "../../../api/types/Fleettag";
 
 const all_columns = [
-  "Sr. No",
   "Fleet Tag ID",
-  "Description",
+  "Fleet Tag Name",
   "In Range",
   "Last Connected/Disconnected Address",
-  "Timestamp"
+  "Timestamp",
+  "Status",
+  "Last Updated",
+  "Last Location",
+  "Vehicle Id"
 ]
 
 const ScreenDashboardAdminFleetTags = () => {
+  const { t: tMain } = useTranslation();
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.fleettags'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
@@ -65,20 +69,25 @@ const ScreenDashboardAdminFleetTags = () => {
     isFetching: isFetchingOrgFleetTags,
     error
   } =
-    useOrganizationDriversQuery(orgFleetTagsQueryParams);
+    useOrganizationFleettagsQuery(orgFleetTagsQueryParams);
   const { count, next, previous, results } = dataOrgFleetTags || {};
 
   const tableData: TAdminTableRowData[] = !!results
-    ? (results || [] as OrganizationDriver[]).map((item: OrganizationDriver, index: number) => (
+    ? (results || [] as OrganizationFleettag[]).map((item: OrganizationFleettag, index: number) => (
       {
         navLink: `${routeUrls.dashboardChildren.adminChildren.fleettags}/${item.id}`,
         cellData: [
-          index + 1, // "Sr. No",
-          '-', // "Fleet Tag ID",
-          '-', // "Description",
-          '-', // "In Range",
-          '-', // "Last Connected/Disconnected Address",
+          item?.fleet_tag_id ?? '-', // "Fleet Tag ID",
+          item?.fleet_tag_name ?? '-', // "Name",
+          item?.in_range
+            ? <span className="text-field-success">{tMain('yes')}</span>
+            : <span className="text-field-error-dark">{tMain('no')}</span>, // "In Range",
+          item?.last_address ?? '-', // "Last Connected/Disconnected Address",
           '-', // "Timestamp"
+          '-', // "Status",
+          item?.updated_at ?? '-', // "Last Updated",
+          item?.last_location ?? '-', // "Geopoint",
+          '-' // "Vehicle Id"
         ].filter((_, index) => columns[index].show)
       }))
     : [];

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
@@ -13,66 +13,13 @@ import AppSearchBox from "../../../components/searchBox";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import Accordian from "../../../components/accordian";
 import FleettagDetailForm from "./fleettag-form";
-
-const listData = [
-  {
-    id: 1,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 2,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 3,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 4,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 5,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 6,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 7,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  },
-  {
-    id: 8,
-    fleettag_id: "FT/ID/001.02",
-    last_address: "1234, 5th Avenue, New York, NY",
-    description: "Fleet tag description",
-    in_range: "Yes",
-  }
-
-]
+import { useDeleteSingleFleettagMutation, useEditOrganizationFleettagMutation, useOrganizationFleettagsQuery, useSingleOrganizationFleettagQuery } from "../../../api/network/adminApiServices";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
+import { TListData } from "./type";
+import { OrganizationFleettag } from "../../../api/types/Fleettag";
 
 const ScreenAdminDetailFleettag = () => {
   const { fleettagId } = useParams<{ fleettagId: any }>();
@@ -81,7 +28,9 @@ const ScreenAdminDetailFleettag = () => {
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.fleettags" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.fleettags.detailsPage" });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const isNewEntity = useRef<boolean>(!!locationState?.new);
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
 
@@ -103,12 +52,79 @@ const ScreenAdminDetailFleettag = () => {
     });
   }, 500);
 
+  const {
+    data: dataOrgFleettags,
+    isFetching: isFetchingOrgFleettags,
+    error,
+  } = useOrganizationFleettagsQuery(orgFleettagsQueryParams);
+  const { results } = dataOrgFleettags || {};
+
+  const { data: dataSingleFleettag, isFetching: isFetchingSingleFleettag } = useSingleOrganizationFleettagQuery( { organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId) }, { skip: !fleettagId });
+  const [ editOrganizationFleettagApiTrigger , {isLoading: isLoadingEditFleettag}] = useEditOrganizationFleettagMutation();
+  const [ deleteSingleFleettagApiTrigger, {isLoading: isLoadingDeleteFleettag}] = useDeleteSingleFleettagMutation();
+
+  const listData: TListData[] = !!results
+    ? (results || ([] as OrganizationFleettag[])).map(
+        (item: OrganizationFleettag, index: number) => ({
+          id: item?.id,
+          fleettag_id: item?.fleet_tag_id || "-",
+          name: item?.fleet_tag_name || "-",
+          last_address: item?.last_address || "-",
+          in_range: item?.in_range ? "Yes" : "No",
+        })
+      )
+    : [];
 
   const formik = useFormik({
     initialValues: fleettagDetailsInitialValues,
     validationSchema: fleettagDetailsYupValidationSchema,
-    onSubmit: () => {console.log("Submit")}
+    onSubmit: (values) => {
+      const data = {
+          fleet_tag_id: values.fleet_tag_id,
+          fleet_tag_name: values.fleet_tag_name,
+          last_event_time: values.last_event_time ? new Date(values.last_event_time).toISOString() : "",
+          last_event_code: values.last_status_code,
+          in_range: values.in_range === "Yes" ? true : false,
+          in_range_device_id: values.in_range_device_id,
+          last_location: values.last_location,
+          last_address: values.last_address,
+          last_altitude: values.last_altitude,
+          distance_traveled: values.distance_travelled,
+          tag_signal_strength: values.tag_signal_strength,
+          tag_battery_level: values.tag_battery_level,
+          temperature: values.temprature,
+      }
+      editOrganizationFleettagApiTrigger({organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId), data: data})
+        .unwrap()
+        .then(() => {
+          toast.success(t("toast.fleettag_updated"));
+          navigate(routeUrls.dashboardChildren.adminChildren.fleettags);
+        })
+        .catch((error) => {
+          console.error("Error: ", error);
+        });
+    }
   });
+
+  useEffect(() => {
+    if(dataSingleFleettag){
+      formik.setValues({
+        fleet_tag_id: dataSingleFleettag?.fleet_tag_id || "",
+        fleet_tag_name: dataSingleFleettag?.fleet_tag_name || "",
+        last_event_time: dataSingleFleettag?.last_event_time || "",
+        last_status_code: dataSingleFleettag?.last_event_code || "",
+        in_range: dataSingleFleettag?.in_range ? "Yes" : "No",
+        in_range_device_id: dataSingleFleettag?.in_range_device_id || "",
+        last_location: dataSingleFleettag?.last_location || "",
+        last_address: dataSingleFleettag?.last_address || "",
+        last_altitude: dataSingleFleettag?.last_altitude || 0,
+        distance_travelled: dataSingleFleettag?.distance_traveled || "",
+        tag_signal_strength: dataSingleFleettag?.tag_signal_strength || "",
+        tag_battery_level: dataSingleFleettag?.tag_battery_level || "",
+        temprature: dataSingleFleettag?.temperature || "",
+      });
+    }
+  }, [dataSingleFleettag,fleettagId]);
 
   const {
     values,
@@ -120,17 +136,22 @@ const ScreenAdminDetailFleettag = () => {
   } = formik;
 
   const handleEditFleettag = () => {
-    console.log("Edit Fleettag");
+    if(userCanEdit){
+      formik.handleSubmit();
+    }
   }
 
   const handleDeleteFleettag = () => {
-    console.log("Delete Fleettag");
+    deleteSingleFleettagApiTrigger({organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId)})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.fleettag_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.fleettags);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
+    });
   }
-
-  const isFetchingOrgFleettags = false;
-  const isLoadingEditFleettag = false;
-  const isLoadingDeleteFleettag = false;
-  const isFetchingSingleFleettag = false;
 
   return (
     <>
@@ -178,7 +199,7 @@ const ScreenAdminDetailFleettag = () => {
                     </div>
                   </div>
                   <p className="font-normal text-base leading-6 text-gray-700">
-                    {item.description}
+                    {item.name}
                   </p>
                 </div>
               ))}
@@ -210,7 +231,7 @@ const ScreenAdminDetailFleettag = () => {
                       type="button"
                       variant="danger"
                       label={tMain("delete")}
-                      onClick={handleDeleteFleettag}
+                      onClick={() => {dispatch(setModalsData({ ...modalsState, showDeleteConfirmation: true }))}}
                       disabled={isLoadingEditFleettag}
                     />
                   </div>
@@ -245,6 +266,7 @@ const ScreenAdminDetailFleettag = () => {
           </div>
         </div>
       </div>
+      <DeleteConfirmation handleDeleteAdmin={handleDeleteFleettag} />
     </>
   );
 }

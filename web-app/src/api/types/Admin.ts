@@ -174,3 +174,19 @@ export type EditOrganizationAccountPayload = {
   data: any;
 };
 
+export type CreateOrganizationFleettagPayload = {
+  organization: number | null;
+  fleet_tag_name: string;
+};
+
+export type SingleOrganizationFleettagPayload = {
+  organization_id: number | null;
+  fleettag_id: number;
+};
+
+export type EditOrganizationFleettagPayload = {
+  organization_id: number | null;
+  fleettag_id: number;
+  data: any;
+};
+

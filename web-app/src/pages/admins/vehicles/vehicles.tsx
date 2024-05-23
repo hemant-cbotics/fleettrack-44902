@@ -69,7 +69,7 @@ const ScreenDashboardAdminVehicles = () => {
   const [activeFilterSlug, setActiveFilterSlug] = React.useState<FilterType>("active");
   
   useEffect(() => {
-    setOrgVehiclesQueryParams((prev) => { return { ...prev, is_active: activeFilterSlug }});
+    setOrgVehiclesQueryParams((prev) => { return { ...prev,page: 1,  is_active: activeFilterSlug }});
   }, [activeFilterSlug])
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")

@@ -44,6 +44,10 @@ export const vehicleFormInitialValues = {
   all_vehicles: false,
 }
 
-export const vehicleFormValidationSchema = Yup.object().shape({});
+const currentYear = new Date().getFullYear();
+
+export const vehicleFormValidationSchema = Yup.object().shape({
+  vehicle_model: Yup.number().max(currentYear, "Vehicle model cannot be in the future"),
+});
 
 export const groupMembershipFormValidationSchema = Yup.object().shape({});

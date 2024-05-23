@@ -57,5 +57,9 @@ export const API_ENDPOINTS = {
     EDIT_ORGANIZATION_GROUP: (group_id: number) => `/group/ap1/v1/${group_id}/`,
 
     EDIT_ORGANIZATION_ACCOUNT: (account_id: number) => `/users/api/v1/account/${account_id}/`,
+
+    ORGANIZATION_FLEETTAGS: `/fleet-tag/ap1/v1/`,
+    SINGLE_ORGANIZATION_FLEETTAG: (fleettags_id: number) => `/fleet-tag/ap1/v1/${fleettags_id}/`,
+    EDIT_ORGANIZATION_FLEETTAG: (fleettags_id: number) => `/fleet-tag/ap1/v1/${fleettags_id}/`,
   }
 }

@@ -219,7 +219,7 @@ export const language_en = {
         }
       }
     }
-  },
+  }, 
   type_here_to_search: "Type here to search...",
   pagination: {
     number_of_items: "Number of items",
@@ -227,7 +227,7 @@ export const language_en = {
   no_items_found: "No items found",
   admins: {
     refresh_data: "Refresh Data",
-    completeCreation: "Please fill the form a click SAVE to complete the process",
+    completeCreation: "Please fill the form and click SAVE to complete the process",
     edit_columns: {
       heading: "Edit Columns",
       sub_heading: "Edit the selection of your columns. See the information that is most relevant to your business",
@@ -461,6 +461,10 @@ export const language_en = {
         heading: "Fleet Tags",
         listing_heading: "Fleet Tag Listing",
         accord_details: "Details",
+        toast: {
+          fleettag_updated: "Fleet Tag has been updated successfully.",
+          fleettag_deleted: "Fleet Tag has been deleted successfully.",
+        },
         form: {
           fleet_tag_id: "Fleet Tag ID",
           fleet_tag_name: "Fleet Tag Name",
