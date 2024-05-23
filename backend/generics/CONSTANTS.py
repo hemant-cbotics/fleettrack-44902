@@ -478,7 +478,7 @@ class UserConstants:
         }
 
     @unique
-    class ZeroToNineInteger(BaseEnum):
+    class ZeroToTenInteger(BaseEnum):
         Zero = 0
         One = 1
         Two = 2
@@ -489,3 +489,4 @@ class UserConstants:
         Seven = 7
         Eight = 8
         Nine = 9
+        TEN = 10
