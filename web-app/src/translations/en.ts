@@ -414,7 +414,7 @@ export const language_en = {
       sub_heading: "Edit Group",
       add_new: "Add New Group",
       group: "Group",
-      show_inactive_groups: "Show Inactive Groups",
+      show_inactive_vehicles: "Show Inactive Vehicles",
       group_description: "Group Description",
       group_description_placeholder: "The description of the group will be displayed here",
       not_in_selected_group: "Not in Selected Group",
