@@ -197,7 +197,7 @@ const ScreenDashboardAdminGroups = () => {
 
   return (
     <>
-      <HeaderView title={t('heading')} showRefreshButton={false} />
+      <HeaderView title={t('heading')} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} pt-4 flex flex-col gap-6 pb-8`}>
         <AdminsGroupsHeader
           heading={t("sub_heading")}

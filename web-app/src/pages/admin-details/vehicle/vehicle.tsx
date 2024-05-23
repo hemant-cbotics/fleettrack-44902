@@ -355,7 +355,7 @@ const ScreenAdminDetailVehicle = () => {
                       disabled={isLoadingEditVehicle}
                     />
                   </div>
-                  <div className="w-24">
+                  {/* <div className="w-24">
                     <AdminFormFieldSubmit
                       type="button"
                       variant="primary"
@@ -372,7 +372,7 @@ const ScreenAdminDetailVehicle = () => {
                       onClick={handleCommandVehicle}
                       disabled={isLoadingEditVehicle}
                     />
-                  </div>
+                  </div> */}
                 </>
               )}
             </div>

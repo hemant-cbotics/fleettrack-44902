@@ -9,14 +9,14 @@ interface HeaderViewProps {
   title: string;
   showBackButton?: boolean;
   backButtonCallback?: () => void;
-  showRefreshButton?: boolean;
+  // showRefreshButton?: boolean;
 }
 
 const HeaderView: FC<HeaderViewProps> = ({
   title,
   showBackButton = false,
   backButtonCallback,
-  showRefreshButton = true,
+  // showRefreshButton = true,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins" });
   const navigate = useNavigate();
@@ -38,14 +38,14 @@ const HeaderView: FC<HeaderViewProps> = ({
             {title}
           </h1>
         </div>
-        {showRefreshButton && <div className="flex items-center">
+        {/* {showRefreshButton && <div className="flex items-center">
           <button className="flex justify-between py-2">
             <p className="text-blue-900 font-medium text-base leading-5">
               {t("refresh_data")}
             </p>
             <img src={RefreshIcon} alt="refresh-icon" className="pl-2 " />
           </button>
-        </div>}
+        </div>} */}
       </header>
   )
 }
