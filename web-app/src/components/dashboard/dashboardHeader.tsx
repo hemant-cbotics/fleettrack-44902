@@ -94,8 +94,8 @@ const DashboardHeader = () => {
             <ul className="flex items-center space-x-2">
               <IconWithCounter src={HelpIcon} alt="help-icon" title={tTop('help')} />
               <IconWithCounter src={ChatIcon} alt="chat-icon" counter={4} title={tTop('chat')} />
-              <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} title={t('warning')} />
-              <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} title={t('notification')} />
+              <IconWithCounter src={WarningIcon} alt="warning-icon" counter={5} title={tTop('warning')} />
+              <IconWithCounter src={NotificationIcon} alt="notification-icon" counter={2} title={tTop('notification')} />
             </ul>
           </div>
 
