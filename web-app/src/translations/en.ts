@@ -227,7 +227,7 @@ export const language_en = {
   no_items_found: "No items found",
   admins: {
     refresh_data: "Refresh Data",
-    completeCreation: "Please fill the form a click SAVE to complete the process",
+    completeCreation: "Please fill the form and click SAVE to complete the process",
     edit_columns: {
       heading: "Edit Columns",
       sub_heading: "Edit the selection of your columns. See the information that is most relevant to your business",
