@@ -89,8 +89,7 @@ const ScreenResetPassword = () => {
             onBlur={handleBlur}
             value={values.verification_code}
             touched={touched.verification_code}
-            error={errors.verification_code}
-            customInputClass="tracking-widest placeholder-tracking-normal" />
+            error={errors.verification_code} />
 
           <p className="col-span-6 mt-0 leading-relaxed text-gray-500">
             {t("sub_heading_2")}

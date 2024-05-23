@@ -101,3 +101,10 @@ code {
 .placeholder-tracking-normal::placeholder {
   letter-spacing: normal;
 }
+
+/**
+ * Hide the password reveal button in Microsoft Edge.
+ */
+::-ms-reveal {
+  display: none;
+}
