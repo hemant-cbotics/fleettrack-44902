@@ -191,8 +191,8 @@ const ScreenAdminDetailUser = () => {
           </p>
         </div>
         <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
-          <div className={`lg:col-span-3 space-y-4${isFetchingOrgUsers ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
-            <div className="font-bold text-lg leading-6">{t("listing_heading")}</div>
+          <div className={`hidden xl:block lg:col-span-3 space-y-4${isFetchingOrgUsers ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
+            <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={tAdmin('search_placeholder')}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
@@ -226,7 +226,7 @@ const ScreenAdminDetailUser = () => {
               ))}
             </div>
           </div>
-          <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'lg:col-span-9'}`}>
+          <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'col-span-12 xl:col-span-9'}`}>
             <div className="flex items-center gap-4">
               {isNewEntity?.current ? (
                 <>
