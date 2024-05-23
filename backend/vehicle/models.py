@@ -7,6 +7,7 @@ class Vehicle(UUIDModel):
     """
         This model is responsible to store vehicle details.
     """
+    vehicle_display_id = models.CharField(max_length=255, unique=True, default=None, null=True, blank=True)
     server_id = models.CharField(max_length=255, null=True, blank=True)
     firmware_version = models.CharField(max_length=255, null=True, blank=True)
     unique_id = models.CharField(max_length=255, null=True, blank=True)
