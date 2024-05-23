@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.e6355a3d.css",
-    "main.js": "/static/js/main.bdae1f05.js",
+    "main.css": "/static/css/main.7a664fd0.css",
+    "main.js": "/static/js/main.091b8494.js",
     "static/js/453.1965c8d6.chunk.js": "/static/js/453.1965c8d6.chunk.js",
     "static/media/landing2.png": "/static/media/landing2.c9711f9ad4940aa90eda.png",
     "service-worker.js": "/service-worker.js",
@@ -21,7 +21,6 @@
     "static/media/menuicon-user.svg": "/static/media/menuicon-user.012672e2006c1d9cdcf391250212a07d.svg",
     "static/media/hide-password-icon.svg": "/static/media/hide-password-icon.7c9993f234d860a298abdd531d38a895.svg",
     "static/media/warning-icon.svg": "/static/media/warning-icon.4d5a4f800085a47d428464c9c3344ca3.svg",
-    "static/media/refresh-icon.svg": "/static/media/refresh-icon.4952ae2faccb2d7120f4ea936c696c24.svg",
     "static/media/fast-forward-icon.svg": "/static/media/fast-forward-icon.222e397246637f2c6c1fca4eae1208ba.svg",
     "static/media/fast-backward-icon.svg": "/static/media/fast-backward-icon.eb250b44e292afe73f5eef75694d17e1.svg",
     "static/media/map-overview-icon.svg": "/static/media/map-overview-icon.f2059163be0d7f12a8f017ffc05afa33.svg",
@@ -39,12 +38,12 @@
     "static/media/expand-more-icon.svg": "/static/media/expand-more-icon.e4acf936b3d9a4825ee8d83ddaaa47a0.svg",
     "static/media/show-password-icon.svg": "/static/media/show-password-icon.adf855e31121adba304dc21283b2cbfa.svg",
     "static/media/left-arrow-icon.svg": "/static/media/left-arrow-icon.a63cb2d52fd0a5d442ac22f9e6ad76dd.svg",
-    "main.e6355a3d.css.map": "/static/css/main.e6355a3d.css.map",
-    "main.bdae1f05.js.map": "/static/js/main.bdae1f05.js.map",
+    "main.7a664fd0.css.map": "/static/css/main.7a664fd0.css.map",
+    "main.091b8494.js.map": "/static/js/main.091b8494.js.map",
     "453.1965c8d6.chunk.js.map": "/static/js/453.1965c8d6.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6355a3d.css",
-    "static/js/main.bdae1f05.js"
+    "static/css/main.7a664fd0.css",
+    "static/js/main.091b8494.js"
   ]
 }
