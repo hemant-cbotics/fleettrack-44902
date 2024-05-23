@@ -1,4 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import ShowPasswordIcon from "../../assets/svg/show-password-icon.svg";
+import HidePasswordIcon from "../../assets/svg/hide-password-icon.svg";
 
 type LandingFormFieldInputProps = {
   label: string;
@@ -27,8 +29,16 @@ export const LandingFormFieldInput: FC<LandingFormFieldInputProps> = ({ label, t
     : 'border-gray-200 focus-visible:outline-accent-blue-pale text-field-label-valid';
   const floatingError = false;
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordFieldType, setPasswordFieldType] = useState(type);
+
+  const togglePassword = () => {
+    setPasswordFieldType(showPassword ? 'password' : 'text');
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className={`col-span-6${floatingError ? ` relative pb-4` : ''} ${wrapperClass}`}>
+    <div className={`col-span-6 relative${floatingError ? ` pb-4` : ''} ${wrapperClass}`}>
       <label
         htmlFor={id}
         className={`block text-sm font-display font-semibold ${labelClass}`}>
@@ -37,7 +47,7 @@ export const LandingFormFieldInput: FC<LandingFormFieldInputProps> = ({ label, t
 
       <input
         {...(type === 'password' && { autoComplete: 'off' })}
-        type={type}
+        type={type === 'password' ? passwordFieldType : type}
         id={id}
         name={name}
         placeholder={placeholder}
@@ -45,8 +55,13 @@ export const LandingFormFieldInput: FC<LandingFormFieldInputProps> = ({ label, t
         onBlur={onBlur}
         value={value}
         readOnly={readonly}
-        className={`mt-1 w-full h-11 px-3 rounded-md bg-white read-only:bg-gray-200 read-only:border-gray-300 text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${touched ? ' touched' : ''} ${inputClass} ${customInputClass}`}
+        className={`mt-1 w-full h-11 px-3 rounded-md bg-white read-only:bg-gray-200 read-only:border-gray-300 text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${touched ? ' touched' : ''} ${inputClass}${type === 'password' ? ' tracking-widest placeholder-tracking-normal' : ''} ${customInputClass}`}
       />
+      {type === 'password' && (
+        <button type="button" onClick={togglePassword} className={`absolute p-2 right-3 mt-[2px] top-11 transform -translate-y-1/2 z-10`}>
+          <img src={showPassword ? HidePasswordIcon : ShowPasswordIcon} alt="toggle password" className="size-4" />
+        </button>
+      )}
       {touched && !!error && <p className={`${floatingError ? 'absolute' : ''} bg-field-error-light px-2 py-1 rounded text-field-error-dark text-xs mt-1`}>{error}</p>}
     </div>
   );
