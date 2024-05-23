@@ -20,6 +20,7 @@ import FastForwardIcon from "../../../assets/svg/fast-forward-icon.svg";
 import ForwardIcon from "../../../assets/svg/forward-icon.svg";
 import FastBackwardIcon from "../../../assets/svg/fast-backward-icon.svg";
 import BackwardIcon from "../../../assets/svg/backward-icon.svg";
+import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 
 
 const ScreenDashboardAdminGroups = () => {
@@ -195,7 +196,7 @@ const ScreenDashboardAdminGroups = () => {
           addNewButtonCallback={() => {
             dispatch(setModalsData({ ...modalsState, showCreateGroup: true }))
           }}
-          deleteButtonCallback={handleDeleteGroup}
+          deleteButtonCallback={() => {dispatch(setModalsData({ ...modalsState, showDeleteConfirmation: true }))}}
           disabled={isLoadingDeleteGroup || isLoadingEditGroup || isFetchingSingleGroup || !groupId}
         />
         <div className={`grid grid-cols-12 gap-4 items-end ${isFetchingOrgGroups ? 'opacity-40 pointer-events-none': ""}`}>
@@ -372,6 +373,7 @@ const ScreenDashboardAdminGroups = () => {
         </div>
       </div>
       <AdminsGroupsCreateNew />
+      <DeleteConfirmation handleDeleteAdmin={handleDeleteGroup} />
     </>
   );
 }

@@ -234,6 +234,10 @@ export const language_en = {
       inactive: "Inactive",
       both: "Both",
     },
+    delete_confirmation: {
+      heading: "Delete",
+      sub_heading: "Are you sure you want to delete?",
+    },
     users: {
       heading: "Users",
       sub_heading: "Create users and delete users in the system to view maps and vehicle information",

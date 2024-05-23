@@ -15,6 +15,7 @@ export type TModalsState = {
   showCreateGroup: boolean;
   showCreateFleetTag: boolean;
   showCreateGeozone: boolean;
+  showDeleteConfirmation: boolean;
 }
 
 export type TAppCommonState = {
@@ -35,6 +36,7 @@ const initialState: TAppCommonState = {
     showCreateGroup: false,
     showCreateFleetTag: false,
     showCreateGeozone: false,
+    showDeleteConfirmation: false
   }
 }
 

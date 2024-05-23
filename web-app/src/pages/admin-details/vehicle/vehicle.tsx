@@ -29,6 +29,9 @@ import {
 import { TListData } from "./type";
 import { OrganizationVehicle } from "../../../api/types/Vehicle";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
@@ -41,6 +44,9 @@ const ScreenAdminDetailVehicle = () => {
     keyPrefix: "admins.vehicles.detailsPage",
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
 
   const isNewEntity = useRef<boolean>(!!locationState?.new);
   const [userCanEdit, setUserCanEdit] = useState<boolean>(
@@ -331,7 +337,7 @@ const ScreenAdminDetailVehicle = () => {
                       type="button"
                       variant="danger"
                       label={tMain("delete")}
-                      onClick={handleDeleteVehicle}
+                      onClick={() => {dispatch(setModalsData({ ...modalsState, showDeleteConfirmation: true }))}}
                       disabled={isLoadingDeleteVehicle}
                     />
                   </div>
@@ -419,6 +425,7 @@ const ScreenAdminDetailVehicle = () => {
           </div>
         </div>
       </div>
+      <DeleteConfirmation handleDeleteAdmin={handleDeleteVehicle} />
     </>
   );
 };
