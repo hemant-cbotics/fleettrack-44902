@@ -31,8 +31,13 @@ const ScreenDashboardAdminGroups = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  type TGroupListItem = {
+    id: string;
+    name: string;
+    is_active: boolean;
+  }
   const [currentAllVehicleList, setCurrentAllVehicleList] = React.useState<any[]>([]);
-  const [currentGroupVehicleList, setCurrentGroupVehicleList] = React.useState<any[]>([]);
+  const [currentGroupVehicleList, setCurrentGroupVehicleList] = React.useState<TGroupListItem[]>([]);
 
   const [leftSelectedVehicles, setleftSelectedVehicles] = React.useState<any[]>([]);
   const [rightSelectedVehicles, setrightSelectedVehicles] = React.useState<any[]>([]);
@@ -85,11 +90,12 @@ const ScreenDashboardAdminGroups = () => {
     )
   : [];
 
-  const groupVehicleList  = !!groupVehicles
+  const groupVehicleList: TGroupListItem[]  = !!groupVehicles
   ? (groupVehicles || ([] as OrganizationVehicle[])).map(
       (item: OrganizationVehicle, index: number) => ({
         id: item?.id,
         name: item?.vehicle_model + " " + item?.vehicle_make,
+        is_active: item?.is_active
       })
     )
   : [];
@@ -344,8 +350,10 @@ const ScreenDashboardAdminGroups = () => {
             >
               {t("in_selected_group")}
               <span className="flex-grow"></span>
-              <span className="text-sm text-accent-green">{t("active", { count: 2 })}</span>
-              <span className="text-sm text-field-error-border">{t("inactive", { count: 0 })}</span>
+              {currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText)).length > 0 && <>
+                <span className="text-sm text-accent-green">{t("active", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText) && groupItem.is_active).length })}</span>
+                <span className="text-sm text-field-error-border">{t("inactive", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText) && !groupItem.is_active).length })}</span>
+              </>}
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}

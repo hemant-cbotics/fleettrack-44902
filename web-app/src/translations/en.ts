@@ -439,7 +439,7 @@ export const language_en = {
         description_placeholder: "Please provide a description for the group",
         submit_button: "Create New Group",
         create_failed: "Failed to create driver. Please check the information that you have entered.",
-        create_success: "Driver has been created successfully.",
+        create_success: "Group has been created successfully.",
       },
     },
     fleettags: {
