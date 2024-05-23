@@ -63,6 +63,7 @@ const ScreenAdminDetailVehicle = () => {
           page: 1,
           page_size: 10,
           search: "",
+          is_active: "both",
         }) as OrganizationEntityListingPayload
   );
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
