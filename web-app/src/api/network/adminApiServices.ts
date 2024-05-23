@@ -535,7 +535,7 @@ export const AdminAPIs = createApi({
       },
     }),
 
-    //organization fleettag
+    //organization fleettag(All)
     organizationFleettags: builder.query<ListingResponse<OrganizationFleettag[]>, OrganizationEntityListingPayload>({ // TODO: change the type
       query: ({ organization_id, page, page_size, search }) => {
         return {
