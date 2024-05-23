@@ -4,7 +4,7 @@ from group.api.v1.serializers import GroupSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from generics.utils import CustomPagination
-# from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from generics.custom_permissions import IsPassedOrganizationPermission
 from vehicle.models import Vehicle  
@@ -15,8 +15,8 @@ class GroupViewset(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
     pagination_class = CustomPagination
-    filter_backends = [ SearchFilter, OrderingFilter]
-    filterset_fields = ['name', 'id']
+    filter_backends = [ SearchFilter, OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['name', 'id', 'is_active']
     search_fields = ['name', 'description', 'created_by__name', 'created_by__email', 'id']
     ordering_fields = ['name']
     ordering = ['-created_at']
