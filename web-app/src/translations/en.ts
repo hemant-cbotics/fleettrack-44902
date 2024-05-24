@@ -303,7 +303,7 @@ export const language_en = {
         sub_heading: "Create vehicles and vehicle details for monitoring",
         listing_heading: "Vehicles",
         accord_details: "Details",
-        accord_camera_id: "Camera ID",
+        accord_recorder_info: "Recorder Info",
         accord_group_membership: "Group Membership",
         toast: {
           vehicle_updated: "Vehicle has been updated successfully.",
