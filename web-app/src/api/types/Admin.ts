@@ -159,11 +159,7 @@ export type TEditOrganizationVehiclePayloadData = {
   vin: string;
   group_ids: number[];
   all_vehicles: boolean;
-  driver: {
-    id: number;
-    name: string;
-    phone: string;
-  };
+  driver: number;
 };
 
 export type EditOrganizationAccountPayload = {

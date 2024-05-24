@@ -114,7 +114,7 @@ type AdminFormFieldAsyncDropdownProps = AdminFormFieldDropdownProps & {
   loadOptions: ((inputValue: string, callback: (options: OptionsOrGroups<TSelectboxOption, GroupBase<TSelectboxOption>>) => void) => void/* | Promise<...>*/) | undefined;
 }
 
-const PseudoSelect: FC<{
+export const PseudoSelect: FC<{
   label: string | false;
 }> = ({ label }) => {
   return (

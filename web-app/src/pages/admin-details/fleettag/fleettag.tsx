@@ -83,7 +83,7 @@ const ScreenAdminDetailFleettag = () => {
       const data = {
           fleet_tag_id: values.fleet_tag_id,
           fleet_tag_name: values.fleet_tag_name,
-          last_event_time: values.last_event_time ? new Date(values.last_event_time).toISOString() : "",
+          last_event_time: values.last_event_time ? new Date(values.last_event_time).toISOString() : null,
           last_event_code: values.last_status_code,
           in_range: values.in_range === "Yes" ? true : false,
           in_range_device_id: values.in_range_device_id,

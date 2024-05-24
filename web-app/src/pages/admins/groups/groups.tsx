@@ -381,9 +381,9 @@ const ScreenDashboardAdminGroups = () => {
             >
               {t("in_selected_group")}
               <span className="flex-grow"></span>
-              {currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText)).length > 0 && <>
-                <span className="text-sm text-accent-green">{t("active", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText) && groupItem.is_active).length })}</span>
-                <span className="text-sm text-field-error-border">{t("inactive", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText) && !groupItem.is_active).length })}</span>
+              {currentGroupVehicleList?.filter((groupItem) => groupItem.name.toLowerCase().includes(rightSearchText.toLowerCase())).length > 0 && <>
+                <span className="text-sm text-accent-green">{t("active", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.toLowerCase().includes(rightSearchText.toLowerCase()) && groupItem.is_active).length })}</span>
+                <span className="text-sm text-field-error-border">{t("inactive", { count: currentGroupVehicleList?.filter((groupItem) => groupItem.name.toLowerCase().includes(rightSearchText.toLowerCase()) && !groupItem.is_active).length })}</span>
               </>}
             </label>
             <AppSearchBox
@@ -394,7 +394,7 @@ const ScreenDashboardAdminGroups = () => {
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {currentGroupVehicleList?.filter((groupItem) => groupItem.name.includes(rightSearchText))?.map((grpItem) => {
+                  {currentGroupVehicleList?.filter((groupItem) => groupItem.name.toLowerCase().includes(rightSearchText.toLowerCase()))?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
                         key={grpItem.id}

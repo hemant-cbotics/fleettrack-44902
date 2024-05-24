@@ -6,6 +6,7 @@ import {
   AdminFormFieldCheckbox,
   AdminFormFieldDropdown,
   AdminFormFieldInput,
+  PseudoSelect,
   TSelectboxOption,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
@@ -16,6 +17,7 @@ import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { OrganizationDriver } from "../../../api/types/Driver";
+import { useDebouncedCallback } from "use-debounce";
 
 interface VehicleDetailFormProps {
   values: any;
@@ -71,6 +73,9 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           } as TSelectboxOption))
     : [];
   };
+  // const debouncedLoadOptionsHandlerDriver = useDebouncedCallback(async (inputValue: string) => {
+  //   await loadOptionsHandlerDriver(inputValue);
+  // }, 500);
 
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
@@ -445,13 +450,14 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       </div>
 
       <div className="grid grid-cols-12 col-span-12">
-        <AdminFormFieldAsyncDropdown
+        {loadingData ? <PseudoSelect label={t("driver_id")} /> : 
+        (<AdminFormFieldAsyncDropdown
           loadingData={loadingData}
           label={t("driver_id")}
           id="driver_id"
           name="driver_id"
           value={values.driver_id}
-          // options={FUEL_TYPE_OPTIONS}
+          options={[{ value: values.driver_id, label: `#${values.driver_id} ${values.driver_name}` }]}
           loadOptions={loadOptionsHandlerDriver}
           onChange={(e) => {
             formikSetValue("driver_id", e?.value);
@@ -466,7 +472,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           error={errors.fuel_type}
           touched={touched.fuel_type}
           disabled={!userCanEdit}
-        />
+        />)}
       </div>
 
       <AdminFormFieldInput
