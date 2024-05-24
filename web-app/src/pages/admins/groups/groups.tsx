@@ -22,6 +22,7 @@ import FastBackwardIcon from "../../../assets/svg/fast-backward-icon.svg";
 import BackwardIcon from "../../../assets/svg/backward-icon.svg";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { FilterType } from "../../../api/types/Admin";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 
 const ScreenDashboardAdminGroups = () => {
@@ -172,7 +173,8 @@ const ScreenDashboardAdminGroups = () => {
         navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${groupId}`);
       })
       .catch((error) => {
-        console.error("Error: ", error);
+        const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+        toast.error(errors?.join(' '));
       });
   }
 
@@ -185,7 +187,8 @@ const ScreenDashboardAdminGroups = () => {
       navigate(routeUrls.dashboardChildren.adminChildren.groups);
     })
     .catch((error) => {
-      console.error("Error: ", error);
+      const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.deletion_failed')];
+      toast.error(errors?.join(' '));
     });
   }
 

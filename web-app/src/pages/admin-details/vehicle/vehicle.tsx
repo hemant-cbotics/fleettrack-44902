@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
@@ -153,7 +154,8 @@ const ScreenAdminDetailVehicle = () => {
         navigate(routeUrls.dashboardChildren.adminChildren.vehicles);
       })
       .catch((error) => {
-        console.error("Error: ", error);
+        const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+        toast.error(errors?.join(' '));
       });
     },
   });
@@ -222,7 +224,8 @@ const ScreenAdminDetailVehicle = () => {
       navigate(routeUrls.dashboardChildren.adminChildren.vehicles);
     })
     .catch((error) => {
-      console.error("Error: ", error);
+      const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.deletion_failed')];
+      toast.error(errors?.join(' '));
     });
   }
 
