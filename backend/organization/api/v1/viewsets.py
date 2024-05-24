@@ -48,11 +48,11 @@ class GetInvitedUserView(APIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            invited_user = InvitedUser.objects.get(id=kwargs['id'])
+            invited_user = InvitedUser.objects.get(id=kwargs['id'], is_accepted=False)
             data = self.serializer_class(invited_user).data
             return Response(data)
         except:
-            return Response({'error': 'Invited user not found'}, status=400)
+            return Response({'error': 'Invited user not found or the link has expired !!'}, status=400)
         
 class OnboardInvitedUserView(APIView):
     serializer_class = OnboardInvitedUserSerializer

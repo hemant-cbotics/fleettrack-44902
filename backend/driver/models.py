@@ -10,7 +10,7 @@ class Driver(CommonModel):
     name = models.CharField(max_length=255)
     nick_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    phone = models.IntegerField(null=True, blank=True)
+    phone = models.CharField(max_length = 30,null=True, blank=True)
     badge_employee_id = models.CharField(max_length=255, null=True, blank=True)
     card_id = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)

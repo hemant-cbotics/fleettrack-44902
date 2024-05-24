@@ -131,49 +131,20 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         disabled={!userCanEdit}
       />
 
-      <AdminFormFieldInput
-        label={t("unique_id")}
-        type="text"
-        id="unique_id"
-        name="unique_id"
-        value={values.unique_id}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={errors.unique_id}
-        touched={touched.unique_id}
-        disabled={!userCanEdit}
-      />
-
-      <AdminFormFieldInput
-        label={t("previous_unique_id")}
-        type="text"
-        id="previous_unique_id"
-        name="previous_unique_id"
-        value={values.previous_unique_id}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={errors.previous_unique_id}
-        touched={touched.previous_unique_id}
-        disabled={!userCanEdit}
-      />
-
-      <AdminFormFieldInput
-        label={t("unique_id_last_change")}
-        type="date"
-        id="unique_id_last_change"
-        name="unique_id_last_change"
-        value={values.unique_id_last_change ? new Date(values.unique_id_last_change).toISOString().slice(0, 10) : ""}
-        onChange={(e) => {
-          formikSetValue("unique_id_last_change", e.target.value);
-        }}
-        onBlur={(e) => {
-          formikSetTouched("unique_id_last_change", true);
-          handleBlur(e);
-        }}
-        error={errors.unique_id_last_change}
-        touched={touched.unique_id_last_change}
-        disabled={!userCanEdit}
-      />
+      <div className="col-span-12 grid grid-cols-12">
+        <AdminFormFieldInput
+          label={t("unique_id")}
+          type="text"
+          id="unique_id"
+          name="unique_id"
+          value={values.unique_id}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={errors.unique_id}
+          touched={touched.unique_id}
+          disabled={!userCanEdit}
+        />
+      </div>
 
       <div className="grid grid-cols-8 col-span-12">
         <AdminFormFieldCheckbox
@@ -735,6 +706,20 @@ const {
   }
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
+      <div className="col-span-12 grid grid-cols-8">
+        <AdminFormFieldCheckbox
+          label={t("all_vehicles")}
+          id="all_vehicles"
+          type="checkbox"
+          name="all_vehicles"
+          checked={!!values.all_vehicles}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={errors.all_vehicles}
+          touched={touched.all_vehicles}
+          disabled={!userCanEdit}
+        />
+      </div>
       <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
         {selectedGroups?.map((option:any) => (
           <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
