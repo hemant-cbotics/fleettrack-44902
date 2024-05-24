@@ -99,7 +99,7 @@ const ScreenDashboardAdminVehicles = () => {
         cellData: [
           item?.driver?.id, // "Driver Id",
           item?.unique_id ?? "-", // "Unique Id",
-          `${item?.vehicle_model} ${item?.vehicle_make}`, // "Description",
+          item?.vehicle_description, // "Description",
           item?.euipment_type ?? "-", // "Equipment Type (VIN)",
           item?.phone ?? "-", // "ECM VIN",
           item?.server_id ?? "-", // "Server ID",

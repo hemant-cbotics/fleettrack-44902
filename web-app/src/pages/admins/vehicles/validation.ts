@@ -9,16 +9,16 @@ export const formInitialValues = {
   license_plate: "",
 };
 
+const currentYear = new Date().getFullYear();
+
 export const YupValidationSchema = Yup.object().shape({
   make: Yup.string()
     .required("Please enter the vehicle make"),
 
-  model: Yup.string()
+  model: Yup.number()
     .required("Please enter the year of the vehicle")
-    .matches(
-      APP_CONFIG.REGEX.YEAR,
-      "Please enter a valid year"
-    ),
+    .test('len', 'Must be valid year', val => val ? val.toString().length === 4 : false)
+    .max(currentYear, "Vehicle model cannot be in the future"),
 
   vin: Yup.string()
     .required("Please enter the vehicle VIN")
