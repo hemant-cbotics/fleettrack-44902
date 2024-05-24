@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
@@ -124,9 +125,7 @@ const ScreenAdminDetailVehicle = () => {
         licence_plate: values.license_plate,
         map_route_color: values.map_route_color,
         maximum_speed: values.maximum_speed,
-        phone: values.phone_number,
         prev_recorder_id: values.previous_recorder_id,
-        prev_unique_id: values.previous_unique_id,
         recorder_id: values.recorder_id,
         recorder_id_last_changed:  values.recorder_id_last_changed ? new Date(values.recorder_id_last_changed).toISOString() : null,
         recorder_on: values.recorder_on,
@@ -135,7 +134,6 @@ const ScreenAdminDetailVehicle = () => {
         server_id: values.server_id,
         short_name: values.short_name,
         unique_id: values.unique_id,
-        unique_id_last_change: values.unique_id_last_change ? new Date(values.unique_id_last_change).toISOString() : null,
         vehicle_class: values.vehicle_class,
         vehicle_description: values.vehicle_description,
         vehicle_make: values.vehicle_make,
@@ -156,7 +154,8 @@ const ScreenAdminDetailVehicle = () => {
         navigate(routeUrls.dashboardChildren.adminChildren.vehicles);
       })
       .catch((error) => {
-        console.error("Error: ", error);
+        const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+        toast.error(errors?.join(' '));
       });
     },
   });
@@ -170,8 +169,6 @@ const ScreenAdminDetailVehicle = () => {
         server_id: dataSingleVehicle?.server_id || "",
         firmware_version: dataSingleVehicle?.firmware_version || "",
         unique_id: dataSingleVehicle?.unique_id || "",
-        previous_unique_id: dataSingleVehicle?.prev_unique_id || "",
-        unique_id_last_change: dataSingleVehicle?.unique_id_last_change || "",
         is_active: dataSingleVehicle?.is_active || false,
         vehicle_description: dataSingleVehicle?.vehicle_description || "",
         short_name: dataSingleVehicle?.short_name || "",
@@ -186,7 +183,6 @@ const ScreenAdminDetailVehicle = () => {
         vehicle_class: dataSingleVehicle?.vehicle_class || "",
         imei_number: dataSingleVehicle?.imei_or_esn_number || 0,
         serial_number: dataSingleVehicle?.serial_number || 0,
-        phone_number: dataSingleVehicle?.phone || 0,
         email: dataSingleVehicle?.email || "",
         group_pushpin_id: dataSingleVehicle?.group_pushin_id || 0,
         map_route_color: dataSingleVehicle?.map_route_color || "",
@@ -228,7 +224,8 @@ const ScreenAdminDetailVehicle = () => {
       navigate(routeUrls.dashboardChildren.adminChildren.vehicles);
     })
     .catch((error) => {
-      console.error("Error: ", error);
+      const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.deletion_failed')];
+      toast.error(errors?.join(' '));
     });
   }
 
@@ -396,7 +393,7 @@ const ScreenAdminDetailVehicle = () => {
                   loadingData={isFetchingSingleVehicle || !formikValuesReady}
                 />
               </Accordian>
-              <Accordian title={t("accord_camera_id")}>
+              <Accordian title={t("accord_recorder_info")}>
                 <VehicleCameraIdDetailForm
                   values={values}
                   errors={errors}

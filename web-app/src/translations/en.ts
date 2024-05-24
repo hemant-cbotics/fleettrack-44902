@@ -145,6 +145,7 @@ export const language_en = {
         accord_scorecard_weight_factors: "Scorecard Weight Factors",
         toast: {
           account_updated: "Account has been updated successfully.",
+          updation_failed: "Failed to update account. Please check the information that you have entered.",
         },
         form : {
           account_id: "Account ID",
@@ -274,6 +275,8 @@ export const language_en = {
         toast: {
           user_updated: "User has been updated successfully.",
           user_deleted: "User has been deleted successfully.",
+          updation_failed: "Failed to update user. Please check the information that you have entered.",
+          deletion_failed: "Failed to delete user. Please check the information that you have entered.",
         }
       }
     },
@@ -303,11 +306,13 @@ export const language_en = {
         sub_heading: "Create vehicles and vehicle details for monitoring",
         listing_heading: "Vehicles",
         accord_details: "Details",
-        accord_camera_id: "Camera ID",
+        accord_recorder_info: "Recorder Info",
         accord_group_membership: "Group Membership",
         toast: {
           vehicle_updated: "Vehicle has been updated successfully.",
           vehicle_deleted: "Vehicle has been deleted successfully.",
+          updation_failed: "Failed to update vehicle. Please check the information that you have entered.",
+          deletion_failed: "Failed to delete vehicle. Please check the information that you have entered.",
         },
         form: {
           vehicle_id: "Vehicle ID",
@@ -384,6 +389,8 @@ export const language_en = {
         toast: {
           driver_updated: "Driver has been updated successfully.",
           driver_deleted: "Driver has been deleted successfully.",
+          updation_failed: "Failed to update driver. Please check the information that you have entered.",
+          deletion_failed: "Failed to delete driver. Please check the information that you have entered.",
         },
         form: {
           driver_id: "Driver ID",
@@ -429,6 +436,8 @@ export const language_en = {
       toast: {
         group_updated: "Group has been updated successfully.",
         group_deleted: "Group has been deleted successfully.",
+        updation_failed: "Failed to update group. Please check the information that you have entered.",
+        deletion_failed: "Failed to delete group. Please check the information that you have entered.",
       },
       create_new: {
         heading: "Add New Group",
@@ -464,6 +473,8 @@ export const language_en = {
         toast: {
           fleettag_updated: "Fleet Tag has been updated successfully.",
           fleettag_deleted: "Fleet Tag has been deleted successfully.",
+          updation_failed: "Failed to update fleet tag. Please check the information that you have entered.",
+          deletion_failed: "Failed to delete fleet tag. Please check the information that you have entered.",
         },
         form: {
           fleet_tag_id: "Fleet Tag ID",

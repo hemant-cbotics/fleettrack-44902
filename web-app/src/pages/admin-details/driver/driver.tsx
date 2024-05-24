@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailDriver = () => {
   const { driverId } = useParams<{ driverId: any }>();
@@ -123,7 +124,8 @@ const ScreenAdminDetailDriver = () => {
         navigate(routeUrls.dashboardChildren.adminChildren.drivers);
       })
       .catch((error) => {
-        console.error("Error: ", error);
+        const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+        toast.error(errors?.join(' '));
       });
     },
   });
@@ -174,7 +176,8 @@ const ScreenAdminDetailDriver = () => {
       navigate(routeUrls.dashboardChildren.adminChildren.drivers);
     })
     .catch((error) => {
-      console.error("Error: ", error);
+      const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.deletion_failed')];
+      toast.error(errors?.join(' '));
     });
   };
 

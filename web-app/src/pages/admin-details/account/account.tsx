@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import { TUser } from "../../../api/types/User";
 import { useEditOrganizationAccountMutation } from "../../../api/network/adminApiServices";
 import { toast } from "react-toastify";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailAccount = () => {
   const [userCanEdit, setUserCanEdit] = useState(false);
@@ -136,7 +137,8 @@ const ScreenAdminDetailAccount = () => {
         navigate(routeUrls.dashboard);
       })
       .catch((error) => {
-        console.error("Error: ", error);
+        const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+        toast.error(errors?.join(' '));
       });
     },
   });

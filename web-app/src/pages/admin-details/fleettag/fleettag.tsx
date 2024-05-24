@@ -20,6 +20,7 @@ import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { TListData } from "./type";
 import { OrganizationFleettag } from "../../../api/types/Fleettag";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailFleettag = () => {
   const { fleettagId } = useParams<{ fleettagId: any }>();
@@ -101,7 +102,8 @@ const ScreenAdminDetailFleettag = () => {
           navigate(routeUrls.dashboardChildren.adminChildren.fleettags);
         })
         .catch((error) => {
-          console.error("Error: ", error);
+          const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.update_failed')];
+          toast.error(errors?.join(' '));
         });
     }
   });
@@ -149,7 +151,8 @@ const ScreenAdminDetailFleettag = () => {
       navigate(routeUrls.dashboardChildren.adminChildren.fleettags);
     })
     .catch((error) => {
-      console.error("Error: ", error);
+      const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.deletion_failed')];
+      toast.error(errors?.join(' '));
     });
   }
 

@@ -143,9 +143,7 @@ export type TEditOrganizationVehiclePayloadData = {
   licence_plate: string;
   map_route_color: string;
   maximum_speed: number;
-  phone: number;
   prev_recorder_id: string;
-  prev_unique_id: string;
   recorder_id: string;
   recorder_id_last_changed: string | null;
   recorder_on: string;
@@ -154,7 +152,6 @@ export type TEditOrganizationVehiclePayloadData = {
   server_id: string;
   short_name: string;
   unique_id: string;
-  unique_id_last_change: string | null;
   vehicle_class: string;
   vehicle_description: string;
   vehicle_make: string;
