@@ -19,7 +19,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     filter_backends = [ SearchFilter, OrderingFilter, DjangoFilterBackend]
     filterset_fields = ['short_name', 'email', 'is_active']
-    search_fields = ['short_name', 'email', 'added_by__name', 'added_by__email', 'vehicle_display_id', 'licence_plate']
+    search_fields = ['short_name', 'email', 'added_by__name', 'added_by__email', 'vehicle_display_id', 'licence_plate', 'unique_id', 'server_id', 'vehicle_description', 'ignition_input', 'euipment_type', 'id']
     ordering_fields = ['short_name', 'email', 'id']
     ordering = ['-created_at']
 
