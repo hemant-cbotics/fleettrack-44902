@@ -23,6 +23,7 @@ import BackwardIcon from "../../../assets/svg/backward-icon.svg";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { FilterType } from "../../../api/types/Admin";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import { useDebouncedCallback } from "use-debounce";
 
 
 const ScreenDashboardAdminGroups = () => {
@@ -45,7 +46,6 @@ const ScreenDashboardAdminGroups = () => {
   const [leftSelectedVehicles, setleftSelectedVehicles] = React.useState<any[]>([]);
   const [rightSelectedVehicles, setrightSelectedVehicles] = React.useState<any[]>([]);
 
-  const [leftSearchText, setLeftSearchText] = React.useState<string>("");
   const [rightSearchText, setRightSearchText] = React.useState<string>("");
 
   const [currentDescription, setCurrentDescription] = React.useState<string>("");
@@ -66,6 +66,12 @@ const ScreenDashboardAdminGroups = () => {
     error
   } =
     useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
+    setOrgGroupsQueryParams((prev) => {
+      return { ...prev, page: 1, search: value };
+    });
+  }, 500);
 
   const { data: dataSingleGroup, isFetching: isFetchingSingleGroup } = useSingleOrganizationGroupQuery( { organization_id: thisUserOrganizationId, group_id: parseInt(groupId) }, { skip: !groupId });
   const [ editOrganizationGroupApiTrigger , {isLoading: isLoadingEditGroup}] = useEditOrganizationGroupMutation();
@@ -151,10 +157,6 @@ const ScreenDashboardAdminGroups = () => {
     setCurrentAllVehicleList([...currentAllVehicleList, ...currentGroupVehicleList]);
     setCurrentGroupVehicleList([]);
     setrightSelectedVehicles([]);
-  }
-
-  const handleLeftSearchChange = (e: any) => {
-    setLeftSearchText(e.target.value);
   }
 
   const handleRightSearchChange = (e: any) => {
@@ -266,13 +268,15 @@ const ScreenDashboardAdminGroups = () => {
             </label>
             <AppSearchBox
               placeholder={t("search_placeholder")}
-              onChange={handleLeftSearchChange}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                debouncedSetSearchKeyword(e.target.value)
+              }
             />
             <div className="h-96 mt-4 p-2 border border-gray-500 rounded-lg overflow-y-auto">
               <fieldset>
                 <legend className="sr-only">Checkboxes</legend>
                 <div className="space-y-2">
-                  {currentAllVehicleList?.filter((groupItem) => groupItem.name.includes(leftSearchText))?.map((grpItem) => {
+                  {currentAllVehicleList?.map((grpItem) => {
                     return (
                       <GroupVehicleItem
                         key={grpItem.id}
