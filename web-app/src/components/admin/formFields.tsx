@@ -1,5 +1,6 @@
 import { FC, ReactNode, useState } from "react";
-import Select from "react-select";
+import Select, { GroupBase, OptionsOrGroups } from "react-select";
+import AsyncSelect from "react-select/async";
 
 type AdminFormFieldInputProps = {
   label: string;
@@ -109,6 +110,10 @@ type AdminFormFieldDropdownProps = {
   menuPlacement?: "auto" | "top" | "bottom";
 };
 
+type AdminFormFieldAsyncDropdownProps = AdminFormFieldDropdownProps & {
+  loadOptions: ((inputValue: string, callback: (options: OptionsOrGroups<TSelectboxOption, GroupBase<TSelectboxOption>>) => void) => void/* | Promise<...>*/) | undefined;
+}
+
 const PseudoSelect: FC<{
   label: string | false;
 }> = ({ label }) => {
@@ -214,6 +219,82 @@ export const AdminFormFieldDropdown: FC<AdminFormFieldDropdownProps> = (props) =
         <RealSelect {...props} />
       )}
     </>
+  );
+};
+
+export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> = ({
+  label,
+  id,
+  name,
+  placeholder = "",
+  onChange,
+  onBlur,
+  value,
+  options = [],
+  loadOptions,
+  touched,
+  error,
+  disabled = false,
+  readOnly = false,
+
+  customSelectboxClass = "",
+  customWrapperClass = "col-span-6",
+
+  menuPlacement = "auto",
+}) => {
+  let wrapperClass = touched && !!error ? "" : "";
+  let labelClass =
+    touched && !!error ? "text-field-error-dark" : "text-field-label-valid";
+  let inputClass =
+    touched && !!error
+      ? "border-field-error-border focus-visible:outline-field-error-dark text-field-error-dark"
+      : "border-gray-200 text-field-label-valid";
+  const floatingError = false;
+
+  const [selected, setSelected] = useState<string | null>(value ?? '');
+  const handleChange = (e: TSelectboxOption | null) => {
+    setSelected(`${e?.value}`);
+    onChange?.(e)
+  }
+
+  return (
+    <div className={`${
+      floatingError ? ` relative pb-4` : ""
+    } ${wrapperClass} ${customWrapperClass}`}>
+      {!!label && <label
+        htmlFor={id}
+        className={`block text-sm font-display font-semibold ${labelClass}`}
+      >
+        {label}
+      </label>}
+
+      <AsyncSelect
+        classNames={{
+          control: (state) =>
+            `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none ${
+              state.isFocused ? 'border-red-600' : 'border-grey-300'
+            } ${
+                state.isDisabled ? 'bg-gray-400' : ''
+              } ${inputClass} ${customSelectboxClass}`,
+        }}
+        placeholder={placeholder}
+        cacheOptions
+        loadOptions={loadOptions}
+        value={options.find(optItem => optItem.value === selected)}
+        onChange={handleChange}
+        isDisabled={disabled || readOnly}
+        menuPlacement={menuPlacement}
+      />
+      {touched && !!error && (
+        <p
+          className={`${
+            floatingError ? "absolute" : ""
+          } bg-field-error-light px-2 py-1 rounded text-field-error-dark text-xs mt-1`}
+        >
+          {error}
+        </p>
+      )}
+    </div>
   );
 };
 

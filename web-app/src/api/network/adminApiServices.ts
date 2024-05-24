@@ -659,6 +659,7 @@ export const {
 
   //driver admin
   useOrganizationDriversQuery,
+  useLazyOrganizationDriversQuery,
   useCreateOrganizationDriverMutation,
   useSingleOrganizationDriverQuery,
   useEditOrganizationDriverMutation,

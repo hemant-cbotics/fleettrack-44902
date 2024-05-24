@@ -14,6 +14,7 @@ export const APP_CONFIG = {
   LISTINGS: {
     PAGE_SIZES: [10, 20, 50, 100],
     DEFAULT_PAGE_SIZE: 10,
+    DROPDOWN_SEARCH_PAGE_SIZE: 20,
     LARGE_PAGE_SIZE: 100, // for groups
   },
   TOASTS: {
