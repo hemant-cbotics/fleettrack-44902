@@ -62,7 +62,8 @@ const ScreenChangePassword = () => {
       const isFormValid = invalidFields.length === 0 && dirty;
 
       return (
-        <form className="p-8 bg-white grid grid-cols-6 gap-6 rounded-3xl shadow-2xl" onSubmit={handleSubmit}>
+        <form className="p-8 bg-white grid grid-cols-6 gap-6 rounded-3xl shadow-2xl" onSubmit={handleSubmit} autoComplete="off">
+          <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
 
           <h2 className="col-span-6 text-3xl font-bold text-heading-black">
             {t("heading")}

@@ -141,11 +141,7 @@ const ScreenAdminDetailVehicle = () => {
         vin: values.vin,
         group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)) || [],
         all_vehicles: values.all_vehicles,
-        driver: {
-          id: values.driver_id,
-          name: values.driver_name,
-          phone: values.driver_phone_number,
-        }
+        driver: values.driver_id
       };
       editOrganizationVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId, data})
       .unwrap()

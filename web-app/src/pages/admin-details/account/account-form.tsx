@@ -50,6 +50,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.account_id}
         touched={touched.account_id}
         disabled={!userCanEdit}
+        readOnly={true}
       />
       <AdminFormFieldInput
         label={t("account_description")}

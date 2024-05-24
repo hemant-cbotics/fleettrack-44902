@@ -2,16 +2,22 @@ import { Formik } from "formik";
 import { FC, useEffect, useState } from "react";
 import { groupMembershipFormValidationSchema } from "./validation";
 import {
+  AdminFormFieldAsyncDropdown,
   AdminFormFieldCheckbox,
   AdminFormFieldDropdown,
   AdminFormFieldInput,
+  PseudoSelect,
+  TSelectboxOption,
 } from "../../../components/admin/formFields";
 import { useTranslation } from "react-i18next";
 import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
-import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
+import { useLazyOrganizationDriversQuery, useOrganizationDriversQuery, useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
 import { useLoggedInUserData } from "../../../utils/user";
 import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
+import { APP_CONFIG } from "../../../constants/constants";
+import { OrganizationDriver } from "../../../api/types/Driver";
+import { useDebouncedCallback } from "use-debounce";
 
 interface VehicleDetailFormProps {
   values: any;
@@ -40,8 +46,37 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
   userCanEdit,
   loadingData,
 }) => {
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
+
+  const [orgDriversQuery, {}] = useLazyOrganizationDriversQuery();
+  const [dropdownSearchResults, setDropdownSearchResults] = useState<OrganizationDriver[]>([]);
+
+  const loadOptionsHandlerDriver = async (inputValue: string) => {
+    const driversQueryResponse = await orgDriversQuery({
+      organization_id: thisUserOrganizationId ?? 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DROPDOWN_SEARCH_PAGE_SIZE,
+      search: inputValue,
+      is_active: "both",
+    })
+    const { data } = driversQueryResponse;
+    const { results } = data as any as { results: OrganizationDriver[] };
+    setDropdownSearchResults(results);
+    return !!results
+    ? (results || [] as OrganizationDriver[])
+        .map((item: OrganizationDriver, index: number) => (
+          {
+            value: `${item.id}`,
+            label: item.name,
+          } as TSelectboxOption))
+    : [];
+  };
+  // const debouncedLoadOptionsHandlerDriver = useDebouncedCallback(async (inputValue: string) => {
+  //   await loadOptionsHandlerDriver(inputValue);
+  // }, 500);
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldInput
@@ -415,18 +450,29 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       </div>
 
       <div className="grid grid-cols-12 col-span-12">
-        <AdminFormFieldInput
+        {loadingData ? <PseudoSelect label={t("driver_id")} /> : 
+        (<AdminFormFieldAsyncDropdown
+          loadingData={loadingData}
           label={t("driver_id")}
-          type="text"
           id="driver_id"
           name="driver_id"
           value={values.driver_id}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={errors.driver_id}
-          touched={touched.driver_id}
+          options={[{ value: values.driver_id, label: `#${values.driver_id} ${values.driver_name}` }]}
+          loadOptions={loadOptionsHandlerDriver}
+          onChange={(e) => {
+            formikSetValue("driver_id", e?.value);
+            const selectedDriver = dropdownSearchResults.find((item) => item.id === parseInt(`${e?.value}`));
+            formikSetValue("driver_name", selectedDriver?.name);
+            formikSetValue("driver_phone_number", selectedDriver?.phone);
+          }}
+          onBlur={(e) => {
+            formikSetTouched("driver_id", true);
+            handleBlur(e);
+          }}
+          error={errors.fuel_type}
+          touched={touched.fuel_type}
           disabled={!userCanEdit}
-        />
+        />)}
       </div>
 
       <AdminFormFieldInput
@@ -440,6 +486,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.driver_name}
         touched={touched.driver_name}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -453,6 +500,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.driver_phone_number}
         touched={touched.driver_phone_number}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldDropdown
