@@ -28,7 +28,7 @@ class Vehicle(UUIDModel):
     imei_or_esn_number = models.IntegerField(null=True, blank=True)
     serial_number = models.IntegerField(null=True, blank=True)
     country_code = models.IntegerField(null=True, blank=True)
-    phone = models.IntegerField(null=True, blank=True)
+    phone = models.CharField(max_length = 30,null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     group_pushin_id = models.IntegerField(null=True, blank=True)
     map_route_color = models.CharField(max_length=20, choices=VehicleConstants.MapRouterColor.choices(), default=VehicleConstants.MapRouterColor.DEFAULT.value)
