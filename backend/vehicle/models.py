@@ -47,6 +47,8 @@ class Vehicle(UUIDModel):
     recorder_id_last_changed = models.DateTimeField(default=None, null=True, blank=True)
     added_by = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='vehicles')
     organization = models.ForeignKey('organization.Organization', on_delete=models.CASCADE, related_name='vehicles', default=None, null=True, blank=True)
+    all_vehicles = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.licence_plate
