@@ -116,8 +116,11 @@ const ScreenDashboardAdminGroups = () => {
   useEffect(() => {
     setCurrentDescription(dataSingleGroup?.description ?? "");
     setCurrentGroupVehicleList(groupVehicleList);
-    setCurrentAllVehicleList(allVehicleList.filter((allVehicleItem) => !groupVehicleList.some((groupVehicleItem) => allVehicleItem.id === groupVehicleItem.id)))
-  }, [dataSingleGroup, dataOrgVehicles])
+  }, [dataSingleGroup])
+ 
+  useEffect(() => {
+    setCurrentAllVehicleList(allVehicleList.filter((allVehicleItem) => !currentGroupVehicleList.some((groupVehicleItem) => allVehicleItem.id === groupVehicleItem.id)))
+  }, [dataOrgVehicles])
 
   const handleLeftCheckboxChange = ({ item, isChecked }: { item: any; isChecked: boolean }) => {
     if(isChecked) {
