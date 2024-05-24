@@ -226,7 +226,7 @@ const ScreenAdminDetailAccount = () => {
         obstructed_camera_ai: account.obstructed_camera_ai ?? "",
         tailgating_ai: account.tailgating_ai ?? "",
       });
-      setTimeout(() => { setFormikValuesReady(true); }, 200); 
+      setTimeout(() => { setFormikValuesReady(true); }, 200);
     }
   }, []);
 
