@@ -164,7 +164,7 @@ const ScreenAdminDetailFleettag = () => {
       />
       <div  className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
-          <div className={`hidden xl:block lg:col-span-3 space-y-4${isFetchingOrgFleettags ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' hidden' : ''}`}>
+          <div className={`hidden xl:block lg:col-span-3 space-y-4${isFetchingOrgFleettags ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' xl:hidden' : ''}`}>
             <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={tAdmin("search_placeholder")}
