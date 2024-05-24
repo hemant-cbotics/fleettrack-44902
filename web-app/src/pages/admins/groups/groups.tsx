@@ -293,52 +293,68 @@ const ScreenDashboardAdminGroups = () => {
               <AdminFormFieldSubmit
                 type="button"
                 variant="primary-like"
-                label={t("add_all")}
+                label={
+                  <>
+                    <span className="hidden xl:block mr-2">{t("add_all")}</span>
+                    <img
+                      src={FastForwardIcon}
+                      alt="fast-forward-icon"
+                      className="size-5"
+                    />
+                  </>}
+                titleText={t("add_all")}
                 onClick={handleAddAll}
               />
-              <img
-                src={FastForwardIcon}
-                alt="fast-forward-icon"
-                className="absolute size-5 right-8 top-1/2 transform -translate-y-1/2"
-              />
             </div>
             <div className="relative">
               <AdminFormFieldSubmit
                 type="button"
                 variant="secondary"
-                label={t("add_selected")}
+                label={
+                  <>
+                    <span className="hidden xl:block mr-2">{t("add_selected")}</span>
+                    <img
+                      src={ForwardIcon}
+                      alt="fast-forward-icon"
+                      className="size-5"
+                    />
+                  </>}
+                titleText={t("add_selected")}
                 onClick={handleAddSelected}
               />
-              <img
-                src={ForwardIcon}
-                alt="fast-forward-icon"
-                className="absolute size-5 right-4 top-1/2 transform -translate-y-1/2"
-              />
             </div>
             <div className="relative">
               <AdminFormFieldSubmit
                 type="button"
                 variant="secondary"
-                label={t("remove_selected")}
+                label={
+                  <>
+                    <img
+                      src={BackwardIcon}
+                      alt="fast-forward-icon"
+                      className="size-5"
+                    />
+                    <span className="hidden xl:block ml-2">{t("remove_selected")}</span>
+                  </>}
+                titleText={t("remove_selected")}
                 onClick={handleRemoveSelected}
-              />
-              <img
-                src={BackwardIcon}
-                alt="fast-forward-icon"
-                className="absolute size-5 left-4 top-1/2 transform -translate-y-1/2"
               />
             </div>
             <div className="relative">
               <AdminFormFieldSubmit
                 type="button"
                 variant="primary-like"
-                label={t("remove_all")}
+                label={
+                  <>
+                    <img
+                      src={FastBackwardIcon}
+                      alt="fast-forward-icon"
+                      className="size-5"
+                    />
+                    <span className="hidden xl:block ml-2">{t("remove_all")}</span>
+                  </>}
+                titleText={t("remove_all")}
                 onClick={handleRemoveAll}
-              />
-              <img
-                src={FastBackwardIcon}
-                alt="fast-forward-icon"
-                className="absolute size-5 left-8 top-1/2 transform -translate-y-1/2"
               />
             </div>
             <div className="flex-grow"></div>
