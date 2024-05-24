@@ -264,7 +264,7 @@ const ScreenAdminDetailVehicle = () => {
           <div
             className={`hidden xl:block lg:col-span-3 space-y-4${
               isFetchingOrgVehicles ? " opacity-40 pointer-events-none" : ""
-            }${isNewEntity?.current ? " hidden" : ""}`}
+            }${isNewEntity?.current ? " xl:hidden" : ""}`}
           >
             <div className="font-bold text-lg leading-6 mt-2 mb-3">
               {t("listing_heading")}

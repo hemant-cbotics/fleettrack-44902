@@ -276,11 +276,12 @@ type AdminFormFieldSubmitProps = {
   type?: 'submit' | 'button';
   variant?: 'primary' | 'primary-like' | 'secondary' | 'danger-transparent' | 'danger' | 'success';
   label: string | ReactNode;
+  titleText?: string;
   onClick?: () => void;
   disabled?: boolean;
 };
 
-export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'submit', variant = 'secondary', label, onClick, disabled = false }) => {
+export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'submit', variant = 'secondary', label, titleText = '', onClick, disabled = false }) => {
   let variantClass = "";
   const disabledClass = "border-gray-200 bg-gray-200 text-gray-400"
   switch (variant) {
@@ -323,10 +324,11 @@ export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'su
   return (
     <div className="col-span-6">
       <button
-        className={`h-10 w-full px-4 rounded-lg border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
+        className={`flex items-center justify-center h-10 w-full px-4 rounded-lg border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
         type={type}
         onClick={onClick}
         disabled={disabled}
+        title={titleText}
       >
         {label}
       </button>
