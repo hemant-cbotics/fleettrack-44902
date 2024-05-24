@@ -39,7 +39,7 @@ class OrganizationInviteUserView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=400)
         else:
             return Response({'error': 'You do not have any organization'}, status=400)
         

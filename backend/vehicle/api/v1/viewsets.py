@@ -23,6 +23,9 @@ class VehicleViewSet(viewsets.ModelViewSet):
     ordering_fields = ['short_name', 'email', 'id']
     ordering = ['-created_at']
 
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_queryset(self):
         organization_id = self.request.GET.get('organization_id')
         return self.queryset.filter(organization=organization_id)
@@ -45,6 +48,10 @@ class VehicleViewSet(viewsets.ModelViewSet):
             driver_id = self.request.data.get('driver')
             if driver_id:
                 from driver.models import Driver
+                driver_assigned = Driver.objects.filter(vehicle_assigned=instance)
+                for driver_a in driver_assigned:
+                    driver_a.vehicle_assigned = None
+                    driver_a.save()
                 driver = Driver.objects.get(id=driver_id)
                 driver.vehicle_assigned = instance
                 driver.save()
