@@ -157,7 +157,7 @@ export type TEditOrganizationVehiclePayloadData = {
   vehicle_make: string;
   vehicle_model: number;
   vin: string;
-  group_ids: number[];
+  group_ids: string;
   all_vehicles: boolean;
   driver: number;
 };

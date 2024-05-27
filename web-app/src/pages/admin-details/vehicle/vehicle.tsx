@@ -139,7 +139,7 @@ const ScreenAdminDetailVehicle = () => {
         vehicle_make: values.vehicle_make,
         vehicle_model: values.vehicle_model,
         vin: values.vin,
-        group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)) || [],
+        group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)).join(','),
         all_vehicles: values.all_vehicles,
         driver: values.driver_id
       };
