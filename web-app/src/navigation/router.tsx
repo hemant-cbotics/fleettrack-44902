@@ -29,6 +29,7 @@ import ScreenDashboardAdminFleetTags from "../pages/admins/fleettag/fleettag"
 import ScreenDashboardAdminGeozones from "../pages/admins/geozones/geozones"
 import ScreenAdminDetailGeozone from "../pages/admin-details/geozone/geozone"
 import ScreenAdminDetailFleettag from "../pages/admin-details/fleettag/fleettag"
+import ScreenMapOverview from "../pages/map-overview/map-overview"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -117,7 +118,11 @@ const routes: RouteObject[] = [
       },
       {
         path: routeUrls.dashboardChildren.map_overview,
-        element: <TemporaryRoute />
+        element: <ScreenMapOverview />
+      },
+      {
+        path: routeUrls.dashboardChildren.map_overview + "/:deviceId",
+        element: <ScreenMapOverview />
       },
       {
         path: routeUrls.dashboardChildren.reports,

@@ -546,4 +546,28 @@ export const language_en = {
     sub_heading: "The page you are looking for does not exist.",
     back_to_home: "Back to Home",
   },
+  mapOverview: {
+    heading: "Map Overview",
+    listing_heading: "Listing",
+    search_placeholder: "Search Vehicle here...",
+    filter: {
+      heading: "Filters",
+      address: "Find Address",
+      traffic: "Traffic",
+      weather: "Weather",
+      street_view: "Street View",
+      three_d_building: "3D Building",
+      attribute_filtering: "Attribute Filtering",
+      spatial_filtering: "Spatial Filtering",
+      temporal_filtering: "Temporal Filtering",
+      hide_geozones: "Hide Geozones",
+      manage_geozones: "Manage Geozones",
+      clustering: "Clustering",
+      date: "Date",
+      time: "Time",
+      timezone: "Timezone",
+      auto_refresh_timer: "Auto Refresh Timer",
+    }
+  },
+  confirm: "Confirm",
 };
