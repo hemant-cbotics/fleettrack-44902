@@ -313,13 +313,14 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
   touched,
   error,
   disabled = false,
+  customWrapperClass = "col-span-4",
 }) => {
   const handleChange = (e:any) => {
     onChange?.(e)
   }
   
   return (
-    <div className="bg-white col-span-4 flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200 cursor-pointer">
+    <div className={`bg-white flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200 cursor-pointer ${customWrapperClass}`}>
       <label
         className={`block text-sm font-display font-semibold text-field-label-valid`}
       >
@@ -360,9 +361,10 @@ type AdminFormFieldSubmitProps = {
   titleText?: string;
   onClick?: () => void;
   disabled?: boolean;
+  customWrapperClass?: string;
 };
 
-export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'submit', variant = 'secondary', label, titleText = '', onClick, disabled = false }) => {
+export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'submit', variant = 'secondary', label, titleText = '', onClick, disabled = false, customWrapperClass = "col-span-6" }) => {
   let variantClass = "";
   const disabledClass = "border-gray-200 bg-gray-200 text-gray-400"
   switch (variant) {
@@ -403,7 +405,7 @@ export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'su
           : variantClass = "border-accent-blue-dark bg-transparent text-accent-blue-dark enabled:hover:bg-accent-blue-pale active:bg-accent-blue-dark active:text-accent-blue-pale";
   }
   return (
-    <div className="col-span-6">
+    <div className={customWrapperClass}>
       <button
         className={`flex items-center justify-center h-10 w-full px-4 rounded-lg border text-sm font-display font-semibold transition focus:outline-none focus:ring ${variantClass}`}
         type={type}
