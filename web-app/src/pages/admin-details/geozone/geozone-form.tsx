@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput } from "../../../components/admin/formFields";
+import BasicMap from "../../../components/maps/basicMap";
 
 export interface GeozoneDetailFormProps {
   values: any;
@@ -30,6 +31,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
+      <BasicMap className="col-span-12 mb-4 bg-gray-200 h-96" />
       <AdminFormFieldInput
         label={t("description")}
         type="text"

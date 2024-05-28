@@ -27,5 +27,9 @@ export const APP_CONFIG = {
   },
   DEBUG: {
     ALL: true,
-  }
+  },
+  MAPS: {
+    SCRIPT_ID: 'bing-maps-script',
+    SCRIPT_URL: (key: string) => `https://www.bing.com/api/maps/mapcontrol?key=${key}`, // callback=initMap&setLang=en&setMkt=en-US
+  },
 }
