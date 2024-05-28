@@ -61,9 +61,17 @@ const BasicMap: FC<TBasicMapProps> = ({ className = '' }) => {
             var m = new (window as any).Microsoft.Maps.Pushpin(
               new (window as any).Microsoft.Maps.Location(_.coords.latitude, _.coords.longitude + 0.001),
               {
-                icon: MapMarkerGreen,
                 anchor: new (window as any).Microsoft.Maps.Point(16, 32),
-                draggable: true
+                // color: 'green',
+                // cursor: 'pointer',
+                draggable: true,
+                enableClickedStyle: true,
+                enableHoverStyle: true,
+                icon: MapMarkerGreen,
+                subTitle: 'M1 Subtitle',
+                title: 'M1',
+                text: 'Test content',
+                visible: true,
               }
             );
             // add the pushpin to the map
