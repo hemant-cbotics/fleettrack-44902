@@ -3180,11 +3180,6 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.3.0.tgz#f6e14a97858d327252200242d4ccfe522c445522"
   integrity sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==
 
-bingmaps-react@^1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/bingmaps-react/-/bingmaps-react-1.2.10.tgz#2d3176c3c39dfde3c920db96c8c7d31b120ae8ff"
-  integrity sha512-fM887Sr6OIlo6ThmSpGfNEDssSytdnsMrbDTDs+YH/43etf0dlfcR4oaJvygy+fwn21hpP2lVvwTHUDZvGxZqA==
-
 bluebird@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
