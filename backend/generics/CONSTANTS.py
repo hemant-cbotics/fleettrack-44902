@@ -490,3 +490,27 @@ class UserConstants:
         Eight = 8
         Nine = 9
         TEN = 10
+
+class GeoZoneConstants:
+
+    @unique
+    class ZoneType(BaseEnum):
+        CIRCLE = "Circle"
+        POLYGON = "Polygon"
+        ROUTE = "Route"
+
+    @unique
+    class ZoneColor(BaseEnum):
+        DEFAULT = "Default"
+        BLACK = "Black"
+        BROWN = "Brown"
+        RED = "Red"
+        ORANGE = "Orange"
+        YELLOW = "Yellow"
+        GREEN = "Green"
+        BLUE = "Blue"
+        PURPLE = "Purple"
+        GRAY = "Gray"
+        WHITE = "White"
+        CYAN = "Cyan"
+        PINK = "Pink"
