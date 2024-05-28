@@ -507,11 +507,19 @@ export const language_en = {
         city: "City",
         type: "Zone Type(Shape)",
         submit_button: "Create New Geozone",
+        create_failed: "Failed to create geozone. Please check the information that you have entered.",
+        create_success: "Geozone has been created successfully.",
       },
       detailsPage: {
         heading: "Geozone Details",
         listing_heading: "Geozone Listing",
         accord_details: "Details",
+        toast: {
+          geozone_updated: "Geozone has been updated successfully.",
+          geozone_deleted: "Geozone has been deleted successfully.",
+          updation_failed: "Failed to update geozone. Please check the information that you have entered.",
+          deletion_failed: "Failed to delete geozone. Please check the information that you have entered.",
+        },
         form: {
           description: "Description(Address)",
           city: "City",

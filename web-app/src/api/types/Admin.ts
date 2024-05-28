@@ -183,3 +183,20 @@ export type EditOrganizationFleettagPayload = {
   data: any;
 };
 
+export type CreateOrganizationGeozonePayload = {
+  organization: number | null;
+  zone_id: string;
+  zone_type: string;
+};
+
+export type SingleOrganizationGeozonePayload = {
+  organization_id: number | null;
+  geozone_id: number;
+};
+
+
+export type EditOrganizationGeozonePayload = {
+  organization_id: number | null;
+  geozone_id: number;
+  data: any;
+};

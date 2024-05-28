@@ -3,6 +3,7 @@ import { API_ENDPOINTS, API_SERVER_URL } from "./endpoints";
 import {
   CreateOrganizationDriverPayload,
   CreateOrganizationFleettagPayload,
+  CreateOrganizationGeozonePayload,
   CreateOrganizationGroupPayload,
   CreateOrganizationUserPayload,
   CreateOrganizationUserResponse,
@@ -10,6 +11,7 @@ import {
   EditOrganizationAccountPayload,
   EditOrganizationDriverPayload,
   EditOrganizationFleettagPayload,
+  EditOrganizationGeozonePayload,
   EditOrganizationGroupPayload,
   EditOrganizationUserPayload,
   EditOrganizationVehiclePayload,
@@ -17,6 +19,7 @@ import {
   OrganizationUser,
   SingleOrganizationDriverPayload,
   SingleOrganizationFleettagPayload,
+  SingleOrganizationGeozonePayload,
   SingleOrganizationGroupPayload,
   SingleOrganizationUserPayload,
   SingleOrganizationVehiclePayload,
@@ -32,6 +35,7 @@ import { OrganizationDriver } from "../types/Driver";
 import { OrganizationGroup } from "../types/Group";
 import { OrganizationAccount } from "../types/Account";
 import { OrganizationFleettag } from "../types/Fleettag";
+import { OrganizationGeozone } from "../types/Geozone";
 
 export enum AdminApiTags {
   USER_CREATED = 'USER_CREATED',
@@ -58,6 +62,11 @@ export enum AdminApiTags {
   FLEETTAG_MODIFIED = 'FLEETTAG_MODIFIED',
   FLEETTAG_DELETED = 'FLEETTAG_DELETED',
   FLEETTAG_SINGLE = 'FLEETTAG_SINGLE',
+
+  GEOZONE_CREATED = 'GEOZONE_CREATED',
+  GEOZONE_MODIFIED = 'GEOZONE_MODIFIED',
+  GEOZONE_DELETED = 'GEOZONE_DELETED',
+  GEOZONE_SINGLE = 'GEOZONE_SINGLE',
 }
 
 export const AdminAPIs = createApi({
@@ -87,6 +96,11 @@ export const AdminAPIs = createApi({
     AdminApiTags.FLEETTAG_MODIFIED,
     AdminApiTags.FLEETTAG_DELETED,
     AdminApiTags.FLEETTAG_SINGLE,
+
+    AdminApiTags.GEOZONE_CREATED,
+    AdminApiTags.GEOZONE_MODIFIED,
+    AdminApiTags.GEOZONE_DELETED,
+    AdminApiTags.GEOZONE_SINGLE,
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API_SERVER_URL,
@@ -636,7 +650,106 @@ export const AdminAPIs = createApi({
       },
     }),
     
+    //organization geozone
+    organizationGeozones: builder.query<ListingResponse<OrganizationGeozone[]>, OrganizationEntityListingPayload>({ // TODO: change the type
+      query: ({ organization_id, page, page_size, search }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_GEOZONES,
+          params: {
+            organization_id,
+            page,
+            page_size,
+            search,
+          },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.GEOZONE_CREATED, AdminApiTags.GEOZONE_MODIFIED, AdminApiTags.GEOZONE_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: ListingResponse<OrganizationGeozone[]>) => {
+        return response;
+      },
+    }),
 
+    // create organization geozone
+    createOrganizationGeozone: builder.mutation<OrganizationGeozone, CreateOrganizationGeozonePayload>({
+      query: (params: CreateOrganizationGeozonePayload) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.ORGANIZATION_GEOZONES,
+          method: API_METHODS.POST,
+          body: params
+        }
+      },
+      invalidatesTags: [AdminApiTags.GEOZONE_CREATED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationGeozone) => {
+        return response;
+      },
+    }),
+
+    // single organization geozone
+    singleOrganizationGeozone: builder.query<OrganizationGeozone, SingleOrganizationGeozonePayload>({
+      query: ({ organization_id, geozone_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_GEOZONE(geozone_id),
+          params: { organization_id },
+          method: API_METHODS.GET,
+        };
+      },
+      providesTags: [AdminApiTags.GEOZONE_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationGeozone) => {
+        return response;
+      },
+    }),
+
+    //edit organization geozone
+    editOrganizationGeozone: builder.mutation<OrganizationGeozone, EditOrganizationGeozonePayload>({
+      query: ({ organization_id, geozone_id, data}) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_GEOZONE(geozone_id),
+          params: { organization_id },
+          method: API_METHODS.PATCH,
+          body: data
+        }
+      },
+      invalidatesTags: [AdminApiTags.GEOZONE_MODIFIED, AdminApiTags.GEOZONE_SINGLE],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: OrganizationGeozone) => {
+        return response;
+      },
+    }),
+
+    //delete organization geozone
+    deleteSingleGeozone: builder.mutation<void, SingleOrganizationGeozonePayload>({
+      query: ({ organization_id, geozone_id }) => {
+        return {
+          url: API_ENDPOINTS.ADMINS.SINGLE_ORGANIZATION_GEOZONE(geozone_id),
+          params: { organization_id },
+          method: API_METHODS.DELETE,
+        };
+      },
+      invalidatesTags: [AdminApiTags.GEOZONE_DELETED],
+      transformErrorResponse(baseQueryReturnValue) {
+        handleAuthErrorCode(baseQueryReturnValue);
+        return baseQueryReturnValue;
+      },
+      transformResponse: (response: void) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -681,5 +794,12 @@ export const {
   useSingleOrganizationFleettagQuery,
   useEditOrganizationFleettagMutation,
   useDeleteSingleFleettagMutation,
+
+  //geozone admin
+  useOrganizationGeozonesQuery,
+  useCreateOrganizationGeozoneMutation,
+  useSingleOrganizationGeozoneQuery,
+  useEditOrganizationGeozoneMutation,
+  useDeleteSingleGeozoneMutation,
   
 } = AdminAPIs;

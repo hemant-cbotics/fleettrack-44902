@@ -1,6 +1,11 @@
-import { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput } from "../../../components/admin/formFields";
+import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
+import { useLoggedInUserData } from "../../../utils/user";
+import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
+import { OrganizationGroup } from "../../../api/types/Group";
+import CloseIcon from "../../../assets/svg/close-icon.svg";
 
 export interface GeozoneDetailFormProps {
   values: any;
@@ -15,6 +20,7 @@ export interface GeozoneDetailFormProps {
     shouldValidate?: boolean
   ) => void;
   userCanEdit: boolean;
+  loadingData: boolean;
 }
 
 export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({ 
@@ -26,8 +32,50 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   handleBlur,
   formikSetTouched,
   userCanEdit,
+  loadingData,
  }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
+const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
+const [selectedGroups, setSelectedGroups] = React.useState(values.assign_group);
+const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
+const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
+  organization_id: thisUserOrganizationId ?? 0,
+  page: 1,
+  page_size: 100,
+  search: ""
+});
+
+const {
+  data: dataOrgGroups,
+} =
+  useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  const { results } = dataOrgGroups ?? {};
+  const groupData = !!results
+  ? (results || ([] as OrganizationGroup[])).map(
+      (item: OrganizationGroup, index: number) => ({
+        value: item?.id.toString(),
+        label: item?.name,
+      })
+    )
+  : [];
+
+  useEffect(() => {
+    setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
+    formikSetValue('assign_group', selectedGroups);
+  }, [selectedGroups, dataOrgGroups])
+
+  const handleChangeGroup = (e: any) => {
+    if(e?.value){
+      setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
+    }
+  }
+
+  const onRemoveFromGroup = (option: any) => {
+    setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
+    formikSetValue('assign_group', selectedGroups);
+  }
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <AdminFormFieldInput
@@ -45,6 +93,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("city")}
         id="city"
         name="city"
@@ -58,10 +107,11 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           { label: "DEF", value: "def" },
           { label: "GHI", value: "ghi" },
         ]}
-        disabled={!userCanEdit}
+        disabled={true}
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("zone_type")}
         id="zone_type"
         name="zone_type"
@@ -70,11 +120,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         onBlur={(e) => {formikSetTouched("zone_type", true); handleBlur(e)}}
         error={errors.zone_type}
         touched={touched.zone_type}
-        options={[
-          { label: "Circle", value: "circle" },
-          { label: "Polygon", value: "polygon" },
-          { label: "Rectangle", value: "rectangle" },
-        ]}
+        options={ZONE_TYPES_OPTIONS}
         disabled={!userCanEdit}
       />
 
@@ -105,37 +151,41 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("overlap_priority")}
         id="overlap_priority"
         name="overlap_priority"
-        value={values.overlap_priority}
+        value={values.overlap_priority.toString()}
         onChange={(e) => {formikSetValue("overlap_priority", e?.value)}}
         onBlur={(e) => {formikSetTouched("overlap_priority", true); handleBlur(e)}}
         error={errors.overlap_priority}
         touched={touched.overlap_priority}
-        options={[
-          { label: "High", value: "high" },
-          { label: "Medium", value: "medium" },
-          { label: "Low", value: "low" },
-        ]}
+        options={OVERLAP_PRIORITY_OPTIONS}
         disabled={!userCanEdit}
       />
 
+      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
+        {selectedGroups?.map((option:any) => (
+          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
+            <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
+            <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
+          </div>
+        ))}
+      </div>
+
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("assign_group")}
         id="assign_group"
         name="assign_group"
-        value={values.assign_group}
-        onChange={(e) => {formikSetValue("assign_group", e?.value)}}
+        value={filteredGroupData?.[0]?.value}
+        onChange={handleChangeGroup}
         onBlur={(e) => {formikSetTouched("assign_group", true); handleBlur(e)}}
         error={errors.assign_group}
         touched={touched.assign_group}
-        options={[
-          { label: "Group 1", value: "group1" },
-          { label: "Group 2", value: "group2" },
-          { label: "Group 3", value: "group3" },
-        ]}
+        options={filteredGroupData}
         disabled={!userCanEdit}
+        customWrapperClass="col-span-12"
       />
 
       <AdminFormFieldCheckbox
@@ -178,6 +228,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldDropdown
+        loadingData={loadingData}
         label={t("zone_color")}
         id="zone_color"
         name="zone_color"
@@ -186,28 +237,20 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         onBlur={(e) => {formikSetTouched("zone_color", true); handleBlur(e)}}
         error={errors.zone_color}
         touched={touched.zone_color}
-        options={[
-          { label: "Red", value: "red" },
-          { label: "Green", value: "green" },
-          { label: "Blue", value: "blue" },
-        ]}
+        options={ZONE_COLOR_OPTIONS}
         disabled={!userCanEdit}
       />
 
-      <AdminFormFieldDropdown
+      <AdminFormFieldInput
         label={t("speed_limit")}
+        type="text"
         id="speed_limit"
         name="speed_limit"
         value={values.speed_limit}
-        onChange={(e) => {formikSetValue("speed_limit", e?.value)}}
-        onBlur={(e) => {formikSetTouched("speed_limit", true); handleBlur(e)}}
+        onChange={handleChange}
+        onBlur={handleBlur}
         error={errors.speed_limit}
         touched={touched.speed_limit}
-        options={[
-          { label: "10", value: "10" },
-          { label: "20", value: "20" },
-          { label: "30", value: "30" },
-        ]}
         disabled={!userCanEdit}
       />
     </div>

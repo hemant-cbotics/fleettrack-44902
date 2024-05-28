@@ -6,6 +6,11 @@ import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { Formik } from "formik";
 import { TFormFieldNames, YupValidationSchema, formInitialValues } from "./validation";
 import { AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { useCreateOrganizationGeozoneMutation } from "../../../api/network/adminApiServices";
+import { toast } from "react-toastify";
+import { routeUrls } from "../../../navigation/routeUrls";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import { ZONE_TYPES_OPTIONS } from "./constants";
 
 const AdminsGeozonesCreateNew = () => {
   const { t: tMain } = useTranslation();
@@ -15,6 +20,8 @@ const AdminsGeozonesCreateNew = () => {
   const navigate = useNavigate();
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
+
+  const [createOrgGeozoneAPITrigger] = useCreateOrganizationGeozoneMutation();
 
   const hideModal = () => {
     dispatch(setModalsData({ ...modalsState, showCreateGeozone: false }));
@@ -31,7 +38,29 @@ const AdminsGeozonesCreateNew = () => {
             initialValues={formInitialValues}
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              console.log('>>>', values);
+              createOrgGeozoneAPITrigger({
+                organization: thisUserOrganizationId ?? 0,
+                zone_id: values.id,
+                // zone_city: values.city,
+                zone_type: values.type
+              })
+                .unwrap()
+                .then((data) => {
+                  if(!!data?.created_at) {
+                    dispatch(setModalsData({ ...modalsState, showCreateGeozone: false }));
+                    toast.success(t('create_success'), { autoClose: 10000 });
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.geozones}/${data?.id}`, { state: { new: true } });
+                  } else {
+                    toast.error(tMain('toast.general_error'));
+                  }
+                })
+                .catch((error) => {
+                  const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('create_failed')];
+                  toast.error(errors?.join(' '));
+                })
+                .finally(() => {
+                  setSubmitting(false);
+                });
             }}
           >
             {({
@@ -73,7 +102,7 @@ const AdminsGeozonesCreateNew = () => {
                   touched={touched.id}
                 />
 
-                <AdminFormFieldDropdown
+                {/* <AdminFormFieldDropdown
                   label={t("city")}
                   id="city"
                   name="city"
@@ -82,14 +111,16 @@ const AdminsGeozonesCreateNew = () => {
                   onBlur={(e) => {setTouched({city: true}); handleBlur(e)}}
                   error={errors.city}
                   touched={touched.city}
-                />
+                  disabled={true}
+                /> */}
 
                 <AdminFormFieldDropdown
                   label={t("type")}
                   id="type"
                   name="type"
-                  // value={values.type}
-                  onChange={(e) => setFieldValue("type", e)}
+                  value={values.type}
+                  options={ZONE_TYPES_OPTIONS}
+                  onChange={(e) => setFieldValue("type", e?.value)}
                   onBlur={(e) => {setTouched({type: true}); handleBlur(e)}}
                   error={errors.type}
                   touched={touched.type}
