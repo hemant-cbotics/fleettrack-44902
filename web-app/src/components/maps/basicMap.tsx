@@ -1,7 +1,6 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { APP_CONFIG } from "../../constants/constants";
 import { asyncLoadScript, removeScript } from "../../utils/common";
-import BingMapsReact from "bingmaps-react";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
 import MapMarkerRed from "../../assets/svg/map-marker-red.svg";
 import MapMarkerGreen from "../../assets/svg/map-marker-green.svg";
