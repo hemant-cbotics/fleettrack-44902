@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
@@ -13,69 +13,14 @@ import { useFormik } from "formik";
 import Accordian from "../../../components/accordian";
 import { geozoneDetailsInitialValues, geozoneDetailsYupValidationSchema } from "./validation";
 import { GeozoneDetailForm } from "./geozone-form";
-
-const listData = [
-  {
-    id: 1,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 2,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 3,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 4,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 5,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 6,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 7,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 8,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 9,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  },
-  {
-    id: 10,
-    type: "Polygon",
-    description: "Custom Zone 5100 popular",
-    radius: "radius meter 100",
-  }
-]
+import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useDeleteSingleGeozoneMutation, useEditOrganizationGeozoneMutation, useOrganizationGeozonesQuery, useSingleOrganizationGeozoneQuery } from "../../../api/network/adminApiServices";
+import { TListData } from "./type";
+import { OrganizationGeozone } from "../../../api/types/Geozone";
+import { toast } from "react-toastify";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -84,7 +29,9 @@ const ScreenAdminDetailGeozone = () => {
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.geozones" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage" });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const isNewEntity = useRef<boolean>(!!locationState?.new);
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
 
@@ -108,24 +55,105 @@ const ScreenAdminDetailGeozone = () => {
     });
   }, 500);
 
+  const {
+    data: dataOrgGeozones,
+    isFetching: isFetchingOrgGeozones,
+    error,
+  } = useOrganizationGeozonesQuery(orgGeozonesQueryParams);
+  const { results } = dataOrgGeozones || {};
+
+  const { data: dataSingleGeozone, isFetching: isFetchingSingleGeozone } = useSingleOrganizationGeozoneQuery( { organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId) }, { skip: !geozoneId });
+  const [ editOrganizationGeozoneApiTrigger , {isLoading: isLoadingEditGeozone}] = useEditOrganizationGeozoneMutation();
+  const [ deleteSingleGeozoneApiTrigger, {isLoading: isLoadingDeleteGeozone}] = useDeleteSingleGeozoneMutation();
+
+  const listData: TListData[] = !!results
+    ? (results || ([] as OrganizationGeozone[])).map(
+        (item: OrganizationGeozone, index: number) => ({
+          id: item?.id,
+          zone_id: item?.zone_id || "-",
+          zone_type: item?.zone_type || "-",
+          description: item?.description || "-",
+          radius: item?.radius || "-",
+        })
+      )
+    : [];
+
+  const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
+  useEffect(() => {
+    if(isFetchingSingleGeozone) {
+      setFormikValuesReady(false);
+    }
+  }, [isFetchingSingleGeozone]);
   const formik = useFormik({
     initialValues: geozoneDetailsInitialValues,
     validationSchema: geozoneDetailsYupValidationSchema,
-    onSubmit: () => {console.log("Submit")}
+    onSubmit: (values) => {
+      const data = {
+        zone_type: values.zone_type,
+        city: values.city,
+        description: values.description,
+        geocode: values.geocode,
+        lat_lng: values.latitude_longitude,
+        overlap_priority: values.overlap_priority,
+        reverse_geocode: values.reverse_geocode,
+        arrival_geozone: values.arrival_zone,
+        departure_zone: values.departure_zone,
+        zone_color: values.zone_color,
+        speed_limit: values.speed_limit,
+        group_ids: values.assign_group?.map((item: any) => parseInt(item.id)).join(','),
+      }
+      editOrganizationGeozoneApiTrigger({organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId), data: data})
+        .unwrap()
+        .then(() => {
+          toast.success(t("toast.geozone_updated"));
+          navigate(routeUrls.dashboardChildren.adminChildren.geozones);
+        })
+        .catch((error) => {
+          const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+          toast.error(errors?.join(' '));
+        });
+    }
   });
 
+  useEffect(() => {
+    if(dataSingleGeozone){
+      setFormikValuesReady(false); // simulate render delay for select pre-selected values
+      formik.setValues({
+        description: dataSingleGeozone?.description || "",
+        city: dataSingleGeozone?.city || "",
+        zone_type: dataSingleGeozone?.zone_type || "",
+        geocode: dataSingleGeozone?.geocode || "",
+        latitude_longitude: dataSingleGeozone?.lat_lng || "",
+        overlap_priority: dataSingleGeozone?.overlap_priority || 0,
+        assign_group: dataSingleGeozone?.groups || [],
+        reverse_geocode: dataSingleGeozone?.reverse_geocode || false,
+        arrival_zone: dataSingleGeozone?.arrival_geozone || false,
+        departure_zone: dataSingleGeozone?.departure_zone || false,
+        zone_color: dataSingleGeozone?.zone_color || "",
+        speed_limit: dataSingleGeozone?.speed_limit || "",
+      });
+      setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
+    }
+  }, [dataSingleGeozone, geozoneId])
+
   const handleEditGeozone = () => {
-    console.log("Edit Geozone");
+    if(userCanEdit){
+      formik.handleSubmit();
+    }
   }
 
   const handleDeleteGeozone = () => {
-    console.log("Delete Geozone");
+    deleteSingleGeozoneApiTrigger({organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId)})
+    .unwrap()
+    .then(() => {
+      toast.success(t("toast.geozone_deleted"));
+      navigate(routeUrls.dashboardChildren.adminChildren.geozones);
+    })
+    .catch((error) => {
+      const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.deletion_failed')];
+      toast.error(errors?.join(' '));
+    });
   }
-
-  const isFetchingOrgGeozones = false;
-  const isLoadingEditGeozone = false;
-  const isLoadingDeleteGeozone = false;
-  const isFetchingSingleGeozone = false;
 
   const {
     values,
@@ -171,10 +199,10 @@ const ScreenAdminDetailGeozone = () => {
                     <div className="grid grid-cols-4">
                       <div className="col-span-3">
                         <p className="font-semibold text-sm leading-6 text-blue-900">
-                          {item.id}
+                          {item.zone_id}
                         </p>
                         <p className="font-normal text-xs leading-6 text-gray-500">
-                          {item.type}
+                          {item.zone_type}
                         </p>
                       </div>
                       <div className="col-span-1 font-bold text-xs leading-4 text-right">
@@ -214,7 +242,7 @@ const ScreenAdminDetailGeozone = () => {
                         type="button"
                         variant="danger"
                         label={tMain("delete")}
-                        onClick={handleDeleteGeozone}
+                        onClick={() => {dispatch(setModalsData({ ...modalsState, showDeleteConfirmation: true }))}}
                         disabled={isLoadingEditGeozone}
                       />
                     </div>
@@ -242,6 +270,7 @@ const ScreenAdminDetailGeozone = () => {
                       handleBlur={handleBlur}
                       formikSetTouched={formik.setFieldTouched}
                       userCanEdit={userCanEdit}
+                      loadingData={isFetchingSingleGeozone || !formikValuesReady}
                     />
                   </Accordian>
                 </form>
@@ -249,6 +278,7 @@ const ScreenAdminDetailGeozone = () => {
             </div>
           </div>
         </div>
+        <DeleteConfirmation handleDeleteAdmin={handleDeleteGeozone} />
       </>
   );
 }
