@@ -167,8 +167,8 @@ const {
       />
 
       <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
-        {selectedGroups?.map((option:any) => (
-          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
+        {selectedGroups?.map((option:any, i: number) => (
+          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={`${option.id}_${i}`}>
             <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
             <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
           </div>
