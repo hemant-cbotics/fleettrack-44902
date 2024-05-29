@@ -46,11 +46,10 @@ const AdminsGroupsCreateNew = () => {
               })
                 .unwrap()
                 .then((data) => {
-                  console.log('>>>', data);
                   if(!!data?.created_at) {
                     dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
                     toast.success(t('create_success'), { autoClose: 10000 });
-                    navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${data?.id}`, { state: { new: true } });
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.groups}`);
                   } else {
                     toast.error(tMain('toast.general_error'));
                   }

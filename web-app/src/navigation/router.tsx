@@ -30,6 +30,7 @@ import ScreenDashboardAdminGeozones from "../pages/admins/geozones/geozones"
 import ScreenAdminDetailGeozone from "../pages/admin-details/geozone/geozone"
 import ScreenAdminDetailFleettag from "../pages/admin-details/fleettag/fleettag"
 import ScreenMapOverview from "../pages/map-overview/map-overview"
+import ScreenAdminDetailGroup from "../pages/admin-details/group/group"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -171,6 +172,10 @@ const routes: RouteObject[] = [
           {
             path: routeUrls.dashboardChildren.adminChildren.groups,
             element: <ScreenDashboardAdminGroups />
+          },
+          {
+            path: routeUrls.dashboardChildren.adminChildren.groups + "/:groupId",
+            element: <ScreenAdminDetailGroup />
           },
           {
             path: routeUrls.dashboardChildren.adminChildren.groups + "/:groupId",
