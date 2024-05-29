@@ -14,7 +14,7 @@ def generate_random_password(length=12):
 
 class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
-    max_page_size = 20  # Optional: set maximum page size
+    max_page_size = 200  # Optional: set maximum page size
 
 def email_otp_generator(length=settings.EMAIL_OTP_LENGTH):
     return ''.join(random.choice(string.digits) for i in range(int(length)))

@@ -33,6 +33,7 @@ urlpatterns = [
     path("driver/ap1/v1/", include("driver.api.v1.urls", namespace="driver")),
     path("group/ap1/v1/", include("group.api.v1.urls", namespace="group")),
     path("fleet-tag/ap1/v1/", include("fleet_tag.api.v1.urls", namespace="fleet-tag")),
+    path("geozone/ap1/v1/", include("geozone.api.v1.urls", namespace="geozone")),
     path("rest-auth/", include("dj_rest_auth.urls")),
     # Override email confirm to use allauth's HTML view instead of rest_auth's API view
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),

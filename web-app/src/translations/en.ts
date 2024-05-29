@@ -507,11 +507,19 @@ export const language_en = {
         city: "City",
         type: "Zone Type(Shape)",
         submit_button: "Create New Geozone",
+        create_failed: "Failed to create geozone. Please check the information that you have entered.",
+        create_success: "Geozone has been created successfully.",
       },
       detailsPage: {
         heading: "Geozone Details",
         listing_heading: "Geozone Listing",
         accord_details: "Details",
+        toast: {
+          geozone_updated: "Geozone has been updated successfully.",
+          geozone_deleted: "Geozone has been deleted successfully.",
+          updation_failed: "Failed to update geozone. Please check the information that you have entered.",
+          deletion_failed: "Failed to delete geozone. Please check the information that you have entered.",
+        },
         form: {
           description: "Description(Address)",
           city: "City",
@@ -546,4 +554,28 @@ export const language_en = {
     sub_heading: "The page you are looking for does not exist.",
     back_to_home: "Back to Home",
   },
+  mapOverview: {
+    heading: "Map Overview",
+    listing_heading: "Listing",
+    search_placeholder: "Search Vehicle here...",
+    filter: {
+      heading: "Filters",
+      address: "Find Address",
+      traffic: "Traffic",
+      weather: "Weather",
+      street_view: "Street View",
+      three_d_building: "3D Building",
+      attribute_filtering: "Attribute Filtering",
+      spatial_filtering: "Spatial Filtering",
+      temporal_filtering: "Temporal Filtering",
+      hide_geozones: "Hide Geozones",
+      manage_geozones: "Manage Geozones",
+      clustering: "Clustering",
+      date: "Date",
+      time: "Time",
+      timezone: "Timezone",
+      auto_refresh_timer: "Auto Refresh Timer",
+    }
+  },
+  confirm: "Confirm",
 };

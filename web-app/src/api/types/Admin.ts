@@ -157,7 +157,7 @@ export type TEditOrganizationVehiclePayloadData = {
   vehicle_make: string;
   vehicle_model: number;
   vin: string;
-  group_ids: number[];
+  group_ids: string;
   all_vehicles: boolean;
   driver: number;
 };
@@ -183,3 +183,20 @@ export type EditOrganizationFleettagPayload = {
   data: any;
 };
 
+export type CreateOrganizationGeozonePayload = {
+  organization: number | null;
+  zone_id: string;
+  zone_type: string;
+};
+
+export type SingleOrganizationGeozonePayload = {
+  organization_id: number | null;
+  geozone_id: number;
+};
+
+
+export type EditOrganizationGeozonePayload = {
+  organization_id: number | null;
+  geozone_id: number;
+  data: any;
+};

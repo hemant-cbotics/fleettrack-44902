@@ -61,5 +61,9 @@ export const API_ENDPOINTS = {
     ORGANIZATION_FLEETTAGS: `/fleet-tag/ap1/v1/`,
     SINGLE_ORGANIZATION_FLEETTAG: (fleettags_id: number) => `/fleet-tag/ap1/v1/${fleettags_id}/`,
     EDIT_ORGANIZATION_FLEETTAG: (fleettags_id: number) => `/fleet-tag/ap1/v1/${fleettags_id}/`,
+
+    ORGANIZATION_GEOZONES: `/geozone/ap1/v1/`,
+    SINGLE_ORGANIZATION_GEOZONE: (geozone_id: number) => `/geozone/ap1/v1/${geozone_id}/`,
+    EDIT_ORGANIZATION_GEOZONE: (geozone_id: number) => `/geozone/ap1/v1/${geozone_id}/`,
   }
 }

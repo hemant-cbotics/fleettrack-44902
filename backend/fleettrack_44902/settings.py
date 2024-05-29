@@ -86,6 +86,7 @@ LOCAL_APPS = [
     'driver.apps.DriverConfig',
     'group.apps.GroupConfig',
     'fleet_tag.apps.FleetTagConfig',
+    'geozone.apps.GeozoneConfig',
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
