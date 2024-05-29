@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 
+// initial values for the form
 export const userDetailsInitialValues = {
   user_id: 0,
   password: "",
@@ -21,6 +22,7 @@ export const userDetailsInitialValues = {
   maximum_access_level: "",
 }
 
+// validation schema for the form
 export const userDetailsYupValidationSchema = Yup.object().shape({
   contact_name: Yup.string().required("Contact Name is required"),
 });
