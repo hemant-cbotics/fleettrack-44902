@@ -49,7 +49,7 @@ const AdminsGroupsCreateNew = () => {
                   if(!!data?.created_at) {
                     dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
                     toast.success(t('create_success'), { autoClose: 10000 });
-                    navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${data.id}`);
+                    navigate(`${routeUrls.dashboardChildren.adminChildren.groups}/${data?.id}`, { state: { new: true } });
                   } else {
                     toast.error(tMain('toast.general_error'));
                   }
