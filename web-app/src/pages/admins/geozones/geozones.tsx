@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Geozones Listing Page
+ * -----------------------------------------------------------------------------
+ * This page is used to list all the geozones of the organization.
+ */
+
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderView from "../../../components/admin/headerView";
@@ -51,6 +58,7 @@ const ScreenDashboardAdminGeozones = () => {
       })
     );
 
+  // geozones query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGeozonesQueryParams, setOrgGeozonesQueryParams] = useState({
     organization_id: thisUserOrganizationId ?? 0,
@@ -62,6 +70,7 @@ const ScreenDashboardAdminGeozones = () => {
     setOrgGeozonesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
+  // fetch geozones data
   const {
     data: dataOrgGeozones,
     isFetching: isFetchingOrgGeozones,
@@ -70,6 +79,7 @@ const ScreenDashboardAdminGeozones = () => {
     useOrganizationGeozonesQuery(orgGeozonesQueryParams);
   const { count, next, previous, results } = dataOrgGeozones || {};
 
+  // preparing table data
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationGeozone[]).map((item: OrganizationGeozone, index: number) => (
       {
@@ -93,7 +103,8 @@ const ScreenDashboardAdminGeozones = () => {
         ].filter((_, index) => columns[index].show)
       }))
     : [];
-    
+  
+  // rendering
   return (
     <>
       <HeaderView title={t("heading")} />

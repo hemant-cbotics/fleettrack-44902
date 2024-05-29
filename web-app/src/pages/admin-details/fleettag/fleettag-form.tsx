@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Fleettag Edit Form
+ * -----------------------------------------------------------------------------
+ * These components are used to render the form for editing the fleettag details.
+ */
+
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminFormFieldInput } from "../../../components/admin/formFields";

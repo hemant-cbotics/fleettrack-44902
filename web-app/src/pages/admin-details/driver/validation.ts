@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 
+// initial values for the form
 export const driverDetailsInitialValues = {
   driver_id: 0,
   driver_name: "",
@@ -23,4 +24,5 @@ export const driverDetailsInitialValues = {
   vehicle_id: "",
 }
 
+// validation schema for the form
 export const driverDetailsYupValidationSchema = Yup.object().shape({});

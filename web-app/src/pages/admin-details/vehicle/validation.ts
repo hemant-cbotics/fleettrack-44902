@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 
+// initial values for the form
 export const vehicleFormInitialValues = {
   vehicle_id: "",
   creation_date: "",
@@ -43,6 +44,7 @@ export const vehicleFormInitialValues = {
 
 const currentYear = new Date().getFullYear();
 
+// validation schema for the form
 export const vehicleFormValidationSchema = Yup.object().shape({
   vehicle_model: Yup.number().max(currentYear, "Vehicle model cannot be in the future"),
 });

@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 
+// initial values for the form
 export const geozoneDetailsInitialValues = {
   description: "",
   city: "",
@@ -15,4 +16,5 @@ export const geozoneDetailsInitialValues = {
   speed_limit: "",
 }
 
+// validation schema for the form
 export const geozoneDetailsYupValidationSchema = Yup.object().shape({});

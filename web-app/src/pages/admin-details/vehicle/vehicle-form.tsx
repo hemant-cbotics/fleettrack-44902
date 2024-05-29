@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Vehicle Edit Form
+ * -----------------------------------------------------------------------------
+ * These components are used to render the form for editing the vehicle details.
+ */
+
 import { Formik } from "formik";
 import { FC, useEffect, useState } from "react";
 import { groupMembershipFormValidationSchema } from "./validation";
@@ -670,21 +677,24 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
   loadingData,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.vehicles.detailsPage.form" });
-const [selectedGroups, setSelectedGroups] = useState(values.list_of_groups);
-const [filteredGroupData, setFilteredGroupData] = useState<any[]>([]);
-const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-const [orgGroupsQueryParams, setOrgGroupsQueryParams] = useState({
-  organization_id: thisUserOrganizationId ?? 0,
-  page: 1,
-  page_size: 100,
-  search: ""
-});
 
-const {
-  data: dataOrgGroups,
-} =
-  useOrganizationGroupsQuery(orgGroupsQueryParams);
+  // selected groups mechanism
+  const [selectedGroups, setSelectedGroups] = useState(values.list_of_groups);
+  const [filteredGroupData, setFilteredGroupData] = useState<any[]>([]);
 
+  // prepare group query params
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+  const [orgGroupsQueryParams, setOrgGroupsQueryParams] = useState({
+    organization_id: thisUserOrganizationId ?? 0,
+    page: 1,
+    page_size: 100,
+    search: ""
+  });
+
+  // fetch organization groups
+  const {data: dataOrgGroups,} = useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  // prepare group data for display
   const { results } = dataOrgGroups ?? {};
   const groupData = !!results
   ? (results || ([] as OrganizationGroup[])).map(
@@ -695,21 +705,25 @@ const {
     )
   : [];
 
+  // update selected groups
   useEffect(() => {
     setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
     formikSetValue('list_of_groups', selectedGroups);
   }, [selectedGroups, dataOrgGroups])
 
+  // handle group selection
   const handleChangeGroup = (e: any) => {
     if(e?.value){
       setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
     }
   }
 
+  // handle group removal
   const onRemoveFromGroup = (option: any) => {
     setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
     formikSetValue('list_of_groups', selectedGroups);
   }
+  
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       <div className="col-span-12 grid grid-cols-8">

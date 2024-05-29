@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Popup - Create New Driver
+ * -----------------------------------------------------------------------------
+ * This popup is used for creating a new driver in the organization.
+ */
+
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,6 +28,7 @@ const AdminsDriversCreateNew = () => {
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
+  // driver mutation
   const [createOrgDriverAPITrigger] = useCreateOrganizationDriverMutation();
 
   const hideModal = () => {

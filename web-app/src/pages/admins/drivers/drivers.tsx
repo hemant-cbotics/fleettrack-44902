@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Drivers Listing Page
+ * -----------------------------------------------------------------------------
+ * This page is used to list all the drivers of the organization.
+ */
+
 import React, { useEffect } from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
@@ -52,6 +59,7 @@ const ScreenDashboardAdminDrivers = () => {
       })
     );
 
+  // filters
   const filters: TListingFilters[] = [
     {
       slug: "active",
@@ -66,12 +74,16 @@ const ScreenDashboardAdminDrivers = () => {
       title: tFilters("both"),
     },
   ];
+
+  // filter mechainism
   const [activeFilterSlug, setActiveFilterSlug] = React.useState<FilterType>("active");
   
+  // updating query params on filter change
   useEffect(() => {
     setOrgDriversQueryParams((prev) => { return { ...prev,page: 1, is_active: activeFilterSlug }});
   }, [activeFilterSlug])
 
+  // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgDriversQueryParams, setOrgDriversQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
@@ -84,6 +96,7 @@ const ScreenDashboardAdminDrivers = () => {
     setOrgDriversQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
+  // fetching driver data
   const {
     data: dataOrgDrivers,
     isFetching: isFetchingOrgDrivers,
@@ -92,6 +105,7 @@ const ScreenDashboardAdminDrivers = () => {
     useOrganizationDriversQuery(orgDriversQueryParams);
   const { count, next, previous, results } = dataOrgDrivers || {};
 
+  // preparing table data
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationDriver[]).map((item: OrganizationDriver, index: number) => (
       {
@@ -114,6 +128,7 @@ const ScreenDashboardAdminDrivers = () => {
       }))
     : [];
 
+  // rendering
   return (
     <>
       <HeaderView title={t('heading')} />

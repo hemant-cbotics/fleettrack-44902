@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Group Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of a single group of the organization.
+ */
+
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,23 +40,32 @@ const ScreenAdminDetailGroup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // define type for group list item
   type TGroupListItem = {
     id: string;
     name: string;
     sub_title: string;
     is_active: boolean;
   }
+
+  // current vehicle list mechainism
   const [currentAllVehicleList, setCurrentAllVehicleList] = React.useState<TGroupListItem[]>([]);
   const [currentGroupVehicleList, setCurrentGroupVehicleList] = React.useState<TGroupListItem[]>([]);
 
+  // selected vehicles mechainism
   const [leftSelectedVehicles, setleftSelectedVehicles] = React.useState<any[]>([]);
   const [rightSelectedVehicles, setrightSelectedVehicles] = React.useState<any[]>([]);
 
+  // search text for right side
   const [rightSearchText, setRightSearchText] = React.useState<string>("");
 
+  // current description mechainism
   const [currentDescription, setCurrentDescription] = React.useState<string>("");
 
+  // show inactive vehicles mechainism
   const [showInactiveVehicles, setShowInactiveVehicles] = React.useState(false);
+
+  // prepare query params for fetching organization groups
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
@@ -59,6 +75,7 @@ const ScreenAdminDetailGroup = () => {
     is_active: "both" as FilterType
   });
 
+  // fetch organization groups
   const {
     data: dataOrgGroups,
     isFetching: isFetchingOrgGroups,
@@ -72,15 +89,20 @@ const ScreenAdminDetailGroup = () => {
     });
   }, 500);
 
+  // fetch single group details
   const { data: dataSingleGroup, isFetching: isFetchingSingleGroup } = useSingleOrganizationGroupQuery( { organization_id: thisUserOrganizationId, group_id: parseInt(groupId) }, { skip: !groupId });
+
+  // group mutations
   const [ editOrganizationGroupApiTrigger , {isLoading: isLoadingEditGroup}] = useEditOrganizationGroupMutation();
   const [ deleteSingleGroupApiTrigger, {isLoading: isLoadingDeleteGroup}] = useDeleteSingleGroupMutation();
 
+  // fetch organization vehicles
   const {data: dataOrgVehicles, isFetching: isFetchingOrgVehicles} = useOrganizationVehiclesQuery(orgGroupsQueryParams);
   const { results: allVehicles } = dataOrgVehicles ?? {};
   const { results } = dataOrgGroups ?? {};
   const { vehicles: groupVehicles } = dataSingleGroup ?? {};
 
+  // prepare group data for group dropdown
   const groupData = !!results
   ? (results || ([] as OrganizationGroup[])).map(
       (item: OrganizationGroup, index: number) => ({
@@ -90,6 +112,7 @@ const ScreenAdminDetailGroup = () => {
     )
   : [];
 
+  // prepare all vehicle list
   const allVehicleList: TGroupListItem[] = !!allVehicles
   ? (allVehicles || ([] as OrganizationVehicle[])).map(
       (item: OrganizationVehicle, index: number) => ({
@@ -101,6 +124,7 @@ const ScreenAdminDetailGroup = () => {
     )
   : [];
 
+  // prepare group vehicle list
   const groupVehicleList: TGroupListItem[] = !!groupVehicles
   ? (groupVehicles || ([] as OrganizationVehicle[])).map(
       (item: OrganizationVehicle, index: number) => ({
@@ -112,15 +136,18 @@ const ScreenAdminDetailGroup = () => {
     )
   : [];
 
+  // updating description and vehicle list on data change
   useEffect(() => {
     setCurrentDescription(dataSingleGroup?.description ?? "");
     setCurrentGroupVehicleList(groupVehicleList);
   }, [dataSingleGroup])
  
+  // updating all vehicle list on data change
   useEffect(() => {
     setCurrentAllVehicleList(allVehicleList.filter((allVehicleItem) => !currentGroupVehicleList.some((groupVehicleItem) => allVehicleItem.id === groupVehicleItem.id)))
   }, [dataOrgVehicles])
 
+  // handle left checkbox selection
   const handleLeftCheckboxChange = ({ item, isChecked }: { item: any; isChecked: boolean }) => {
     if(isChecked) {
       setleftSelectedVehicles([...leftSelectedVehicles, item]);
@@ -129,6 +156,7 @@ const ScreenAdminDetailGroup = () => {
     }
   }
 
+  // handle right checkbox selection
   const handleRightCheckboxChange = ({ item, isChecked }: { item: any; isChecked: boolean }) => {
     if(isChecked) {
       setrightSelectedVehicles([...rightSelectedVehicles, item]);
@@ -137,39 +165,49 @@ const ScreenAdminDetailGroup = () => {
     }
   }
 
+  // handle add selected vehicles from all vehicles
   const handleAddSelected = () => {
     setCurrentGroupVehicleList([...currentGroupVehicleList, ...leftSelectedVehicles]);
     setCurrentAllVehicleList(currentAllVehicleList.filter((item) => !leftSelectedVehicles.some((group) => group.id === item.id)));
     setleftSelectedVehicles([]);
   }
 
+  // handle remove selected vehicles from group vehicles
   const handleRemoveSelected = () => {
     setCurrentAllVehicleList([...currentAllVehicleList, ...rightSelectedVehicles]);
     setCurrentGroupVehicleList(currentGroupVehicleList.filter((item) => !rightSelectedVehicles.some((group) => group.id === item.id)));
     setrightSelectedVehicles([]);
   }
 
+  // handle add all vehicles from all vehicles
   const handleAddAll = () => {
     setCurrentGroupVehicleList([...currentGroupVehicleList, ...currentAllVehicleList]);
     setCurrentAllVehicleList([]);
     setleftSelectedVehicles([]);
   }
 
+  // handle remove all vehicles from group vehicles
   const handleRemoveAll = () => {
     setCurrentAllVehicleList([...currentAllVehicleList, ...currentGroupVehicleList]);
     setCurrentGroupVehicleList([]);
     setrightSelectedVehicles([]);
   }
 
+  // handle search change for right side
   const handleRightSearchChange = (e: any) => {
     setRightSearchText(e.target.value);
   }
 
+  // handle edit group
   const handleEditGroup = () => {
+
+    // prepare payload
     const data = {
       description: currentDescription,
       vehicle_ids: currentGroupVehicleList.map((vehicle) => vehicle.id).join(',')
     }
+
+    // call api to update group
     editOrganizationGroupApiTrigger({organization_id: thisUserOrganizationId, group_id: parseInt(groupId), data: data})
       .unwrap()
       .then(() => {
@@ -182,6 +220,7 @@ const ScreenAdminDetailGroup = () => {
       });
   }
 
+  // handle delete group
   const handleDeleteGroup = () => {
     deleteSingleGroupApiTrigger({organization_id: thisUserOrganizationId, group_id: parseInt(groupId)})
     .unwrap()

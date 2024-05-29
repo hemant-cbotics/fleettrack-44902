@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Popup - Create New Fleettag
+ * -----------------------------------------------------------------------------
+ * This popup is used for creating a new fleettag in the organization.
+ */
+
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,6 +28,7 @@ const AdminsFleetTagsCreateNew = () => {
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
+  // fleettag mutation
   const [createOrgFleettagAPITrigger] = useCreateOrganizationFleettagMutation();
 
   const hideModal = () => {

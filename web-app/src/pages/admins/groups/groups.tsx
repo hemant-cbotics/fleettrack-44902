@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Groups Listing Page
+ * -----------------------------------------------------------------------------
+ * This page is used to list all the groups of the organization.
+ */
+
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
@@ -47,6 +54,7 @@ const ScreenDashboardAdminGroups = () => {
       })
     );
 
+  // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
@@ -59,6 +67,7 @@ const ScreenDashboardAdminGroups = () => {
     setOrgGroupsQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
+  // fetch groups data
   const {
     data: dataOrgGroups,
     isFetching: isFetchingOrgGroups,
@@ -67,6 +76,7 @@ const ScreenDashboardAdminGroups = () => {
 
   const { count, next, previous, results } = dataOrgGroups || {};
 
+  // preparing table data
   const tableData: TAdminTableRowData[] = !!results
   ? (results || [] as OrganizationGroup[]).map((item: OrganizationGroup, index: number) => (
     {
@@ -81,7 +91,7 @@ const ScreenDashboardAdminGroups = () => {
     }))
   : [];
 
-
+  // rendering
   return (
     <>  
       <HeaderView title={t('heading')} />
