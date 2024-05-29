@@ -178,10 +178,6 @@ const routes: RouteObject[] = [
             element: <ScreenAdminDetailGroup />
           },
           {
-            path: routeUrls.dashboardChildren.adminChildren.groups + "/:groupId",
-            element: <ScreenDashboardAdminGroups />
-          },
-          {
             path: routeUrls.dashboardChildren.adminChildren.fleettags,
             element: <ScreenDashboardAdminFleetTags />
           },
