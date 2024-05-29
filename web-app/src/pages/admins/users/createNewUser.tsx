@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Popup - Create New User
+ * -----------------------------------------------------------------------------
+ * This popup is used for creating a new user in the organization.
+ */
+
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -19,11 +26,13 @@ const AdminsUsersCreateNew = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // fetching roles and permissions
   const {
     data: dataOrgRolesPermissions,
     isFetching: isFetchingOrgRolesPermissions,
   } = useOrganizationRolesPermissionsQuery();
   
+  // user mutation
   const [createOrgUserAPITrigger] = useCreateOrganizationUserMutation();
 
   const hideModal = () => {

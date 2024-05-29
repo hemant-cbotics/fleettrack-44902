@@ -1,3 +1,9 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Geozone Edit Form
+ * -----------------------------------------------------------------------------
+ * These components are used to render the form for editing the geozone details.
+ */
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput } from "../../../components/admin/formFields";
@@ -36,8 +42,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   loadingData,
  }) => {
 const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
+
+// selected groups mechanism
 const [selectedGroups, setSelectedGroups] = React.useState(values.assign_group);
 const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
+
+// prepare group query params
 const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
 const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
   organization_id: thisUserOrganizationId ?? 0,
@@ -46,11 +56,13 @@ const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
   search: ""
 });
 
+// fetch organization groups
 const {
   data: dataOrgGroups,
 } =
   useOrganizationGroupsQuery(orgGroupsQueryParams);
 
+  // prepare group data for display
   const { results } = dataOrgGroups ?? {};
   const groupData = !!results
   ? (results || ([] as OrganizationGroup[])).map(
@@ -61,17 +73,20 @@ const {
     )
   : [];
 
+  // update selected groups
   useEffect(() => {
     setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
     formikSetValue('assign_group', selectedGroups);
   }, [selectedGroups, dataOrgGroups])
 
+  // handle group selection
   const handleChangeGroup = (e: any) => {
     if(e?.value){
       setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
     }
   }
 
+  // handle group removal
   const onRemoveFromGroup = (option: any) => {
     setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
     formikSetValue('assign_group', selectedGroups);

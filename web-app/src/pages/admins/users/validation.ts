@@ -1,13 +1,16 @@
 import * as Yup from "yup";
-import { APP_CONFIG } from "../../../constants/constants";
 
+// form field names
 export type TFormFieldNames = "username" | "email" | "acl_role";
+
+// initial values for the form
 export const formInitialValues = {
   username: "",
   email: "",
   acl_role: "",
 };
 
+// validation schema for the form
 export const YupValidationSchema = Yup.object().shape({
   username: Yup.string()
     .required("Please select the full name of the user"),

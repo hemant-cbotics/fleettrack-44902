@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Users Listing Page
+ * -----------------------------------------------------------------------------
+ * This page is used to list all the users of the organization.
+ */
+
 import React from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
@@ -50,6 +57,7 @@ const ScreenDashboardAdminUsers = () => {
       })
     );
 
+  // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
@@ -61,6 +69,7 @@ const ScreenDashboardAdminUsers = () => {
     setOrgUsersQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
+  // fetching user data
   const {
     data: dataOrgUsers,
     isFetching: isFetchingOrgUsers,
@@ -71,6 +80,7 @@ const ScreenDashboardAdminUsers = () => {
     });
   const { count, next, previous, results } = dataOrgUsers || {};
 
+  // preparing table data
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationUser[]).map((item: OrganizationUser, index: number) => (
       {
@@ -91,6 +101,7 @@ const ScreenDashboardAdminUsers = () => {
       }))
     : [];
 
+  // rendering
   return (
     <>
       <HeaderView title={t('heading')} />

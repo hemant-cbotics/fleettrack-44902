@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Geozone Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of a single geozone of the organization.
+ */
+
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -24,7 +31,7 @@ import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
-  const { state: locationState } = useLocation();
+  const { state: locationState } = useLocation(); // OrganizationEntityListingPayload | { new: true }
   const { t: tMain } = useTranslation();
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.geozones" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage" });
@@ -32,9 +39,14 @@ const ScreenAdminDetailGeozone = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+
+  // flag to idenfiy if user is coming from create new geozone popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
+
+  // flag to enable edit mode
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
 
+  // prepare query params for fetching organization geozones
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgGeozonesQueryParams, setOrgGeozonesQueryParams] = useState<
     OrganizationEntityListingPayload
@@ -55,6 +67,7 @@ const ScreenAdminDetailGeozone = () => {
     });
   }, 500);
 
+  // fetch organization geozones
   const {
     data: dataOrgGeozones,
     isFetching: isFetchingOrgGeozones,
@@ -62,10 +75,14 @@ const ScreenAdminDetailGeozone = () => {
   } = useOrganizationGeozonesQuery(orgGeozonesQueryParams);
   const { results } = dataOrgGeozones || {};
 
+  // fetch single geozone details
   const { data: dataSingleGeozone, isFetching: isFetchingSingleGeozone } = useSingleOrganizationGeozoneQuery( { organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId) }, { skip: !geozoneId });
+
+  // geozone mutations
   const [ editOrganizationGeozoneApiTrigger , {isLoading: isLoadingEditGeozone}] = useEditOrganizationGeozoneMutation();
   const [ deleteSingleGeozoneApiTrigger, {isLoading: isLoadingDeleteGeozone}] = useDeleteSingleGeozoneMutation();
 
+  // prepare list data for geozone list
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationGeozone[])).map(
         (item: OrganizationGeozone, index: number) => ({
@@ -78,6 +95,7 @@ const ScreenAdminDetailGeozone = () => {
       )
     : [];
 
+  // formik
   const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
   useEffect(() => {
     if(isFetchingSingleGeozone) {
@@ -88,6 +106,8 @@ const ScreenAdminDetailGeozone = () => {
     initialValues: geozoneDetailsInitialValues,
     validationSchema: geozoneDetailsYupValidationSchema,
     onSubmit: (values) => {
+
+      // prepare payload
       const data = {
         zone_type: values.zone_type,
         city: values.city,
@@ -102,6 +122,8 @@ const ScreenAdminDetailGeozone = () => {
         speed_limit: values.speed_limit,
         group_ids: values.assign_group?.map((item: any) => parseInt(item.id)).join(','),
       }
+
+      // call api for updating geozone
       editOrganizationGeozoneApiTrigger({organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId), data: data})
         .unwrap()
         .then(() => {
@@ -115,6 +137,7 @@ const ScreenAdminDetailGeozone = () => {
     }
   });
 
+  // pre-fill formik values
   useEffect(() => {
     if(dataSingleGeozone){
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
@@ -136,12 +159,14 @@ const ScreenAdminDetailGeozone = () => {
     }
   }, [dataSingleGeozone, geozoneId])
 
+  // handle edit geozone
   const handleEditGeozone = () => {
     if(userCanEdit){
       formik.handleSubmit();
     }
   }
 
+  // handle delete geozone
   const handleDeleteGeozone = () => {
     deleteSingleGeozoneApiTrigger({organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId)})
     .unwrap()

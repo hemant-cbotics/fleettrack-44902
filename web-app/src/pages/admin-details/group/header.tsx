@@ -32,19 +32,6 @@ const AdminsGroupsHeader: FC<TAdminsGroupsHeaderProps> = ({
       <AdminFormFieldSubmit
         type="button"
         variant="primary-like"
-        label={<span className="flex justify-center whitespace-nowrap">
-          {t("add_new")}
-          <img
-            className="ml-2"
-            src={ButtonIconPlus}
-            alt={t("add_new")}
-          />
-        </span>}
-        onClick={addNewButtonCallback}
-      />
-      <AdminFormFieldSubmit
-        type="button"
-        variant="primary-like"
         label={tMain("help")}
         onClick={helpButtonCallback}
       />

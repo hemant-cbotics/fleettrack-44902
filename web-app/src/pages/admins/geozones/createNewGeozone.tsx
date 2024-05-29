@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Popup - Create New Geozone
+ * -----------------------------------------------------------------------------
+ * This popup is used for creating a new geozone in the organization.
+ */
+
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +28,7 @@ const AdminsGeozonesCreateNew = () => {
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
 
+  // geozone mutation
   const [createOrgGeozoneAPITrigger] = useCreateOrganizationGeozoneMutation();
 
   const hideModal = () => {

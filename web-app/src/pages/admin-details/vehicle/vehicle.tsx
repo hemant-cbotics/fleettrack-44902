@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Vehicle Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of a single vehicle of the organization.
+ */
+
 import HeaderView from "../../../components/admin/headerView";
 import { FC, useEffect, useRef, useState } from "react";
 import Accordian from "../../../components/accordian";
@@ -36,7 +43,7 @@ import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
-  const { state: locationState } = useLocation();
+  const { state: locationState } = useLocation(); // OrganizationEntityListingPayload | { new: true }
   const { t: tMain } = useTranslation();
   const { t: tAdmin } = useTranslation("translation", {
     keyPrefix: "admins.vehicles",
@@ -49,10 +56,15 @@ const ScreenAdminDetailVehicle = () => {
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
 
+  // flag to idenfiy if user is coming from create new vehicle popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
+
+  // flag to enable edit mode
   const [userCanEdit, setUserCanEdit] = useState<boolean>(
     !!isNewEntity?.current
   );
+
+  // prepare query params for fetching organization vehicles
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = useState<
     OrganizationEntityListingPayload
@@ -73,6 +85,7 @@ const ScreenAdminDetailVehicle = () => {
     });
   }, 500);
 
+  // fetch organization vehicles
   const {
     data: dataOrgVehicles,
     isFetching: isFetchingOrgVehicles,
@@ -80,9 +93,14 @@ const ScreenAdminDetailVehicle = () => {
   } = useOrganizationVehiclesQuery(orgVehiclesQueryParams);
   const { results } = dataOrgVehicles || {};
 
+  // fetch single vehicle details
   const { data: dataSingleVehicle, isFetching: isFetchingSingleVehicle, } = useSingleOrganizationVehicleQuery({ organization_id: thisUserOrganizationId, vehicle_id: vehicleId },{ skip: !vehicleId });
+
+  // vehicle mutations
   const [ editOrganizationVehicleApiTrigger , {isLoading: isLoadingEditVehicle}] = useEditOrganizationVehicleMutation();
   const [ deleteSingleVehicleApiTrigger , {isLoading: isLoadingDeleteVehicle}] = useDeleteSingleVehicleMutation();
+
+  // prepare list data for vehicle list
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationVehicle[])).map(
         (item: OrganizationVehicle, index: number) => ({
@@ -95,6 +113,7 @@ const ScreenAdminDetailVehicle = () => {
       )
     : [];
 
+  // formik
   const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
   useEffect(() => {
     if(isFetchingSingleVehicle) {
@@ -105,6 +124,8 @@ const ScreenAdminDetailVehicle = () => {
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
+
+      // prepare payload
       const data : TEditOrganizationVehiclePayloadData = {
         id: values.vehicle_id,
         asset_type: values.asset_type,
@@ -143,6 +164,8 @@ const ScreenAdminDetailVehicle = () => {
         all_vehicles: values.all_vehicles,
         driver: values.driver_id
       };
+
+      // call api for updating vehicle
       editOrganizationVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId, data})
       .unwrap()
       .then(() => {
@@ -156,6 +179,7 @@ const ScreenAdminDetailVehicle = () => {
     },
   });
 
+  // pre-fill formik values
   useEffect(() => {
     if (dataSingleVehicle) {
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
@@ -212,6 +236,7 @@ const ScreenAdminDetailVehicle = () => {
     handleSubmit,
   } = formik;
 
+  // handle delete vehicle
   const handleDeleteVehicle = () => {
     deleteSingleVehicleApiTrigger({organization_id: thisUserOrganizationId, vehicle_id: vehicleId})
     .unwrap()
@@ -225,6 +250,7 @@ const ScreenAdminDetailVehicle = () => {
     });
   }
 
+  // handle edit vehicle
   const handleEditVehicle = () => {
     if (userCanEdit) {
       formik.handleSubmit();

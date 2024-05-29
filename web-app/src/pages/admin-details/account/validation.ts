@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 
+// initial values for the form
 export const accountDetailsInitialValues = {
   account_id: 0,
   account_description: "",
@@ -72,4 +73,5 @@ export const accountDetailsInitialValues = {
   tailgating_ai: "",
 }
 
+// validation schema for the form
 export const accountDetailsYupValidationSchema = Yup.object().shape({});

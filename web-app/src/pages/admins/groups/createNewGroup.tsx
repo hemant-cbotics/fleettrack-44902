@@ -1,3 +1,9 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Popup - Create New Group
+ * -----------------------------------------------------------------------------
+ * This popup is used for creating a new group in the organization.
+ */
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,6 +27,7 @@ const AdminsGroupsCreateNew = () => {
   
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
+  // group mutation
   const [createOrgGroupAPITrigger] = useCreateOrganizationGroupMutation();
 
   const hideModal = () => {
@@ -46,7 +53,6 @@ const AdminsGroupsCreateNew = () => {
               })
                 .unwrap()
                 .then((data) => {
-                  console.log('>>>', data);
                   if(!!data?.created_at) {
                     dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
                     toast.success(t('create_success'), { autoClose: 10000 });

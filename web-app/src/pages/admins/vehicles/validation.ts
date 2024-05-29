@@ -1,7 +1,10 @@
 import * as Yup from "yup";
 import { APP_CONFIG } from "../../../constants/constants";
 
+// form field names
 export type TFormFieldNames = "make" | "model" | "vin" | "license_plate";
+
+// initial values for the form
 export const formInitialValues = {
   make: "",
   model: "",
@@ -11,6 +14,7 @@ export const formInitialValues = {
 
 const currentYear = new Date().getFullYear();
 
+// validation schema for the form
 export const YupValidationSchema = Yup.object().shape({
   make: Yup.string()
     .required("Please enter the vehicle make"),

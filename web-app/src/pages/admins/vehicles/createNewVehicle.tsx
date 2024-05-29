@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Popup - Create New Vehicle
+ * -----------------------------------------------------------------------------
+ * This popup is used for creating a new vehicle in the organization.
+ */
+
 import { Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,6 +28,7 @@ const AdminsVehiclesCreateNew = () => {
 
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   
+  // vehicle mutation
   const [createOrgVehicleAPITrigger] = useCreateOrganizationVehicleMutation();
 
   const hideModal = () => {
