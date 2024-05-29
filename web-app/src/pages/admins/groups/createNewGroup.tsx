@@ -46,7 +46,6 @@ const AdminsGroupsCreateNew = () => {
               })
                 .unwrap()
                 .then((data) => {
-                  console.log('>>>', data);
                   if(!!data?.created_at) {
                     dispatch(setModalsData({ ...modalsState, showCreateGroup: false }));
                     toast.success(t('create_success'), { autoClose: 10000 });
