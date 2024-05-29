@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import { APP_CONFIG } from "../../../constants/constants";
 
 export type TFormFieldNames = "username" | "email" | "acl_role";
 export const formInitialValues = {

@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * User Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of a single user of the organization.
+ */
+
 import React from "react";
 import HeaderView from "../../../components/admin/headerView";
 import Accordian from "../../../components/accordian";
@@ -45,8 +52,13 @@ const ScreenAdminDetailUser = () => {
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
 
-  const isNewEntity = React.useRef<boolean>(!!locationState?.new); // TODO: remove true
+  // flag to idenfiy if user is coming from create new user popup
+  const isNewEntity = React.useRef<boolean>(!!locationState?.new);
+
+  // flag to enable edit mode
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
+  
+  // prepare query params for fetching organization users
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState<OrganizationEntityListingPayload>(
     (!!(locationState as OrganizationEntityListingPayload)?.organization_id
@@ -61,22 +73,26 @@ const ScreenAdminDetailUser = () => {
     setOrgUsersQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
+  // fetch organization users
   const {
     data: dataOrgUsers,
     isFetching: isFetchingOrgUsers,
     error
   } = useOrganizationUsersQuery(orgUsersQueryParams);
 
+  // fetch single user details
   const {
     data: dataSingleUser,
     isFetching: isFetchingSingleUser,
     error: errorSingleUser,
   } = useSingleOrganizationUserQuery({ user_id: parseInt(userId) },{ skip: !userId });
 
+  // user mutations
   const [ editOrganizationUserApiTrigger, { isLoading: isLoadingEditUser }] = useEditOrganizationUserMutation();
   const [ deleteSingleUserApiTrigger, { isLoading: isLoadingDeleteUser }] = useDeleteSingleUserMutation();
   const { results } = dataOrgUsers || {};
 
+  // formik
   const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
   useEffect(() => {
     if(isFetchingSingleUser) {
@@ -87,6 +103,8 @@ const ScreenAdminDetailUser = () => {
     initialValues: userDetailsInitialValues,
     validationSchema: userDetailsYupValidationSchema,
     onSubmit: (values) => {
+
+      // prepare payload
       const data: TEditOrganizationUserPayloadData = {
         user: {
           id: values.user_id,
@@ -112,6 +130,8 @@ const ScreenAdminDetailUser = () => {
           role: dataSingleUser?.role_and_permission?.role?.id || 0,
         }
       }
+
+      // call api for updating user
       editOrganizationUserApiTrigger({data})
         .unwrap()
         .then(() => {
@@ -125,6 +145,7 @@ const ScreenAdminDetailUser = () => {
     },
   });
 
+  // pre-fill formik values
   useEffect(() => {
     if (dataSingleUser) {
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
@@ -152,6 +173,7 @@ const ScreenAdminDetailUser = () => {
     }
   }, [dataSingleUser, userId]);
 
+  // prepare list data for user list
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationUser[])).map(
         (item: OrganizationUser, index: number) => ({
@@ -166,12 +188,14 @@ const ScreenAdminDetailUser = () => {
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } = formik;
 
+  // handle edit user
   const handleEditUser = () => {
     if(userCanEdit) {
       formik.handleSubmit();
     }
   }
 
+  // handle delete user
   const handleDeleteUser = () => {
     deleteSingleUserApiTrigger({user_id: parseInt(userId)})
     .unwrap()
@@ -184,6 +208,7 @@ const ScreenAdminDetailUser = () => {
       toast.error(errors?.join(' '));
     });
   }
+
   return (
     <>
       <HeaderView title={t("heading")} showBackButton={true} backButtonCallback={() => navigate(routeUrls.dashboardChildren.adminChildren.users)} />

@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * User Edit Form
+ * -----------------------------------------------------------------------------
+ * These components are used to render the form for editing the user details.
+ */
+
 import React, { FC, useEffect } from "react";
 
 import {
@@ -254,21 +261,26 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   loadingData,
 }) => {
 
-const [selectedGroups, setSelectedGroups] = React.useState(values.authorized_groups);
-const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
-const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
-  organization_id: thisUserOrganizationId ?? 0,
-  page: 1,
-  page_size: 100,
-  search: ""
-});
+  // selected groups mechanism
+  const [selectedGroups, setSelectedGroups] = React.useState(values.authorized_groups);
+  const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
 
-const {
-  data: dataOrgGroups,
-} =
-  useOrganizationGroupsQuery(orgGroupsQueryParams);
+  // prepare group query params
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+  const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
+    organization_id: thisUserOrganizationId ?? 0,
+    page: 1,
+    page_size: 100,
+    search: ""
+  });
 
+  // fetch organization groups
+  const {
+    data: dataOrgGroups,
+  } =
+    useOrganizationGroupsQuery(orgGroupsQueryParams);
+
+  // prepare group data for display
   const { results } = dataOrgGroups ?? {};
   const groupData = !!results
   ? (results || ([] as OrganizationGroup[])).map(
@@ -279,17 +291,20 @@ const {
     )
   : [];
 
+  // update selected groups
   useEffect(() => {
     setFilteredGroupData(groupData.filter((group) => !selectedGroups.some((selectedGroup:any) => selectedGroup.id === parseInt(group.value))))
     formikSetValue('authorized_groups', selectedGroups);
   }, [selectedGroups, dataOrgGroups])
 
+  // handle group selection
   const handleChangeGroup = (e: any) => {
     if(e?.value){
       setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
     }
   }
 
+  // handle group removal
   const onRemoveFromGroup = (option: any) => {
     setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
     formikSetValue('authorized_groups', selectedGroups);
