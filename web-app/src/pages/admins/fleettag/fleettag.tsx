@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Fleettags Listing Page
+ * -----------------------------------------------------------------------------
+ * This page is used to list all the fleettags of the organization.
+ */
+
 import React from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
@@ -51,19 +58,19 @@ const ScreenDashboardAdminFleetTags = () => {
       })
     );
 
+  // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-  // TODO: Start - Change the following line to use the correct API call for fleet tags
   const [orgFleetTagsQueryParams, setOrgFleetTagsQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
     search: ""
   });
-  // TODO: End - Change the following line to use the correct API call for fleet tags
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgFleetTagsQueryParams((prev) => { return { ...prev, page: 1, search: value }});
   }, 500);
 
+  // fetching fleettags data
   const {
     data: dataOrgFleetTags,
     isFetching: isFetchingOrgFleetTags,
@@ -72,6 +79,7 @@ const ScreenDashboardAdminFleetTags = () => {
     useOrganizationFleettagsQuery(orgFleetTagsQueryParams);
   const { count, next, previous, results } = dataOrgFleetTags || {};
 
+  // preparing table data
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationFleettag[]).map((item: OrganizationFleettag, index: number) => (
       {
@@ -92,6 +100,7 @@ const ScreenDashboardAdminFleetTags = () => {
       }))
     : [];
 
+  // rendering
   return (
     <>
       <HeaderView title={t('heading')} />

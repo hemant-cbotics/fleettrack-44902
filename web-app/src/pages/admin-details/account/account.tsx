@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Account Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of an account of the user.
+ */
+
 import { useFormik } from "formik";
 import Accordian from "../../../components/accordian";
 import HeaderView from "../../../components/admin/headerView";
@@ -28,8 +35,10 @@ import { toast } from "react-toastify";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailAccount = () => {
+
+  // flag to enable edit mode
   const [userCanEdit, setUserCanEdit] = useState(false);
-  const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
+  
   const { t: tMain } = useTranslation();
   const { t } = useTranslation("translation", {
     keyPrefix: "dashboard.profile.account",
@@ -37,6 +46,7 @@ const ScreenAdminDetailAccount = () => {
   const navigate = useNavigate();
   const { getSessionStorageItem, setSessionStorageItem } = useSessionStorage();
 
+  // get account details from session storage
   const loggedInUserData: VerifyEmailOtpResponseSuccess = useSelector(
     (state: any) => state.commonReducer.user
   );
@@ -44,15 +54,20 @@ const ScreenAdminDetailAccount = () => {
     loggedInUserData?.user ?? getSessionStorageItem(sessionStorageKeys.user);
   const { account } = loggedInUser;
 
+  // account mutations
   const [
     editOrganizationAccountApiTrigger,
     { isLoading: isLoadingEditAccount },
   ] = useEditOrganizationAccountMutation();
 
+  // formik
+  const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: accountDetailsInitialValues,
     validationSchema: accountDetailsYupValidationSchema,
     onSubmit: (values) => {
+
+      // prepare payload
       const data = {
         id: values.account_id,
         description: values.account_description,
@@ -125,6 +140,8 @@ const ScreenAdminDetailAccount = () => {
         obstructed_camera_ai: values.obstructed_camera_ai,
         tailgating_ai: values.tailgating_ai,
       };
+
+      // call api for account update
       editOrganizationAccountApiTrigger({account_id: values.account_id, data: data})
       .unwrap()
       .then((data) => {
@@ -151,9 +168,10 @@ const ScreenAdminDetailAccount = () => {
     handleSubmit,
   } = formik;
 
+  // pre-fill formik values
   useEffect(() => {
     if (account) {
-      setFormikValuesReady(false); 
+      setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
         account_id: account.id,
         account_description: account.description ?? "",
@@ -232,6 +250,7 @@ const ScreenAdminDetailAccount = () => {
     }
   }, []);
 
+  // handle edit information
   const handleEditInformation = () => {
     if (userCanEdit) {
       formik.handleSubmit();

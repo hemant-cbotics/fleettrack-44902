@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Vehicles Listing Page
+ * -----------------------------------------------------------------------------
+ * This page is used to list all the vehicles of the organization.
+ */
+
 import React, { useEffect } from "react";
 import AdminTable from "../components/adminTable";
 import Pagination, { TPaginationSelected } from "../components/pagination";
@@ -52,6 +59,7 @@ const ScreenDashboardAdminVehicles = () => {
       })
     );
 
+  // filters
   const filters: TListingFilters[] = [
     {
       slug: "active",
@@ -66,12 +74,16 @@ const ScreenDashboardAdminVehicles = () => {
       title: tFilters("both"),
     },
   ];
+
+  // filter mechainism
   const [activeFilterSlug, setActiveFilterSlug] = React.useState<FilterType>("active");
   
+  // updating query params on filter change
   useEffect(() => {
     setOrgVehiclesQueryParams((prev) => { return { ...prev,page: 1,  is_active: activeFilterSlug }});
   }, [activeFilterSlug])
 
+  // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
@@ -92,6 +104,7 @@ const ScreenDashboardAdminVehicles = () => {
     useOrganizationVehiclesQuery(orgVehiclesQueryParams);
   const { count, next, previous, results } = dataOrgVehicles || {};
 
+  // preparing table data
   const tableData: TAdminTableRowData[] = !!results
     ? (results || [] as OrganizationVehicle[]).map((item: OrganizationVehicle, index: number) => (
       {
@@ -112,6 +125,7 @@ const ScreenDashboardAdminVehicles = () => {
       }))
     : [];
 
+  // rendering
   return (
     <>
       <HeaderView title={t('heading')} />

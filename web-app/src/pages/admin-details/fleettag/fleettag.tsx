@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Fleettag Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of a single fleettag of the organization.
+ */
+
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -24,7 +31,7 @@ import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailFleettag = () => {
   const { fleettagId } = useParams<{ fleettagId: any }>();
-  const { state: locationState } = useLocation();
+  const { state: locationState } = useLocation(); // OrganizationEntityListingPayload | { new: true }
   const { t: tMain } = useTranslation();
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.fleettags" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.fleettags.detailsPage" });
@@ -32,9 +39,14 @@ const ScreenAdminDetailFleettag = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+
+  // flag to idenfiy if fleettag is coming from create new fleettag popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
+
+  // flag to enable edit mode
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
 
+  // prepare query params for fetching organization fleettags
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgFleettagsQueryParams, setOrgFleettagsQueryParams] = useState<OrganizationEntityListingPayload>(
     (!!(locationState as OrganizationEntityListingPayload)?.organization_id
@@ -53,6 +65,7 @@ const ScreenAdminDetailFleettag = () => {
     });
   }, 500);
 
+  // fetch organization fleettags
   const {
     data: dataOrgFleettags,
     isFetching: isFetchingOrgFleettags,
@@ -60,10 +73,14 @@ const ScreenAdminDetailFleettag = () => {
   } = useOrganizationFleettagsQuery(orgFleettagsQueryParams);
   const { results } = dataOrgFleettags || {};
 
+  // fetch single fleettag details
   const { data: dataSingleFleettag, isFetching: isFetchingSingleFleettag } = useSingleOrganizationFleettagQuery( { organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId) }, { skip: !fleettagId });
+
+  // fleettag mutations
   const [ editOrganizationFleettagApiTrigger , {isLoading: isLoadingEditFleettag}] = useEditOrganizationFleettagMutation();
   const [ deleteSingleFleettagApiTrigger, {isLoading: isLoadingDeleteFleettag}] = useDeleteSingleFleettagMutation();
 
+  // prepare list data for fleettag list
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationFleettag[])).map(
         (item: OrganizationFleettag, index: number) => ({
@@ -76,10 +93,13 @@ const ScreenAdminDetailFleettag = () => {
       )
     : [];
 
+  // formik
   const formik = useFormik({
     initialValues: fleettagDetailsInitialValues,
     validationSchema: fleettagDetailsYupValidationSchema,
     onSubmit: (values) => {
+
+      // prepare payload
       const data = {
           fleet_tag_id: values.fleet_tag_id,
           fleet_tag_name: values.fleet_tag_name,
@@ -95,6 +115,8 @@ const ScreenAdminDetailFleettag = () => {
           tag_battery_level: values.tag_battery_level,
           temperature: values.temprature,
       }
+
+      // call api for updating fleettag
       editOrganizationFleettagApiTrigger({organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId), data: data})
         .unwrap()
         .then(() => {
@@ -108,6 +130,7 @@ const ScreenAdminDetailFleettag = () => {
     }
   });
 
+  // pre-fill formik values
   useEffect(() => {
     if(dataSingleFleettag){
       formik.setValues({
@@ -137,12 +160,14 @@ const ScreenAdminDetailFleettag = () => {
     handleSubmit,
   } = formik;
 
+  // handle edit fleettag
   const handleEditFleettag = () => {
     if(userCanEdit){
       formik.handleSubmit();
     }
   }
 
+  // handle delete fleettag
   const handleDeleteFleettag = () => {
     deleteSingleFleettagApiTrigger({organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId)})
     .unwrap()

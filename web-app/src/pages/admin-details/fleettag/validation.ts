@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 
+// initial values for the form
 export const fleettagDetailsInitialValues = {
   fleet_tag_id: "",
   fleet_tag_name: "",
@@ -16,4 +17,5 @@ export const fleettagDetailsInitialValues = {
   temprature: "",
 }
 
+// validation schema for the form
 export const fleettagDetailsYupValidationSchema = Yup.object().shape({});

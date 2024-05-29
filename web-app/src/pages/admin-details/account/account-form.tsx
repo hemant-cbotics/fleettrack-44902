@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Account Edit Form
+ * -----------------------------------------------------------------------------
+ * These components are used to render the form for editing the account details.
+ */
+
 import { FC } from "react";
 import {
   AdminFormFieldCheckbox,

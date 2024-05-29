@@ -1,3 +1,10 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Driver Detail Page
+ * -----------------------------------------------------------------------------
+ * This page is used to show the details of a single driver of the organization.
+ */
+
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
@@ -31,7 +38,7 @@ import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 
 const ScreenAdminDetailDriver = () => {
   const { driverId } = useParams<{ driverId: any }>();
-  const { state: locationState } = useLocation();
+  const { state: locationState } = useLocation();  // OrganizationEntityListingPayload | { new: true }
   const { t: tMain } = useTranslation();
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "admins.drivers" });
   const { t } = useTranslation("translation", { keyPrefix: "admins.drivers.detailsPage" });
@@ -39,8 +46,14 @@ const ScreenAdminDetailDriver = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+
+  // flag to idenfiy if driver is coming from create new driver popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
+
+  // flag to enable edit mode
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
+
+  // prepare query params for fetching organization drivers
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
   const [orgDriversQueryParams, setOrgDriversQueryParams] = useState<
     OrganizationEntityListingPayload
@@ -62,6 +75,7 @@ const ScreenAdminDetailDriver = () => {
     });
   }, 500);
 
+  // fetch organization drivers
   const {
     data: dataOrgDrivers,
     isFetching: isFetchingOrgDrivers,
@@ -69,10 +83,14 @@ const ScreenAdminDetailDriver = () => {
   } = useOrganizationDriversQuery(orgDriversQueryParams);
   const { results } = dataOrgDrivers || {};
 
+  // fetch single driver details
   const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { organization_id: thisUserOrganizationId, driver_id: parseInt(driverId) }, { skip: !driverId });
+
+  // driver mutations
   const [ editOrganizationDriverApiTrigger , {isLoading: isLoadingEditDriver}] = useEditOrganizationDriverMutation();
   const [ deleteSingleDriverApiTrigger, {isLoading: isLoadingDeleteDriver}] = useDeleteSingleDriverMutation()
 
+  // prepare list data for driver list
   const listData: TListData[] = !!results
     ? (results || ([] as OrganizationDriver[])).map(
         (item: OrganizationDriver, index: number) => ({
@@ -85,16 +103,19 @@ const ScreenAdminDetailDriver = () => {
       )
     : [];
 
-    const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
-    useEffect(() => {
-      if(isFetchingSingleDriver) {
-        setFormikValuesReady(false);
-      }
-    }, [isFetchingSingleDriver]);
-    const formik = useFormik({
+    // formik
+  const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
+  useEffect(() => {
+    if(isFetchingSingleDriver) {
+      setFormikValuesReady(false);
+    }
+  }, [isFetchingSingleDriver]);
+  const formik = useFormik({
     initialValues: driverDetailsInitialValues,
     validationSchema: driverDetailsYupValidationSchema,
     onSubmit: (values) => {
+
+      // prepare payload
       const data = {
         id: values.driver_id,
         address: values.address,
@@ -117,6 +138,8 @@ const ScreenAdminDetailDriver = () => {
         twic_expiry: values.twic_expiry_date ? new Date(values.twic_expiry_date).toISOString() : null,
         vehicle_assigned: values.vehicle_id,
       };
+
+      // call api for updating driver
       editOrganizationDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId), data: data})
       .unwrap()
       .then(() => {
@@ -130,6 +153,7 @@ const ScreenAdminDetailDriver = () => {
     },
   });
 
+  // pre-fill formik values
   useEffect(() => {
     if (dataSingleDriver) {
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
@@ -168,6 +192,7 @@ const ScreenAdminDetailDriver = () => {
     handleSubmit,
   } = formik;
 
+  // handle delete driver
   const handleDeleteDriver = () => {
     deleteSingleDriverApiTrigger({organization_id: thisUserOrganizationId, driver_id: parseInt(driverId)})
     .unwrap()
@@ -181,6 +206,7 @@ const ScreenAdminDetailDriver = () => {
     });
   };
 
+  // handle edit driver
   const handleEditDriver = () => {
     if(userCanEdit){
       formik.handleSubmit();
