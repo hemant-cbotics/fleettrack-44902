@@ -3,8 +3,10 @@ import { APP_CONFIG } from "../../constants/constants";
 import { asyncLoadScript, removeScript } from "../../utils/common";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
 import { onMapScriptLoaded } from "./onMapScriptLoaded";
-import { TGeozoneMapData } from "./types";
+import { TGeozoneMapData, TLatLng } from "./types";
 import { mapGetCurrentPosition } from "../../utils/map";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserCurrPosData } from "../../api/store/commonSlice";
 
 type TBasicMapProps = {
   className?: string;
@@ -21,12 +23,16 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
 }) => {
   const initRef = React.useRef(false);
   const renderCount = React.useRef(0);
+  const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
+  const dispatch = useDispatch();
 
   const [loadingMap, setLoadingMap] = React.useState(true);
 
   const initBingMap = useCallback(() => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap')
-    mapGetCurrentPosition((currPos) => {
+    if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap');
+    const currPosRetrievedCallback = (currPos: TLatLng) => {
+      dispatch(setUserCurrPosData(currPos));
+      console.log('[setMapData] via initBingMap', currPos);
       setMapData?.(data => ({
         ...data,
         centerPosition: currPos,
@@ -48,7 +54,13 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
           }, loadingMap ? 2000 : 200); // delay necessary to let map resources load, before attempting to load the map
         }
       )
-    });
+    }
+    // get user's current position, use if available
+    if(userCurrPos) {
+      currPosRetrievedCallback(userCurrPos);
+    } else {
+      mapGetCurrentPosition(currPosRetrievedCallback);
+    }
   }, [loadingMap]);
 
   const removeBingMap = useCallback(() => {
@@ -76,6 +88,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
       </div>
     )}
     <div id={APP_CONFIG.MAPS.COMPONENT_ID} className="w-full h-full relative"></div>
+    <>{console.log('[[ RERENDER ]]')}</>
     <MemoizedBingMapsReact />
   </div>;
 })

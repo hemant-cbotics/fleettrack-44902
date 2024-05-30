@@ -14,6 +14,7 @@ export type TGeozoneMapDataPolygon = {
 }
 
 export type TGeozoneMapDataRoute = {
+  centerPosition: TLatLng;
   locs: TLatLng[];
 }
 

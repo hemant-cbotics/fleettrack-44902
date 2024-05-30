@@ -4,6 +4,7 @@ import MapMarkerGreen from "../../../assets/svg/map-marker-green.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../components/maps/types";
 import { TMapRef } from "./type";
+import { MAP_DEFAULTS } from "./constants";
 
 const dragLabelCenter = {
   subTitle: 'to reposition',
@@ -32,7 +33,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
       pRadius: null,
     },
     mCircle: null,
-    circleRadius: 0.6,
+    circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? MAP_DEFAULTS.RADIUS,
   }
 
   const getDistanceFromCenter = (loc1: any, loc2: any) => {
@@ -108,6 +109,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
         renderCircle(refCenter, distanceFromCenter);
         // update the map data
+        console.log('[setMapData] via mapOperations (center dragend)');
         props.setMapData(
           data =>
           ({
@@ -146,6 +148,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
         renderCircle(refCenter, distanceFromCenter);
         // update the map data
+        console.log('[setMapData] via mapOperations (radius dragend)');
         props.setMapData(
           data =>
           ({
