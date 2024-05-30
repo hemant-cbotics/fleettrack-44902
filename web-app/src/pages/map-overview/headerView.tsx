@@ -1,17 +1,27 @@
 import React, { FC } from "react";
 import { APP_CONFIG } from "../../constants/constants";
 import FilterIcon from "../../assets/svg/filter-icon.svg";
+import { AdminFormFieldSubmit } from "../../components/admin/formFields";
 
 interface HeaderViewProps {
   title: string;
   filterChange: () => void;
+  groupSelectorCallback: () => void;
 }
-const HeaderView: FC<HeaderViewProps> = ({ title, filterChange }) => {
+const HeaderView: FC<HeaderViewProps> = ({ title, filterChange, groupSelectorCallback }) => {
   return (
     <header
       className={`flex justify-between ${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}
     >
-      <h1 className="font-bold text-blue-900 text-3xl leading-9">{title}</h1>
+      <div className="flex gap-6">
+        <h1 className="font-bold text-blue-900 text-3xl leading-9">{title}</h1>
+        <AdminFormFieldSubmit
+          label="Group Selector"
+          variant="primary"
+          type="button"
+          onClick={groupSelectorCallback}
+        />
+      </div>
       <div className="flex gap-4 items-center">
         {/* {showRefreshButton && <div className="flex items-center">
           <button className="flex justify-between py-2">
