@@ -6,9 +6,10 @@ type GroupVehicleItemProps = {
   sub_title?: string;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   show?: boolean;
+  disabled?: boolean;
 };
 
-const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title, sub_title = '', handleChange, show = true }) => {
+const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title, sub_title = '', handleChange, show = true, disabled  = false }) => {
   return (
     <label
       htmlFor={`GroupVehicleItem_${id}`}
@@ -18,9 +19,10 @@ const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title, sub_title = ''
         &#8203;
         <input
           type="checkbox"
-          className="size-4 rounded border-gray-300"
+          className="size-4 rounded border-gray-300 disabled:bg-gray-200 disabled:border-gray-300"
           id={`GroupVehicleItem_${id}`} 
           onChange={handleChange}
+          disabled={disabled}
           />
       </div>
 
