@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { TGroupList } from './type';
 import { TModalsState, setModalsData } from '../../api/store/commonSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,14 +20,19 @@ const GroupSelectorModal: FC<GroupSelectorModalProps> = ({filteredGroupData, set
     hideModal();
   }
 
-const [allChecked, setAllChecked] = useState(false);
+  const [allChecked, setAllChecked] = useState(false);
 
-const handleAllCheckboxChange = (e:any) => {
-  setAllChecked(prevState => !prevState);
-  if(e.target.checked){
-    setFilteredGroupData(filteredGroupData.map(group => ({ ...group, checked: true })));
-  }
-};
+  useEffect(() => {
+    const areAllGroupsChecked = filteredGroupData.every(group => group.checked);
+    setAllChecked(areAllGroupsChecked);
+  }, [filteredGroupData])
+
+  const handleAllCheckboxChange = (e:any) => {
+    setAllChecked(prevState => !prevState);
+    if(e.target.checked){
+      setFilteredGroupData(filteredGroupData.map(group => ({ ...group, checked: true })));
+    }
+  };
 
   const hideModal = () => {
     dispatch(setModalsData({ ...modalsState, showGroupSelector: false }));
