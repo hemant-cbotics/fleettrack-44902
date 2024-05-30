@@ -436,6 +436,7 @@ export const language_en = {
       detailsPage: {
         heading: "Groups",
         sub_heading: "Edit Group",
+        listing_heading: "Group Listing",
         add_new: "Add New Group",
         group: "Group",
         show_inactive_vehicles: "Show Inactive Vehicles",
@@ -445,7 +446,7 @@ export const language_en = {
         in_selected_group: "In Selected Group",
         active: "Active: {{count}}",
         inactive: "Inactive: {{count}}",
-        search_placeholder: "Search vehicles here...",
+        search_placeholder: "Search groups here...",
         add_all: "Add All",
         add_selected: "Add Selected",
         remove_selected: "Remove Selected",
