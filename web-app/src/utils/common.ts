@@ -10,3 +10,25 @@ export const sideEffectLogOut = (redirect = true) => {
   if (redirect)
     window.location.href = routeUrls.landingPage
 }
+
+export const asyncLoadScript = (src: string, id: string, callback: () => void) => {
+  const existingScript = document.getElementById(id)
+
+  if (!existingScript) {
+    const script = document.createElement('script')
+    script.src = src
+    script.id = id
+    document.body.appendChild(script)
+
+    script.onload = () => {
+      if (callback) callback()
+    }
+  }
+
+  if (existingScript && callback) callback()
+}
+
+export const removeScript = (id: string) => {
+  const existingScript = document.getElementById(id)
+  if (existingScript) existingScript.remove()
+}

@@ -181,6 +181,7 @@ const RealSelect: FC<AdminFormFieldDropdownProps> = ({
       </label>}
 
       <Select
+        inputId={id}
         classNames={{
           control: (state) =>
             `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none ${
@@ -269,6 +270,7 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
       </label>}
 
       <AsyncSelect
+        inputId={id}
         classNames={{
           control: (state) =>
             `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none ${
