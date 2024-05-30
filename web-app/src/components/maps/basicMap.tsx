@@ -3,20 +3,20 @@ import { APP_CONFIG } from "../../constants/constants";
 import { asyncLoadScript, removeScript } from "../../utils/common";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
 import { onMapScriptLoaded } from "./onMapScriptLoaded";
-import { TLatLng } from "./types";
+import { TGeozoneMapData } from "./types";
 import { mapGetCurrentPosition } from "../../utils/map";
 
 type TBasicMapProps = {
   className?: string;
   mapRef?: any;
-  currentPosition: React.MutableRefObject<TLatLng>;
+  setMapData?: React.Dispatch<React.SetStateAction<TGeozoneMapData>>;
   onMapReady?: () => void;
 };
 
 const BasicMap: FC<TBasicMapProps> = React.memo(({
   className = '',
   mapRef,
-  currentPosition,
+  setMapData,
   onMapReady
 }) => {
   const initRef = React.useRef(false);
@@ -27,7 +27,10 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
   const initBingMap = useCallback(() => {
     if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap')
     mapGetCurrentPosition((currPos) => {
-      currentPosition.current = currPos;
+      setMapData?.(data => ({
+        ...data,
+        centerPosition: currPos,
+      }));
       asyncLoadScript(
         APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
         APP_CONFIG.MAPS.SCRIPT_ID,
