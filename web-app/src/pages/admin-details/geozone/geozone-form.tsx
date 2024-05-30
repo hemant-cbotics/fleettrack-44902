@@ -13,6 +13,8 @@ import { useOrganizationGroupsQuery } from "../../../api/network/adminApiService
 import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import BasicMap from "../../../components/maps/basicMap";
+import { mapOperations } from "./map";
+import { TLatLng } from "../../../components/maps/types";
 
 export interface GeozoneDetailFormProps {
   values: any;
@@ -41,26 +43,26 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   userCanEdit,
   loadingData,
  }) => {
-const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
+  const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
 
-// selected groups mechanism
-const [selectedGroups, setSelectedGroups] = React.useState(values.assign_group);
-const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
+  // selected groups mechanism
+  const [selectedGroups, setSelectedGroups] = React.useState(values.assign_group);
+  const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
 
-// prepare group query params
-const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
-  organization_id: thisUserOrganizationId ?? 0,
-  page: 1,
-  page_size: 100,
-  search: ""
-});
+  // prepare group query params
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
+  const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
+    organization_id: thisUserOrganizationId ?? 0,
+    page: 1,
+    page_size: 100,
+    search: ""
+  });
 
-// fetch organization groups
-const {
-  data: dataOrgGroups,
-} =
-  useOrganizationGroupsQuery(orgGroupsQueryParams);
+  // fetch organization groups
+  const {
+    data: dataOrgGroups,
+  } =
+    useOrganizationGroupsQuery(orgGroupsQueryParams);
 
   // prepare group data for display
   const { results } = dataOrgGroups ?? {};
@@ -92,9 +94,27 @@ const {
     formikSetValue('assign_group', selectedGroups);
   }
 
+  // common map ref to be used for various map operations
+  const mapRef = React.useRef(null);
+  const currentPosition = React.useRef<TLatLng>({ latitude: 0, longitude: 0 });
+
+  // carry out map operations on map ready
+  const handleMapReady = () => {
+    mapOperations({
+      mapRef,
+      currentPosition,
+    })
+  }
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      <BasicMap className="col-span-12 mb-4 bg-gray-200 h-96" />
+      {JSON.stringify(currentPosition.current)}
+      <BasicMap
+        className="col-span-12 mb-4 bg-gray-200 h-96"
+        mapRef={mapRef}
+        currentPosition={currentPosition}
+        onMapReady={handleMapReady}
+      />
       <AdminFormFieldInput
         label={t("description")}
         type="text"

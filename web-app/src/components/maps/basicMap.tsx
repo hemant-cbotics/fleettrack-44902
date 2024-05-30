@@ -2,36 +2,44 @@ import React, { FC, useCallback, useEffect } from "react";
 import { APP_CONFIG } from "../../constants/constants";
 import { asyncLoadScript, removeScript } from "../../utils/common";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
-import MapMarkerRed from "../../assets/svg/map-marker-red.svg";
-import MapMarkerGreen from "../../assets/svg/map-marker-green.svg";
 import { onMapScriptLoaded } from "./onMapScriptLoaded";
+import { TLatLng } from "./types";
+import { mapGetCurrentPosition } from "../../utils/map";
 
 type TBasicMapProps = {
   className?: string;
+  mapRef?: any;
+  currentPosition: React.MutableRefObject<TLatLng>;
+  onMapReady?: () => void;
 };
 
-const BasicMap: FC<TBasicMapProps> = React.memo(({ className = '' }) => {
+const BasicMap: FC<TBasicMapProps> = React.memo(({
+  className = '',
+  mapRef,
+  currentPosition,
+  onMapReady
+}) => {
   const initRef = React.useRef(false);
-  const mapRef = React.useRef(null);
-  const centreMarkerRef = React.useRef(null);
   const renderCount = React.useRef(0);
 
   const [loadingMap, setLoadingMap] = React.useState(true);
 
   const initBingMap = useCallback(() => {
-    console.log('initBingMap')
-    navigator.geolocation.getCurrentPosition(function(_) {
-      console.log('GET CurrentPosition', `${_.coords.latitude}, ${_.coords.longitude}`)
+    if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap')
+    mapGetCurrentPosition((currPos) => {
+      currentPosition.current = currPos;
       asyncLoadScript(
         APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
         APP_CONFIG.MAPS.SCRIPT_ID,
         () => {
-          console.log("Map script loaded");
+          if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
           setTimeout(() => {
             
             onMapScriptLoaded({
-              currentPosition: _,
+              mapRef,
+              currentPosition: currPos,
               setLoadingMap,
+              onMapReadyCallback: onMapReady,
             })
 
           }, loadingMap ? 2000 : 200); // delay necessary to let map resources load, before attempting to load the map
@@ -41,25 +49,17 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({ className = '' }) => {
   }, [loadingMap]);
 
   const removeBingMap = useCallback(() => {
-    console.log('removeBingMap')
+    if(APP_CONFIG.DEBUG.MAPS) console.log('removeBingMap')
     removeScript(APP_CONFIG.MAPS.SCRIPT_ID)
   }, []);
 
-  useEffect(() => {
-    console.log(renderCount.current)
-  }, [renderCount.current]);
-
-  useEffect(() => {
-    console.log('COMP initBingMap');
-  }, [initBingMap]);
-
   const MemoizedBingMapsReact = useCallback(() => {
-    console.log('MemoizedBingMapsReact')
+    if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedBingMapsReact')
 
     // initialize the map
     if(!initRef.current) {
       initRef.current = true;
-      setTimeout(() => initBingMap(), 1000);
+      setTimeout(() => initBingMap(), 500);
     }
     
     return <>

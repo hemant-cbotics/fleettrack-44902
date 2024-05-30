@@ -27,6 +27,7 @@ export const APP_CONFIG = {
   },
   DEBUG: {
     ALL: true,
+    MAPS: false,
   },
   MAPS: {
     SCRIPT_ID: 'bing-maps-script',
