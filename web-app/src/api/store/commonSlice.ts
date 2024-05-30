@@ -17,6 +17,8 @@ export type TModalsState = {
   showCreateGeozone: boolean;
   showDeleteConfirmation: boolean;
   showMapFilter: boolean;
+  showGroupSelector: boolean;
+  showDeviceReport: boolean;
 }
 
 export type TAppCommonState = {
@@ -39,6 +41,8 @@ const initialState: TAppCommonState = {
     showCreateGeozone: false,
     showDeleteConfirmation: false,
     showMapFilter: false,
+    showGroupSelector: false,
+    showDeviceReport: false,
   }
 }
 
