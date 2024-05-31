@@ -1,17 +1,18 @@
 import * as Yup from 'yup';
+import { OrganizationGeozone } from '../../../api/types/Geozone';
 
 // initial values for the form
-export const geozoneDetailsInitialValues = {
+export const geozoneDetailsInitialValues: Partial<OrganizationGeozone> & { assign_group: any[] } = {
   properties: {},
   description: "",
   city: "",
-  zone_type: "",
+  zone_type: "Circle",
   geocode: "",
-  latitude_longitude: "",
+  lat_lng: "",
   overlap_priority: 0,
   assign_group: [{}],
   reverse_geocode: false,
-  arrival_zone: false,
+  arrival_geozone: false,
   departure_zone: false,
   zone_color: "",
   speed_limit: "",

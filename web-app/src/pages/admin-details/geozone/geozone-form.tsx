@@ -12,15 +12,20 @@ import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
 import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
+import { geozoneDetailsInitialValues } from "./validation";
 import BasicMap from "../../../components/maps/basicMap";
+import {
+  mapOperations as mapOperationsPolygon,
+  mapUpdatesHandler as mapUpdatesHandlerPolygon
+} from "./map-polygon";
 import { mapOperations, mapUpdatesHandler } from "./map";
 import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../types/map";
-import { TMapRef } from "./type";
+import { TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
 import { useSelector } from "react-redux";
 import { APP_CONFIG } from "../../../constants/constants";
 
 export interface GeozoneDetailFormProps {
-  values: any;
+  values: typeof geozoneDetailsInitialValues;
   errors: any;
   touched: any;
   handleChange: (event: React.ChangeEvent<any>) => void;
@@ -127,6 +132,22 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     }
   }, [/*loadingData, */values.properties, mapData]);
 
+  // determine applicable map operations and map updates handler
+  let applicableMapOperations: TMapOperations;
+  let applicableMapUpdatesHandler: TMapUpdatesHandler;
+  switch(values.zone_type) {
+    case 'Polygon':
+      console.log('[POLYGON]')
+      applicableMapOperations = mapOperationsPolygon;
+      applicableMapUpdatesHandler = mapUpdatesHandlerPolygon;
+    break;
+    case 'Circle':
+    default:
+      applicableMapOperations = mapOperations;
+      applicableMapUpdatesHandler = mapUpdatesHandler;
+    break;
+  }
+
   // update form values on map data change
   useEffect(() => {
     const { ready, editable, ...mapDataToSave } = mapData;
@@ -140,7 +161,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       ...mapData,
       editable: userCanEdit,
     });
-    mapUpdatesHandler(
+    applicableMapUpdatesHandler(
       {
         mapRef,
         mapData,
@@ -157,7 +178,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       console.error('MAP DATA ISSUE - lat = 0')
     } else {
       console.log('>> sending map operations', { ...mapData })
-      mapOperations({
+      applicableMapOperations({
         mapRef,
         mapData: { ...mapData },
         setMapData,
@@ -238,7 +259,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         type="text"
         id="latitude_longitude"
         name="latitude_longitude"
-        value={values.latitude_longitude}
+        value={values.lat_lng}
         onChange={handleChange}
         onBlur={handleBlur}
         error={errors.latitude_longitude}
@@ -251,7 +272,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         label={t("overlap_priority")}
         id="overlap_priority"
         name="overlap_priority"
-        value={values.overlap_priority.toString()}
+        value={`${values.overlap_priority ?? ""}`}
         onChange={(e) => {formikSetValue("overlap_priority", e?.value)}}
         onBlur={(e) => {formikSetTouched("overlap_priority", true); handleBlur(e)}}
         error={errors.overlap_priority}
@@ -302,7 +323,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         id="arrival_zone"
         type="checkbox"
         name="arrival_zone"
-        checked={values.arrival_zone}
+        checked={values.arrival_geozone}
         onChange={handleChange}
         onBlur={handleBlur}
         error={errors.arrival_zone}

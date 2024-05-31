@@ -50,19 +50,19 @@ export function createCircle(center: any, radius: any, color: any) {
   return new Microsoft.Maps.ContourLine(getCircleLocs(center, radius), color);
 }
 
-export const renderCircle = (mapRef: any, center: any, radiusInMiles: number, color: string) => {
+export const renderCircle = (mapRef: any, center: any, radiusInMiles: number, colorRGB: [number,number,number]) => {
   const Microsoft = (window as any).Microsoft;
   if(APP_CONFIG.DEBUG.MAPS) console.log('Rendering circle at', center.latitude, center.longitude, 'with radius', radiusInMiles);
   mapRef.current.map.layers.clear();
-  mapRef.current.objects.mCircle = createCircle(center, radiusInMiles, 'rgba(0,150,50,0.4)');
+  if(APP_CONFIG.DEBUG.MAPS) console.log('color', `rgba(${colorRGB.join(',')},0.2)`)
+  mapRef.current.objects.mCircle = createCircle(center, radiusInMiles, `rgba(${colorRGB.join(',')},0.2)`);
   const circleLayer = new Microsoft.Maps.ContourLayer(
     [mapRef.current.objects.mCircle],
     {
       colorCallback: (val: any) => val,
       polygonOptions: {
         strokeThickness: 2,
-        strokeColor: 'rgba(0,100,0,0.5)',
-        // fillColor: 'rgba(0,0,0,0.1)',
+        strokeColor: `rgba(${colorRGB.join(',')},0.6)`, // 'rgba(0,100,0,0.5)',
         visible: true
       }
     }

@@ -3,7 +3,7 @@ import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
 import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { TGeozoneMapData, TGeozoneMapDataCircle } from "../../../types/map";
-import { TMapOperations, TMapUpdatesHandler } from "./type";
+import { TMapOperationsProps, TMapUpdatesHandler } from "./type";
 import { MAP_DEFAULTS } from "./constants";
 import { getDistanceFromCenter, renderCircle } from "../../../utils/map";
 import { ColorRGB } from "../../../types/common";
@@ -16,9 +16,9 @@ const dragLabelRadius = {
   subTitle: 'to resize',
   title: 'Drag',
 }
-const circleColorRGB: ColorRGB = [0, 150, 50];
+const circleColorRGB: ColorRGB = [150,0,50];
 
-export const mapOperations: TMapOperations = (props) => {
+export const mapOperations = (props: TMapOperationsProps) => {
 
   const Microsoft = (window as any).Microsoft;
   (window as any).map = props.mapRef.current;
@@ -31,7 +31,6 @@ export const mapOperations: TMapOperations = (props) => {
     },
     mCircle: null,
     circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? MAP_DEFAULTS.RADIUS,
-    mRadiusLine: null,
   }
 
   const renderMapObjects = () => {
@@ -69,11 +68,6 @@ export const mapOperations: TMapOperations = (props) => {
         const distanceFromCenter = getDistanceFromCenter(c, r);
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
         renderCircle(props.mapRef, refCenter, distanceFromCenter, circleColorRGB);
-        // update radius line
-        props.mapRef.current.objects.mRadiusLine?.setLocations([
-          props.mapRef.current.objects.mPushpins.pCentre.getLocation(),
-          props.mapRef.current.objects.mPushpins.pRadius.getLocation()
-        ]);
         // update the map data
         console.log('[setMapData] via mapOperations (center dragend)');
         props.setMapData(
@@ -102,17 +96,6 @@ export const mapOperations: TMapOperations = (props) => {
     );
     props.mapRef.current.map.entities.push(props.mapRef.current.objects.mPushpins.pRadius); // add the pushpin to the map
 
-    // create radius line
-    props.mapRef.current.objects.mRadiusLine = new Microsoft.Maps.Polyline([
-      props.mapRef.current.objects.mPushpins.pCentre.getLocation(),
-      props.mapRef.current.objects.mPushpins.pRadius.getLocation()
-    ], {
-      strokeColor: new Microsoft.Maps.Color(200, circleColorRGB[0], circleColorRGB[1], circleColorRGB[2]),
-      strokeThickness: 2,
-      strokeDashArray: [4, 4]
-    });
-    props.mapRef.current.map.entities.push(props.mapRef.current.objects.mRadiusLine);
-
     // add event listener for dragend event on the radius pushpin
     Microsoft.Maps.Events.addHandler(
       props.mapRef.current.objects.mPushpins.pRadius,
@@ -124,11 +107,6 @@ export const mapOperations: TMapOperations = (props) => {
         const distanceFromCenter = getDistanceFromCenter(c, r);
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
         renderCircle(props.mapRef, refCenter, distanceFromCenter, circleColorRGB);
-        // update radius line
-        props.mapRef.current.objects.mRadiusLine?.setLocations([
-          props.mapRef.current.objects.mPushpins.pCentre.getLocation(),
-          props.mapRef.current.objects.mPushpins.pRadius.getLocation()
-        ]);
         // update the map data
         console.log('[setMapData] via mapOperations (radius dragend)');
         props.setMapData(
