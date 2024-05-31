@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 
 // initial values for the form
 export const geozoneDetailsInitialValues = {
+  properties: {},
   description: "",
   city: "",
   zone_type: "",

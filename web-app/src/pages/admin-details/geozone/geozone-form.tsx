@@ -4,7 +4,7 @@
  * -----------------------------------------------------------------------------
  * These components are used to render the form for editing the geozone details.
  */
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput } from "../../../components/admin/formFields";
 import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
@@ -13,8 +13,10 @@ import { useOrganizationGroupsQuery } from "../../../api/network/adminApiService
 import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import BasicMap from "../../../components/maps/basicMap";
-import { mapOperations } from "./map";
-import { TLatLng } from "../../../components/maps/types";
+import { mapOperations, mapUpdatesHandler } from "./map";
+import { TGeozoneMapData, TLatLng } from "../../../components/maps/types";
+import { mapGetCurrentPosition } from "../../../utils/map";
+import { TMapRef } from "./type";
 
 export interface GeozoneDetailFormProps {
   values: any;
@@ -95,26 +97,66 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   }
 
   // common map ref to be used for various map operations
-  const mapRef = React.useRef(null);
-  const currentPosition = React.useRef<TLatLng>({ latitude: 0, longitude: 0 });
+  const mapRef = React.useRef<TMapRef>({
+    map: null,
+    objects: {},
+  });
+  // map data state - used to store map data for saving
+  const [mapData, setMapData] = useState<TGeozoneMapData>({
+    centerPosition: { latitude: 0, longitude: 0 },
+    radius: 0,
+    ready: false,
+    editable: userCanEdit,
+  });
+
+  useEffect(() => {
+    if (!mapData.ready) {
+      mapGetCurrentPosition((position: TLatLng) => {
+        setMapData({
+          ...mapData,
+          centerPosition: position,
+          ready: true,
+        });
+      });
+    }
+    const { ready, editable, ...mapDataToSave } = mapData;
+    formikSetValue('properties', mapDataToSave);
+  }, [mapData]);
+
+  useEffect(() => {
+    setMapData({
+      ...mapData,
+      editable: userCanEdit,
+    });
+    mapUpdatesHandler(
+      {
+        mapRef,
+        mapData,
+        setMapData,
+      },
+      'edit',
+      userCanEdit
+    );
+  }, [userCanEdit]);
 
   // carry out map operations on map ready
   const handleMapReady = () => {
     mapOperations({
       mapRef,
-      currentPosition,
+      mapData,
+      setMapData,
     })
   }
 
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      {JSON.stringify(currentPosition.current)}
-      <BasicMap
+      mapData: {JSON.stringify(mapData)}
+      {mapData.ready && <BasicMap
         className="col-span-12 mb-4 bg-gray-200 h-96"
         mapRef={mapRef}
-        currentPosition={currentPosition}
+        setMapData={setMapData}
         onMapReady={handleMapReady}
-      />
+      />}
       <AdminFormFieldInput
         label={t("description")}
         type="text"
