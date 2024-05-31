@@ -5,127 +5,20 @@ import AppSearchBox from "../../components/searchBox";
 import { useDebouncedCallback } from "use-debounce";
 import { useNavigate, useParams } from "react-router-dom";
 import { routeUrls } from "../../navigation/routeUrls";
-import { TListData } from "./type";
+import { TGroupList, TVehicleList } from "./type";
 import DeviceIcon from "../../assets/svg/device-icon.svg";
 import { useLoggedInUserData } from "../../utils/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOrganizationGroupsQuery } from "../../api/network/adminApiServices";
 import { OrganizationGroup } from "../../api/types/Group";
 import { AdminFormFieldDropdown } from "../../components/admin/formFields";
 import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../api/store/commonSlice";
 import MapFilter from "./mapFilter";
-
-const listData: TListData[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Group 1",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test2",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 3,
-    name: "John Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test1",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 4,
-    name: "Jane Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 5,
-    name: "John Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 6,
-    name: "Jane Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Group 1",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 7,
-    name: "John Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test2",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 8,
-    name: "Jane Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 9,
-    name: "John Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test1",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 10,
-    name: "Jane Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 11,
-    name: "John Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test1",
-    device_image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 12,
-    name: "Jane Doe",
-    device_id: "123456",
-    device_number: "123456",
-    is_active: true,
-    group_name: "Test2",
-    device_image: "https://via.placeholder.com/150",
-  },
-];
+import DeviceReport from "./report";
+import GroupList from "./groupList";
+import { OrganizationVehicle } from "../../api/types/Vehicle";
+import GroupSelectorModal from "./groupSelector";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
@@ -150,20 +43,34 @@ const ScreenMapOverview = () => {
   );
 
   const { results } = dataOrgGroups ?? {};
-  const groupData = !!results
+  const [filteredGroupData, setFilteredGroupData] = useState<TGroupList[]>([]);
+  const groupData: TGroupList[] = !!results
     ? (results || ([] as OrganizationGroup[])).map(
         (item: OrganizationGroup, index: number) => ({
-          value: item?.id.toString(),
-          label: item?.name,
+          id: item?.id,
+          name: item?.name,
+          listOfVehicles: item?.vehicles.map(
+                              (vehicle: OrganizationVehicle, index: number) => ({
+                                id: vehicle.id,
+                                name: vehicle?.vehicle_model + " " + vehicle?.vehicle_make || "-",
+                                description: vehicle?.vehicle_description || "-",
+                                vin: vehicle?.vin || "-",
+                                is_active: vehicle?.is_active,
+                              })
+                            ),
+          checked: true,
         })
       )
     : [];
+
+    useEffect(() => {
+      setFilteredGroupData(groupData);
+    }, [dataOrgGroups])
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     console.log(value);
   }, 500);
 
-  const isFetchingMapOverview = false;
   return (
     <>
       <HeaderView
@@ -171,12 +78,16 @@ const ScreenMapOverview = () => {
         filterChange={() => {
           dispatch(setModalsData({ ...modalsState, showMapFilter: true }));
         }}
+        groupSelectorCallback={() => {
+          dispatch(setModalsData({ ...modalsState, showGroupSelector: true }));
+        }}
       />
+      <GroupSelectorModal filteredGroupData = {filteredGroupData} setFilteredGroupData={setFilteredGroupData}/>
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
-        <div className="lg:grid lg:grid-cols-12 mt-4 py-2">
+        <div className="lg:grid lg:grid-cols-12 py-2">
           <div
             className={`hidden xl:block lg:col-span-3 space-y-4${
-              isFetchingMapOverview ? " opacity-40 pointer-events-none" : ""
+              isFetchingOrgGroups ? " opacity-40 pointer-events-none" : ""
             } bg-gray-100 rounded-l-lg`}
           >
             <div className="px-4 mt-4">
@@ -187,73 +98,61 @@ const ScreenMapOverview = () => {
                 }
               />
             </div>
-            <div className="flex justify-between items-center px-3">
-              <div className="font-bold text-lg leading-6">
-                {t("listing_heading")}
-              </div>
-              <div className="font-normal text-sm leading-6 text-blue-900 cursor-pointer">
-                <AdminFormFieldDropdown
-                  loadingData={isFetchingOrgGroups}
-                  label={""}
-                  id="group_id"
-                  name="group_id"
-                  options={groupData}
-                  value={groupData[0]?.value}
-                  onChange={(e) => {
-                    setSelectedGroups(e?.label);
-                  }}
-                  customSelectboxClass="border-none"
-                />
-              </div>
+            <div className="px-3 font-bold text-lg leading-6">
+              {t("listing_heading")}
             </div>
             <div>
-              {listData
-                ?.filter((listItem) => listItem.group_name === selectedGroups)
-                ?.map((item: any, index: number) => (
-                  <div
-                    key={index}
-                    className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                      parseInt(deviceId) === item.id ? "bg-blue-200" : ""
-                    }`}
-                    onClick={() =>
-                      navigate(
-                        `${routeUrls.dashboardChildren.map_overview}/${item.id}`
-                      )
-                    }
-                  >
-                    <div className="grid grid-cols-4">
-                      <div className="col-span-3 flex space-x-2">
-                        <div className="flex items-center">
-                          <img src={DeviceIcon} alt={`device-img${item.id}`} className="p-2 bg-gray-200 rounded-full"/>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm leading-6 text-blue-900">
-                            {item.name}
-                          </p>
-                          <p className="font-normal text-xs leading-6 text-gray-500">
-                            {item.device_id}
-                          </p>
-                          <p className="font-normal text-base leading-6 text-gray-700">
-                            {item.device_number}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="col-span-1 font-bold text-xs leading-4 text-right space-y-1">
-                        <div className="flex items-center justify-end space-x-1">
-                          <p>{item.group_name}</p>
-                          <div className="p-2 bg-blue-600 rounded-full"></div>
-                        </div>
-                        <p className="text-green-700">
-                          {item.is_active ? "Active" : "Inactive"}
-                        </p>
-                      </div>
+              {filteredGroupData?.filter((group) => group.checked)?.map((item: any, index: number) => (
+                <GroupList 
+                  key={index}
+                  name={item.name}
+                  color="red"
+                  noOfVehicles={item.listOfVehicles.length}
+                  openByDefault={index === 0 ? true : false}
+                >
+                  {item.listOfVehicles
+                    ?.map((vehicle: any, index: number) => (
+                      <div
+                        key={index}
+                        className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
+                          deviceId === vehicle.id ? "bg-blue-200" : ""
+                        }`}
+                        onClick={() =>{dispatch(setModalsData({ ...modalsState, showDeviceReport: true }));}}>
+                        <div className="grid grid-cols-4">
+                          <div className="col-span-3 flex space-x-2">
+                            <div className="flex items-center">
+                              {/* <img src={DeviceIcon} alt={`device-img${vehicle.id}`} className="p-2 bg-gray-200 rounded-full"/> */}
+                              <input
+                                type="checkbox"
+                                className="size-4 rounded border-gray-300 disabled:bg-gray-200 disabled:border-gray-300"
+                                id={vehicle.id} 
+                                onChange={() => {}}
+                                />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-sm leading-6 text-blue-900">
+                                {vehicle.name}
+                              </p>
+                              <p className="font-normal text-xs leading-6 text-gray-500">
+                                {vehicle.description}
+                              </p>
+                              <p className="font-normal text-base leading-6 text-gray-700">
+                                {vehicle.vin}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-span-1 font-bold text-xs leading-4 text-right text-green-700 space-y-1">
+                              {vehicle.is_active ? "Active" : "Inactive"}
+                          </div>
                     </div>
                   </div>
                 ))}
+                </GroupList>
+              ))}
             </div>
           </div>
-          <div className="lg:col-span-9">
-
+          <div className="lg:col-span-9 relative">
+            <DeviceReport />
           </div>
         </div>
       </div>
