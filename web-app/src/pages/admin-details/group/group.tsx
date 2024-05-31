@@ -149,7 +149,7 @@ const ScreenAdminDetailGroup = () => {
   // updating all vehicle list on data change
   useEffect(() => {
     setCurrentAllVehicleList(allVehicleList.filter((allVehicleItem) => !currentGroupVehicleList.some((groupVehicleItem) => allVehicleItem.id === groupVehicleItem.id)))
-  }, [dataOrgVehicles])
+  }, [dataOrgVehicles, currentGroupVehicleList])
 
   // handle left checkbox selection
   const handleLeftCheckboxChange = ({ item, isChecked }: { item: any; isChecked: boolean }) => {
@@ -200,6 +200,13 @@ const ScreenAdminDetailGroup = () => {
   // handle search change for right side
   const handleRightSearchChange = (e: any) => {
     setRightSearchText(e.target.value);
+  }
+
+  //handle cancel button 
+  const handleCancelButton = () => {
+    setCurrentGroupVehicleList(groupVehicleList);
+    setCurrentDescription(dataSingleGroup?.description ?? "");
+    setUserCanEdit(false);
   }
 
   // handle edit group
@@ -478,6 +485,13 @@ const ScreenAdminDetailGroup = () => {
                   />
                 </div>
                 <div className="flex-grow"></div>
+                <AdminFormFieldSubmit
+                  type="button"
+                  variant="primary"
+                  label={tMain("cancel")}
+                  onClick={handleCancelButton}
+                  disabled={!userCanEdit}
+                />
                 <AdminFormFieldSubmit
                   type="button"
                   variant="success"

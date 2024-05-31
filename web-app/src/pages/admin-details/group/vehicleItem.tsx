@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 type GroupVehicleItemProps = {
   id: string;
@@ -10,6 +10,21 @@ type GroupVehicleItemProps = {
 };
 
 const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title, sub_title = '', handleChange, show = true, disabled  = false }) => {
+  // Create a state for the checked status of the checkbox
+  const [isChecked, setIsChecked] = useState(false);
+
+  // Update the checked status when the checkbox is clicked
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(e.target.checked);
+    handleChange?.(e);
+  }
+
+  // Uncheck the checkbox when it's disabled
+  useEffect(() => {
+    if (disabled) {
+      setIsChecked(false);
+    }
+  }, [disabled]);
   return (
     <label
       htmlFor={`GroupVehicleItem_${id}`}
@@ -21,8 +36,9 @@ const GroupVehicleItem: FC<GroupVehicleItemProps> = ({ id, title, sub_title = ''
           type="checkbox"
           className="size-4 rounded border-gray-300 disabled:bg-gray-200 disabled:border-gray-300"
           id={`GroupVehicleItem_${id}`} 
-          onChange={handleChange}
+          onChange={handleCheckboxChange}
           disabled={disabled}
+          checked={isChecked}
           />
       </div>
 
