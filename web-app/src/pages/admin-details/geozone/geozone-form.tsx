@@ -14,9 +14,10 @@ import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import BasicMap from "../../../components/maps/basicMap";
 import { mapOperations, mapUpdatesHandler } from "./map";
-import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../components/maps/types";
+import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../types/map";
 import { TMapRef } from "./type";
 import { useSelector } from "react-redux";
+import { APP_CONFIG } from "../../../constants/constants";
 
 export interface GeozoneDetailFormProps {
   values: any;
@@ -104,7 +105,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   });
   // map data state - used to store map data for saving
   const [mapData, setMapData] = useState<TGeozoneMapData>({
-    centerPosition: { latitude: 0, longitude: 0 },
+    centerPosition: APP_CONFIG.MAPS.DEFAULT_CENTER,
     radius: MAP_DEFAULTS.RADIUS,
     ready: false,
     editable: userCanEdit,

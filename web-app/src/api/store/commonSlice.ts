@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { VerifyEmailOtpResponseSuccess } from "../types/Onboarding"
-import { TLatLng } from "../../components/maps/types";
+import { TLatLng } from "../../types/map";
+import { TMapState } from "../../types/map";
 
 export type TPreLoginUserData = {
   email?: string;
@@ -24,12 +25,15 @@ export type TAppCommonState = {
   preLoginUserData?: TPreLoginUserData;
   user?: VerifyEmailOtpResponseSuccess;
   userCurrPos?: TLatLng;
+  mapState?: TMapState;
   modals: TModalsState;
 }
 
 const initialState: TAppCommonState = {
   preLoginUserData: undefined,
   user: undefined,
+  userCurrPos: undefined,
+  mapState: undefined,
   modals: {
     showCreateUser: false,
     showEditColumns: false,
@@ -59,6 +63,9 @@ export const commonSlice = createSlice({
     setUserCurrPosData: (state, action: PayloadAction<TLatLng>) => {
       state.userCurrPos = action?.payload
     },
+    setMapStateData: (state, action: PayloadAction<TMapState>) => {
+      state.mapState = action?.payload
+    },
     setModalsData: (state, action: PayloadAction<TModalsState>) => {
       state.modals = { ...(state.modals || {}), ...action?.payload }
     }
@@ -69,6 +76,7 @@ export const {
   setPreLoginUserData,
   setUserData,
   setUserCurrPosData,
+  setMapStateData,
   setModalsData
 } = commonSlice.actions
 

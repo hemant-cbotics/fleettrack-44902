@@ -1,15 +1,19 @@
-import { FC } from "react";
+import React, { FC, useCallback } from "react";
 import Sidemenu from "../sidemenu";
 import DashboardHeader from "./dashboardHeader";
 import { Outlet } from "react-router-dom";
-import { TModalsState } from "../../api/store/commonSlice";
-import { useSelector } from "react-redux";
+import { setMapStateData, TModalsState } from "../../api/store/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { TMapState } from "../../types/map";
+import { APP_CONFIG } from "../../constants/constants";
+import { asyncLoadScript } from "../../utils/common";
 
 interface DashboardWrapperProps extends React.PropsWithChildren {
   children: React.ReactNode;
 }
 
 const DashboardWrapper: FC = () => {
+  // modals state
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
   const modalActive =
     modalsState.showEditColumns === true ||
@@ -20,6 +24,40 @@ const DashboardWrapper: FC = () => {
     modalsState.showCreateGroup === true ||
     modalsState.showCreateFleetTag === true ||
     modalsState.showCreateGeozone === true;
+  
+  const initRef = React.useRef(false);
+  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
+  const dispatch = useDispatch();
+
+  const MemoizedInitBingMaps = useCallback(() => {
+    if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedInitBingMaps')
+
+    // initialize the map
+    if(!initRef.current) {
+      initRef.current = true;
+      asyncLoadScript(
+        APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
+        APP_CONFIG.MAPS.SCRIPT_ID,
+        () => {
+          if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
+          setTimeout(() => {
+
+            // set map script loaded
+            dispatch(setMapStateData({
+              mapScriptLoaded: true,
+            }));
+
+            // TODO: Pre load user current position
+
+          }, /*loadingMap ?*/ 2000/* : 200*/); // delay necessary to let map resources load, before attempting to load the map
+        }
+      )
+    }
+    
+    return <>
+    </>
+  }, [mapState]);
+  
   return (
     <section className={`container-dashboard bg-white${modalActive ? " h-screen overflow-hidden" : ""}`}>
       <div className="flex min-h-screen grid-cols-12">
@@ -28,6 +66,7 @@ const DashboardWrapper: FC = () => {
         </aside>
         <div className="w-full pl-64">
           <header>
+            <MemoizedInitBingMaps />
             <DashboardHeader />
           </header>
           <main>

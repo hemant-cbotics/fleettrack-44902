@@ -1,12 +1,11 @@
 import React, { FC, useCallback, useEffect } from "react";
 import { APP_CONFIG } from "../../constants/constants";
-import { asyncLoadScript, removeScript } from "../../utils/common";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
 import { onMapScriptLoaded } from "./onMapScriptLoaded";
-import { TGeozoneMapData, TLatLng } from "./types";
+import { TGeozoneMapData, TLatLng, TMapState } from "../../types/map";
 import { mapGetCurrentPosition } from "../../utils/map";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserCurrPosData } from "../../api/store/commonSlice";
+import { setMapStateData, setUserCurrPosData } from "../../api/store/commonSlice";
 
 type TBasicMapProps = {
   className?: string;
@@ -22,8 +21,8 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
   onMapReady
 }) => {
   const initRef = React.useRef(false);
-  const renderCount = React.useRef(0);
   const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
+  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
 
   const [loadingMap, setLoadingMap] = React.useState(true);
@@ -37,23 +36,23 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
         ...data,
         centerPosition: currPos,
       }));
-      asyncLoadScript(
-        APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
-        APP_CONFIG.MAPS.SCRIPT_ID,
-        () => {
-          if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
-          setTimeout(() => {
-            
-            onMapScriptLoaded({
-              mapRef,
-              currentPosition: currPos,
-              setLoadingMap,
-              onMapReadyCallback: onMapReady,
-            })
-
-          }, loadingMap ? 2000 : 200); // delay necessary to let map resources load, before attempting to load the map
-        }
-      )
+      if(mapState?.mapScriptLoaded) {
+        onMapScriptLoaded({
+          mapRef,
+          currentPosition: currPos,
+          setLoadingMap,
+          onMapReadyCallback: () => {
+            dispatch(setMapStateData({
+              ...mapState,
+              pageMapLoaded: true,
+            }));
+            onMapReady?.();
+          },
+        });
+      } else {
+        // TODO: handle error when user lands directly on a page having map
+        if(APP_CONFIG.DEBUG.MAPS) console.log('ERROR: Map script should have been loaded by now');
+      }
     }
     // get user's current position, use if available
     if(userCurrPos) {
@@ -61,25 +60,19 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
     } else {
       mapGetCurrentPosition(currPosRetrievedCallback);
     }
-  }, [loadingMap]);
-
-  const removeBingMap = useCallback(() => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('removeBingMap')
-    removeScript(APP_CONFIG.MAPS.SCRIPT_ID)
-  }, []);
+  }, [loadingMap, mapState]);
 
   const MemoizedBingMapsReact = useCallback(() => {
     if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedBingMapsReact')
 
     // initialize the map
-    if(!initRef.current) {
+    if(!initRef.current && mapState?.mapScriptLoaded) {
       initRef.current = true;
       setTimeout(() => initBingMap(), 500);
     }
     
-    return <>
-    </>
-  }, [initBingMap]);
+    return <></>
+  }, [initBingMap, mapState]);
 
   return <div className={`relative ${className}`}>
     {loadingMap && (

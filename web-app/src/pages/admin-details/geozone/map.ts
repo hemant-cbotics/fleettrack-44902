@@ -1,10 +1,11 @@
 import React from "react";
 import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
-import MapMarkerGreen from "../../../assets/svg/map-marker-green.svg";
+import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { APP_CONFIG } from "../../../constants/constants";
-import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../components/maps/types";
+import { TGeozoneMapData, TGeozoneMapDataCircle } from "../../../types/map";
 import { TMapRef } from "./type";
 import { MAP_DEFAULTS } from "./constants";
+import { createCircle, getDistanceFromCenter, renderCircle } from "../../../utils/map";
 
 const dragLabelCenter = {
   subTitle: 'to reposition',
@@ -14,6 +15,7 @@ const dragLabelRadius = {
   subTitle: 'to resize',
   title: 'Drag',
 }
+const circleColor = 'rgba(0,150,50,0.4)';
 
 type TMapOperationsProps = {
   mapRef: React.MutableRefObject<TMapRef>;
@@ -36,50 +38,13 @@ export const mapOperations = (props: TMapOperationsProps) => {
     circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? MAP_DEFAULTS.RADIUS,
   }
 
-  const getDistanceFromCenter = (loc1: any, loc2: any) => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('[getDistanceFromCenter]', loc1.getLocation().latitude, loc2.getLocation().longitude);
-    return Microsoft.Maps.SpatialMath.getDistanceTo(
-      loc1.getLocation(),
-      loc2.getLocation(),
-      Microsoft.Maps.SpatialMath.DistanceUnits.Miles
-    );
-  }
-
-  const getCircleLocs = (center: any, radius: any) => {
-    // calculate the locations for a regular polygon that has 36 locations which will result in an approximate circle.
-    return Microsoft.Maps.SpatialMath.getRegularPolygon(center, radius, 36 * 2, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
-  }
-
-  function createCircle(center: any, radius: any, color: any) {
-    // Create a contour line that represents a circle.
-    return new Microsoft.Maps.ContourLine(getCircleLocs(center, radius), color);
-  }
-
-  const renderCircle = (center: any, radiusInMiles: number) => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('Rendering circle at', center.latitude, center.longitude, 'with radius', radiusInMiles);
-    props.mapRef.current.map.layers.clear();
-    props.mapRef.current.objects.mCircle = createCircle(center, radiusInMiles, 'rgba(0,150,50,0.4)');
-    const circleLayer = new Microsoft.Maps.ContourLayer(
-      [props.mapRef.current.objects.mCircle],
-      {
-        colorCallback: (val: any) => val,
-        polygonOptions: {
-          strokeThickness: 2,
-          strokeColor: 'rgba(0,100,0,0.5)',
-          // fillColor: 'rgba(0,0,0,0.1)',
-          visible: true
-        }
-      }
-    );
-    props.mapRef.current.map.layers.insert(circleLayer);
-  }
-
   const renderMapObjects = () => {
     let refCenter = new Microsoft.Maps.Location(
       (props.mapData as TGeozoneMapDataCircle).centerPosition.latitude,
       (props.mapData as TGeozoneMapDataCircle).centerPosition.longitude
     )
     if(APP_CONFIG.DEBUG.MAPS) console.log('Dropping center at', refCenter.latitude, refCenter.longitude);
+    props.mapRef.current.map.setView({ center: refCenter }); // set the view to the center
 
     // create center pushpin
     props.mapRef.current.objects.mPushpins.pCentre = new Microsoft.Maps.Pushpin(
@@ -107,7 +72,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         );
         const distanceFromCenter = getDistanceFromCenter(c, r);
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
-        renderCircle(refCenter, distanceFromCenter);
+        renderCircle(props.mapRef, refCenter, distanceFromCenter, circleColor);
         // update the map data
         console.log('[setMapData] via mapOperations (center dragend)');
         props.setMapData(
@@ -129,7 +94,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
       Microsoft.Maps.SpatialMath.getDestination(refCenter, 45, props.mapRef.current.objects.circleRadius, Microsoft.Maps.SpatialMath.DistanceUnits.Miles),
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        icon: MapMarkerGreen,
+        icon: MapMarkerBlue,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelRadius : {})
       }
@@ -146,7 +111,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         const r = props.mapRef.current.objects.mPushpins.pRadius as any;
         const distanceFromCenter = getDistanceFromCenter(c, r);
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
-        renderCircle(refCenter, distanceFromCenter);
+        renderCircle(props.mapRef, refCenter, distanceFromCenter, circleColor);
         // update the map data
         console.log('[setMapData] via mapOperations (radius dragend)');
         props.setMapData(
@@ -164,7 +129,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     );
 
     // render the circle
-    renderCircle(refCenter, props.mapRef.current.objects.circleRadius);
+    renderCircle(props.mapRef, refCenter, props.mapRef.current.objects.circleRadius, circleColor);
   }
 
   // load map modules before rendering the map objects
