@@ -84,7 +84,7 @@ const ScreenMapOverview = () => {
       />
       <GroupSelectorModal filteredGroupData = {filteredGroupData} setFilteredGroupData={setFilteredGroupData}/>
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
-        <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-">
+        <div className="lg:grid lg:grid-cols-12 py-2">
           <div
             className={`hidden xl:block lg:col-span-3 space-y-4${
               isFetchingOrgGroups ? " opacity-40 pointer-events-none" : ""
@@ -117,7 +117,7 @@ const ScreenMapOverview = () => {
                         className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
                           deviceId === vehicle.id ? "bg-blue-200" : ""
                         }`}
-                        onClick={() =>{}}>
+                        onClick={() =>{dispatch(setModalsData({ ...modalsState, showDeviceReport: true }));}}>
                         <div className="grid grid-cols-4">
                           <div className="col-span-3 flex space-x-2">
                             <div className="flex items-center">
@@ -151,13 +151,12 @@ const ScreenMapOverview = () => {
               ))}
             </div>
           </div>
-          <div className="lg:col-span-9">
-
+          <div className="lg:col-span-9 relative">
+            <DeviceReport />
           </div>
         </div>
       </div>
       <MapFilter />
-      <DeviceReport />
     </>
   );
 };
