@@ -109,6 +109,7 @@ const ScreenAdminDetailGeozone = () => {
 
       // prepare payload
       const data = {
+        properties: values.properties,
         zone_type: values.zone_type,
         city: values.city,
         description: values.description,
@@ -142,6 +143,7 @@ const ScreenAdminDetailGeozone = () => {
     if(dataSingleGeozone){
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
+        properties: dataSingleGeozone?.properties || [],
         description: dataSingleGeozone?.description || "",
         city: dataSingleGeozone?.city || "",
         zone_type: dataSingleGeozone?.zone_type || "",
@@ -192,7 +194,7 @@ const ScreenAdminDetailGeozone = () => {
   return (
       <>
         <HeaderView
-          title={t("heading")}
+          title={`${t("heading")}: ${dataSingleGeozone?.zone_id || geozoneId}`}
           showBackButton={true}
           backButtonCallback={() =>
             navigate(routeUrls.dashboardChildren.adminChildren.geozones)
@@ -285,7 +287,7 @@ const ScreenAdminDetailGeozone = () => {
               </div>
               <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleGeozone || isLoadingEditGeozone || isLoadingDeleteGeozone ? 'opacity-40' : ''}`}>
                 <form onSubmit={handleSubmit}>
-                  <Accordian title={t("accord_details")} openByDefault={true}>
+                  <Accordian title={t("accord_details")} openByDefault={true} collapsible={false}>
                     <GeozoneDetailForm
                       values={values}
                       errors={errors}

@@ -1,15 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="32px" height="32px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <g id="Vivid.JS" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-    <g id="Vivid-Icons" transform="translate(-125.000000, -643.000000)">
-      <g id="Icons" transform="translate(37.000000, 169.000000)">
-        <g id="map-marker" transform="translate(78.000000, 468.000000)">
-          <g transform="translate(10.000000, 6.000000)">
-            <path d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z" id="Shape" fill="#FF6E6E"></path>
-            <circle id="Oval" fill="#0C0058" fill-rule="nonzero" cx="14" cy="14" r="7"></circle>
-          </g>
-        </g>
-      </g>
-    </g>
-  </g>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 99" width="32" height="32">
+	<g>
+		<path
+			fill-rule="evenodd"
+			fill="#ff4050"
+      stroke="#000000"
+      stroke-width="0.5"
+			d="m11 38c0-21 18-38 39-38 21 0 38 17 38 38 0 24-25 34-39 61-13-28-38-37-38-61zm37-11c-2 0-3 1-5 2-4 2-7 7-6 13 0 6 6 12 14 11 7-1 13-7 12-14 0-2-1-4-2-5-1-2-2-3-3-4-2-2-6-3-10-3z"
+		/>
+	</g>
 </svg>

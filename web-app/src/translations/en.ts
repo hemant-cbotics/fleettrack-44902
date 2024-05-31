@@ -583,7 +583,14 @@ export const language_en = {
       time: "Time",
       timezone: "Timezone",
       auto_refresh_timer: "Auto Refresh Timer",
-    }
+    },
+    report: {
+      heading: "Report",
+    },
+    groupSelector: {
+      heading: "Group Selector",
+      sub_heading: "Please select the group you wish to view.",
+    },
   },
   confirm: "Confirm",
 };

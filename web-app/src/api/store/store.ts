@@ -5,7 +5,6 @@ import { UserAPIs } from "../network/userApiService"
 import commonSlice from "./commonSlice"
 import { AdminAPIs } from "../network/adminApiServices"
 
-
 // ...
 
 export const store = configureStore({

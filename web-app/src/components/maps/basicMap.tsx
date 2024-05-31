@@ -1,70 +1,78 @@
 import React, { FC, useCallback, useEffect } from "react";
 import { APP_CONFIG } from "../../constants/constants";
-import { asyncLoadScript, removeScript } from "../../utils/common";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
 import { onMapScriptLoaded } from "./onMapScriptLoaded";
-import { TLatLng } from "./types";
+import { TGeozoneMapData, TLatLng, TMapState } from "../../types/map";
 import { mapGetCurrentPosition } from "../../utils/map";
+import { useDispatch, useSelector } from "react-redux";
+import { setMapStateData, setUserCurrPosData } from "../../api/store/commonSlice";
 
 type TBasicMapProps = {
   className?: string;
   mapRef?: any;
-  currentPosition: React.MutableRefObject<TLatLng>;
+  setMapData?: React.Dispatch<React.SetStateAction<TGeozoneMapData>>;
   onMapReady?: () => void;
 };
 
 const BasicMap: FC<TBasicMapProps> = React.memo(({
   className = '',
   mapRef,
-  currentPosition,
+  setMapData,
   onMapReady
 }) => {
   const initRef = React.useRef(false);
-  const renderCount = React.useRef(0);
+  const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
+  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
+  const dispatch = useDispatch();
 
   const [loadingMap, setLoadingMap] = React.useState(true);
 
   const initBingMap = useCallback(() => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap')
-    mapGetCurrentPosition((currPos) => {
-      currentPosition.current = currPos;
-      asyncLoadScript(
-        APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
-        APP_CONFIG.MAPS.SCRIPT_ID,
-        () => {
-          if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
-          setTimeout(() => {
-            
-            onMapScriptLoaded({
-              mapRef,
-              currentPosition: currPos,
-              setLoadingMap,
-              onMapReadyCallback: onMapReady,
-            })
-
-          }, loadingMap ? 2000 : 200); // delay necessary to let map resources load, before attempting to load the map
-        }
-      )
-    });
-  }, [loadingMap]);
-
-  const removeBingMap = useCallback(() => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('removeBingMap')
-    removeScript(APP_CONFIG.MAPS.SCRIPT_ID)
-  }, []);
+    if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap');
+    const currPosRetrievedCallback = (currPos: TLatLng) => {
+      dispatch(setUserCurrPosData(currPos));
+      console.log('[setMapData] via initBingMap', currPos);
+      setMapData?.(data => ({
+        ...data,
+        centerPosition: currPos,
+      }));
+      if(mapState?.mapScriptLoaded) {
+        onMapScriptLoaded({
+          mapRef,
+          currentPosition: currPos,
+          setLoadingMap,
+          onMapReadyCallback: () => {
+            dispatch(setMapStateData({
+              ...mapState,
+              pageMapLoaded: true,
+            }));
+            onMapReady?.();
+          },
+        });
+      } else {
+        // TODO: handle error when user lands directly on a page having map
+        if(APP_CONFIG.DEBUG.MAPS) console.log('ERROR: Map script should have been loaded by now');
+      }
+    }
+    // get user's current position, use if available
+    if(userCurrPos) {
+      currPosRetrievedCallback(userCurrPos);
+    } else {
+      mapGetCurrentPosition(currPosRetrievedCallback);
+    }
+  }, [loadingMap, mapState]);
 
   const MemoizedBingMapsReact = useCallback(() => {
     if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedBingMapsReact')
 
     // initialize the map
-    if(!initRef.current) {
+    if(!initRef.current && mapState?.mapScriptLoaded) {
       initRef.current = true;
       setTimeout(() => initBingMap(), 500);
     }
     
-    return <>
-    </>
-  }, [initBingMap]);
+    return <></>
+  }, [initBingMap, mapState]);
 
   return <div className={`relative ${className}`}>
     {loadingMap && (
@@ -73,6 +81,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
       </div>
     )}
     <div id={APP_CONFIG.MAPS.COMPONENT_ID} className="w-full h-full relative"></div>
+    <>{console.log('[[ RERENDER ]]')}</>
     <MemoizedBingMapsReact />
   </div>;
 })
