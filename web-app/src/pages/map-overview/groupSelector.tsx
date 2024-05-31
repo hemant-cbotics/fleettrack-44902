@@ -18,19 +18,24 @@ const GroupSelectorModal: FC<GroupSelectorModalProps> = ({filteredGroupData, set
 
   const handleSubmit = () => {
     hideModal();
+    setFilteredGroupData(tempFilteredGroupData);
   }
-
+  const [tempFilteredGroupData, setTempFilteredGroupData] = useState(filteredGroupData)
   const [allChecked, setAllChecked] = useState(false);
 
   useEffect(() => {
-    const areAllGroupsChecked = filteredGroupData.every(group => group.checked);
-    setAllChecked(areAllGroupsChecked);
+    setTempFilteredGroupData(filteredGroupData);
   }, [filteredGroupData])
+
+  useEffect(() => {
+    const areAllGroupsChecked = tempFilteredGroupData.every(group => group.checked);
+    setAllChecked(areAllGroupsChecked);
+  }, [tempFilteredGroupData])
 
   const handleAllCheckboxChange = (e:any) => {
     setAllChecked(prevState => !prevState);
     if(e.target.checked){
-      setFilteredGroupData(filteredGroupData.map(group => ({ ...group, checked: true })));
+      setTempFilteredGroupData(tempFilteredGroupData.map(group => ({ ...group, checked: true })));
     }
   };
 
@@ -66,7 +71,7 @@ const GroupSelectorModal: FC<GroupSelectorModalProps> = ({filteredGroupData, set
                   onChange={handleAllCheckboxChange}
                 />
               </div>
-              {filteredGroupData?.map((group: TGroupList, index: number) => (
+              {tempFilteredGroupData?.map((group: TGroupList, index: number) => (
                 <div className='col-span-6' key={index}>
                   <AdminFormFieldCheckbox
                     id={group.name}
@@ -75,7 +80,7 @@ const GroupSelectorModal: FC<GroupSelectorModalProps> = ({filteredGroupData, set
                     name={group.name}
                     checked={group.checked}
                     onChange={() => {
-                      setFilteredGroupData(filteredGroupData.map((grp) => {
+                      setTempFilteredGroupData(tempFilteredGroupData.map((grp) => {
                         if(grp.name === group.name) {
                           return { ...grp, checked: !grp.checked }
                         }
@@ -98,7 +103,7 @@ const GroupSelectorModal: FC<GroupSelectorModalProps> = ({filteredGroupData, set
               label={tMain('cancel')}
               type="button"
               variant="danger-transparent"
-              onClick={hideModal}   
+              onClick={() => {setTempFilteredGroupData(filteredGroupData); hideModal();}}   
             />
 
           </form>
