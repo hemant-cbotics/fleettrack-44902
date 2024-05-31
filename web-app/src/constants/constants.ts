@@ -27,11 +27,15 @@ export const APP_CONFIG = {
   },
   DEBUG: {
     ALL: true,
-    MAPS: false,
+    MAPS: true,
   },
   MAPS: {
     SCRIPT_ID: 'bing-maps-script',
     SCRIPT_URL: (key: string) => `https://www.bing.com/api/maps/mapcontrol?key=${key}`, // callback=initMap&setLang=en&setMkt=en-US
     COMPONENT_ID: 'FTBingMap',
+    DEFAULT_CENTER: { // Memphis, TN (LB Technology HQ)
+      latitude: 35.129186,
+      longitude: -89.9571074,
+    },
   },
 }

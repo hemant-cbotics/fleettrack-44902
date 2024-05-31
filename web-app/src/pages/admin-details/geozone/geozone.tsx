@@ -287,7 +287,7 @@ const ScreenAdminDetailGeozone = () => {
               </div>
               <div className={`rounded-lg mt-2 bg-blue-200 transition ${isFetchingSingleGeozone || isLoadingEditGeozone || isLoadingDeleteGeozone ? 'opacity-40' : ''}`}>
                 <form onSubmit={handleSubmit}>
-                  <Accordian title={t("accord_details")} openByDefault={true}>
+                  <Accordian title={t("accord_details")} openByDefault={true} collapsible={false}>
                     <GeozoneDetailForm
                       values={values}
                       errors={errors}

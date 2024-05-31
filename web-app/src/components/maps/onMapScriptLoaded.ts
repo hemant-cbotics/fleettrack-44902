@@ -1,7 +1,7 @@
 import React from "react";
 import { APP_CONFIG } from "../../constants/constants";
 import { TMapRef } from "../../pages/admin-details/geozone/type";
-import { TLatLng } from "./types";
+import { TLatLng } from "../../types/map";
 
 type TOnMapScriptLoadedProps = {
   mapRef: React.MutableRefObject<TMapRef>;
