@@ -529,9 +529,9 @@ export const language_en = {
           deletion_failed: "Failed to delete geozone. Please check the information that you have entered.",
         },
         form: {
-          description: "Description(Address)",
+          description: "Description (Address)",
           city: "City",
-          zone_type: "Zone Type(Shape)",
+          zone_type: "Zone Type (Shape)",
           geocode: "Geocode",
           latitude_longitude: "Latitude/Longitude",
           overlap_priority: "Overlap Priority",
@@ -541,6 +541,13 @@ export const language_en = {
           departure_zone: "Departure Zone",
           zone_color: "Zone Color",
           speed_limit: "Speed Limit",
+        },
+        map: {
+          polygonEdit: {
+            heading: "Edit Geozone Polygon",
+            sub_heading: "You can drag the blue pushpins around to reshape the polygon.",
+            ok_button: "OK",
+          }
         }
       },
     },

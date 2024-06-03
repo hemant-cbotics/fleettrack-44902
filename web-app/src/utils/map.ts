@@ -39,15 +39,15 @@ export const getDistanceFromCenter = (loc1: any, loc2: any) => {
 }
 
 // calculate the locations for a regular polygon that has 36 locations which will result in an approximate circle.
-export const getCircleLocs = (center: any, radius: any) => {
+export const getCircleLocs = (center: any, radius: any, edges: number) => {
   const Microsoft = (window as any).Microsoft;
-  return Microsoft.Maps.SpatialMath.getRegularPolygon(center, radius, 36 * 2, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
+  return Microsoft.Maps.SpatialMath.getRegularPolygon(center, radius, edges, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
 }
 
 // Create a contour line that represents a circle.
 export function createCircle(center: any, radius: any, color: any) {
   const Microsoft = (window as any).Microsoft;
-  return new Microsoft.Maps.ContourLine(getCircleLocs(center, radius), color);
+  return new Microsoft.Maps.ContourLine(getCircleLocs(center, radius, 36 * 2), color);
 }
 
 export const renderCircle = (mapRef: any, center: any, radiusInMiles: number, colorRGB: [number,number,number]) => {
@@ -68,5 +68,25 @@ export const renderCircle = (mapRef: any, center: any, radiusInMiles: number, co
     }
   );
   mapRef.current.map.layers.insert(circleLayer);
+}
+
+export const renderPolygon = (mapRef: any, center: any, polygonPoints: any, colorRGB: [number,number,number]) => {
+  const Microsoft = (window as any).Microsoft;
+  if(APP_CONFIG.DEBUG.MAPS) console.log('Rendering polygon at', center.latitude, center.longitude, 'with points', polygonPoints);
+  mapRef.current.map.layers.clear();
+  if(APP_CONFIG.DEBUG.MAPS) console.log('color', `rgba(${colorRGB.join(',')},0.2)`)
+  mapRef.current.objects.mPolygon = new Microsoft.Maps.ContourLine(polygonPoints, `rgba(${colorRGB.join(',')},0.2)`); // createCircle(center, radiusInMiles, `rgba(${colorRGB.join(',')},0.2)`);
+  const poygonLayer = new Microsoft.Maps.ContourLayer(
+    [mapRef.current.objects.mPolygon],
+    {
+      colorCallback: (val: any) => val,
+      polygonOptions: {
+        strokeThickness: 2,
+        strokeColor: `rgba(${colorRGB.join(',')},0.6)`, // 'rgba(0,100,0,0.5)',
+        visible: true
+      }
+    }
+  );
+  mapRef.current.map.layers.insert(poygonLayer);
 }
 
