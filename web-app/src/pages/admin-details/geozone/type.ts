@@ -1,4 +1,5 @@
 import { GeozoneType } from "../../../api/types/Geozone";
+import { BingAutosuggestResItem } from "../../../api/types/Map";
 import { TGeozoneMapData } from "../../../types/map";
 
 export type TListData = {
@@ -21,3 +22,8 @@ export type TMapOperationsProps = {
 }
 export type TMapOperations = (props: TMapOperationsProps) => void;
 export type TMapUpdatesHandler = (props: TMapOperationsProps, action: 'edit', value?: any) => void;
+
+export type TAutosuggestOptionValue = {
+  labelText: string;
+  itemJSON: BingAutosuggestResItem;
+}

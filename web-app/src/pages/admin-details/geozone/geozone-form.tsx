@@ -6,7 +6,7 @@
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput } from "../../../components/admin/formFields";
+import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
 import { MAP_DEFAULTS, OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
@@ -20,9 +20,12 @@ import {
 } from "./map-polygon";
 import { mapOperations, mapUpdatesHandler } from "./map";
 import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../types/map";
-import { TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
+import { TAutosuggestOptionValue, TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
 import { useSelector } from "react-redux";
 import { APP_CONFIG } from "../../../constants/constants";
+import { useDebouncedCallback } from "use-debounce";
+import { useLazyAutosuggestAddressQuery, useLazyGeocodeQuery } from "../../../api/network/mapApiServices";
+import { BingAutosuggestResItem } from "../../../api/types/Map";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -186,6 +189,67 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     }
   }, [mapData]);
 
+  const [autoSuggestKeyword, setAutoSuggestKeyword] = useState<string>("");
+  const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
+    setAutoSuggestKeyword(value);
+  }, 500);
+
+  const [autosuggestQuery, { isFetching: isFetchingAutosuggest }] = useLazyAutosuggestAddressQuery()
+  const [autosuggestResults, setAutosuggestResults] = useState<BingAutosuggestResItem[]>([]);
+  const [autosuggestDropOptions, setAutosuggestDropOptions] = useState<TSelectboxOption[]>([]);
+
+  const loadOptionsHandlerAutosuggest =
+  // TODO: enable debouncing, currently causing issues with autosuggest
+  // useDebouncedCallback(
+    async (inputValue: string) => {
+      const autosuggestResponse = await autosuggestQuery(inputValue)
+      console.log('autosuggestResponse', autosuggestResponse)
+      const { data } = autosuggestResponse;
+      const firstResultSet = data?.resourceSets?.[0];
+      const options = !!firstResultSet?.estimatedTotal && firstResultSet?.estimatedTotal > 0
+        ? firstResultSet?.resources?.[0]?.value?.map((item) => {
+            const labelText = item?.name ?? `${item?.address?.formattedAddress} - ${item?.address?.countryRegion}`; // TODO: standardize
+            return {
+              value: JSON.stringify({ labelText, itemJSON: item } as TAutosuggestOptionValue),
+              label: labelText, // to show icon, add ${item.__type === 'LocalBusiness' ? '💲' : '📍'}
+            } as TSelectboxOption
+          })
+        : [];
+      const newAutosuggestResults = firstResultSet?.resources?.[0]?.value ?? [];
+      console.log('newAutosuggestResults', newAutosuggestResults)
+      setAutosuggestResults(newAutosuggestResults);
+      setAutosuggestDropOptions(options);
+      return options;
+    }
+  // , 500);
+
+  const [geocodeQuery, { isFetching: isFetchingGeocode }] = useLazyGeocodeQuery();
+
+  const handleAutosuggestChange = async (e: any) => {
+    const newlySelectedLocation = e.value;
+    const newlySelectedLocationJSON = JSON.parse(e.value) as TAutosuggestOptionValue;
+    formikSetValue('description', newlySelectedLocation);
+    console.log('newlySelectedLocation', newlySelectedLocation);
+    console.log('newlySelectedLocationJSON', newlySelectedLocationJSON);
+    const geocodeResponse = await geocodeQuery(
+      newlySelectedLocationJSON.itemJSON.address
+    );
+    console.log('geocodeResponse', geocodeResponse);
+    const newlySelectedLocationCoords = geocodeResponse.data?.resourceSets?.[0]?.resources?.[0]?.point?.coordinates;
+    console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
+    // const selectedItemData =
+    //   autosuggestResults.find((item) => {
+    //     const labelText = item?.name ?? `${item?.address?.formattedAddress} - ${item?.address?.countryRegion}`; // TODO: standardize
+    //     return labelText === newlySelectedLocation
+    //   });
+    // // TODO: selected not being captured - maybe set JSON in value of select options
+    // console.log('selectedItemData', selectedItemData)
+    // geocoding
+    // const geocodeResponse = await geocodeQuery(newlySelectedLocation)
+    // console.log('geocodeResponse', geocodeResponse)
+
+  }
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       {/* mapData: {JSON.stringify(mapData)} */}
@@ -195,19 +259,43 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         setMapData={setMapData}
         onMapReady={handleMapReady}
       />}
-      <AdminFormFieldInput
+      {loadingData ? <PseudoSelect label={t("description")} /> : 
+        (<AdminFormFieldAsyncDropdown
+          loadingData={loadingData || isFetchingAutosuggest}
+          label={t("description")}
+          id="description"
+          name="description"
+          value={values.description}
+          // options={[{ value: `${values.description}`, label: `${values.description}` }]}
+          // options={autosuggestResults}
+          loadOptions={loadOptionsHandlerAutosuggest}
+          onChange={handleAutosuggestChange}
+          onBlur={(e) => {
+            formikSetTouched("description", true);
+            handleBlur(e);
+          }}
+          error={errors.description}
+          touched={touched.description}
+          disabled={!userCanEdit}
+        />)
+      }
+      {/* <AdminFormFieldInput
         label={t("description")}
         type="text"
         id="description"
         name="description"
         value={values.description}
-        onChange={handleChange}
+        // onChange={handleChange}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          handleChange(e)
+          debouncedSetSearchKeyword(e.target.value)
+        }}
         onBlur={handleBlur}
         error={errors.description}
         touched={touched.description}
         disabled={!userCanEdit}
         customWrapperClass="col-span-12"
-      />
+      /> */}
 
       <AdminFormFieldDropdown
         loadingData={loadingData}
