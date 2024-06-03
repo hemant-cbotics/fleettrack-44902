@@ -142,30 +142,32 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
         });
       });
       // show the infobox
-      props.mapRef.current.objects.mInfobox = new Microsoft.Maps.Infobox(refCenter, {
-        title: i18n.t('admins.geozones.detailsPage.map.polygonEdit.heading'),
-        description: i18n.t('admins.geozones.detailsPage.map.polygonEdit.sub_heading'),
-        showPointer: false, 
-        // showCloseButton: false,
-        visible: false,
-        actions: [{
-            label: i18n.t('admins.geozones.detailsPage.map.polygonEdit.ok_button'),
-            eventHandler: () => {
-              // close info box
-              props.mapRef.current.objects.mInfobox.setOptions({ visible: false });
-            }
-        }],
-      });
-      props.mapRef.current.objects.mInfobox.setMap(props.mapRef.current.map);
-      props.mapRef.current.objects.mInfobox.setOptions({ visible: true });
-      setTimeout(() => {
-        const infoboxElement = (window as any).document.querySelector('.MicrosoftMap .Infobox')?.parentNode;
-        if(infoboxElement) {
-          (infoboxElement as any).style.transition = 'all 0.5s ease 0s';
-          (infoboxElement as any).style.left = '20px';
-          (infoboxElement as any).style.top = '20px';
-        }
-      }, 100);
+      if(false) {
+        props.mapRef.current.objects.mInfobox = new Microsoft.Maps.Infobox(refCenter, {
+          title: i18n.t('admins.geozones.detailsPage.map.polygonEdit.heading'),
+          description: i18n.t('admins.geozones.detailsPage.map.polygonEdit.sub_heading'),
+          showPointer: false, 
+          // showCloseButton: false,
+          visible: false,
+          actions: [{
+              label: i18n.t('admins.geozones.detailsPage.map.polygonEdit.ok_button'),
+              eventHandler: () => {
+                // close info box
+                props.mapRef.current.objects.mInfobox.setOptions({ visible: false });
+              }
+          }],
+        });
+        props.mapRef.current.objects.mInfobox.setMap(props.mapRef.current.map);
+        props.mapRef.current.objects.mInfobox.setOptions({ visible: true });
+        setTimeout(() => {
+          const infoboxElement = (window as any).document.querySelector('.MicrosoftMap .Infobox')?.parentNode;
+          if(infoboxElement) {
+            (infoboxElement as any).style.transition = 'all 0.5s ease 0s';
+            (infoboxElement as any).style.left = '20px';
+            (infoboxElement as any).style.top = '20px';
+          }
+        }, 100);
+      }
       break;
     default:
       break;

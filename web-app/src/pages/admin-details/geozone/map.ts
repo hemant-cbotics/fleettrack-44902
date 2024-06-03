@@ -9,12 +9,12 @@ import { getDistanceFromCenter, renderCircle } from "../../../utils/map";
 import { ColorRGB } from "../../../types/common";
 
 const dragLabelCenter = {
-  subTitle: 'to reposition',
-  title: 'Drag',
+  // subTitle: 'to reposition',
+  // title: 'Drag',
 }
 const dragLabelRadius = {
-  subTitle: 'to resize',
-  title: 'Drag',
+  // subTitle: 'to resize',
+  // title: 'Drag',
 }
 const circleColorRGB: ColorRGB = [0, 150, 50];
 
@@ -47,7 +47,7 @@ export const mapOperations: TMapOperations = (props) => {
       refCenter,
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        icon: MapMarkerRed,
+        icon: MapMarkerBlue,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelCenter : {})
       }
@@ -95,7 +95,7 @@ export const mapOperations: TMapOperations = (props) => {
       Microsoft.Maps.SpatialMath.getDestination(refCenter, 45, props.mapRef.current.objects.circleRadius, Microsoft.Maps.SpatialMath.DistanceUnits.Miles),
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        icon: MapMarkerBlue,
+        icon: MapMarkerRed,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelRadius : {})
       }

@@ -27,6 +27,8 @@ import { useDebouncedCallback } from "use-debounce";
 import { useLazyAutosuggestAddressQuery, useLazyGeocodeQuery } from "../../../api/network/mapApiServices";
 import { BingAutosuggestResItem } from "../../../api/types/Map";
 import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
+import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
+import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -273,13 +275,27 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       {/* mapData: {JSON.stringify(mapData)} */}
-      {mapData.ready && <BasicMap
-        className="col-span-12 mb-4 bg-gray-200 h-96"
-        mapRef={mapRef}
-        mapData={mapData}
-        setMapData={setMapData}
-        onMapReady={handleMapReady}
-      />}
+      {mapData.ready && <>
+        <BasicMap
+          className="col-span-12 bg-gray-200 h-96"
+          mapRef={mapRef}
+          mapData={mapData}
+          setMapData={setMapData}
+          onMapReady={handleMapReady}
+        />
+        <div className="col-span-12 flex gap-8 mb-4">
+          {userCanEdit && (<>
+            {values.zone_type === 'Circle' && (<div className="flex items-center gap-2">
+              <img src={MapMarkerBlue} alt="" />
+              <span className="font-bold text-sm text-[#5959FF]">{t('bluePushpin')}</span>
+            </div>)}
+            <div className="flex items-center gap-2">
+              <img src={MapMarkerRed} alt="" />
+              <span className="font-bold text-sm text-[#FF3F4F]">{t('redPushpin')}</span>
+            </div>
+          </>)}
+        </div>
+      </>}
       {loadingData ? <PseudoSelect label={t("description")} /> : 
         (<AdminFormFieldAsyncDropdown
           loadingData={loadingData || isFetchingAutosuggest}
