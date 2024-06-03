@@ -28,6 +28,7 @@ import { OrganizationGeozone } from "../../../api/types/Geozone";
 import { toast } from "react-toastify";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
+import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -237,7 +238,7 @@ const ScreenAdminDetailGeozone = () => {
                       </div>
                     </div>
                     <p className="font-normal text-base leading-6 text-gray-700">
-                      {item.description}
+                      {geozoneDescriptionDisplayText(item.description, "-")}
                     </p>
                   </div>
                 ))}

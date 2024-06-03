@@ -19,11 +19,11 @@ export type TGeozoneMapDataRoute = {
 }
 
 export type TGeozoneMapDataForAPIs =
-  TGeozoneMapDataCircle |
-  TGeozoneMapDataPolygon |
-  TGeozoneMapDataRoute;
+  Partial<TGeozoneMapDataCircle> & // TGeozoneMapDataCircle |
+  Partial<TGeozoneMapDataPolygon> & // TGeozoneMapDataPolygon |
+  Partial<TGeozoneMapDataRoute>; // TGeozoneMapDataRoute;
 
-export type TGeozoneMapData = TGeozoneMapDataForAPIs & { ready: boolean, editable: boolean };
+export type TGeozoneMapData = TGeozoneMapDataForAPIs & { ready?: boolean, editable?: boolean };
 
 // map state in redux store
 export type TMapState = {

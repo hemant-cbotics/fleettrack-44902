@@ -530,6 +530,7 @@ export const language_en = {
         },
         form: {
           description: "Description (Address)",
+          description_no_options: "No locations found. Please try another search.",
           city: "City",
           zone_type: "Zone Type (Shape)",
           geocode: "Geocode",

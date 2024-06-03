@@ -94,7 +94,7 @@ type AdminFormFieldDropdownProps = {
   label: string | false;
   id: string;
   name: string;
-  placeholder?: string;
+  placeholder?: ReactNode | string;
   // onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onChange?: (e: TSelectboxOption | null) => void;
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
@@ -111,6 +111,8 @@ type AdminFormFieldDropdownProps = {
 };
 
 type AdminFormFieldAsyncDropdownProps = AdminFormFieldDropdownProps & {
+  noOptionsMessage?: (obj: { inputValue: string }) => string;
+  defaultOption?: TSelectboxOption;
   loadOptions: ((inputValue: string, callback: (options: OptionsOrGroups<TSelectboxOption, GroupBase<TSelectboxOption>>) => void) => void/* | Promise<...>*/) | undefined;
 }
 
@@ -232,6 +234,8 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
   onBlur,
   value,
   options = [],
+  noOptionsMessage = () => "No options found",
+  defaultOption = null,
   loadOptions,
   touched,
   error,
@@ -286,6 +290,8 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
         onChange={handleChange}
         isDisabled={disabled || readOnly}
         menuPlacement={menuPlacement}
+        defaultValue={defaultOption}
+        noOptionsMessage={noOptionsMessage}
       />
       {touched && !!error && (
         <p

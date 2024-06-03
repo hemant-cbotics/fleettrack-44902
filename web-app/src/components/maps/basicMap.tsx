@@ -10,6 +10,7 @@ import { setMapStateData, setUserCurrPosData } from "../../api/store/commonSlice
 type TBasicMapProps = {
   className?: string;
   mapRef?: any;
+  mapData?: TGeozoneMapData;
   setMapData?: React.Dispatch<React.SetStateAction<TGeozoneMapData>>;
   onMapReady?: () => void;
 };
@@ -17,6 +18,7 @@ type TBasicMapProps = {
 const BasicMap: FC<TBasicMapProps> = React.memo(({
   className = '',
   mapRef,
+  mapData,
   setMapData,
   onMapReady
 }) => {
@@ -31,15 +33,15 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
     if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap');
     const currPosRetrievedCallback = (currPos: TLatLng) => {
       dispatch(setUserCurrPosData(currPos));
-      console.log('[setMapData] via initBingMap', currPos);
-      setMapData?.(data => ({
-        ...data,
-        centerPosition: currPos,
-      }));
+      console.log('[setMapData] via initBingMap [DISABLED]', currPos);
+      // setMapData?.({
+      //   ...mapData,
+      //   centerPosition: mapData?.centerPosition ?? currPos,
+      // });
       if(mapState?.mapScriptLoaded) {
         onMapScriptLoaded({
           mapRef,
-          currentPosition: currPos,
+          currentPosition: mapData?.centerPosition ?? currPos,
           setLoadingMap,
           onMapReadyCallback: () => {
             dispatch(setMapStateData({

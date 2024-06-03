@@ -26,6 +26,7 @@ import { APP_CONFIG } from "../../../constants/constants";
 import { useDebouncedCallback } from "use-debounce";
 import { useLazyAutosuggestAddressQuery, useLazyGeocodeQuery } from "../../../api/network/mapApiServices";
 import { BingAutosuggestResItem } from "../../../api/types/Map";
+import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -177,7 +178,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
 
   // carry out map operations on map ready
   const handleMapReady = useCallback(() => {
-    if(mapData.centerPosition.latitude === 0) {
+    if(mapData.centerPosition?.latitude === 0) {
       console.error('MAP DATA ISSUE - lat = 0')
     } else {
       console.log('>> sending map operations', { ...mapData })
@@ -237,6 +238,25 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     console.log('geocodeResponse', geocodeResponse);
     const newlySelectedLocationCoords = geocodeResponse.data?.resourceSets?.[0]?.resources?.[0]?.point?.coordinates;
     console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
+    if(!!newlySelectedLocationCoords?.[0] && !!newlySelectedLocationCoords?.[1]) {
+      setMapData({
+        ...mapData,
+        ready: false,
+      });
+      setTimeout(() => {
+        console.info('setting map data with new location coords', newlySelectedLocationCoords)
+        setMapData({
+          ...mapData,
+          centerPosition: {
+            latitude: newlySelectedLocationCoords?.[0],
+            longitude: newlySelectedLocationCoords?.[1],
+          },
+          ready: true,
+        });
+      }, 200);
+    } else {
+      console.error('GEOCODE RESPONSE ISSUE - no coordinates')
+    }
     // const selectedItemData =
     //   autosuggestResults.find((item) => {
     //     const labelText = item?.name ?? `${item?.address?.formattedAddress} - ${item?.address?.countryRegion}`; // TODO: standardize
@@ -256,6 +276,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       {mapData.ready && <BasicMap
         className="col-span-12 mb-4 bg-gray-200 h-96"
         mapRef={mapRef}
+        mapData={mapData}
         setMapData={setMapData}
         onMapReady={handleMapReady}
       />}
@@ -265,9 +286,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           label={t("description")}
           id="description"
           name="description"
-          value={values.description}
-          // options={[{ value: `${values.description}`, label: `${values.description}` }]}
-          // options={autosuggestResults}
+          noOptionsMessage={() => t("description_no_options")}
+          options={[{ value: `${values.description}`, label: `${geozoneDescriptionDisplayText(`${values.description}`, "-")}` }]}
           loadOptions={loadOptionsHandlerAutosuggest}
           onChange={handleAutosuggestChange}
           onBlur={(e) => {

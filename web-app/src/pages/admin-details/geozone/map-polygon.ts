@@ -61,7 +61,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     const polygonPoints = getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, 6);
 
     // use the polygon points to create pushpins
-    polygonPoints.forEach((polygonPoint: any, index: number) => {
+    polygonPoints?.forEach((polygonPoint: any, index: number) => {
       const newPushpin = new Microsoft.Maps.Pushpin(
         polygonPoint,
         {
@@ -135,7 +135,7 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
   switch(action) {
     case 'edit':
       // edge pushpins are draggable
-      props.mapRef.current.objects.mPushpins?.pPoints.forEach((pushpin: any) => {
+      props.mapRef.current.objects.mPushpins?.pPoints?.forEach((pushpin: any) => {
         pushpin.setOptions({
           draggable: value,
           // ...(value ? dragLabelPoints : {})
