@@ -287,7 +287,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           id="description"
           name="description"
           noOptionsMessage={() => t("description_no_options")}
-          options={[{ value: `${values.description}`, label: `${geozoneDescriptionDisplayText(`${values.description}`, "-")}` }]}
+          defaultOption={{ value: `${values.description}`, label: `${geozoneDescriptionDisplayText(`${values.description}`, "-")}` }}
           loadOptions={loadOptionsHandlerAutosuggest}
           onChange={handleAutosuggestChange}
           onBlur={(e) => {
