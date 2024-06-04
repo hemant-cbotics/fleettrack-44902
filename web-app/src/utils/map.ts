@@ -7,7 +7,7 @@ type TMapGetCurrentPositionCallback = (position: TLatLng) => void;
 export const mapGetCurrentPosition = (callback: TMapGetCurrentPositionCallback) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
-      if(APP_CONFIG.DEBUG.MAPS) console.log('[mapGetCurrentPosition]', `${position.coords.latitude}, ${position.coords.longitude}`)
+      if(APP_CONFIG.DEBUG.MAPS) console.log('[mapGetCurrentPosition] Retrieved user current geo position', `${position.coords.latitude}, ${position.coords.longitude}`)
       callback({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude

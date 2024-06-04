@@ -10,12 +10,12 @@ import { ColorRGB } from "../../../types/common";
 import i18n from "../../../services/i18n";
 
 const dragLabelCenter = {
-  subTitle: 'to reposition',
-  title: 'Drag',
+  // subTitle: 'to reposition',
+  // title: 'Drag',
 }
 const dragLabelPoints = {
-  subTitle: 'to reshape',
-  title: 'Drag',
+  // subTitle: 'to reshape',
+  // title: 'Drag',
 }
 const polygonColorRGB: ColorRGB = [150, 0, 50];
 
@@ -57,8 +57,15 @@ export const mapOperations = (props: TMapOperationsProps) => {
     );
     props.mapRef.current.map.entities.push(props.mapRef.current.objects.mPushpins.pCentre); // add the pushpin to the map
 
-    // get the polygon points
-    const polygonPoints = getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, 6);
+    // ------------------------------------------------------------------------------------------------------------
+    // TODO: when editing a polygon, we identified that extra pushpins is added to the map - this needs to be fixed
+    // ------------------------------------------------------------------------------------------------------------
+
+    // load from saved polygon points or get the default polygon points
+    const polygonPoints =
+      !!(props.mapData as TGeozoneMapDataPolygon).locs
+        ? (props.mapData as TGeozoneMapDataPolygon).locs.map((point: TLatLng) => new Microsoft.Maps.Location(point.latitude, point.longitude))
+        : getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, MAP_DEFAULTS.POLYGON_POINTS);
 
     // use the polygon points to create pushpins
     polygonPoints?.forEach((polygonPoint: any, index: number) => {
@@ -66,7 +73,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         polygonPoint,
         {
           anchor: new Microsoft.Maps.Point(16, 32),
-          icon: MapMarkerBlue,
+          icon: MapMarkerRed,
           // draggable: props.mapData.editable,
           draggable: true, // temp
           ...(props.mapData.editable ? dragLabelPoints : {})
@@ -85,16 +92,14 @@ export const mapOperations = (props: TMapOperationsProps) => {
           renderPolygon(props.mapRef, refCenter, polygonPointLocations, polygonColorRGB);
           // update the map data
           console.log('[setMapData] via mapOperations (radius dragend)');
-          props.setMapData(
-            data =>
-            ({
-              ...data,
+          props.setMapData({
+              ...props.mapData,
               centerPosition: {
                 latitude: refCenter.latitude,
                 longitude: refCenter.longitude
               },
               locs: polygonPointLocations.map((point: any) => ({ latitude: point.latitude, longitude: point.longitude } as TLatLng)),
-            } as TGeozoneMapData)
+            } as TGeozoneMapData
           );
         }
       );

@@ -18,7 +18,7 @@ export type TMapRef = {
 export type TMapOperationsProps = {
   mapRef: React.MutableRefObject<TMapRef>;
   mapData: TGeozoneMapData;
-  setMapData: React.Dispatch<React.SetStateAction<TGeozoneMapData>>;
+  setMapData: (mapData: TGeozoneMapData) => void; // React.Dispatch<React.SetStateAction<TGeozoneMapData>>;
 }
 export type TMapOperations = (props: TMapOperationsProps) => void;
 export type TMapUpdatesHandler = (props: TMapOperationsProps, action: 'edit', value?: any) => void;

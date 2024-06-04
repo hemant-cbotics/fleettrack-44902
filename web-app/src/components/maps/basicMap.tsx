@@ -19,7 +19,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
   className = '',
   mapRef,
   mapData,
-  setMapData,
+  setMapData, // deprecated
   onMapReady
 }) => {
   const initRef = React.useRef(false);
@@ -29,11 +29,13 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
 
   const [loadingMap, setLoadingMap] = React.useState(true);
 
-  const initBingMap = useCallback(() => {
+  const initBingMap = 
+  // useCallback(
+  () => {
     if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap');
     const currPosRetrievedCallback = (currPos: TLatLng) => {
       dispatch(setUserCurrPosData(currPos));
-      console.log('[setMapData] via initBingMap [DISABLED]', currPos);
+      // console.log('[setMapData] via initBingMap [DISABLED]', currPos);
       // setMapData?.({
       //   ...mapData,
       //   centerPosition: mapData?.centerPosition ?? currPos,
@@ -58,14 +60,17 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
     }
     // get user's current position, use if available
     if(userCurrPos) {
+      console.log('[basicMap] APP HAS USER CURR POS')
       currPosRetrievedCallback(userCurrPos);
     } else {
+      console.log('[basicMap] APP DOES NOT HAVE USER CURR POS YET')
       mapGetCurrentPosition(currPosRetrievedCallback);
     }
-  }, [loadingMap, mapState]);
+  }
+  //, [loadingMap, mapState]);
 
   const MemoizedBingMapsReact = useCallback(() => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedBingMapsReact')
+    // if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedBingMapsReact')
 
     // initialize the map
     if(!initRef.current && mapState?.mapScriptLoaded) {
@@ -83,7 +88,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
       </div>
     )}
     <div id={APP_CONFIG.MAPS.COMPONENT_ID} className="w-full h-full relative"></div>
-    <>{console.log('[[ RERENDER ]]')}</>
+    {/* <>{console.log('[[ RERENDER ]]')}</> */}
     <MemoizedBingMapsReact />
   </div>;
 })

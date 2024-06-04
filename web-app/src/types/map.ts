@@ -23,7 +23,10 @@ export type TGeozoneMapDataForAPIs =
   Partial<TGeozoneMapDataPolygon> & // TGeozoneMapDataPolygon |
   Partial<TGeozoneMapDataRoute>; // TGeozoneMapDataRoute;
 
-export type TGeozoneMapData = TGeozoneMapDataForAPIs & { ready?: boolean, editable?: boolean };
+export type TGeozoneMapData = TGeozoneMapDataForAPIs & {
+  ready?: boolean,
+  editable?: boolean
+};
 
 // map state in redux store
 export type TMapState = {
@@ -33,6 +36,6 @@ export type TMapState = {
   mapZoom?: number; // zoom level of the map
   mapType?: string; // type of the map
   // mapBounds?: TLatLngBounds; // bounds of the map
-  mapData?: TGeozoneMapData[]; // data to be displayed on the map
-  mapDataForAPIs?: TGeozoneMapDataForAPIs[]; // data to be sent to APIs
+  mapData?: TGeozoneMapData; // data to be displayed on the map
+  mapDataForAPIs?: TGeozoneMapDataForAPIs; // data to be sent to APIs
 }

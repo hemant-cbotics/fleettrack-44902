@@ -1,5 +1,6 @@
 export const MAP_DEFAULTS = {
   RADIUS: 0.6,
+  POLYGON_POINTS: 6,
 };
 
 export const ZONE_TYPES_OPTIONS = [

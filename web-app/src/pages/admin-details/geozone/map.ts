@@ -76,16 +76,14 @@ export const mapOperations: TMapOperations = (props) => {
         ]);
         // update the map data
         console.log('[setMapData] via mapOperations (center dragend)');
-        props.setMapData(
-          data =>
-          ({
-            ...data,
+        props.setMapData({
+            ...props.mapData,
             centerPosition: {
               latitude: refCenter.latitude,
               longitude: refCenter.longitude
             },
             radius: props.mapRef.current.objects.circleRadius,
-          } as TGeozoneMapData)
+          } as TGeozoneMapData
         );
       }
     );
@@ -131,16 +129,14 @@ export const mapOperations: TMapOperations = (props) => {
         ]);
         // update the map data
         console.log('[setMapData] via mapOperations (radius dragend)');
-        props.setMapData(
-          data =>
-          ({
-            ...data,
+        props.setMapData({
+            ...props.mapData,
             centerPosition: {
               latitude: refCenter.latitude,
               longitude: refCenter.longitude
             },
             radius: props.mapRef.current.objects.circleRadius,
-          } as TGeozoneMapData)
+          } as TGeozoneMapData
         );
       }
     );
@@ -167,6 +163,8 @@ export const mapOperations: TMapOperations = (props) => {
       
     }
   );
+
+  return null;
 }
 
 export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
