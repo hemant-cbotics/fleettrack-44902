@@ -35,17 +35,11 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
 
   const [loadingMap, setLoadingMap] = React.useState(true);
 
-  const initBingMap = 
-  // useCallback(
+  const initBingMap =
   () => {
     if(APP_CONFIG.DEBUG.MAPS) console.log('initBingMap');
     const currPosRetrievedCallback = (currPos: TLatLng) => {
       dispatch(setUserCurrPosData(currPos));
-      // console.log('[setMapData] via initBingMap [DISABLED]', currPos);
-      // setMapData?.({
-      //   ...mapData,
-      //   centerPosition: mapData?.centerPosition ?? currPos,
-      // });
       if(mapState?.mapScriptLoaded) {
         onMapScriptLoaded({
           mapRef,
@@ -73,7 +67,6 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
       mapGetCurrentPosition(currPosRetrievedCallback);
     }
   }
-  //, [loadingMap, mapState]);
 
   const MemoizedBingMapsReact = useCallback(() => {
     // if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedBingMapsReact')
