@@ -22,7 +22,10 @@ import {
   mapOperations as mapOperationsRoute,
   mapUpdatesHandler as mapUpdatesHandlerRoute
 } from "./map-route";
-import { mapOperations, mapUpdatesHandler } from "./map";
+import {
+  mapOperations as mapOperationsCircle,
+  mapUpdatesHandler as mapUpdatesHandlerCircle
+} from "./map-circle";
 import { TGeozoneMapData, TGeozoneMapDataCircle, TGeozoneMapDataForAPIs, TGeozoneMapDataPolygon, TGeozoneMapDataRoute, TLatLng, TMapState } from "../../../types/map";
 import { TAutosuggestOptionValue, TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
 import { useDispatch, useSelector } from "react-redux";
@@ -250,7 +253,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ? mapUpdatesHandlerRoute
       : values.zone_type === 'Polygon'
         ? mapUpdatesHandlerPolygon
-        : mapUpdatesHandler;
+        : mapUpdatesHandlerCircle;
     applicableMapUpdatesHandler(
       {
         mapRef,
@@ -275,7 +278,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           ? mapOperationsRoute
         : values.zone_type === 'Polygon'
           ? mapOperationsPolygon
-          : mapOperations;
+          : mapOperationsCircle;
       applicableMapOperations({
         mapRef,
         mapData: { ...mapState?.mapData },
