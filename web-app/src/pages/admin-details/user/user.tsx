@@ -169,7 +169,7 @@ const ScreenAdminDetailUser = () => {
         default_acl_role: "",
         maximum_access_level: "",
       });
-      setUserCanEdit(false);
+      setUserCanEdit(!!isNewEntity?.current);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [dataSingleUser, userId]);

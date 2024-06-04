@@ -7,7 +7,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
-import { MAP_DEFAULTS, OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
+import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
 import { OrganizationGroup } from "../../../api/types/Group";
@@ -191,7 +191,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
             // ...mapState?.mapData,
             centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
             ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
-            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? MAP_DEFAULTS.RADIUS,
+            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
             ready: true,
             editable: userCanEdit,
           },
@@ -365,16 +365,17 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
             longitude: newlySelectedLocationCoords?.[1],
           },
           ...(
-            values.zone_type === 'Polygon' ||
-            values.zone_type === 'Route' // TODO: need to setup route
+            values.zone_type === 'Route'
+            ? { locs: [] }
+            : values.zone_type === 'Polygon'
             ? { locs:
                   getCircleLocs(
                     new Microsoft.Maps.Location(newlySelectedLocationCoords?.[0], newlySelectedLocationCoords?.[1]),
-                    MAP_DEFAULTS.RADIUS,
-                    MAP_DEFAULTS.POLYGON_POINTS
+                    APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               }
-            : { radius: MAP_DEFAULTS.RADIUS }
+            : { radius: APP_CONFIG.MAPS.DEFAULTS.RADIUS }
           ),
         }
         dispatch(setMapStateData({

@@ -7,7 +7,6 @@ import {
   TLatLng,
 } from "../../../types/map";
 import { renderRoute } from "../../../utils/map";
-import { MAP_DEFAULTS } from "./constants";
 import { TMapOperationsProps, TMapUpdatesHandler } from "./type";
 import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
 
@@ -36,7 +35,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     mRoutes: [],
     mInfobox: null,
     circleRadius:
-      (props.mapData as TGeozoneMapDataRoute).locs ?? MAP_DEFAULTS.RADIUS,
+      (props.mapData as TGeozoneMapDataRoute).locs ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
   };
 
   const renderMapObjects = () => {

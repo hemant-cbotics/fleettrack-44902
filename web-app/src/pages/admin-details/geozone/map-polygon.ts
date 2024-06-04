@@ -3,7 +3,6 @@ import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { TGeozoneMapData, TGeozoneMapDataPolygon, TLatLng } from "../../../types/map";
 import { TMapOperationsProps, TMapUpdatesHandler } from "./type";
-import { MAP_DEFAULTS } from "./constants";
 import { getCircleLocs, renderPolygon } from "../../../utils/map";
 import { ColorRGB } from "../../../types/common";
 import i18n from "../../../services/i18n";
@@ -31,7 +30,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     },
     mPolygon: null,
     mInfobox: null,
-    circleRadius: (props.mapData as TGeozoneMapDataPolygon).locs ?? MAP_DEFAULTS.RADIUS,
+    circleRadius: (props.mapData as TGeozoneMapDataPolygon).locs ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
   }
 
   const renderMapObjects = () => {
@@ -64,7 +63,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     const polygonPoints =
       !!(props.mapData as TGeozoneMapDataPolygon).locs
         ? (props.mapData as TGeozoneMapDataPolygon).locs.map((point: TLatLng) => new Microsoft.Maps.Location(point.latitude, point.longitude))
-        : getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, MAP_DEFAULTS.POLYGON_POINTS);
+        : getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS);
 
     // use the polygon points to create pushpins
     polygonPoints?.forEach((polygonPoint: any, index: number) => {

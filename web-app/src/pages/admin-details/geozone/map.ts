@@ -4,7 +4,6 @@ import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { TGeozoneMapData, TGeozoneMapDataCircle } from "../../../types/map";
 import { TMapOperations, TMapUpdatesHandler } from "./type";
-import { MAP_DEFAULTS } from "./constants";
 import { getDistanceFromCenter, renderCircle } from "../../../utils/map";
 import { ColorRGB } from "../../../types/common";
 
@@ -30,7 +29,7 @@ export const mapOperations: TMapOperations = (props) => {
       pRadius: null,
     },
     mCircle: null,
-    circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? MAP_DEFAULTS.RADIUS,
+    circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
     mRadiusLine: null,
   }
 

@@ -30,6 +30,7 @@ import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
 import { TMapState } from "../../../types/map";
+import { getCircleLocs } from "../../../utils/map";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -44,8 +45,13 @@ const ScreenAdminDetailGeozone = () => {
   // clear map state on unmount
   useEffect(() => {
     return () => {
+      const restOfMapState = { ...mapState };
+      delete restOfMapState.mapData;
       dispatch(setMapStateData({
-        ...mapState,
+        ...restOfMapState,
+        mapData: {
+          centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
+        },
         pageMapLoaded: false,
       }));
     };
@@ -151,9 +157,31 @@ const ScreenAdminDetailGeozone = () => {
     if(isFetchingSingleGeozone) {
       setFormikValuesReady(false);
     } else if(!!dataSingleGeozone) {
+      const Microsoft = (window as any).Microsoft;
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
-        properties: dataSingleGeozone?.properties || [],
+        properties:
+          Object.keys(dataSingleGeozone?.properties).length > 0
+          ? dataSingleGeozone?.properties
+          // set default values for properties - to be used by map when user is creating new geozone
+          : {
+            ...(
+              dataSingleGeozone?.zone_type === "Route" ? {
+                centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
+              } : (dataSingleGeozone?.zone_type === "Polygon" ? {
+                centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
+                locs:
+                  getCircleLocs(
+                    new Microsoft.Maps.Location(APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude, APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude),
+                    APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
+                  ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
+              } : {
+                centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
+                radius: APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+              })
+            )
+          },
         description: dataSingleGeozone?.description || "",
         city: dataSingleGeozone?.city || "",
         zone_type: dataSingleGeozone?.zone_type || "",
@@ -167,7 +195,7 @@ const ScreenAdminDetailGeozone = () => {
         zone_color: dataSingleGeozone?.zone_color || "",
         speed_limit: dataSingleGeozone?.speed_limit || "",
       });
-      setUserCanEdit(false);
+      setUserCanEdit(!!isNewEntity?.current);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [isFetchingSingleGeozone, dataSingleGeozone, geozoneId])
@@ -211,12 +239,12 @@ const ScreenAdminDetailGeozone = () => {
             navigate(routeUrls.dashboardChildren.adminChildren.geozones)
           }
         />
-        <div className="grid grid-cols-12 gap-4 p-4 text-sm">
+        {APP_CONFIG.DEBUG.GEOZONES && (<div className="grid grid-cols-12 gap-4 p-4 text-sm">
           <div className="col col-span-3 max-h-60 overflow-auto"><h3><strong>values.properties</strong></h3><pre>{JSON.stringify(values.properties, undefined, 2)}</pre></div>
           <div className="col col-span-3 max-h-60 overflow-auto"><h3><strong>Map Center</strong></h3><pre>{JSON.stringify(mapState?.mapCenter, undefined, 2)}</pre></div>
           <div className="col col-span-3 max-h-60 overflow-auto"><h3><strong>Map Data</strong></h3><pre>{JSON.stringify(mapState?.mapData, undefined, 2)}</pre></div>
           <div className="col col-span-3 max-h-60 overflow-auto"><h3><strong>Map Data For APIs</strong></h3><pre>{JSON.stringify(mapState?.mapDataForAPIs, undefined, 2)}</pre></div>
-        </div>
+        </div>)}
         <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
           <div className="lg:grid lg:grid-cols-12 mt-8 py-2 gap-4">
             <div className={`hidden xl:block lg:col-span-3 space-y-4${isFetchingOrgGeozones ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' xl:hidden' : ''}`}>
