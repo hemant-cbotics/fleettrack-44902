@@ -18,8 +18,12 @@ import {
   mapOperations as mapOperationsPolygon,
   mapUpdatesHandler as mapUpdatesHandlerPolygon
 } from "./map-polygon";
+import {
+  mapOperations as mapOperationsRoute,
+  mapUpdatesHandler as mapUpdatesHandlerRoute
+} from "./map-route";
 import { mapOperations, mapUpdatesHandler } from "./map";
-import { TGeozoneMapData, TGeozoneMapDataCircle, TGeozoneMapDataForAPIs, TGeozoneMapDataPolygon, TLatLng, TMapState } from "../../../types/map";
+import { TGeozoneMapData, TGeozoneMapDataCircle, TGeozoneMapDataForAPIs, TGeozoneMapDataPolygon, TGeozoneMapDataRoute, TLatLng, TMapState } from "../../../types/map";
 import { TAutosuggestOptionValue, TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
 import { useDispatch, useSelector } from "react-redux";
 import { APP_CONFIG } from "../../../constants/constants";
