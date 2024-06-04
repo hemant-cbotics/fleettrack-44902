@@ -90,3 +90,23 @@ export const renderPolygon = (mapRef: any, center: any, polygonPoints: any, colo
   mapRef.current.map.layers.insert(poygonLayer);
 }
 
+export const renderRoute = (mapRef: any, center: any, routePoints: any, colorRGB: [number,number,number]) => {
+  if(!routePoints || routePoints.length < 2) return;
+  const Microsoft = (window as any).Microsoft;
+  if(APP_CONFIG.DEBUG.MAPS) console.log('Rendering route at', center.latitude, center.longitude, 'with points', routePoints);
+
+  // remove existing routes
+  if(mapRef.current.objects.mRoutes) mapRef.current.objects.mRoutes.forEach((route: any) => mapRef.current.map.entities.remove(route));
+
+  if(APP_CONFIG.DEBUG.MAPS) console.log('color', `rgba(${colorRGB.join(',')},0.2)`)
+  const line = new Microsoft.Maps.Polyline(
+    routePoints, 
+    { strokeColor: `rgba(${colorRGB.join(',')},0.6)`, 
+      strokeThickness: 2 
+    }
+  );
+  mapRef.current.map.entities.push(line);
+  mapRef.current.objects.mRoutes.push(line);
+}
+
+

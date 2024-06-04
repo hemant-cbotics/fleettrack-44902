@@ -547,7 +547,12 @@ export const language_en = {
             heading: "Edit Geozone Polygon",
             sub_heading: "You can drag the blue pushpins around to reshape the polygon.",
             ok_button: "OK",
-          }
+          },
+          routeEdit: {
+            heading: "Edit Geozone Route",
+            sub_heading: "You can drag the blue pushpins around to reshape the route.",
+            ok_button: "OK",
+          },
         }
       },
     },

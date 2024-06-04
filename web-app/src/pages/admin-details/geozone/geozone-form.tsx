@@ -18,8 +18,12 @@ import {
   mapOperations as mapOperationsPolygon,
   mapUpdatesHandler as mapUpdatesHandlerPolygon
 } from "./map-polygon";
+import {
+  mapOperations as mapOperationsRoute,
+  mapUpdatesHandler as mapUpdatesHandlerRoute
+} from "./map-route";
 import { mapOperations, mapUpdatesHandler } from "./map";
-import { TGeozoneMapData, TGeozoneMapDataCircle, TLatLng } from "../../../types/map";
+import { TGeozoneMapData, TGeozoneMapDataCircle, TGeozoneMapDataPolygon, TGeozoneMapDataRoute, TLatLng } from "../../../types/map";
 import { TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
 import { useSelector } from "react-redux";
 import { APP_CONFIG } from "../../../constants/constants";
@@ -114,6 +118,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     radius: MAP_DEFAULTS.RADIUS,
     ready: false,
     editable: userCanEdit,
+    locs: [],
   });
 
   // set map data on form load
@@ -123,12 +128,39 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       console.log('SAVED MAP DATA', savedMapData as TGeozoneMapDataCircle)
       console.log('mapData', mapData);
       console.log('[setMapData] via useEffect to prefill', { userCurrPos, savedMapData })
-      setMapData({
-        ...mapData,
-        centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-        radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? MAP_DEFAULTS.RADIUS,
-        ready: true,
-      });
+      switch(values.zone_type) {
+        case 'Circle':
+          setMapData({
+            ...mapData,
+            centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? MAP_DEFAULTS.RADIUS,
+            ready: true,
+          });
+        break;
+        case 'Polygon':
+          setMapData({
+            ...mapData,
+            centerPosition: (savedMapData as TGeozoneMapDataPolygon)?.centerPosition ?? userCurrPos,
+            locs: (savedMapData as TGeozoneMapDataPolygon)?.locs ?? [],
+            ready: true,
+          });
+        break;
+        case 'Route':
+          setMapData({
+            ...mapData,
+            centerPosition: (savedMapData as TGeozoneMapDataRoute)?.centerPosition ?? userCurrPos,
+            locs: (savedMapData as TGeozoneMapDataRoute)?.locs ?? [],
+            ready: true,
+          });
+        break;
+        default:
+          setMapData({
+            ...mapData,
+            centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? MAP_DEFAULTS.RADIUS,
+            ready: true,
+          });
+    }
     }
   }, [/*loadingData, */values.properties, mapData]);
 
@@ -140,6 +172,11 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       console.log('[POLYGON]')
       applicableMapOperations = mapOperationsPolygon;
       applicableMapUpdatesHandler = mapUpdatesHandlerPolygon;
+    break;
+    case 'Route':
+      console.log('[ROUTE]')
+      applicableMapOperations = mapOperationsRoute;
+      applicableMapUpdatesHandler = mapUpdatesHandlerRoute;
     break;
     case 'Circle':
     default:
