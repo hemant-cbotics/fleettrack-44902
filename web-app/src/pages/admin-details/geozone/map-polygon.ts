@@ -1,6 +1,5 @@
 import React from "react";
 import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
-import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { TGeozoneMapData, TGeozoneMapDataPolygon, TLatLng } from "../../../types/map";
 import { TMapOperationsProps, TMapUpdatesHandler } from "./type";
@@ -74,8 +73,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         {
           anchor: new Microsoft.Maps.Point(16, 32),
           icon: MapMarkerRed,
-          // draggable: props.mapData.editable,
-          draggable: true, // temp
+          draggable: props.mapData.editable,
           ...(props.mapData.editable ? dragLabelPoints : {})
         }
       );

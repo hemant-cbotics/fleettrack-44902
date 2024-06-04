@@ -13,7 +13,7 @@ import { useOrganizationGroupsQuery } from "../../../api/network/adminApiService
 import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import { geozoneDetailsInitialValues } from "./validation";
-import BasicMap from "../../../components/maps/basicMap";
+import BasicMap, { MapLoadingAnimation } from "../../../components/maps/basicMap";
 import {
   mapOperations as mapOperationsPolygon,
   mapUpdatesHandler as mapUpdatesHandlerPolygon
@@ -245,7 +245,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         editable: userCanEdit,
       },
     }));
-    const applicableMapUpdatesHandler = values.zone_type === 'Polygon' ? mapUpdatesHandlerPolygon : mapUpdatesHandler;
+    const applicableMapUpdatesHandler =
+      values.zone_type === 'Route'
+        ? mapUpdatesHandlerRoute
+      : values.zone_type === 'Polygon'
+        ? mapUpdatesHandlerPolygon
+        : mapUpdatesHandler;
     applicableMapUpdatesHandler(
       {
         mapRef,
@@ -265,7 +270,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       console.error('MAP DATA ISSUE - lat = 0')
     } else {
       console.log('>> sending map operations', JSON.stringify({ ...mapState?.mapData }))
-      const applicableMapOperations = values.zone_type === 'Polygon' ? mapOperationsPolygon : mapOperations;
+      const applicableMapOperations =
+        values.zone_type === 'Route'
+          ? mapOperationsRoute
+        : values.zone_type === 'Polygon'
+          ? mapOperationsPolygon
+          : mapOperations;
       applicableMapOperations({
         mapRef,
         mapData: { ...mapState?.mapData },
@@ -396,7 +406,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       {/* mapData: {JSON.stringify(mapData)} */}
-      {mapState?.mapData?.ready && !loadingData && !mapStateTransitionInProgress && <>
+      {mapState?.mapData?.ready && !loadingData && !mapStateTransitionInProgress ? (<>
         <BasicMap
           className="col-span-12 bg-gray-200 h-96"
           mapRef={mapRef}
@@ -416,7 +426,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
             </div>
           </>)}
         </div>
-      </>}
+      </>) : (<>
+        <div className="col-span-12 bg-gray-200 h-96 flex items-center justify-center relative">
+          <MapLoadingAnimation />
+        </div>
+        <div className="col-span-12 flex gap-8 mb-4"></div>
+      </>)}
       {loadingData ? <PseudoSelect label={t("description")} /> : 
         (<AdminFormFieldAsyncDropdown
           loadingData={loadingData || isFetchingAutosuggest}

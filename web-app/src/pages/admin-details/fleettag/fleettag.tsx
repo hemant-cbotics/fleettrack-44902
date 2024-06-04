@@ -148,6 +148,7 @@ const ScreenAdminDetailFleettag = () => {
         tag_battery_level: dataSingleFleettag?.tag_battery_level || "",
         temprature: dataSingleFleettag?.temperature || "",
       });
+      setUserCanEdit(false);
     }
   }, [dataSingleFleettag,fleettagId]);
 

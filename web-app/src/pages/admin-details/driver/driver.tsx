@@ -179,6 +179,7 @@ const ScreenAdminDetailDriver = () => {
         address: dataSingleDriver?.address || "",
         vehicle_id: dataSingleDriver?.vehicle_assigned || "",
       });
+      setUserCanEdit(false);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [dataSingleDriver, driverId])

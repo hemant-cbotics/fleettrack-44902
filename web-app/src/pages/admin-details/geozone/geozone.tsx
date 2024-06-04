@@ -167,6 +167,7 @@ const ScreenAdminDetailGeozone = () => {
         zone_color: dataSingleGeozone?.zone_color || "",
         speed_limit: dataSingleGeozone?.speed_limit || "",
       });
+      setUserCanEdit(false);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [isFetchingSingleGeozone, dataSingleGeozone, geozoneId])

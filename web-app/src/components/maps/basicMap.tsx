@@ -15,6 +15,12 @@ type TBasicMapProps = {
   onMapReady?: () => void;
 };
 
+export const MapLoadingAnimation = () => (
+  <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50">
+    <img src={LoadingAnimation} alt="Loading animation" className="w-12 h-12" />
+  </div>
+);
+
 const BasicMap: FC<TBasicMapProps> = React.memo(({
   className = '',
   mapRef,
@@ -83,9 +89,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
 
   return <div className={`relative ${className}`}>
     {loadingMap && (
-      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50">
-        <img src={LoadingAnimation} alt="Loading animation" className="w-12 h-12" />
-      </div>
+      <MapLoadingAnimation />
     )}
     <div id={APP_CONFIG.MAPS.COMPONENT_ID} className="w-full h-full relative"></div>
     {/* <>{console.log('[[ RERENDER ]]')}</> */}
