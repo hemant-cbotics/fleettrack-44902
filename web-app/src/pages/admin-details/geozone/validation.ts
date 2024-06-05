@@ -5,7 +5,7 @@ import { OrganizationGeozone } from '../../../api/types/Geozone';
 export const geozoneDetailsInitialValues: Partial<OrganizationGeozone> & { assign_group: any[] } = {
   properties: {},
   description: "",
-  city: "",
+  // city: "",
   zone_type: "Circle",
   geocode: "",
   lat_lng: "",

@@ -125,7 +125,7 @@ const ScreenAdminDetailGeozone = () => {
       const data = {
         properties: mapState?.mapDataForAPIs ?? values.properties,
         zone_type: values.zone_type,
-        city: values.city,
+        // city: values.city,
         description: values.description,
         geocode: values.geocode,
         lat_lng: values.lat_lng,
@@ -174,7 +174,8 @@ const ScreenAdminDetailGeozone = () => {
                   getCircleLocs(
                     new Microsoft.Maps.Location(APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude, APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
+                    true
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               } : {
                 centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
@@ -183,7 +184,7 @@ const ScreenAdminDetailGeozone = () => {
             )
           },
         description: dataSingleGeozone?.description || "",
-        city: dataSingleGeozone?.city || "",
+        // city: dataSingleGeozone?.city || "",
         zone_type: dataSingleGeozone?.zone_type || "",
         geocode: dataSingleGeozone?.geocode || "",
         lat_lng: dataSingleGeozone?.lat_lng || "",

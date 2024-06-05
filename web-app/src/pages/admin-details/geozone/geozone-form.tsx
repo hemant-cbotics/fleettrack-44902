@@ -387,7 +387,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         customWrapperClass="col-span-12"
       /> */}
 
-      <AdminFormFieldDropdown
+      {/* <AdminFormFieldDropdown
         loadingData={loadingData}
         label={t("city")}
         id="city"
@@ -403,7 +403,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           { label: "GHI", value: "ghi" },
         ]}
         disabled={true}
-      />
+      /> */}
 
       <AdminFormFieldDropdown
         loadingData={loadingData}
