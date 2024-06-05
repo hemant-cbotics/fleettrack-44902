@@ -193,8 +193,7 @@ const ScreenAdminDetailGeozone = () => {
                   getCircleLocs(
                     new Microsoft.Maps.Location(APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude, APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
-                    true
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               } : {
                 centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
