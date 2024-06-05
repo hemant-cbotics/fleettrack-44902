@@ -107,7 +107,8 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         onBlur={handleBlur}
         error={errors.contact_email}
         touched={touched.contact_email}
-        disabled={true}
+        disabled={!userCanEdit}
+        readOnly={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldInput

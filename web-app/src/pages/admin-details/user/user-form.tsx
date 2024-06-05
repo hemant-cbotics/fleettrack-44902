@@ -160,7 +160,8 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         onBlur={handleBlur}
         touched={touched.contact_email}
         error={errors.contact_email}
-        disabled={true}
+        disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldDropdown

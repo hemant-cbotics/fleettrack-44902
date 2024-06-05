@@ -47,6 +47,13 @@ const currentYear = new Date().getFullYear();
 // validation schema for the form
 export const vehicleFormValidationSchema = Yup.object().shape({
   vehicle_model: Yup.number().max(currentYear, "Vehicle model cannot be in the future"),
+  vehicle_description: Yup.string().required("Vehicle Description is required"),
+  active: Yup.boolean().required("Is Active is required"),
+  creation_date: Yup.date().required("Creation Date is required"),
+  short_name: Yup.string().required("Short Name is required"),
+  ignition_input: Yup.string().required("Ignition Input is required"),
+  driver_id: Yup.number().required("Driver ID is required"),
+  driver_name: Yup.string().required("Driver Name is required"),
 });
 
 export const groupMembershipFormValidationSchema = Yup.object().shape({});
