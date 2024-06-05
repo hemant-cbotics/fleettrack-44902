@@ -24,5 +24,13 @@ export const userDetailsInitialValues = {
 
 // validation schema for the form
 export const userDetailsYupValidationSchema = Yup.object().shape({
-  contact_name: Yup.string().required("Contact Name is required"),
+  user_id: Yup.number().required("User ID is required"),
+  user_description: Yup.string().required("User Description is required"),
+  timezone: Yup.string().required("Timezone is required"),
+  is_active: Yup.boolean().required("Is Active is required"),
+  use_geozone_labels: Yup.boolean().required("Use Geozone Labels is required"),
+  session_timeout: Yup.number().required("Session Timeout is required"),
+  first_login_page: Yup.string().required("First Login Page is required"),
+
+  // TODO role feature is not implemented yet
 });

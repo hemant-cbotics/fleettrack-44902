@@ -366,6 +366,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           error={errors.description}
           touched={touched.description}
           disabled={!userCanEdit}
+          customWrapperClass="col-span-12"
         />)
       }
       {/* <AdminFormFieldInput
@@ -386,7 +387,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         customWrapperClass="col-span-12"
       /> */}
 
-      <AdminFormFieldDropdown
+      {/* <AdminFormFieldDropdown
         loadingData={loadingData}
         label={t("city")}
         id="city"
@@ -402,7 +403,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           { label: "GHI", value: "ghi" },
         ]}
         disabled={true}
-      />
+      /> */}
 
       <AdminFormFieldDropdown
         loadingData={loadingData}
@@ -432,15 +433,15 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label={t("latitude_longitude")}
+        label={t("lat_lng")}
         type="text"
-        id="latitude_longitude"
-        name="latitude_longitude"
+        id="lat_lng"
+        name="lat_lng"
         value={values.lat_lng}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={errors.latitude_longitude}
-        touched={touched.latitude_longitude}
+        error={errors.lat_lng}
+        touched={touched.lat_lng}
         disabled={!userCanEdit}
       />
 
@@ -496,15 +497,15 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldCheckbox
-        label={t("arrival_zone")}
-        id="arrival_zone"
+        label={t("arrival_geozone")}
+        id="arrival_geozone"
         type="checkbox"
-        name="arrival_zone"
+        name="arrival_geozone"
         checked={values.arrival_geozone}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={errors.arrival_zone}
-        touched={touched.arrival_zone}
+        error={errors.arrival_geozone}
+        touched={touched.arrival_geozone}
         disabled={!userCanEdit}
       />
 

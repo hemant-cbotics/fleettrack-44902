@@ -18,4 +18,7 @@ export const fleettagDetailsInitialValues = {
 }
 
 // validation schema for the form
-export const fleettagDetailsYupValidationSchema = Yup.object().shape({});
+export const fleettagDetailsYupValidationSchema = Yup.object().shape({
+  fleet_tag_id: Yup.number().required("Fleet Tag ID is required"),
+  fleet_tag_name: Yup.string().required("Fleet Tag Name is required"),
+});

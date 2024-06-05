@@ -25,4 +25,8 @@ export const driverDetailsInitialValues = {
 }
 
 // validation schema for the form
-export const driverDetailsYupValidationSchema = Yup.object().shape({});
+export const driverDetailsYupValidationSchema = Yup.object().shape({
+  driver_id: Yup.number().required("Driver ID is required"),
+  is_active: Yup.boolean().required("Is Active is required"),
+  driver_name: Yup.string().required("Driver Name is required"),
+});

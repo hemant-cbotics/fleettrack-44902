@@ -59,12 +59,15 @@ export const mapOperations = (props: TMapOperationsProps) => {
     // TODO: when editing a polygon, we identified that extra pushpins is added to the map - this needs to be fixed
     // ------------------------------------------------------------------------------------------------------------
 
+    // let initialPoints = 
+    // initialPoints.pop(); // remove the last point to avoid duplication
     // load from saved polygon points or get the default polygon points
     const polygonPoints =
       !!(props.mapData as TGeozoneMapDataPolygon).locs
         ? (props.mapData as TGeozoneMapDataPolygon).locs.map((point: TLatLng) => new Microsoft.Maps.Location(point.latitude, point.longitude))
-        : getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS);
+        : getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS, true);
 
+    polygonPoints.pop();
     // use the polygon points to create pushpins
     polygonPoints?.forEach((polygonPoint: any, index: number) => {
       const newPushpin = new Microsoft.Maps.Pushpin(

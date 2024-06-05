@@ -6,7 +6,7 @@ export type OrganizationGeozone = {
   updated_at: string;
   zone_id: string;
   zone_type: GeozoneType;
-  city: string | null;
+  // city: string | null;
   properties: {};
   description: string | null;
   geocode: string | null;
