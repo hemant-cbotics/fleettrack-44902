@@ -275,6 +275,11 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     const newlySelectedLocationCoords = geocodeResponse.data?.resourceSets?.[0]?.resources?.[0]?.point?.coordinates;
     console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
     if(!!newlySelectedLocationCoords?.[0] && !!newlySelectedLocationCoords?.[1]) {
+
+      // update lat_lng field value
+      formikSetValue("lat_lng", `${newlySelectedLocationCoords?.[0]},${newlySelectedLocationCoords?.[1]}`);
+      
+      // update map state
       dispatch(setMapStateData({
         ...mapState,
         mapData: {

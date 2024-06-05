@@ -43,19 +43,19 @@ const ScreenAdminDetailGeozone = () => {
 
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
-  // clear map state on unmount
+  // clear map state on unmount - Disabled 6/5 as this is causing issues with mapState when changing screens
   useEffect(() => {
-    return () => {
-      const restOfMapState = { ...mapState };
-      delete restOfMapState.mapData;
-      dispatch(setMapStateData({
-        ...restOfMapState,
-        mapData: {
-          centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
-        },
-        pageMapLoaded: false,
-      }));
-    };
+    // return () => {
+    //   const restOfMapState = { ...mapState };
+    //   delete restOfMapState.mapData;
+    //   dispatch(setMapStateData({
+    //     ...restOfMapState,
+    //     mapData: {
+    //       centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
+    //     },
+    //     pageMapLoaded: false,
+    //   }));
+    // };
   }, []);
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
@@ -206,7 +206,7 @@ const ScreenAdminDetailGeozone = () => {
         // city: dataSingleGeozone?.city || "",
         zone_type: dataSingleGeozone?.zone_type || "",
         geocode: dataSingleGeozone?.geocode || "",
-        lat_lng: dataSingleGeozone?.lat_lng || "",
+        lat_lng: dataSingleGeozone?.lat_lng || `${APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude},${APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude}`,
         overlap_priority: dataSingleGeozone?.overlap_priority || 0,
         assign_group: dataSingleGeozone?.groups || [],
         reverse_geocode: dataSingleGeozone?.reverse_geocode || false,
