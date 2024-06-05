@@ -1,5 +1,11 @@
 export type GeozoneType = 'Circle' | 'Polygon' | 'Route';
 
+export type GeozoneVehicleGroup = {
+  id: number;
+  name: string;
+  organization: number;
+}
+
 export type OrganizationGeozone = {
   id: number;
   created_at: string;
@@ -20,5 +26,5 @@ export type OrganizationGeozone = {
   speed_limit: string | null;
   is_active: boolean;
   organization: number;
-  groups: any[];
+  groups: GeozoneVehicleGroup[];
 };

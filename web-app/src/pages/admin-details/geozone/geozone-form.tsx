@@ -38,6 +38,7 @@ import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
 import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { setMapStateData } from "../../../api/store/commonSlice";
 import { getCircleLocs } from "../../../utils/map";
+import { GeozoneVehicleGroup } from "../../../api/types/Geozone";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -72,8 +73,18 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   const dispatch = useDispatch();
 
   // selected groups mechanism
-  const [selectedGroups, setSelectedGroups] = React.useState(values.assign_group);
-  const [filteredGroupData, setFilteredGroupData] = React.useState<any[]>([]);
+  const [selectedGroups, setSelectedGroups] = React.useState<GeozoneVehicleGroup[]>([]);
+  const [filteredGroupData, setFilteredGroupData] = React.useState<TSelectboxOption[]>([]);
+  useEffect(() => {
+    setSelectedGroups(values.groups ?? [])
+    setFilteredGroupData(
+      groupData
+        .filter((group) =>
+          !selectedGroups.some((selectedGroup: GeozoneVehicleGroup) =>
+            selectedGroup.id === parseInt(group.value))
+          )
+    )
+  }, [values.groups])
 
   // prepare group query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
@@ -107,13 +118,25 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   // handle group selection
   const handleChangeGroup = (e: any) => {
     if(e?.value){
-      setSelectedGroups([...selectedGroups, {id: parseInt(e.value), name: e.label, organization: thisUserOrganizationId}]);
+      setSelectedGroups([
+        ...selectedGroups,
+        {
+          id: parseInt(e.value),
+          name: e.label,
+          organization: thisUserOrganizationId ?? 0
+        }
+      ]);
     }
   }
 
   // handle group removal
   const onRemoveFromGroup = (option: any) => {
-    setSelectedGroups(selectedGroups.filter((selectedGroup:any) => selectedGroup !== option));
+    setSelectedGroups(
+      selectedGroups
+        .filter(
+          (selectedGroup: GeozoneVehicleGroup) => selectedGroup !== option
+        )
+    );
     formikSetValue('assign_group', selectedGroups);
   }
 
@@ -464,11 +487,11 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         disabled={!userCanEdit}
       />
 
-      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
-        {selectedGroups?.map((option:any, i: number) => (
-          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={`${option.id}_${i}`}>
-            <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
-            <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
+      <div className={`col-span-12 p-3 gap-2 ${userCanEdit ? 'bg-white' : 'bg-gray-100'} border border-gray-200 rounded-lg flex items-start flex-wrap min-h-24`}>
+        {selectedGroups?.map((option: GeozoneVehicleGroup, i: number) => (
+          <div className="flex items-center bg-gray-200 rounded-lg gap-2 py-1 px-2" key={`${option.id}_${i}`}>
+            <span className="p-1 font-semibold text-sm text-gray-500 leading-4 tracking-tighter">{option.name}</span>
+            {userCanEdit && (<img src={CloseIcon} alt={option.name} className="size-5 cursor-pointer opacity-80 hover:opacity-40" onClick={() => onRemoveFromGroup(option)}/>)}
           </div>
         ))}
       </div>
