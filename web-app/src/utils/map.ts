@@ -39,9 +39,10 @@ export const getDistanceFromCenter = (loc1: any, loc2: any) => {
 }
 
 // calculate the locations for a regular polygon that has 36 locations which will result in an approximate circle.
-export const getCircleLocs = (center: any, radius: any, edges: number) => {
+export const getCircleLocs = (center: any, radius: any, edges: number, isPolygon: boolean = false) => {
   const Microsoft = (window as any).Microsoft;
-  return Microsoft.Maps.SpatialMath.getRegularPolygon(center, radius, edges, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
+  let locs = Microsoft.Maps.SpatialMath.getRegularPolygon(center, radius, edges, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
+  return isPolygon ? locs.slice(0, locs.length - 1) : locs;
 }
 
 // Create a contour line that represents a circle.

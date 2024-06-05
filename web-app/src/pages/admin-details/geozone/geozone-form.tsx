@@ -366,6 +366,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           error={errors.description}
           touched={touched.description}
           disabled={!userCanEdit}
+          customWrapperClass="col-span-12"
         />)
       }
       {/* <AdminFormFieldInput
