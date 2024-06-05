@@ -27,6 +27,7 @@ import { TAdminTableRowData } from "../components/types";
 import { OrganizationGeozone } from "../../../api/types/Geozone";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TAutosuggestOptionValue } from "../../admin-details/geozone/type";
+import { TMapState } from "../../../types/map";
 
 const all_columns = [
   "Geozone Id",
@@ -58,6 +59,7 @@ const ScreenDashboardAdminGeozones = () => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.geozones'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
 
   // columns
@@ -91,7 +93,7 @@ const ScreenDashboardAdminGeozones = () => {
     isFetching: isFetchingOrgGeozones,
     error
   } =
-    useOrganizationGeozonesQuery(orgGeozonesQueryParams);
+    useOrganizationGeozonesQuery(orgGeozonesQueryParams, { skip: !mapState?.mapScriptLoaded });
   const { count, next, previous, results } = dataOrgGeozones || {};
 
   // preparing table data
@@ -146,7 +148,7 @@ const ScreenDashboardAdminGeozones = () => {
           <AdminTable
             columns={columns.filter(item => item.show).map((item) => item.name)}
             data={tableData}
-            isLoading={isFetchingOrgGeozones}
+            isLoading={isFetchingOrgGeozones || !mapState?.mapScriptLoaded}
           />
           {!isFetchingOrgGeozones && (
             <Pagination

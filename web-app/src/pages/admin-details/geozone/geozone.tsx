@@ -92,11 +92,29 @@ const ScreenAdminDetailGeozone = () => {
     data: dataOrgGeozones,
     isFetching: isFetchingOrgGeozones,
     error,
-  } = useOrganizationGeozonesQuery(orgGeozonesQueryParams);
+  } = useOrganizationGeozonesQuery(
+    orgGeozonesQueryParams,
+    { skip: !mapState || typeof mapState.mapScriptLoaded === 'undefined' }
+  );
   const { results } = dataOrgGeozones || {};
 
   // fetch single geozone details
-  const { data: dataSingleGeozone, isFetching: isFetchingSingleGeozone } = useSingleOrganizationGeozoneQuery( { organization_id: thisUserOrganizationId, geozone_id: parseInt(geozoneId) }, { skip: !geozoneId });
+  const {
+    data: dataSingleGeozone,
+    isFetching: isFetchingSingleGeozone
+  } = useSingleOrganizationGeozoneQuery(
+    {
+      organization_id: thisUserOrganizationId,
+      geozone_id: parseInt(geozoneId)
+    },
+    {
+      skip:
+        !thisUserOrganizationId ||
+        !geozoneId ||
+        !mapState ||
+        typeof mapState.mapScriptLoaded === 'undefined'
+    }
+  );
 
   // geozone mutations
   const [ editOrganizationGeozoneApiTrigger , {isLoading: isLoadingEditGeozone}] = useEditOrganizationGeozoneMutation();
@@ -235,7 +253,7 @@ const ScreenAdminDetailGeozone = () => {
   return (
       <>
         <HeaderView
-          title={`${t("heading")}: ${dataSingleGeozone?.zone_id || geozoneId}`}
+          title={`${t("heading")}`} // ${dataSingleGeozone?.zone_id ? `: ${dataSingleGeozone?.zone_id}` : ''}
           showBackButton={true}
           backButtonCallback={() =>
             navigate(routeUrls.dashboardChildren.adminChildren.geozones)
@@ -329,7 +347,12 @@ const ScreenAdminDetailGeozone = () => {
                       handleBlur={handleBlur}
                       formikSetTouched={formik.setFieldTouched}
                       userCanEdit={userCanEdit}
-                      loadingData={isFetchingSingleGeozone || !formikValuesReady}
+                      loadingData={
+                        isFetchingSingleGeozone ||
+                        !formikValuesReady ||
+                        !mapState ||
+                        typeof mapState.mapScriptLoaded === 'undefined'
+                      }
                     />
                   </Accordian>
                 </form>
