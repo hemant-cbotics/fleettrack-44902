@@ -540,7 +540,7 @@ export const language_en = {
           overlap_priority: "Overlap Priority",
           assign_group: "Assign Group",
           reverse_geocode: "Reverse Geocode",
-          arrival_zone: "Arrival Zone",
+          arrival_geozone: "Arrival Zone",
           departure_zone: "Departure Zone",
           zone_color: "Zone Color",
           speed_limit: "Speed Limit",

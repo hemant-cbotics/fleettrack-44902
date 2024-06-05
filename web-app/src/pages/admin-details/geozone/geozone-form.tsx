@@ -496,15 +496,15 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldCheckbox
-        label={t("arrival_zone")}
-        id="arrival_zone"
+        label={t("arrival_geozone")}
+        id="arrival_geozone"
         type="checkbox"
-        name="arrival_zone"
+        name="arrival_geozone"
         checked={values.arrival_geozone}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={errors.arrival_zone}
-        touched={touched.arrival_zone}
+        error={errors.arrival_geozone}
+        touched={touched.arrival_geozone}
         disabled={!userCanEdit}
       />
 
