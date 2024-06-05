@@ -51,10 +51,23 @@ const DashboardWrapper: FC = () => {
             if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
             setTimeout(() => {
 
-              // set map script loaded
-              dispatch(setMapStateData({
-                mapScriptLoaded: true,
-              }));
+              // load map modules
+              const Microsoft = (window as any).Microsoft;
+              Microsoft.Maps.loadModule(
+                [
+                  'Microsoft.Maps.SpatialMath',
+                  'Microsoft.Maps.Contour',
+                  'Microsoft.Maps.Clustering',
+                ],
+                () => {
+
+                  // set map script loaded
+                  dispatch(setMapStateData({
+                    mapScriptLoaded: true,
+                  }));
+
+                }
+              );
 
               // TODO: Pre load user current position
 

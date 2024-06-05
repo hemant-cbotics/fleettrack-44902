@@ -43,19 +43,19 @@ const ScreenAdminDetailGeozone = () => {
 
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
-  // clear map state on unmount
+  // clear map state on unmount - Disabled 6/5 as this is causing issues with mapState when changing screens
   useEffect(() => {
-    return () => {
-      const restOfMapState = { ...mapState };
-      delete restOfMapState.mapData;
-      dispatch(setMapStateData({
-        ...restOfMapState,
-        mapData: {
-          centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
-        },
-        pageMapLoaded: false,
-      }));
-    };
+    // return () => {
+    //   const restOfMapState = { ...mapState };
+    //   delete restOfMapState.mapData;
+    //   dispatch(setMapStateData({
+    //     ...restOfMapState,
+    //     mapData: {
+    //       centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
+    //     },
+    //     pageMapLoaded: false,
+    //   }));
+    // };
   }, []);
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
@@ -193,8 +193,7 @@ const ScreenAdminDetailGeozone = () => {
                   getCircleLocs(
                     new Microsoft.Maps.Location(APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude, APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
-                    true
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               } : {
                 centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
@@ -206,9 +205,10 @@ const ScreenAdminDetailGeozone = () => {
         // city: dataSingleGeozone?.city || "",
         zone_type: dataSingleGeozone?.zone_type || "",
         geocode: dataSingleGeozone?.geocode || "",
-        lat_lng: dataSingleGeozone?.lat_lng || "",
+        lat_lng: dataSingleGeozone?.lat_lng || `${APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude},${APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude}`,
         overlap_priority: dataSingleGeozone?.overlap_priority || 0,
-        assign_group: dataSingleGeozone?.groups || [],
+        groups: dataSingleGeozone?.groups || [],
+        assign_group: dataSingleGeozone?.groups.map(item => ({ value: `${item.id}`, label: item.name })) || [],
         reverse_geocode: dataSingleGeozone?.reverse_geocode || false,
         arrival_geozone: dataSingleGeozone?.arrival_geozone || false,
         departure_zone: dataSingleGeozone?.departure_zone || false,

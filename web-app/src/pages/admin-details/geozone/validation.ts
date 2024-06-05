@@ -1,8 +1,9 @@
 import * as Yup from 'yup';
 import { OrganizationGeozone } from '../../../api/types/Geozone';
+import { TSelectboxOption } from '../../../components/admin/formFields';
 
 // initial values for the form
-export const geozoneDetailsInitialValues: Partial<OrganizationGeozone> & { assign_group: any[] } = {
+export const geozoneDetailsInitialValues: Partial<OrganizationGeozone> & { assign_group: TSelectboxOption[] } = {
   properties: {},
   description: "",
   // city: "",
@@ -10,7 +11,7 @@ export const geozoneDetailsInitialValues: Partial<OrganizationGeozone> & { assig
   geocode: "",
   lat_lng: "",
   overlap_priority: 0,
-  assign_group: [{}],
+  assign_group: [],
   reverse_geocode: false,
   arrival_geozone: false,
   departure_zone: false,
