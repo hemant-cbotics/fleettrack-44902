@@ -223,6 +223,7 @@ const ScreenAdminDetailVehicle = () => {
         list_of_groups: dataSingleVehicle?.groups || [],
         all_vehicles: dataSingleVehicle?.all_vehicles || false,
       });
+      setUserCanEdit(!!isNewEntity?.current);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
     }
   }, [dataSingleVehicle, vehicleId]);

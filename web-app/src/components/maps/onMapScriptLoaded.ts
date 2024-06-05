@@ -20,6 +20,7 @@ export const onMapScriptLoaded = (props: TOnMapScriptLoadedProps) => {
     {
       mapTypeId: Microsoft.Maps.MapTypeId.road, // aerial, auto, birdseye, collinsBart, mercator, ordnanceSurvey, road, streetside
       navigationBarMode: Microsoft.Maps.NavigationBarMode.square, // 'square', 'default'
+      disableScrollWheelZoom: true,
       center: new Microsoft.Maps.Location(
         props.currentPosition.latitude,
         props.currentPosition.longitude

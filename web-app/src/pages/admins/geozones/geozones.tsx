@@ -26,6 +26,7 @@ import { useOrganizationGeozonesQuery } from "../../../api/network/adminApiServi
 import { TAdminTableRowData } from "../components/types";
 import { OrganizationGeozone } from "../../../api/types/Geozone";
 import { routeUrls } from "../../../navigation/routeUrls";
+import { TAutosuggestOptionValue } from "../../admin-details/geozone/type";
 
 const all_columns = [
   "Geozone Id",
@@ -38,6 +39,20 @@ const all_columns = [
   "Radius",
   "Center",
 ]
+
+export const geozoneDescriptionDisplayText = (description: string | null, defaultText: string) => {
+  let displayText = defaultText;
+  try {
+    if(description) {
+      const descriptionObj: TAutosuggestOptionValue = JSON.parse(description);
+      displayText = descriptionObj.labelText;
+    }
+    return displayText ?? description ?? defaultText;
+  }
+  catch (e) {
+    return description ?? defaultText;
+  }
+}
 
 const ScreenDashboardAdminGeozones = () => {
   const { t: tMain } = useTranslation();
@@ -86,7 +101,7 @@ const ScreenDashboardAdminGeozones = () => {
         navLink: `${routeUrls.dashboardChildren.adminChildren.geozones}/${item.id}`,
         cellData: [
           item?.zone_id ?? "-", // Geozone Id
-          item?.description ?? "-", // Description
+          geozoneDescriptionDisplayText(item?.description, "-"), // Description
           item?.overlap_priority ?? "-", // Overlap Priority
           item?.zone_type ?? "-", // Zone Type
           item?.reverse_geocode 

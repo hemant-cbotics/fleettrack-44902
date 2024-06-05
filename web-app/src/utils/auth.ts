@@ -6,7 +6,7 @@ const useAuth = () => {
     const accessToken = getSessionStorageItem(sessionStorageKeys.accessToken);
 
     const isUserLoggedIn = () => {
-        if (APP_CONFIG.DEBUG.ALL) console.log('access Token', accessToken);
+        // if (APP_CONFIG.DEBUG.ALL) console.log('access Token', accessToken);
         return accessToken !== null && accessToken !== undefined;
     };
 

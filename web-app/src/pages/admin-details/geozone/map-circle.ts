@@ -4,17 +4,16 @@ import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { APP_CONFIG } from "../../../constants/constants";
 import { TGeozoneMapData, TGeozoneMapDataCircle } from "../../../types/map";
 import { TMapOperations, TMapUpdatesHandler } from "./type";
-import { MAP_DEFAULTS } from "./constants";
 import { getDistanceFromCenter, renderCircle } from "../../../utils/map";
 import { ColorRGB } from "../../../types/common";
 
 const dragLabelCenter = {
-  subTitle: 'to reposition',
-  title: 'Drag',
+  // subTitle: 'to reposition',
+  // title: 'Drag',
 }
 const dragLabelRadius = {
-  subTitle: 'to resize',
-  title: 'Drag',
+  // subTitle: 'to resize',
+  // title: 'Drag',
 }
 const circleColorRGB: ColorRGB = [0, 150, 50];
 
@@ -30,7 +29,7 @@ export const mapOperations: TMapOperations = (props) => {
       pRadius: null,
     },
     mCircle: null,
-    circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? MAP_DEFAULTS.RADIUS,
+    circleRadius: (props.mapData as TGeozoneMapDataCircle).radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
     mRadiusLine: null,
   }
 
@@ -47,7 +46,7 @@ export const mapOperations: TMapOperations = (props) => {
       refCenter,
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        icon: MapMarkerRed,
+        icon: MapMarkerBlue,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelCenter : {})
       }
@@ -76,16 +75,14 @@ export const mapOperations: TMapOperations = (props) => {
         ]);
         // update the map data
         console.log('[setMapData] via mapOperations (center dragend)');
-        props.setMapData(
-          data =>
-          ({
-            ...data,
+        props.setMapData({
+            ...props.mapData,
             centerPosition: {
               latitude: refCenter.latitude,
               longitude: refCenter.longitude
             },
             radius: props.mapRef.current.objects.circleRadius,
-          } as TGeozoneMapData)
+          } as TGeozoneMapData
         );
       }
     );
@@ -95,7 +92,7 @@ export const mapOperations: TMapOperations = (props) => {
       Microsoft.Maps.SpatialMath.getDestination(refCenter, 45, props.mapRef.current.objects.circleRadius, Microsoft.Maps.SpatialMath.DistanceUnits.Miles),
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        icon: MapMarkerBlue,
+        icon: MapMarkerRed,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelRadius : {})
       }
@@ -131,16 +128,14 @@ export const mapOperations: TMapOperations = (props) => {
         ]);
         // update the map data
         console.log('[setMapData] via mapOperations (radius dragend)');
-        props.setMapData(
-          data =>
-          ({
-            ...data,
+        props.setMapData({
+            ...props.mapData,
             centerPosition: {
               latitude: refCenter.latitude,
               longitude: refCenter.longitude
             },
             radius: props.mapRef.current.objects.circleRadius,
-          } as TGeozoneMapData)
+          } as TGeozoneMapData
         );
       }
     );
@@ -167,6 +162,8 @@ export const mapOperations: TMapOperations = (props) => {
       
     }
   );
+
+  return null;
 }
 
 export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {

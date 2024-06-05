@@ -6,14 +6,14 @@
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput } from "../../../components/admin/formFields";
-import { MAP_DEFAULTS, OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
+import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
+import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
 import { OrganizationGroup } from "../../../api/types/Group";
 import CloseIcon from "../../../assets/svg/close-icon.svg";
 import { geozoneDetailsInitialValues } from "./validation";
-import BasicMap from "../../../components/maps/basicMap";
+import BasicMap, { MapLoadingAnimation } from "../../../components/maps/basicMap";
 import {
   mapOperations as mapOperationsPolygon,
   mapUpdatesHandler as mapUpdatesHandlerPolygon
@@ -22,11 +22,22 @@ import {
   mapOperations as mapOperationsRoute,
   mapUpdatesHandler as mapUpdatesHandlerRoute
 } from "./map-route";
-import { mapOperations, mapUpdatesHandler } from "./map";
-import { TGeozoneMapData, TGeozoneMapDataCircle, TGeozoneMapDataPolygon, TGeozoneMapDataRoute, TLatLng } from "../../../types/map";
-import { TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
-import { useSelector } from "react-redux";
+import {
+  mapOperations as mapOperationsCircle,
+  mapUpdatesHandler as mapUpdatesHandlerCircle
+} from "./map-circle";
+import { TGeozoneMapData, TGeozoneMapDataCircle, TGeozoneMapDataForAPIs, TGeozoneMapDataPolygon, TGeozoneMapDataRoute, TLatLng, TMapState } from "../../../types/map";
+import { TAutosuggestOptionValue, TMapOperations, TMapRef, TMapUpdatesHandler } from "./type";
+import { useDispatch, useSelector } from "react-redux";
 import { APP_CONFIG } from "../../../constants/constants";
+import { useDebouncedCallback } from "use-debounce";
+import { useLazyAutosuggestAddressQuery, useLazyGeocodeQuery } from "../../../api/network/mapApiServices";
+import { BingAutosuggestResItem } from "../../../api/types/Map";
+import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
+import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
+import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
+import { setMapStateData } from "../../../api/store/commonSlice";
+import { getCircleLocs } from "../../../utils/map";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -41,7 +52,7 @@ export interface GeozoneDetailFormProps {
     shouldValidate?: boolean
   ) => void;
   userCanEdit: boolean;
-  loadingData: boolean;
+  loadingData: boolean; // true if isFetchingSingleGeozone || !formikValuesReady
 }
 
 export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({ 
@@ -57,6 +68,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
  }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
   const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
+  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
+  const dispatch = useDispatch();
 
   // selected groups mechanism
   const [selectedGroups, setSelectedGroups] = React.useState(values.assign_group);
@@ -72,10 +85,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   });
 
   // fetch organization groups
-  const {
-    data: dataOrgGroups,
-  } =
-    useOrganizationGroupsQuery(orgGroupsQueryParams);
+  const { data: dataOrgGroups } = useOrganizationGroupsQuery(orgGroupsQueryParams);
 
   // prepare group data for display
   const { results } = dataOrgGroups ?? {};
@@ -112,97 +122,68 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     map: null,
     objects: {},
   });
-  // map data state - used to store map data for saving
-  const [mapData, setMapData] = useState<TGeozoneMapData>({
-    centerPosition: APP_CONFIG.MAPS.DEFAULT_CENTER,
-    radius: MAP_DEFAULTS.RADIUS,
-    ready: false,
-    editable: userCanEdit,
-    locs: [],
-  });
+
+  const [mapStateTransitionInProgress, setMapStateTransitionInProgress] = useState(false);
 
   // set map data on form load
   useEffect(() => {
+    if(!!!values.properties || Object.keys(values.properties).length === 0) return;
     const savedMapData = values.properties as TGeozoneMapData;
-    if (/*!loadingData && */!!savedMapData && Object.keys(savedMapData).length > 0 && !mapData.ready) {
+    if (!!savedMapData
+    && Object.keys(savedMapData).length > 0) {
       console.log('SAVED MAP DATA', savedMapData as TGeozoneMapDataCircle)
-      console.log('mapData', mapData);
-      console.log('[setMapData] via useEffect to prefill', { userCurrPos, savedMapData })
-      switch(values.zone_type) {
-        case 'Circle':
-          setMapData({
-            ...mapData,
+      console.log('>> new values', JSON.stringify(values.properties));
+      setMapStateTransitionInProgress(true)
+      setTimeout(() => {
+        dispatch(setMapStateData({
+          ...mapState,
+          mapCenter: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+          mapData: {
+            // ...mapState?.mapData,
             centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? MAP_DEFAULTS.RADIUS,
+            ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
+            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
             ready: true,
-          });
-        break;
-        case 'Polygon':
-          setMapData({
-            ...mapData,
-            centerPosition: (savedMapData as TGeozoneMapDataPolygon)?.centerPosition ?? userCurrPos,
-            locs: (savedMapData as TGeozoneMapDataPolygon)?.locs ?? [],
-            ready: true,
-          });
-        break;
-        case 'Route':
-          setMapData({
-            ...mapData,
-            centerPosition: (savedMapData as TGeozoneMapDataRoute)?.centerPosition ?? userCurrPos,
-            locs: (savedMapData as TGeozoneMapDataRoute)?.locs ?? [],
-            ready: true,
-          });
-        break;
-        default:
-          setMapData({
-            ...mapData,
-            centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? MAP_DEFAULTS.RADIUS,
-            ready: true,
-          });
+            editable: userCanEdit,
+          },
+        }));
+        setMapStateTransitionInProgress(false);
+      }, 200);
     }
-    }
-  }, [/*loadingData, */values.properties, mapData]);
-
-  // determine applicable map operations and map updates handler
-  let applicableMapOperations: TMapOperations;
-  let applicableMapUpdatesHandler: TMapUpdatesHandler;
-  switch(values.zone_type) {
-    case 'Polygon':
-      console.log('[POLYGON]')
-      applicableMapOperations = mapOperationsPolygon;
-      applicableMapUpdatesHandler = mapUpdatesHandlerPolygon;
-    break;
-    case 'Route':
-      console.log('[ROUTE]')
-      applicableMapOperations = mapOperationsRoute;
-      applicableMapUpdatesHandler = mapUpdatesHandlerRoute;
-    break;
-    case 'Circle':
-    default:
-      applicableMapOperations = mapOperations;
-      applicableMapUpdatesHandler = mapUpdatesHandler;
-    break;
-  }
+  }, [values.properties]);
 
   // update form values on map data change
   useEffect(() => {
-    const { ready, editable, ...mapDataToSave } = mapData;
-    formikSetValue('properties', mapDataToSave);
-    console.log('[CHANGED]', mapData)
-  }, [mapData]);
+    const mapDataToSave = { ...mapState?.mapData } as TGeozoneMapData;
+    delete mapDataToSave.ready;
+    delete mapDataToSave.editable;
+    console.log('[CHANGE] to values.properties for saving map changes is DISABLED!', JSON.stringify(mapState?.mapDataForAPIs))
+    dispatch(setMapStateData({
+      ...mapState,
+      mapDataForAPIs: mapDataToSave,
+    }));
+  }, [mapState?.mapData]);
 
   useEffect(() => {
     console.log('[setMapData] via useEffect', { userCanEdit })
-    setMapData({
-      ...mapData,
-      editable: userCanEdit,
-    });
+    dispatch(setMapStateData({
+      ...mapState,
+      mapData: {
+        ...mapState?.mapData,
+        editable: userCanEdit,
+      },
+    }));
+    const applicableMapUpdatesHandler =
+      values.zone_type === 'Route'
+        ? mapUpdatesHandlerRoute
+      : values.zone_type === 'Polygon'
+        ? mapUpdatesHandlerPolygon
+        : mapUpdatesHandlerCircle;
     applicableMapUpdatesHandler(
       {
         mapRef,
-        mapData,
-        setMapData,
+        mapData: { ...mapState?.mapData }, // not in use
+        setMapData: () => {}, // not in use
       },
       'edit',
       userCanEdit
@@ -210,41 +191,200 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   }, [userCanEdit]);
 
   // carry out map operations on map ready
-  const handleMapReady = useCallback(() => {
-    if(mapData.centerPosition.latitude === 0) {
+  const handleMapReady =
+  useCallback(
+  () => {
+    if(mapState?.mapData?.centerPosition?.latitude === 0) {
       console.error('MAP DATA ISSUE - lat = 0')
     } else {
-      console.log('>> sending map operations', { ...mapData })
+      console.log('>> sending map operations', JSON.stringify({ ...mapState?.mapData }))
+      const applicableMapOperations =
+        values.zone_type === 'Route'
+          ? mapOperationsRoute
+        : values.zone_type === 'Polygon'
+          ? mapOperationsPolygon
+          : mapOperationsCircle;
       applicableMapOperations({
         mapRef,
-        mapData: { ...mapData },
-        setMapData,
+        mapData: { ...mapState?.mapData },
+        setMapData: (newMapData: TGeozoneMapData) => {
+          const mapDataToSave = { ...newMapData } as TGeozoneMapData;
+          delete mapDataToSave.ready;
+          delete mapDataToSave.editable;
+          console.log('[setMapData] via handleMapReady - dispatch(setMapStateData({...', JSON.stringify(mapState))
+          dispatch(setMapStateData({
+            ...mapState,
+            mapData: {
+              ...mapState?.mapData,
+              ...newMapData,
+            },
+            mapDataForAPIs: { ...mapDataToSave } as TGeozoneMapDataForAPIs,
+          }));
+        },
       })
     }
-  }, [mapData]);
+  }
+  , [mapState?.mapData]);
+
+  const [autoSuggestKeyword, setAutoSuggestKeyword] = useState<string>("");
+  const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
+    setAutoSuggestKeyword(value);
+  }, 500);
+
+  const [autosuggestQuery, { isFetching: isFetchingAutosuggest }] = useLazyAutosuggestAddressQuery()
+  const [autosuggestResults, setAutosuggestResults] = useState<BingAutosuggestResItem[]>([]);
+  const [autosuggestDropOptions, setAutosuggestDropOptions] = useState<TSelectboxOption[]>([]);
+
+  const loadOptionsHandlerAutosuggest =
+  // TODO: enable debouncing, currently causing issues with autosuggest
+  // useDebouncedCallback(
+    async (inputValue: string) => {
+      const autosuggestResponse = await autosuggestQuery(inputValue)
+      console.log('autosuggestResponse', autosuggestResponse)
+      const { data } = autosuggestResponse;
+      const firstResultSet = data?.resourceSets?.[0];
+      const options = !!firstResultSet?.estimatedTotal && firstResultSet?.estimatedTotal > 0
+        ? firstResultSet?.resources?.[0]?.value?.map((item) => {
+            const labelText = item?.name ?? `${item?.address?.formattedAddress} - ${item?.address?.countryRegion}`; // TODO: standardize
+            return {
+              value: JSON.stringify({ labelText, itemJSON: item } as TAutosuggestOptionValue),
+              label: labelText, // to show icon, add ${item.__type === 'LocalBusiness' ? '💲' : '📍'}
+            } as TSelectboxOption
+          })
+        : [];
+      const newAutosuggestResults = firstResultSet?.resources?.[0]?.value ?? [];
+      console.log('newAutosuggestResults', newAutosuggestResults)
+      setAutosuggestResults(newAutosuggestResults);
+      setAutosuggestDropOptions(options);
+      return options;
+    }
+  // , 500);
+
+  const [geocodeQuery, { isFetching: isFetchingGeocode }] = useLazyGeocodeQuery();
+
+  const handleAutosuggestChange = async (e: any) => {
+    const newlySelectedLocation = e.value;
+    const newlySelectedLocationJSON = JSON.parse(e.value) as TAutosuggestOptionValue;
+    formikSetValue('description', newlySelectedLocation);
+    console.log('newlySelectedLocation', newlySelectedLocation);
+    console.log('newlySelectedLocationJSON', newlySelectedLocationJSON);
+    const geocodeResponse = await geocodeQuery(
+      newlySelectedLocationJSON.itemJSON.address
+    );
+    console.log('geocodeResponse', geocodeResponse);
+    const newlySelectedLocationCoords = geocodeResponse.data?.resourceSets?.[0]?.resources?.[0]?.point?.coordinates;
+    console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
+    if(!!newlySelectedLocationCoords?.[0] && !!newlySelectedLocationCoords?.[1]) {
+      dispatch(setMapStateData({
+        ...mapState,
+        mapData: {
+          // ...mapState?.mapData,
+          ready: false,
+        },
+      }));
+      setTimeout(() => {
+        console.info('[handleAutosuggestChange] Setting map data with new location coords', newlySelectedLocationCoords)
+        const Microsoft = (window as any).Microsoft;
+        const newMapDataForAPIs: TGeozoneMapDataForAPIs = {
+          ...mapState?.mapData,
+          centerPosition: {
+            latitude: newlySelectedLocationCoords?.[0],
+            longitude: newlySelectedLocationCoords?.[1],
+          },
+          ...(
+            values.zone_type === 'Route'
+            ? { locs: [] }
+            : values.zone_type === 'Polygon'
+            ? { locs:
+                  getCircleLocs(
+                    new Microsoft.Maps.Location(newlySelectedLocationCoords?.[0], newlySelectedLocationCoords?.[1]),
+                    APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
+                  ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
+              }
+            : { radius: APP_CONFIG.MAPS.DEFAULTS.RADIUS }
+          ),
+        }
+        dispatch(setMapStateData({
+          ...mapState,
+          mapData: {
+            ...newMapDataForAPIs,
+            ready: true,
+            editable: userCanEdit,
+          },
+          mapDataForAPIs: newMapDataForAPIs,
+        }));
+      }, 200);
+    } else {
+      console.error('GEOCODE RESPONSE ISSUE - no coordinates')
+    }
+  }
 
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       {/* mapData: {JSON.stringify(mapData)} */}
-      {mapData.ready && <BasicMap
-        className="col-span-12 mb-4 bg-gray-200 h-96"
-        mapRef={mapRef}
-        setMapData={setMapData}
-        onMapReady={handleMapReady}
-      />}
-      <AdminFormFieldInput
+      {mapState?.mapData?.ready && !loadingData && !mapStateTransitionInProgress ? (<>
+        <BasicMap
+          className="col-span-12 bg-gray-200 h-96"
+          mapRef={mapRef}
+          mapData={mapState?.mapData}
+          setMapData={() => {}}
+          onMapReady={handleMapReady}
+        />
+        <div className="col-span-12 flex gap-8 mb-4">
+          {userCanEdit && (<>
+            {values.zone_type === 'Circle' && (<div className="flex items-center gap-2">
+              <img src={MapMarkerBlue} alt="" />
+              <span className="font-bold text-sm text-[#5959FF]">{t('bluePushpin')}</span>
+            </div>)}
+            <div className="flex items-center gap-2">
+              <img src={MapMarkerRed} alt="" />
+              <span className="font-bold text-sm text-[#FF3F4F]">{t('redPushpin')}</span>
+            </div>
+          </>)}
+        </div>
+      </>) : (<>
+        <div className="col-span-12 bg-gray-200 h-96 flex items-center justify-center relative">
+          <MapLoadingAnimation />
+        </div>
+        <div className="col-span-12 flex gap-8 mb-4"></div>
+      </>)}
+      {loadingData ? <PseudoSelect label={t("description")} /> : 
+        (<AdminFormFieldAsyncDropdown
+          loadingData={loadingData || isFetchingAutosuggest}
+          label={t("description")}
+          id="description"
+          name="description"
+          noOptionsMessage={() => t("description_no_options")}
+          defaultOption={{ value: `${values.description}`, label: `${geozoneDescriptionDisplayText(`${values.description}`, "-")}` }}
+          loadOptions={loadOptionsHandlerAutosuggest}
+          onChange={handleAutosuggestChange}
+          onBlur={(e) => {
+            formikSetTouched("description", true);
+            handleBlur(e);
+          }}
+          error={errors.description}
+          touched={touched.description}
+          disabled={!userCanEdit}
+        />)
+      }
+      {/* <AdminFormFieldInput
         label={t("description")}
         type="text"
         id="description"
         name="description"
         value={values.description}
-        onChange={handleChange}
+        // onChange={handleChange}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          handleChange(e)
+          debouncedSetSearchKeyword(e.target.value)
+        }}
         onBlur={handleBlur}
         error={errors.description}
         touched={touched.description}
         disabled={!userCanEdit}
         customWrapperClass="col-span-12"
-      />
+      /> */}
 
       <AdminFormFieldDropdown
         loadingData={loadingData}
