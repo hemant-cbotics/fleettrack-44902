@@ -31,6 +31,7 @@ import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
 import { TMapState } from "../../../types/map";
 import { getCircleLocs } from "../../../utils/map";
+import AdminListingColumnItem from "../../../components/adminListingColumnItem";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -257,34 +258,19 @@ const ScreenAdminDetailGeozone = () => {
               />
               <div>
                 {listData?.map((item: any, index: number) => (
-                  <div
+                  <AdminListingColumnItem
                     key={index}
-                    className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                      parseInt(geozoneId) === item.id ? "bg-blue-200" : ""
-                    }`}
+                    selected={parseInt(geozoneId) === item.id}
                     onClick={() =>
                       navigate(
                         `${routeUrls.dashboardChildren.adminChildren.geozones}/${item.id}`
                       )
                     }
-                  >
-                    <div className="grid grid-cols-4">
-                      <div className="col-span-3">
-                        <p className="font-semibold text-sm leading-6 text-blue-900">
-                          {item.zone_id}
-                        </p>
-                        <p className="font-normal text-xs leading-6 text-gray-500">
-                          {item.zone_type}
-                        </p>
-                      </div>
-                      <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                        {item.radius}
-                      </div>
-                    </div>
-                    <p className="font-normal text-base leading-6 text-gray-700">
-                      {geozoneDescriptionDisplayText(item.description, "-")}
-                    </p>
-                  </div>
+                    title={item.zone_id}
+                    description={item.zone_type}
+                    asideText={item.radius}
+                    bottomText={geozoneDescriptionDisplayText(item.description, "-")}
+                  />
                 ))}
               </div>
             </div>

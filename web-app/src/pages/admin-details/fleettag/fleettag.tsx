@@ -28,6 +28,7 @@ import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { TListData } from "./type";
 import { OrganizationFleettag } from "../../../api/types/Fleettag";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import AdminListingColumnItem from "../../../components/adminListingColumnItem";
 
 const ScreenAdminDetailFleettag = () => {
   const { fleettagId } = useParams<{ fleettagId: any }>();
@@ -203,34 +204,19 @@ const ScreenAdminDetailFleettag = () => {
             />
             <div>
               {listData?.map((item: any, index: number) => (
-                <div
+                <AdminListingColumnItem
                   key={index}
-                  className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    parseInt(fleettagId) === item.id ? "bg-blue-200" : ""
-                  }`}
+                  selected={fleettagId === item.id}
                   onClick={() =>
                     navigate(
                       `${routeUrls.dashboardChildren.adminChildren.fleettags}/${item.id}`
                     )
                   }
-                >
-                  <div className="grid grid-cols-4">
-                    <div className="col-span-3">
-                      <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.fleettag_id}
-                      </p>
-                      <p className="font-normal text-xs leading-6 text-gray-500">
-                        {item.last_address}
-                      </p>
-                    </div>
-                    <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                      {item.in_range}
-                    </div>
-                  </div>
-                  <p className="font-normal text-base leading-6 text-gray-700">
-                    {item.name}
-                  </p>
-                </div>
+                  title={item.fleettag_id}
+                  description={item.last_address}
+                  asideText={item.in_range}
+                  bottomText={item.name}
+                />
               ))}
             </div>
           </div>

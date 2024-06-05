@@ -40,6 +40,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import AdminListingColumnItem from "../../../components/adminListingColumnItem";
 
 const ScreenAdminDetailUser = () => {
   const { userId } = useParams<{ userId: any }>();
@@ -228,30 +229,19 @@ const ScreenAdminDetailUser = () => {
             />
             <div>
               {listData?.map((item: any, index: number) => (
-                <div
+                <AdminListingColumnItem
                   key={index}
-                  className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    parseInt(userId) === item.user_id ? "bg-blue-200" : ""
-                  }`}
-                  onClick={() => navigate(`${routeUrls.dashboardChildren.adminChildren.users}/${item.user_id}`)}
-                >
-                  <div className="grid grid-cols-4">
-                    <div className="col-span-3">
-                      <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.user_name}
-                      </p>
-                      <p className="font-normal text-xs leading-6 text-gray-500">
-                        {item.user_description}
-                      </p>
-                    </div>
-                    <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                      {item.user_role}
-                    </div>
-                  </div>
-                  <p className="font-normal text-base leading-6 text-gray-700">
-                    {item.user_email}
-                  </p>
-                </div>
+                  selected={parseInt(userId) === item.user_id}
+                  onClick={() =>
+                    navigate(
+                      `${routeUrls.dashboardChildren.adminChildren.users}/${item.user_id}`
+                    )
+                  }
+                  title={item.user_name}
+                  description={item.user_description}
+                  asideText={item.user_role}
+                  bottomText={item.user_email}
+                />
               ))}
             </div>
           </div>
