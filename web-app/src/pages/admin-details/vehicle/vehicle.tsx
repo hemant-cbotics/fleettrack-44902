@@ -40,6 +40,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import AdminListingColumnItem from "../../../components/adminListingColumnItem";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
@@ -297,34 +298,19 @@ const ScreenAdminDetailVehicle = () => {
             />
             <div>
               {listData.map((item: any, index: number) => (
-                <div
+                <AdminListingColumnItem
                   key={index}
-                  className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    vehicleId === item.id ? "bg-blue-200" : ""
-                  }`}
+                  selected={vehicleId === item.id}
                   onClick={() =>
                     navigate(
                       `${routeUrls.dashboardChildren.adminChildren.vehicles}/${item.id}`
                     )
                   }
-                >
-                  <div className="grid grid-cols-4">
-                    <div className="col-span-3">
-                      <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.name}
-                      </p>
-                      <p className="font-normal text-xs leading-6 text-gray-500">
-                        {item.description}
-                      </p>
-                    </div>
-                    <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                      {item.equipment_type}
-                    </div>
-                  </div>
-                  <p className="font-normal text-base leading-6 text-gray-700">
-                    {item.vin}
-                  </p>
-                </div>
+                  title={item.name}
+                  description={item.description}
+                  asideText={item.equipment_type}
+                  bottomText={item.vin}
+                />
               ))}
             </div>
           </div>
