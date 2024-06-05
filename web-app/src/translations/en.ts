@@ -536,7 +536,7 @@ export const language_en = {
           city: "City",
           zone_type: "Zone Type (Shape)",
           geocode: "Geocode",
-          latitude_longitude: "Latitude/Longitude",
+          lat_lng: "Latitude/Longitude",
           overlap_priority: "Overlap Priority",
           assign_group: "Assign Group",
           reverse_geocode: "Reverse Geocode",

@@ -432,15 +432,15 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       />
 
       <AdminFormFieldInput
-        label={t("latitude_longitude")}
+        label={t("lat_lng")}
         type="text"
-        id="latitude_longitude"
-        name="latitude_longitude"
+        id="lat_lng"
+        name="lat_lng"
         value={values.lat_lng}
         onChange={handleChange}
         onBlur={handleBlur}
-        error={errors.latitude_longitude}
-        touched={touched.latitude_longitude}
+        error={errors.lat_lng}
+        touched={touched.lat_lng}
         disabled={!userCanEdit}
       />
 
