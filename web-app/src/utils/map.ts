@@ -7,7 +7,7 @@ type TMapGetCurrentPositionCallback = (position: TLatLng) => void;
 export const mapGetCurrentPosition = (callback: TMapGetCurrentPositionCallback) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
-      if(APP_CONFIG.DEBUG.MAPS) console.log('[mapGetCurrentPosition]', `${position.coords.latitude}, ${position.coords.longitude}`)
+      if(APP_CONFIG.DEBUG.MAPS) console.log('[mapGetCurrentPosition] Retrieved user current geo position', `${position.coords.latitude}, ${position.coords.longitude}`)
       callback({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
@@ -68,6 +68,12 @@ export const renderCircle = (mapRef: any, center: any, radiusInMiles: number, co
     }
   );
   mapRef.current.map.layers.insert(circleLayer);
+
+  // center the map to the circle
+  mapRef.current.map.setView({
+    bounds: Microsoft.Maps.LocationRect.fromLocations(getCircleLocs(center, radiusInMiles, 36 * 2)),
+    padding: 20
+  });
 }
 
 export const renderPolygon = (mapRef: any, center: any, polygonPoints: any, colorRGB: [number,number,number]) => {
@@ -88,6 +94,12 @@ export const renderPolygon = (mapRef: any, center: any, polygonPoints: any, colo
     }
   );
   mapRef.current.map.layers.insert(poygonLayer);
+
+  // center the map to the polygon
+  mapRef.current.map.setView({
+    bounds: Microsoft.Maps.LocationRect.fromLocations(polygonPoints),
+    padding: 20
+  });
 }
 
 export const renderRoute = (mapRef: any, center: any, routePoints: any, colorRGB: [number,number,number]) => {
@@ -107,6 +119,12 @@ export const renderRoute = (mapRef: any, center: any, routePoints: any, colorRGB
   );
   mapRef.current.map.entities.push(line);
   mapRef.current.objects.mRoutes.push(line);
+
+  // center the map to the route
+  mapRef.current.map.setView({
+    bounds: Microsoft.Maps.LocationRect.fromLocations(routePoints),
+    padding: 20
+  });
 }
 
 

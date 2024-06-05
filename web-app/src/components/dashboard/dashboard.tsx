@@ -2,11 +2,12 @@ import React, { FC, useCallback } from "react";
 import Sidemenu from "../sidemenu";
 import DashboardHeader from "./dashboardHeader";
 import { Outlet } from "react-router-dom";
-import { setMapStateData, TModalsState } from "../../api/store/commonSlice";
+import { setMapStateData, setUserCurrPosData, TModalsState } from "../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { TMapState } from "../../types/map";
+import { TLatLng, TMapState } from "../../types/map";
 import { APP_CONFIG } from "../../constants/constants";
 import { asyncLoadScript } from "../../utils/common";
+import { mapGetCurrentPosition } from "../../utils/map";
 
 interface DashboardWrapperProps extends React.PropsWithChildren {
   children: React.ReactNode;
@@ -29,34 +30,44 @@ const DashboardWrapper: FC = () => {
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
 
-  const MemoizedInitBingMaps = useCallback(() => {
-    if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedInitBingMaps')
+  const MemoizedInitBingMaps =
+  // useCallback(
+    () => {
+    // if(APP_CONFIG.DEBUG.MAPS) console.log('MemoizedInitBingMaps')
 
     // initialize the map
     if(!initRef.current) {
       initRef.current = true;
-      asyncLoadScript(
-        APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
-        APP_CONFIG.MAPS.SCRIPT_ID,
-        () => {
-          if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
-          setTimeout(() => {
+      mapGetCurrentPosition((currPos: TLatLng) => {
 
-            // set map script loaded
-            dispatch(setMapStateData({
-              mapScriptLoaded: true,
-            }));
+        // set user current position in store
+        dispatch(setUserCurrPosData(currPos));
 
-            // TODO: Pre load user current position
+        // load map script
+        asyncLoadScript(
+          APP_CONFIG.MAPS.SCRIPT_URL(`${process.env.REACT_APP_BING_MAPS_API_KEY}`),
+          APP_CONFIG.MAPS.SCRIPT_ID,
+          () => {
+            if(APP_CONFIG.DEBUG.MAPS) console.log("Map script loaded");
+            setTimeout(() => {
 
-          }, /*loadingMap ?*/ 2000/* : 200*/); // delay necessary to let map resources load, before attempting to load the map
-        }
-      )
+              // set map script loaded
+              dispatch(setMapStateData({
+                mapScriptLoaded: true,
+              }));
+
+              // TODO: Pre load user current position
+
+            }, /*loadingMap ?*/ 2000/* : 200*/); // delay necessary to let map resources load, before attempting to load the map
+          }
+        );
+
+      });
     }
     
-    return <>
-    </>
-  }, [mapState]);
+    return <></>
+  }
+  // , [mapState]);
   
   return (
     <section className={`container-dashboard bg-white${modalActive ? " h-screen overflow-hidden" : ""}`}>

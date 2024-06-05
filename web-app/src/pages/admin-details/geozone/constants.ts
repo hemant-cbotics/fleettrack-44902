@@ -1,7 +1,3 @@
-export const MAP_DEFAULTS = {
-  RADIUS: 0.6,
-};
-
 export const ZONE_TYPES_OPTIONS = [
   { id: "CIRCLE", label: "Circle", value: "Circle" },
   { id: "POLYGON", label: "Polygon", value: "Polygon" },

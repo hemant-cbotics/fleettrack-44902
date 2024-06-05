@@ -1,3 +1,5 @@
+import { BingLocationAddress } from "../types/Map";
+
 type TAppEnv = "staging" | "prod";
 
 export const APP_ENV: TAppEnv
@@ -67,3 +69,26 @@ export const API_ENDPOINTS = {
     EDIT_ORGANIZATION_GEOZONE: (geozone_id: number) => `/geozone/ap1/v1/${geozone_id}/`,
   }
 }
+
+export const BINGMAPS_ENDPOINTS = {
+  AUTOSUGGEST:
+    (query: string) =>
+      'https://dev.virtualearth.net/REST/v1/Autosuggest' +
+      `?query=${encodeURIComponent(query)}` +
+      // '&userLocation=47.668697,-122.376373,5' +
+      // '&includeEntityTypes=Business' +
+      `&key=${process.env.REACT_APP_BING_MAPS_API_KEY}`,
+
+  GEOCODE:
+    (address: BingLocationAddress) => {
+      type TAddress = keyof typeof address;
+      return 'https://dev.virtualearth.net/REST/v1/Locations?' +
+      Object.keys(address).map(
+        (key: string) => `${key}=${address[key as TAddress]}`
+      ).join('&') +
+      // `&userLocation={userLocation}&userIp={userIp}&usermapView={usermapView}&includeNeighborhood={includeNeighborhood}` +
+      `&maxResults=5` +
+      `&key=${process.env.REACT_APP_BING_MAPS_API_KEY}`
+    }
+
+};

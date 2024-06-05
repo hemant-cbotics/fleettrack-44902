@@ -4,6 +4,7 @@ import { AuthAPIs } from "../network/authApiService"
 import { UserAPIs } from "../network/userApiService"
 import commonSlice from "./commonSlice"
 import { AdminAPIs } from "../network/adminApiServices"
+import { MapAPIs } from "../network/mapApiServices"
 
 // ...
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     [AuthAPIs.reducerPath]: AuthAPIs.reducer,
     [UserAPIs.reducerPath]: UserAPIs.reducer,
     [AdminAPIs.reducerPath]: AdminAPIs.reducer,
+    [MapAPIs.reducerPath]: MapAPIs.reducer,
     commonReducer: commonSlice
   },
 
@@ -21,7 +23,8 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }).concat(
       AuthAPIs.middleware,
       UserAPIs.middleware,
-      AdminAPIs.middleware
+      AdminAPIs.middleware,
+      MapAPIs.middleware,
     )
 })
 

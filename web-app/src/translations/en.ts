@@ -529,7 +529,10 @@ export const language_en = {
           deletion_failed: "Failed to delete geozone. Please check the information that you have entered.",
         },
         form: {
+          bluePushpin: "Drag the Blue Pin to move the Zone",
+          redPushpin: "Drag the Red Pin(s) to change the size/shape of the Zone",
           description: "Description (Address)",
+          description_no_options: "No locations found. Please try another search.",
           city: "City",
           zone_type: "Zone Type (Shape)",
           geocode: "Geocode",
