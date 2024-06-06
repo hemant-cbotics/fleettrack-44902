@@ -546,12 +546,16 @@ export const language_en = {
           speed_limit: "Speed Limit",
         },
         map: {
-          polygonEdit: {
+          shape_controls: "Shape Controls", // deprecated
+          polygon_sides: "Polygon Sides",
+          route_points: "Route Points",
+          create_route_point: "Click anywhere on the map to create a new route point",
+          polygonEdit: { // deprecated
             heading: "Edit Geozone Polygon",
             sub_heading: "You can drag the blue pushpins around to reshape the polygon.",
             ok_button: "OK",
           },
-          routeEdit: {
+          routeEdit: { // deprecated
             heading: "Edit Geozone Route",
             sub_heading: "You can drag the blue pushpins around to reshape the route.",
             ok_button: "OK",
