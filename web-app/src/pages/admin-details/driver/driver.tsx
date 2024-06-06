@@ -271,7 +271,7 @@ const ScreenAdminDetailDriver = () => {
                       variant="success"
                       label={tMain("save")}
                       onClick={handleEditDriver}
-                      disabled={isLoadingEditDriver}
+                      disabled={isLoadingEditDriver || !!Object.keys(errors).length}
                     />
                   </div>
                 </>
@@ -293,7 +293,7 @@ const ScreenAdminDetailDriver = () => {
                       variant="primary"
                       label={userCanEdit ? tMain("update") : tMain("edit")}
                       onClick={userCanEdit ? handleEditDriver : () => setUserCanEdit(!userCanEdit)}
-                      disabled={isLoadingEditDriver}
+                      disabled={isLoadingEditDriver || (userCanEdit && !!Object.keys(errors).length)}
                     />
                   </div>
                 </>

@@ -259,7 +259,7 @@ const ScreenAdminDetailUser = () => {
                       variant="success"
                       label={tMain("save")}
                       onClick={handleEditUser}
-                      disabled={isLoadingEditUser}
+                      disabled={isLoadingEditUser || !!Object.keys(errors).length}
                     />
                   </div>
                 </>
@@ -281,7 +281,7 @@ const ScreenAdminDetailUser = () => {
                       variant="primary"
                       label={userCanEdit ? tMain("update") : tMain("edit")}
                       onClick={userCanEdit ? handleEditUser : () => setUserCanEdit(!userCanEdit)}
-                      disabled={isLoadingEditUser}
+                      disabled={isLoadingEditUser || (userCanEdit && !!Object.keys(errors).length)}
                     />
                   </div>
                 </>

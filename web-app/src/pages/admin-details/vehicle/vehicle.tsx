@@ -332,7 +332,7 @@ const ScreenAdminDetailVehicle = () => {
                       variant="success"
                       label={tMain("save")}
                       onClick={handleEditVehicle}
-                      disabled={isLoadingEditVehicle}
+                      disabled={isLoadingEditVehicle || !!Object.keys(errors).length}
                     />
                   </div>
                 </>
@@ -358,7 +358,7 @@ const ScreenAdminDetailVehicle = () => {
                           ? handleEditVehicle
                           : () => setUserCanEdit(!userCanEdit)
                       }
-                      disabled={isLoadingEditVehicle}
+                      disabled={isLoadingEditVehicle || (userCanEdit && !!Object.keys(errors).length)}
                     />
                   </div>
                   {/* <div className="w-24">
