@@ -39,6 +39,7 @@ import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { setMapStateData } from "../../../api/store/commonSlice";
 import { getCircleLocs } from "../../../utils/map";
 import { GeozoneVehicleGroup } from "../../../api/types/Geozone";
+import { ColorRGB } from "../../../types/common";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -170,6 +171,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
             centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
             ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
             radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+            color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
             ready: true,
             editable: userCanEdit,
           },
@@ -179,9 +181,26 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     }
   }, [values.properties]);
 
+  // update map data on color change
+  useEffect(() => {
+    setMapStateTransitionInProgress(true)
+    setTimeout(() => {
+      dispatch(setMapStateData({
+        ...mapState,
+        mapData: {
+          ...mapState?.mapData,
+          color:
+            APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+        },
+      }));
+      setMapStateTransitionInProgress(false);
+    }, 200);
+  }, [values.zone_color]);
+
   // update form values on map data change
   useEffect(() => {
     const mapDataToSave = { ...mapState?.mapData } as TGeozoneMapData;
+    delete mapDataToSave.color;
     delete mapDataToSave.ready;
     delete mapDataToSave.editable;
     console.log('[CHANGE] to values.properties for saving map changes is DISABLED!', JSON.stringify(mapState?.mapDataForAPIs))
@@ -341,6 +360,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           ...mapState,
           mapData: {
             ...newMapDataForAPIs,
+            color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
             ready: true,
             editable: userCanEdit,
           },
@@ -382,6 +402,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ...mapState,
         mapData: {
           ...newMapDataForAPIs,
+          color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
           ready: true,
           editable: userCanEdit,
         },
@@ -412,6 +433,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ...mapState,
         mapData: {
           ...newMapDataForAPIs,
+          color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
           ready: true,
           editable: userCanEdit,
         },
@@ -599,6 +621,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.lat_lng}
         touched={touched.lat_lng}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldDropdown

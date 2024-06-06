@@ -28,6 +28,7 @@ import { OrganizationGeozone } from "../../../api/types/Geozone";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TAutosuggestOptionValue } from "../../admin-details/geozone/type";
 import { TMapState } from "../../../types/map";
+import { getGeozoneShapeDescription } from "../../../utils/geozone";
 
 const all_columns = [
   "Geozone Id",
@@ -37,7 +38,7 @@ const all_columns = [
   "Reverse Geocode",
   "Arrival Zone",
   "Departure Zone",
-  "Radius",
+  "Shape Details",
   "Center",
 ]
 
@@ -115,7 +116,7 @@ const ScreenDashboardAdminGeozones = () => {
           item?.departure_zone
           ? <span className="text-field-success">{tMain('yes')}</span>
           : <span className="text-field-error-dark">{tMain('no')}</span>, // Departure Zone
-          item?.radius ?? "-", // Radius
+          getGeozoneShapeDescription(item) ?? "-", // Radius
           item?.lat_lng ?? "-", // Center
         ].filter((_, index) => columns[index].show)
       }))
