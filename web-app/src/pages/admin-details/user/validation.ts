@@ -1,5 +1,13 @@
 import * as Yup from "yup";
 
+// form field names
+export type TFormFieldNames = "user_id" | "password" | "user_description" |
+  "is_active" | "use_two_factor" | "use_geozone_labels" | "contact_name" |
+  "contact_phone_number" | "contact_email" | "timezone" |
+  "enable_sso_to_visatracks" | "default_overlay" | "user_state" |
+  "session_timeout" | "first_login_page" | "authorized_groups" |
+  "default_acl_role" | "maximum_access_level";
+
 // initial values for the form
 export const userDetailsInitialValues = {
   user_id: 0,

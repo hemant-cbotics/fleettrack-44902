@@ -243,7 +243,6 @@ const ScreenAdminDetailGeozone = () => {
     dirty,
   } = formik;
 
-  console.log('errors', errors)
   const invalidFields =
     Object.keys(errors)
       .filter(key => !!errors[key as TFormFieldNames]);

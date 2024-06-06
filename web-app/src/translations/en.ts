@@ -451,6 +451,8 @@ export const language_en = {
         add_selected: "Add Selected",
         remove_selected: "Remove Selected",
         remove_all: "Remove All",
+        vehicle_count_1: "1 vehicle",
+        vehicle_count: "{{count}} vehicles",
         toast: {
           group_updated: "Group has been updated successfully.",
           group_deleted: "Group has been deleted successfully.",
