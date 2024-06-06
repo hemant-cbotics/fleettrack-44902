@@ -40,6 +40,7 @@ export const APP_CONFIG = {
         longitude: -89.9571074,
       },
       RADIUS: 0.6,
+      POLYGON_POINTS_RANGE: [3, 12],
       POLYGON_POINTS: 6,
     }
   },

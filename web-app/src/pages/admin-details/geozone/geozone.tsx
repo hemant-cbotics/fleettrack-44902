@@ -18,7 +18,7 @@ import AppSearchBox from "../../../components/searchBox";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { useFormik } from "formik";
 import Accordian from "../../../components/accordian";
-import { geozoneDetailsInitialValues, geozoneDetailsYupValidationSchema } from "./validation";
+import { geozoneDetailsInitialValues, geozoneDetailsYupValidationSchema, TFormFieldNames } from "./validation";
 import { GeozoneDetailForm } from "./geozone-form";
 import { TModalsState, setModalsData, setMapStateData } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -193,7 +193,8 @@ const ScreenAdminDetailGeozone = () => {
                   getCircleLocs(
                     new Microsoft.Maps.Location(APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude, APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
+                    true
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               } : {
                 centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
@@ -206,14 +207,14 @@ const ScreenAdminDetailGeozone = () => {
         zone_type: dataSingleGeozone?.zone_type || "",
         geocode: dataSingleGeozone?.geocode || "",
         lat_lng: dataSingleGeozone?.lat_lng || `${APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude},${APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude}`,
-        overlap_priority: dataSingleGeozone?.overlap_priority || 0,
+        overlap_priority: dataSingleGeozone?.overlap_priority || geozoneDetailsInitialValues.overlap_priority,
         groups: dataSingleGeozone?.groups || [],
         assign_group: dataSingleGeozone?.groups.map(item => ({ value: `${item.id}`, label: item.name })) || [],
         reverse_geocode: dataSingleGeozone?.reverse_geocode || false,
         arrival_geozone: dataSingleGeozone?.arrival_geozone || false,
         departure_zone: dataSingleGeozone?.departure_zone || false,
-        zone_color: dataSingleGeozone?.zone_color || "",
-        speed_limit: dataSingleGeozone?.speed_limit || "",
+        zone_color: dataSingleGeozone?.zone_color || geozoneDetailsInitialValues.zone_color,
+        speed_limit: dataSingleGeozone?.speed_limit || geozoneDetailsInitialValues.speed_limit,
       });
       setUserCanEdit(!!isNewEntity?.current);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
@@ -248,7 +249,14 @@ const ScreenAdminDetailGeozone = () => {
     handleChange,
     handleBlur,
     handleSubmit,
+    dirty,
   } = formik;
+
+  console.log('errors', errors)
+  const invalidFields =
+    Object.keys(errors)
+      .filter(key => !!errors[key as TFormFieldNames]);
+  const isFormValid = invalidFields.length === 0 && dirty;
   
   return (
       <>
@@ -307,7 +315,7 @@ const ScreenAdminDetailGeozone = () => {
                         variant="success"
                         label={tMain("save")}
                         onClick={handleEditGeozone}
-                        disabled={isLoadingEditGeozone}
+                        disabled={!isFormValid || isLoadingEditGeozone}
                       />
                     </div>
                   </>
