@@ -546,6 +546,7 @@ export const language_en = {
           speed_limit: "Speed Limit",
         },
         map: {
+          reset_map: "Reset Map",
           shape_controls: "Shape Controls", // deprecated
           polygon_sides: "Polygon Sides",
           route_points: "Route Points",

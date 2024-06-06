@@ -6,7 +6,7 @@
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
+import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
 import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
@@ -150,9 +150,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
 
   const [mapStateTransitionInProgress, setMapStateTransitionInProgress] = useState(false);
 
-  // set map data on form load
-  useEffect(() => {
-    if(!!!values.properties || Object.keys(values.properties).length === 0) return;
+  const loadResetMapDataWithInitialValues = () => {
     const savedMapData = values.properties as TGeozoneMapData;
     if (!!savedMapData
     && Object.keys(savedMapData).length > 0) {
@@ -171,7 +169,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
             centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
             ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
             radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-            color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
+            color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
             ready: true,
             editable: userCanEdit,
           },
@@ -179,6 +177,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         setMapStateTransitionInProgress(false);
       }, 200);
     }
+  }
+
+  // set map data on form load
+  useEffect(() => {
+    if(!!!values.properties || Object.keys(values.properties).length === 0) return;
+    loadResetMapDataWithInitialValues();
   }, [values.properties]);
 
   // update map data on color change
@@ -454,7 +458,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
               setMapData={() => {}}
               onMapReady={handleMapReady}
             />
-            <div className="col-span-12 flex gap-8 mt-4">
+            <div className="col-span-12 flex gap-4 mt-4">
               {userCanEdit && (<>
                 {values.zone_type === 'Circle' && (<div className="flex items-center gap-2">
                   <img src={MapMarkerBlue} alt="" />
@@ -464,6 +468,14 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
                   <img src={MapMarkerRed} alt="" />
                   <span className="font-bold text-sm text-[#FF3F4F]">{t('redPushpin')}</span>
                 </div>
+                <AdminFormFieldSubmit
+                  customWrapperClass="col-span-6 ml-auto"
+                  type="button"
+                  variant="primary-like"
+                  label={tMap('reset_map')}
+                  onClick={loadResetMapDataWithInitialValues}
+                  disabled={loadingData}
+                />
               </>)}
             </div>
             {userCanEdit && values.zone_type !== 'Circle' && (
