@@ -46,26 +46,26 @@ const ScreenMapOverview = () => {
   const [filteredGroupData, setFilteredGroupData] = useState<TGroupList[]>([]);
   const groupData: TGroupList[] = !!results
     ? (results || ([] as OrganizationGroup[])).map(
-        (item: OrganizationGroup, index: number) => ({
-          id: item?.id,
-          name: item?.name,
-          listOfVehicles: item?.vehicles.map(
-                              (vehicle: OrganizationVehicle, index: number) => ({
-                                id: vehicle.id,
-                                name: vehicle?.vehicle_model + " " + vehicle?.vehicle_make || "-",
-                                description: vehicle?.vehicle_description || "-",
-                                vin: vehicle?.vin || "-",
-                                is_active: vehicle?.is_active,
-                              })
-                            ),
-          checked: true,
-        })
-      )
+      (item: OrganizationGroup, index: number) => ({
+        id: item?.id,
+        name: item?.name,
+        listOfVehicles: item?.vehicles.map(
+          (vehicle: OrganizationVehicle, index: number) => ({
+            id: vehicle.id,
+            name: vehicle?.vehicle_model + " " + vehicle?.vehicle_make || "-",
+            description: vehicle?.vehicle_description || "-",
+            vin: vehicle?.vin || "-",
+            is_active: vehicle?.is_active,
+          })
+        ),
+        checked: true,
+      })
+    )
     : [];
 
-    useEffect(() => {
-      setFilteredGroupData(groupData);
-    }, [dataOrgGroups])
+  useEffect(() => {
+    setFilteredGroupData(groupData);
+  }, [dataOrgGroups])
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     console.log(value);
@@ -82,13 +82,13 @@ const ScreenMapOverview = () => {
           dispatch(setModalsData({ ...modalsState, showGroupSelector: true }));
         }}
       />
-      <GroupSelectorModal filteredGroupData = {filteredGroupData} setFilteredGroupData={setFilteredGroupData}/>
+      <GroupSelectorModal filteredGroupData={filteredGroupData} setFilteredGroupData={setFilteredGroupData} />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="lg:grid lg:grid-cols-12 py-2">
           <div
             className={`hidden xl:block lg:col-span-3 space-y-4${
               isFetchingOrgGroups ? " opacity-40 pointer-events-none" : ""
-            } bg-gray-100 rounded-l-lg`}
+              } bg-gray-100 rounded-l-lg`}
           >
             <div className="px-4 mt-4">
               <AppSearchBox
@@ -103,7 +103,7 @@ const ScreenMapOverview = () => {
             </div>
             <div>
               {filteredGroupData?.filter((group) => group.checked)?.map((item: any, index: number) => (
-                <GroupList 
+                <GroupList
                   key={index}
                   name={item.name}
                   color="red"
@@ -116,8 +116,8 @@ const ScreenMapOverview = () => {
                         key={index}
                         className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
                           deviceId === vehicle.id ? "bg-blue-200" : ""
-                        }`}
-                        onClick={() =>{dispatch(setModalsData({ ...modalsState, showDeviceReport: true }));}}>
+                          }`}
+                        onClick={() => { dispatch(setModalsData({ ...modalsState, showDeviceReport: true })); }}>
                         <div className="grid grid-cols-4">
                           <div className="col-span-3 flex space-x-2">
                             <div className="flex items-center">
@@ -125,9 +125,9 @@ const ScreenMapOverview = () => {
                               <input
                                 type="checkbox"
                                 className="size-4 rounded border-gray-300 disabled:bg-gray-200 disabled:border-gray-300"
-                                id={vehicle.id} 
-                                onChange={() => {}}
-                                />
+                                id={vehicle.id}
+                                onChange={() => { }}
+                              />
                             </div>
                             <div>
                               <p className="font-semibold text-sm leading-6 text-blue-900">
@@ -142,11 +142,12 @@ const ScreenMapOverview = () => {
                             </div>
                           </div>
                           <div className="col-span-1 font-bold text-xs leading-4 text-right text-green-700 space-y-1">
-                              {vehicle.is_active ? "Active" : "Inactive"}
+                            {vehicle.is_active ? "Active" : "Inactive"}
                           </div>
-                    </div>
-                  </div>
-                ))}
+                        </div>
+                      </div>
+                    ))
+                  }
                 </GroupList>
               ))}
             </div>
