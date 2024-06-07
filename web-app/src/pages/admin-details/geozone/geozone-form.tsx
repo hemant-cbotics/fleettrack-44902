@@ -154,8 +154,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     const savedMapData = values.properties as TGeozoneMapData;
     if (!!savedMapData
     && Object.keys(savedMapData).length > 0) {
-      console.log('SAVED MAP DATA', savedMapData as TGeozoneMapDataCircle)
-      console.log('>> new values', JSON.stringify(values.properties));
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('SAVED MAP DATA', JSON.stringify(savedMapData));
       setMapStateTransitionInProgress(true)
       if(values.zone_type === 'Polygon') {
         setPolygonSides(`${(savedMapData as TGeozoneMapDataPolygon)?.locs?.length ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS}`);
@@ -535,6 +534,9 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           <>
             <div className="col-span-12 bg-gray-200 h-96 flex items-center justify-center relative">
               <MapLoadingAnimation />
+              {APP_CONFIG.DEBUG.MAPS && (<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-8">
+                <h4 className="font-bold text-lg text-black">{!mapState?.mapData || Object.keys(mapState?.mapData).length < 2 ? 'Map data not received' : ''}</h4>
+              </div>)}
             </div>
             <div className="col-span-12 flex gap-8 mb-4"></div>
           </>

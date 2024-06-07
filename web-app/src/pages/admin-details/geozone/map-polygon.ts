@@ -135,7 +135,6 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
   if(APP_CONFIG.DEBUG.MAPS) console.log('[mapUpdatesHandler]', action, value);
 
   const Microsoft = (window as any).Microsoft;
-  const refCenter = props.mapRef.current.map.getCenter();
 
   switch(action) {
     case 'edit':
@@ -148,6 +147,7 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
       });
       // show the infobox
       if(false) {
+        const refCenter = props.mapRef.current.map?.getCenter();
         props.mapRef.current.objects.mInfobox = new Microsoft.Maps.Infobox(refCenter, {
           title: i18n.t('admins.geozones.detailsPage.map.polygonEdit.heading'),
           description: i18n.t('admins.geozones.detailsPage.map.polygonEdit.sub_heading'),

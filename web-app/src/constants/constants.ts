@@ -30,7 +30,7 @@ export const APP_CONFIG = {
   DEBUG: {
     ALL: true,
     MAPS: true,
-    GEOZONES: true,
+    GEOZONES: false,
   },
   MAPS: {
     SCRIPT_ID: 'bing-maps-script',
