@@ -529,6 +529,10 @@ export const language_en = {
           geozone_deleted: "Geozone has been deleted successfully.",
           updation_failed: "Failed to update geozone. Please check the information that you have entered.",
           deletion_failed: "Failed to delete geozone. Please check the information that you have entered.",
+          route_points_required: "Please drop at least two route points to create a route geozone.",
+          polygon_points_required: "Please create a polygon with at least three sides to create a polygon geozone.",
+          circle_points_required: "Please create a circle to create a circle geozone.",
+          edit_not_allowed: "You are not allowed to edit this geozone.",
         },
         form: {
           bluePushpin: "Drag the Blue Pin to move the Zone",
