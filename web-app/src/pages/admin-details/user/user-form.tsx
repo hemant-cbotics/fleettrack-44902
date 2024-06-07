@@ -55,6 +55,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         error={errors.user_id}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -68,6 +69,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.password}
         error={errors.password}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
       <div className="col-span-12">
         <AdminFormFieldInput
@@ -81,6 +83,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
           touched={touched.user_description}
           error={errors.user_description}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
       <div className="col-span-12 grid grid-cols-12 gap-4">
@@ -135,6 +138,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.contact_name}
         error={errors.contact_name}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -148,6 +152,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.contact_phone_number}
         error={errors.contact_phone_number}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -162,6 +167,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         error={errors.contact_email}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -176,6 +182,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.timezone}
         error={errors.timezone}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <div className="col-span-12 grid grid-cols-8">
@@ -205,6 +212,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.default_overlay}
         error={errors.default_overlay}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -219,6 +227,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.user_state}
         error={errors.user_state}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -232,6 +241,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.session_timeout}
         error={errors.session_timeout}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -246,6 +256,7 @@ export const UserGeneralDetailForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.first_login_page}
         error={errors.first_login_page}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -334,6 +345,7 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.authorized_group_1}
         error={errors.authorized_group_1}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -362,6 +374,7 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.default_acl_role}
         error={errors.default_acl_role}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -375,6 +388,7 @@ export const UserAccessControlForm: FC<UserGeneralDetailFormProps> = ({
         touched={touched.maximum_access_level}
         error={errors.maximum_access_level}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );

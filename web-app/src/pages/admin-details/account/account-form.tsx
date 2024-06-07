@@ -57,6 +57,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.account_id}
         touched={touched.account_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
         readOnly={true}
       />
       <AdminFormFieldInput
@@ -70,6 +71,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.account_description}
         touched={touched.account_description}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
       <AdminFormFieldInput
         label={t("contact_name")}
@@ -82,6 +84,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.contact_name}
         touched={touched.contact_name}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldInput
@@ -95,6 +98,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.contact_phone_number}
         touched={touched.contact_phone_number}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldInput
@@ -108,6 +112,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.contact_email}
         touched={touched.contact_email}
         disabled={!userCanEdit}
+        detailsFormField={true}
         readOnly={true}
         customWrapperClass="col-span-4"
       />
@@ -122,6 +127,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.private_cost}
         touched={touched.private_cost}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldInput
@@ -135,6 +141,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.idle_gas_usage}
         touched={touched.idle_gas_usage}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldInput
@@ -148,6 +155,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.distance_gas_usage}
         touched={touched.distance_gas_usage}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
 
@@ -163,6 +171,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           error={errors.auto_update_interval_for_maps}
           touched={touched.auto_update_interval_for_maps}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -178,6 +187,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           touched={touched.drivers_assigned_to_devices}
           error={errors.drivers_assigned_to_devices}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -199,6 +209,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           touched={touched.enable_map_clustering}
           error={errors.enable_map_clustering}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -214,6 +225,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           touched={touched.open_reports_in_new_tab}
           error={errors.open_reports_in_new_tab}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
 
         <AdminFormFieldCheckbox
@@ -227,6 +239,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           touched={touched.sync_driverId_from_driver_admin}
           error={errors.sync_driverId_from_driver_admin}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
       <div className="col-span-12 grid grid-cols-8 gap-4">
@@ -241,6 +254,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           touched={touched.has_snowplows}
           error={errors.has_snowplows}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
         <AdminFormFieldCheckbox
           label={t("hide_total_rows_in_csv")}
@@ -253,6 +267,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           touched={touched.hide_total_rows_in_csv}
           error={errors.hide_total_rows_in_csv}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
       <AdminFormFieldDropdown
@@ -272,6 +287,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.timezone}
         error={errors.timezone}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
@@ -291,6 +307,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.speed_units}
         error={errors.speed_units}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
@@ -310,6 +327,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.distance_units}
         error={errors.distance_units}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
@@ -329,6 +347,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.volume_units}
         error={errors.volume_units}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
@@ -348,6 +367,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.economy_units}
         error={errors.economy_units}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
@@ -367,6 +387,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.pressure_units}
         error={errors.pressure_units}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-4"
       />
       <AdminFormFieldDropdown
@@ -386,6 +407,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.temperature_units}
         error={errors.temperature_units}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -405,6 +427,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.latitude_longitude_format}
         error={errors.latitude_longitude_format}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <div className="col-span-12 grid grid-cols-6">
@@ -419,6 +442,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
           error={errors.route_segment_color_rule}
           touched={touched.route_segment_color_rule}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -439,6 +463,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.route_line_thickness}
         error={errors.route_line_thickness}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -452,6 +477,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.multi_vehicle_map_name}
         touched={touched.multi_vehicle_map_name}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -465,6 +491,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.device_title}
         touched={touched.device_title}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -478,6 +505,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.device_title_plural}
         touched={touched.device_title_plural}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -491,6 +519,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.device_group_title}
         touched={touched.device_group_title}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -504,6 +533,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.device_group_title_plural}
         touched={touched.device_group_title_plural}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -517,6 +547,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.address_title}
         touched={touched.address_title}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -530,6 +561,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.address_title_plural}
         touched={touched.address_title_plural}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -543,6 +575,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         error={errors.default_login_userId}
         touched={touched.default_login_userId}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
       <AdminFormFieldDropdown
         loadingData={loadingData}
@@ -561,6 +594,7 @@ export const AccountGeneralDetailForm: FC<AccountGeneralDetailFormProps> = ({
         touched={touched.default_overlay}
         error={errors.default_overlay}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -592,6 +626,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_1}
         touched={touched.last_maintenance_1}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -605,6 +640,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_2}
         touched={touched.last_maintenance_2}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -618,6 +654,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_3}
         touched={touched.last_maintenance_3}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -631,6 +668,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_4}
         touched={touched.last_maintenance_4}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -644,6 +682,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_5}
         touched={touched.last_maintenance_5}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -657,6 +696,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_6}
         touched={touched.last_maintenance_6}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -670,6 +710,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_7}
         touched={touched.last_maintenance_7}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -683,6 +724,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_8}
         touched={touched.last_maintenance_8}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -696,6 +738,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_9}
         touched={touched.last_maintenance_9}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -709,6 +752,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_maintenance_10}
         touched={touched.last_maintenance_10}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -722,6 +766,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_eng_hours_maint_1}
         touched={touched.last_eng_hours_maint_1}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -735,6 +780,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_eng_hours_maint_2}
         touched={touched.last_eng_hours_maint_2}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -748,6 +794,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_eng_hours_maint_3}
         touched={touched.last_eng_hours_maint_3}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -761,6 +808,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_eng_hours_maint_4}
         touched={touched.last_eng_hours_maint_4}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
       <div className="col-span-12 grid grid-cols-12 gap-4">
         <AdminFormFieldInput
@@ -774,6 +822,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
           error={errors.last_eng_hours_maint_5}
           touched={touched.last_eng_hours_maint_5}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -788,6 +837,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_service_time_1}
         touched={touched.last_service_time_1}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -801,6 +851,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_service_time_2}
         touched={touched.last_service_time_2}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -814,6 +865,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_service_time_3}
         touched={touched.last_service_time_3}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -827,6 +879,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_service_time_4}
         touched={touched.last_service_time_4}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -840,6 +893,7 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         error={errors.last_service_time_5}
         touched={touched.last_service_time_5}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -878,6 +932,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.harsh_braking}
         error={errors.harsh_braking}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -897,6 +952,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.harsh_acceleration}
         error={errors.harsh_acceleration}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -916,6 +972,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.speeding}
         error={errors.speeding}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -935,6 +992,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.reverse}
         error={errors.reverse}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -954,6 +1012,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.seatbelt_off}
         error={errors.seatbelt_off}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -973,6 +1032,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.harsh_cornering}
         error={errors.harsh_cornering}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -992,6 +1052,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.idle_ratio}
         error={errors.idle_ratio}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1011,6 +1072,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.impact_crash_ai}
         error={errors.impact_crash_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1030,6 +1092,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.cellphone_use_ai}
         error={errors.cellphone_use_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1049,6 +1112,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.distracted_driving_ai}
         error={errors.distracted_driving_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1068,6 +1132,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.drinking_eating_ai}
         error={errors.drinking_eating_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1087,6 +1152,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.smoking_ai}
         error={errors.smoking_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1106,6 +1172,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.possible_fatiuge_ai}
         error={errors.possible_fatiuge_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1125,6 +1192,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.obstructed_camera_ai}
         error={errors.obstructed_camera_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -1144,6 +1212,7 @@ export const AccountScorecardWeightFactorsForm: FC<AccountGeneralDetailFormProps
         touched={touched.tailgating_ai}
         error={errors.tailgating_ai}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );

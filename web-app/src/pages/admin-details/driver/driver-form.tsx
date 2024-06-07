@@ -57,6 +57,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.driver_id}
         touched={touched.driver_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -70,6 +71,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.driver_name}
         touched={touched.driver_name}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -83,6 +85,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.nick_name}
         touched={touched.nick_name}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -96,6 +99,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.contact_phone}
         touched={touched.contact_phone}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
       <AdminFormFieldInput
         label={t("contact_email")}
@@ -108,6 +112,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.contact_email}
         touched={touched.contact_email}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-12"
       />
 
@@ -122,6 +127,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.badge_employee_id}
         touched={touched.badge_employee_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -135,6 +141,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.card_id}
         touched={touched.card_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
       <div className="col-span-12 grid grid-cols-8">
         <AdminFormFieldCheckbox
@@ -148,6 +155,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
           error={errors.is_active}
           touched={touched.is_active}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
     </div>
@@ -185,6 +193,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.license_type}
         touched={touched.license_type}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -204,6 +213,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.license_state}
         touched={touched.license_state}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -217,6 +227,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.license_number}
         touched={touched.license_number}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -230,6 +241,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.license_expiry_date}
         touched={touched.license_expiry_date}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -249,6 +261,7 @@ export const DriverLicenseDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.license_status}
         touched={touched.license_status}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -292,6 +305,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.medical_card_no}
         touched={touched.medical_card_no}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -305,6 +319,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.medical_card_expiry_date}
         touched={touched.medical_card_expiry_date}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <div className="col-span-12 grid grid-cols-8">
@@ -319,6 +334,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
           error={errors.hazmat_certified}
           touched={touched.hazmat_certified}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -333,6 +349,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.twic}
         touched={touched.twic}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -346,6 +363,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.twic_expiry_date}
         touched={touched.twic_expiry_date}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -359,6 +377,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.address}
         touched={touched.address}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-12"
       />
 
@@ -379,6 +398,7 @@ export const DriverMedicalDetailForm: FC<DriverGeneralDetailFormProps> = ({
         error={errors.vehicle_id}
         touched={touched.vehicle_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
