@@ -15,6 +15,7 @@ type AdminFormFieldInputProps = {
   error?: string;
   disabled?: boolean;
   readOnly?: boolean;
+  detailsFormField?: boolean;
   customInputClass?: string;
   customWrapperClass?: string;
 };
@@ -32,14 +33,16 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
   error,
   disabled = false,
   readOnly = false,
+  detailsFormField = false,
   customInputClass = "",
   customWrapperClass = "col-span-6",
 }) => {
-  let wrapperClass = touched && !!error ? "" : "";
+  const fieldHasError = detailsFormField ?  !disabled && !!error : touched && !!error;
+  let wrapperClass = fieldHasError ? "" : "";
   let labelClass =
-    touched && !!error ? "text-field-error-dark" : "text-field-label-valid";
+    fieldHasError ? "text-field-error-dark" : "text-field-label-valid";
   let inputClass =
-    touched && !!error
+    fieldHasError
       ? "border-field-error-border focus-visible:outline-field-error-dark text-field-error-dark"
       : "border-gray-200 text-field-label-valid";
   const floatingError = false;
@@ -71,7 +74,7 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
           touched ? " touched" : ""
         } ${disabled || readOnly ? "bg-gray-100" : "bg-white"} ${inputClass} ${customInputClass}`}
       />
-      {touched && !!error && (
+      {fieldHasError && (
         <p
           className={`${
             floatingError ? "absolute" : ""
@@ -104,6 +107,7 @@ type AdminFormFieldDropdownProps = {
   error?: string;
   disabled?: boolean;
   readOnly?: boolean;
+  detailsFormField?: boolean;
   customSelectboxClass?: string;
   customWrapperClass?: string;
 
@@ -150,17 +154,18 @@ const RealSelect: FC<AdminFormFieldDropdownProps> = ({
   error,
   disabled = false,
   readOnly = false,
-
+  detailsFormField = false,
   customSelectboxClass = "",
   customWrapperClass = "col-span-6",
 
   menuPlacement = "auto",
 }) => {
-  let wrapperClass = touched && !!error ? "" : "";
+  const fieldHasError = detailsFormField ?  !disabled && !!error : touched && !!error;
+  let wrapperClass = fieldHasError ? "" : "";
   let labelClass =
-    touched && !!error ? "text-field-error-dark" : "text-field-label-valid";
+    fieldHasError ? "text-field-error-dark" : "text-field-label-valid";
   let inputClass =
-    touched && !!error
+    fieldHasError
       ? "border-field-error-border focus-visible:outline-field-error-dark text-field-error-dark"
       : "border-gray-200 text-field-label-valid";
   const floatingError = false;
@@ -200,7 +205,7 @@ const RealSelect: FC<AdminFormFieldDropdownProps> = ({
         // onBlur={onBlur}
         menuPlacement={menuPlacement}
       />
-      {touched && !!error && (
+      {fieldHasError && (
         <p
           className={`${
             floatingError ? "absolute" : ""
@@ -241,17 +246,18 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
   error,
   disabled = false,
   readOnly = false,
-
+  detailsFormField = false,
   customSelectboxClass = "",
   customWrapperClass = "col-span-6",
 
   menuPlacement = "auto",
 }) => {
-  let wrapperClass = touched && !!error ? "" : "";
+  const fieldHasError = detailsFormField ?  !disabled && !!error : touched && !!error;
+  let wrapperClass = fieldHasError ? "" : "";
   let labelClass =
-    touched && !!error ? "text-field-error-dark" : "text-field-label-valid";
+    fieldHasError ? "text-field-error-dark" : "text-field-label-valid";
   let inputClass =
-    touched && !!error
+    fieldHasError
       ? "border-field-error-border focus-visible:outline-field-error-dark text-field-error-dark"
       : "border-gray-200 text-field-label-valid";
   const floatingError = false;
@@ -293,7 +299,7 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
         defaultValue={defaultOption}
         noOptionsMessage={noOptionsMessage}
       />
-      {touched && !!error && (
+      {fieldHasError && (
         <p
           className={`${
             floatingError ? "absolute" : ""

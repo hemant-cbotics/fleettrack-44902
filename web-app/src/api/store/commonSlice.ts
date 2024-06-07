@@ -3,6 +3,9 @@ import type { PayloadAction } from "@reduxjs/toolkit"
 import { VerifyEmailOtpResponseSuccess } from "../types/Onboarding"
 import { TLatLng } from "../../types/map";
 import { TMapState } from "../../types/map";
+import { APP_CONFIG } from "../../constants/constants";
+import { FilterType } from "../types/Admin";
+
 
 export type TPreLoginUserData = {
   email?: string;
@@ -22,6 +25,23 @@ export type TModalsState = {
   showGroupSelector: boolean;
   showDeviceReport: boolean;
 }
+const ownerOrganization = sessionStorage.getItem("ownerOrganization")
+
+export type TQueryParams = {
+  organization_id: number;
+  page: number;
+  page_size: number;
+  search: string;
+}
+
+export type TListingQueryParams = {
+  users: TQueryParams;
+  vehicles: TQueryParams & { is_active: FilterType };
+  drivers: TQueryParams & { is_active: FilterType };
+  groups: TQueryParams;
+  fleetTags: TQueryParams;
+  geoZones: TQueryParams;
+}
 
 export type TAppCommonState = {
   preLoginUserData?: TPreLoginUserData;
@@ -29,6 +49,7 @@ export type TAppCommonState = {
   userCurrPos?: TLatLng;
   mapState?: TMapState;
   modals: TModalsState;
+  listingQueryParams: TListingQueryParams;
 }
 
 const initialState: TAppCommonState = {
@@ -49,6 +70,46 @@ const initialState: TAppCommonState = {
     showMapFilter: false,
     showGroupSelector: false,
     showDeviceReport: false,
+  },
+  listingQueryParams: {
+    users: {
+      organization_id: ownerOrganization ? JSON.parse(ownerOrganization).id : 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+      search: ""
+    },
+    vehicles: {
+      organization_id: ownerOrganization ? JSON.parse(ownerOrganization).id : 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+      search: "",
+      is_active: "active"
+    },
+    drivers: {
+      organization_id: ownerOrganization ? JSON.parse(ownerOrganization).id : 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+      search: "",
+      is_active: "active"
+    },
+    groups: {
+      organization_id: ownerOrganization ? JSON.parse(ownerOrganization).id : 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+      search: ""
+    },
+    fleetTags: {
+      organization_id: ownerOrganization ? JSON.parse(ownerOrganization).id : 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+      search: ""
+    },
+    geoZones: {
+      organization_id: ownerOrganization ? JSON.parse(ownerOrganization).id : 0,
+      page: 1,
+      page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
+      search: ""
+    }
   }
 }
 
@@ -72,6 +133,9 @@ export const commonSlice = createSlice({
     },
     setModalsData: (state, action: PayloadAction<TModalsState>) => {
       state.modals = { ...(state.modals || {}), ...action?.payload }
+    },
+    setListingQueryParams: (state, action: PayloadAction<TListingQueryParams>) => {
+      state.listingQueryParams = { ...(state.listingQueryParams || {}), ...action?.payload }
     }
   }
 })
@@ -81,7 +145,8 @@ export const {
   setUserData,
   setUserCurrPosData,
   setMapStateData,
-  setModalsData
+  setModalsData,
+  setListingQueryParams
 } = commonSlice.actions
 
 export default commonSlice.reducer

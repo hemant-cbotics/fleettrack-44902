@@ -15,7 +15,7 @@ import ListingPageSubHeader from "../components/listingPageSubHeader";
 import ListingTableHeader from "../components/listingTableHeader";
 import AdminsUsersCreateNew from "./createNewUser";
 import { useDispatch, useSelector } from "react-redux";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TListingQueryParams, TModalsState, setListingQueryParams, setModalsData } from "../../../api/store/commonSlice";
 import { useOrganizationUsersQuery } from "../../../api/network/adminApiServices";
 import { TAdminTableRowData } from "../components/types";
 import { OrganizationUser } from "../../../api/types/Admin";
@@ -42,6 +42,8 @@ const ScreenDashboardAdminUsers = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.users'});
   const { t: tMain } = useTranslation();
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { users: orgUsersQueryParams } = listingQueryParams;
   const dispatch = useDispatch();
 
   // columns
@@ -59,14 +61,8 @@ const ScreenDashboardAdminUsers = () => {
 
   // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
-  const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState({
-    organization_id: thisUserOrganizationId ?? 0,
-    page: 1,
-    page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
-  });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgUsersQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetching user data
@@ -116,6 +112,7 @@ const ScreenDashboardAdminUsers = () => {
         <ListingTableHeader
           heading={t("listing_heading")}
           searchBoxPlaceholder={t("search_placeholder")}
+          searchBoxValue={orgUsersQueryParams.search}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
         <EditListingColumnsModal
@@ -135,19 +132,12 @@ const ScreenDashboardAdminUsers = () => {
             <Pagination
               pageSize={orgUsersQueryParams.page_size}
               handlePageSizeChange={(e: TSelectboxOption | null) => {
-                  setOrgUsersQueryParams((prev) => { return {
-                    ...prev,
-                    page: 1,
-                    page_size: parseInt(`${e?.value}`)
-                  }})
+                  dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
                 }}
               totalPages={count ? Math.ceil(count / orgUsersQueryParams.page_size) : 1}
               forcePage={orgUsersQueryParams.page - 1}
               handlePageClick={(data: TPaginationSelected) => {
-                setOrgUsersQueryParams((prev) => { return {
-                  ...prev,
-                  page: data?.selected + 1
-                }})
+                dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: data?.selected + 1 }}));
               }}
             />
           )}

@@ -3,12 +3,14 @@ import React from "react";
 type TSearchBoxProps = {
   wrapperClassName?: string;
   placeholder: string;
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const AppSearchBox: React.FC<TSearchBoxProps> = ({
   wrapperClassName = "",
   placeholder,
+  value = "",
   onChange
 }) => {
   return (
@@ -16,6 +18,7 @@ const AppSearchBox: React.FC<TSearchBoxProps> = ({
       <input
         type="text"
         placeholder={placeholder}
+        // value={value}  // TODO: Uncomment this line to make the input controlled
         onChange={onChange}
         className="w-full rounded-md border-gray-200 py-2.5 ps-10 shadow-sm sm:text-sm"
       />

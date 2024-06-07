@@ -15,12 +15,12 @@ import HeaderView from "../../../components/admin/headerView";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { APP_CONFIG } from "../../../constants/constants";
 import AppSearchBox from "../../../components/searchBox";
-import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
 import { useFormik } from "formik";
 import Accordian from "../../../components/accordian";
 import { geozoneDetailsInitialValues, geozoneDetailsYupValidationSchema, TFormFieldNames } from "./validation";
 import { GeozoneDetailForm } from "./geozone-form";
-import { TModalsState, setModalsData, setMapStateData } from "../../../api/store/commonSlice";
+import { TModalsState, setModalsData, setMapStateData, TListingQueryParams, setListingQueryParams } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useDeleteSingleGeozoneMutation, useEditOrganizationGeozoneMutation, useOrganizationGeozonesQuery, useSingleOrganizationGeozoneQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
@@ -33,6 +33,7 @@ import { TMapState } from "../../../types/map";
 import { getCircleLocs } from "../../../utils/map";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
 import { getGeozoneShapeDescription } from "../../../utils/geozone";
+import Pagination, { TPaginationSelected } from "../../admins/components/pagination";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -43,6 +44,8 @@ const ScreenAdminDetailGeozone = () => {
   const navigate = useNavigate();
 
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { geoZones: orgGeozonesQueryParams } = listingQueryParams;
   const dispatch = useDispatch();
   // clear map state on unmount - Disabled 6/5 as this is causing issues with mapState when changing screens
   useEffect(() => {
@@ -69,23 +72,9 @@ const ScreenAdminDetailGeozone = () => {
 
   // prepare query params for fetching organization geozones
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
-  const [orgGeozonesQueryParams, setOrgGeozonesQueryParams] = useState<
-    OrganizationEntityListingPayload
-  >(
-    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
-      ? locationState
-      : {
-          organization_id: thisUserOrganizationId,
-          page: 1,
-          page_size: 10,
-          search: "",
-        }) as OrganizationEntityListingPayload
-  );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgGeozonesQueryParams((prev) => {
-      return { ...prev, page: 1, search: value };
-    });
+    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, search: value }}));
   }, 500);
 
   // fetch organization geozones
@@ -97,7 +86,7 @@ const ScreenAdminDetailGeozone = () => {
     orgGeozonesQueryParams,
     { skip: !mapState || typeof mapState.mapScriptLoaded === 'undefined' }
   );
-  const { results } = dataOrgGeozones || {};
+  const { results, count } = dataOrgGeozones || {};
 
   // fetch single geozone details
   const {
@@ -293,11 +282,12 @@ const ScreenAdminDetailGeozone = () => {
               <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
               <AppSearchBox
                 placeholder={tAdmin("search_placeholder")}
+                value={orgGeozonesQueryParams.search}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   debouncedSetSearchKeyword(e.target.value)
                 }
               />
-              <div>
+              <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
                 {listData?.map((item, index: number) => (
                   <AdminListingColumnItem
                     key={index}
@@ -314,6 +304,20 @@ const ScreenAdminDetailGeozone = () => {
                   />
                 ))}
               </div>
+              {!isFetchingOrgGeozones && (
+                <Pagination
+                  pageSize={orgGeozonesQueryParams.page_size}
+                  handlePageSizeChange={(e: TSelectboxOption | null) => {
+                    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, page_size: parseInt(`${e?.value}`) }}));
+                  }}
+                  totalPages={count ? Math.ceil(count / orgGeozonesQueryParams.page_size) : 1}
+                  forcePage={orgGeozonesQueryParams.page - 1}
+                  handlePageClick={(data: TPaginationSelected) => {
+                    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, page: data?.selected + 1 }}));
+                  }}
+                  onlyPageChange={true}
+                />
+              )}
             </div>
             <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'col-span-12 xl:col-span-9'}`}>
               <div className="flex items-center gap-4">

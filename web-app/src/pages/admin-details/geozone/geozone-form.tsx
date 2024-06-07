@@ -563,6 +563,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           error={errors.description}
           touched={touched.description}
           disabled={!userCanEdit}
+          detailsFormField={true}
           customWrapperClass="col-span-12"
         />)
       }
@@ -581,6 +582,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.description}
         touched={touched.description}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-12"
       /> */}
 
@@ -614,6 +616,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         touched={touched.zone_type}
         options={ZONE_TYPES_OPTIONS}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -627,6 +630,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.geocode}
         touched={touched.geocode}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -640,6 +644,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.lat_lng}
         touched={touched.lat_lng}
         disabled={!userCanEdit}
+        detailsFormField={true}
         readOnly={true}
       />
 
@@ -655,6 +660,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         touched={touched.overlap_priority}
         options={OVERLAP_PRIORITY_OPTIONS}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <div className={`col-span-12 p-3 gap-2 ${userCanEdit ? 'bg-white' : 'bg-gray-100'} border border-gray-200 rounded-lg flex items-start flex-wrap min-h-24`}>
@@ -678,6 +684,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         touched={touched.assign_group}
         options={filteredGroupData}
         disabled={!userCanEdit}
+        detailsFormField={true}
         customWrapperClass="col-span-12"
       />
 
@@ -692,6 +699,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.reverse_geocode}
         touched={touched.reverse_geocode}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldCheckbox
@@ -705,6 +713,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.arrival_geozone}
         touched={touched.arrival_geozone}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldCheckbox
@@ -718,6 +727,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.departure_zone}
         touched={touched.departure_zone}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -732,6 +742,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         touched={touched.zone_color}
         options={ZONE_COLOR_OPTIONS}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -745,6 +756,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.speed_limit}
         touched={touched.speed_limit}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   )

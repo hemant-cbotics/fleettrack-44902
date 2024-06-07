@@ -97,6 +97,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.vehicle_id}
         touched={touched.vehicle_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -116,6 +117,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         touched={touched.creation_date}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -130,6 +132,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         touched={touched.server_id}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -144,6 +147,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         touched={touched.firmware_version}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <div className="col-span-12 grid grid-cols-12">
@@ -158,6 +162,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           error={errors.unique_id}
           touched={touched.unique_id}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -187,6 +192,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.vehicle_description}
         touched={touched.vehicle_description}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -200,6 +206,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.short_name}
         touched={touched.short_name}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -213,6 +220,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.vin}
         touched={touched.vin}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -226,6 +234,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.vehicle_make}
         touched={touched.vehicle_make}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -239,6 +248,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.vehicle_model}
         touched={touched.vehicle_model}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -252,6 +262,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.license_plate}
         touched={touched.license_plate}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -270,6 +281,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.license_expiration}
         touched={touched.license_expiration}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -283,6 +295,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.equipment_type}
         touched={touched.equipment_type}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -302,6 +315,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.equipment_status}
         touched={touched.equipment_status}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -321,6 +335,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.asset_type}
         touched={touched.asset_type}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -340,6 +355,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.vehicle_class}
         touched={touched.vehicle_class}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -353,6 +369,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.imei_number}
         touched={touched.imei_number}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -366,6 +383,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.serial_number}
         touched={touched.serial_number}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -379,6 +397,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.phone_number}
         touched={touched.phone_number}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -392,6 +411,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.email}
         touched={touched.email}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -405,6 +425,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.group_pushpin_id}
         touched={touched.group_pushpin_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -424,6 +445,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.map_route_color}
         touched={touched.map_route_color}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -444,6 +466,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         touched={touched.ignition_input}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
       <div className="grid grid-cols-12 col-span-12">
         <AdminFormFieldInput
@@ -457,6 +480,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           error={errors.maximum_speed}
           touched={touched.maximum_speed}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />
       </div>
 
@@ -483,6 +507,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           error={errors.fuel_type}
           touched={touched.fuel_type}
           disabled={!userCanEdit}
+          detailsFormField={true}
         />)}
       </div>
 
@@ -498,6 +523,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         touched={touched.driver_name}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -512,6 +538,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         touched={touched.driver_phone_number}
         disabled={!userCanEdit}
         readOnly={true}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -531,6 +558,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.fuel_type}
         touched={touched.fuel_type}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -544,6 +572,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.fuel_capacity}
         touched={touched.fuel_capacity}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -557,6 +586,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.fuel_economy}
         touched={touched.fuel_economy}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -570,6 +600,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.fuel_cost}
         touched={touched.fuel_cost}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -600,6 +631,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.recorder_id}
         touched={touched.recorder_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -619,6 +651,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.recorder_on}
         touched={touched.recorder_on}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldDropdown
@@ -638,6 +671,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.recorder_type}
         touched={touched.recorder_type}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -651,6 +685,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.previous_recorder_id}
         touched={touched.previous_recorder_id}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
 
       <AdminFormFieldInput
@@ -664,6 +699,7 @@ export const VehicleCameraIdDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.recorder_id_last_changed}
         touched={touched.recorder_id_last_changed}
         disabled={!userCanEdit}
+        detailsFormField={true}
       />
     </div>
   );
@@ -765,6 +801,7 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
         touched={touched.list_of_groups}
         disabled={!userCanEdit}
         menuPlacement="top"
+        detailsFormField={true}
       />
       {/* <div className="grid grid-cols-8 col-span-12 gap-4">
         <AdminFormFieldCheckbox

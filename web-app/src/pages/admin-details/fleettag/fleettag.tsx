@@ -17,18 +17,19 @@ import HeaderView from "../../../components/admin/headerView";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { APP_CONFIG } from "../../../constants/constants";
 import AppSearchBox from "../../../components/searchBox";
-import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
 import Accordian from "../../../components/accordian";
 import FleettagDetailForm from "./fleettag-form";
 import { useDeleteSingleFleettagMutation, useEditOrganizationFleettagMutation, useOrganizationFleettagsQuery, useSingleOrganizationFleettagQuery } from "../../../api/network/adminApiServices";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TListingQueryParams, TModalsState, setListingQueryParams, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { TListData } from "./type";
 import { OrganizationFleettag } from "../../../api/types/Fleettag";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import Pagination, { TPaginationSelected } from "../../admins/components/pagination";
 
 const ScreenAdminDetailFleettag = () => {
   const { fleettagId } = useParams<{ fleettagId: any }>();
@@ -40,6 +41,8 @@ const ScreenAdminDetailFleettag = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { fleetTags: orgFleettagsQueryParams } = listingQueryParams;
 
   // flag to idenfiy if fleettag is coming from create new fleettag popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
@@ -49,21 +52,9 @@ const ScreenAdminDetailFleettag = () => {
 
   // prepare query params for fetching organization fleettags
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
-  const [orgFleettagsQueryParams, setOrgFleettagsQueryParams] = useState<OrganizationEntityListingPayload>(
-    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
-      ? locationState
-      : {
-          organization_id: thisUserOrganizationId,
-          page: 1,
-          page_size: 10,
-          search: "",
-        }) as OrganizationEntityListingPayload
-  );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgFleettagsQueryParams((prev) => {
-      return { ...prev, page: 1, search: value };
-    });
+    dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleettagsQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetch organization fleettags
@@ -72,7 +63,7 @@ const ScreenAdminDetailFleettag = () => {
     isFetching: isFetchingOrgFleettags,
     error,
   } = useOrganizationFleettagsQuery(orgFleettagsQueryParams);
-  const { results } = dataOrgFleettags || {};
+  const { results, count } = dataOrgFleettags || {};
 
   // fetch single fleettag details
   const { data: dataSingleFleettag, isFetching: isFetchingSingleFleettag } = useSingleOrganizationFleettagQuery( { organization_id: thisUserOrganizationId, fleettag_id: parseInt(fleettagId) }, { skip: !fleettagId });
@@ -198,11 +189,12 @@ const ScreenAdminDetailFleettag = () => {
             <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={tAdmin("search_placeholder")}
+              value={orgFleettagsQueryParams.search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
             />
-            <div>
+            <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               {listData?.map((item: any, index: number) => (
                 <AdminListingColumnItem
                   key={index}
@@ -219,6 +211,20 @@ const ScreenAdminDetailFleettag = () => {
                 />
               ))}
             </div>
+            {!isFetchingOrgFleettags && (
+              <Pagination
+                pageSize={orgFleettagsQueryParams.page_size}
+                handlePageSizeChange={(e: TSelectboxOption | null) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleettagsQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
+                }}
+                totalPages={count ? Math.ceil(count / orgFleettagsQueryParams.page_size) : 1}
+                forcePage={orgFleettagsQueryParams.page - 1}
+                handlePageClick={(data: TPaginationSelected) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleettagsQueryParams, page: data?.selected + 1 }}));
+                }}
+                onlyPageChange={true}
+              />
+            )}
           </div>
           <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'col-span-12 xl:col-span-9'}`}>
             <div className="flex items-center gap-4">

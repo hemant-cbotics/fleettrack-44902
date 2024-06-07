@@ -27,7 +27,7 @@ import {
 import { useLoggedInUserData } from "../../../utils/user";
 import { OrganizationEntityListingPayload, TEditOrganizationVehiclePayloadData } from "../../../api/types/Admin";
 import { useDebouncedCallback } from "use-debounce";
-import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
 import {
   useDeleteSingleVehicleMutation,
   useEditOrganizationVehicleMutation,
@@ -38,10 +38,11 @@ import { TListData } from "./type";
 import { OrganizationVehicle } from "../../../api/types/Vehicle";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TListingQueryParams, TModalsState, setListingQueryParams, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import Pagination, { TPaginationSelected } from "../../admins/components/pagination";
 
 const ScreenAdminDetailVehicle = () => {
   const { vehicleId } = useParams<{ vehicleId: any }>();
@@ -57,6 +58,8 @@ const ScreenAdminDetailVehicle = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { vehicles: orgVehiclesQueryParams } = listingQueryParams;
 
   // flag to idenfiy if user is coming from create new vehicle popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
@@ -68,23 +71,8 @@ const ScreenAdminDetailVehicle = () => {
 
   // prepare query params for fetching organization vehicles
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
-  const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = useState<
-    OrganizationEntityListingPayload
-  >(
-    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
-      ? locationState
-      : {
-          organization_id: thisUserOrganizationId,
-          page: 1,
-          page_size: 10,
-          search: "",
-          is_active: "both",
-        }) as OrganizationEntityListingPayload
-  );
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgVehiclesQueryParams((prev) => {
-      return { ...prev, page: 1, search: value };
-    });
+    dispatch(setListingQueryParams({ ...listingQueryParams, vehicles: { ...orgVehiclesQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetch organization vehicles
@@ -93,7 +81,7 @@ const ScreenAdminDetailVehicle = () => {
     isFetching: isFetchingOrgVehicles,
     error,
   } = useOrganizationVehiclesQuery(orgVehiclesQueryParams);
-  const { results } = dataOrgVehicles || {};
+  const { results , count } = dataOrgVehicles || {};
 
   // fetch single vehicle details
   const { data: dataSingleVehicle, isFetching: isFetchingSingleVehicle, } = useSingleOrganizationVehicleQuery({ organization_id: thisUserOrganizationId, vehicle_id: vehicleId },{ skip: !vehicleId });
@@ -300,11 +288,12 @@ const ScreenAdminDetailVehicle = () => {
             </div>
             <AppSearchBox
               placeholder={tAdmin("search_placeholder")}
+              value={orgVehiclesQueryParams.search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
             />
-            <div>
+            <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               {listData.map((item: any, index: number) => (
                 <AdminListingColumnItem
                   key={index}
@@ -321,6 +310,20 @@ const ScreenAdminDetailVehicle = () => {
                 />
               ))}
             </div>
+            {!isFetchingOrgVehicles && (
+              <Pagination
+                pageSize={orgVehiclesQueryParams.page_size}
+                handlePageSizeChange={(e: TSelectboxOption | null) => {
+                    dispatch(setListingQueryParams({ ...listingQueryParams, vehicles: { ...orgVehiclesQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
+                  }}
+                totalPages={count ? Math.ceil(count / orgVehiclesQueryParams.page_size) : 1}
+                forcePage={orgVehiclesQueryParams.page - 1}
+                handlePageClick={(data: TPaginationSelected) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, vehicles: { ...orgVehiclesQueryParams, page: data?.selected + 1 }}));
+                }}
+                onlyPageChange={true}
+            />
+          )}
           </div>
           <div
             className={`${

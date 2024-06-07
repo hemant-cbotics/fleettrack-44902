@@ -17,6 +17,7 @@ type TPaginatonProps = {
   totalPages?: number;
   forcePage: number;
   handlePageClick: (data: TPaginationSelected) => void;
+  onlyPageChange?: boolean;
 }
 
 const Pagination: FC<TPaginatonProps> = ({
@@ -25,11 +26,13 @@ const Pagination: FC<TPaginatonProps> = ({
   handlePageSizeChange,
   totalPages = 1,
   forcePage,
-  handlePageClick
+  handlePageClick,
+  onlyPageChange = false
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "pagination" });
   return (
-    <div className="flex justify-between mt-7 items-center">
+    <div className={`flex ${onlyPageChange ? "justify-center" : "justify-between"} mt-7 items-center`}>
+      {onlyPageChange ? <></> : (
       <div className="flex space-x-4 items-center">
         <p className="font-semibold text-sm leading-6">{t('number_of_items')}</p>
         <Select
@@ -42,6 +45,7 @@ const Pagination: FC<TPaginatonProps> = ({
           onChange={handlePageSizeChange}
         />
       </div>
+      )}
       <ReactPaginate
         onPageChange={handlePageClick}
         pageCount={totalPages}
