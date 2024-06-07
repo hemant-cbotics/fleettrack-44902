@@ -15,8 +15,16 @@ type TBasicMapProps = {
   onMapReady?: () => void;
 };
 
-export const MapLoadingAnimation = () => (
-  <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50">
+type TMapLoadingAnimationProps = {
+  bgClassName?: string;
+  bgOpacityClassName?: string;
+};
+
+export const MapLoadingAnimation: FC<TMapLoadingAnimationProps> = ({
+  bgClassName = 'bg-white',
+  bgOpacityClassName = 'bg-opacity-90'
+}) => (
+  <div className={`absolute inset-0 flex items-center justify-center ${bgClassName} ${bgOpacityClassName} z-50`}>
     <img src={LoadingAnimation} alt="Loading animation" className="w-12 h-12" />
   </div>
 );

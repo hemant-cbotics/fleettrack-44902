@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 type TAdminListingColumnItemProps = {
-  selected: boolean;
+  selected?: boolean;
   onClick: () => void;
   title: string;
   description: string;
@@ -10,7 +10,7 @@ type TAdminListingColumnItemProps = {
 };
 
 const AdminListingColumnItem: FC<TAdminListingColumnItemProps> = ({
-  selected,
+  selected = false,
   onClick,
   title,
   description = '',
