@@ -151,6 +151,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   const [mapStateTransitionInProgress, setMapStateTransitionInProgress] = useState(false);
 
   const loadResetMapDataWithInitialValues = () => {
+    console.log('[loadResetMapDataWithInitialValues]')
     const savedMapData = values.properties as TGeozoneMapData;
     if (!!savedMapData
     && Object.keys(savedMapData).length > 0) {
@@ -159,22 +160,26 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       if(values.zone_type === 'Polygon') {
         setPolygonSides(`${(savedMapData as TGeozoneMapDataPolygon)?.locs?.length ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS}`);
       }
+      const newMapState: TMapState = {
+        ...mapState,
+        mapCenter: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+        mapData: {
+          // ...mapState?.mapData,
+          centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+          ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
+          radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+          ready: true,
+          editable: userCanEdit,
+        },
+      }
+      console.log('newMapState', newMapState)
       setTimeout(() => {
-        dispatch(setMapStateData({
-          ...mapState,
-          mapCenter: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-          mapData: {
-            // ...mapState?.mapData,
-            centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-            ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
-            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-            color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
-            ready: true,
-            editable: userCanEdit,
-          },
-        }));
+        dispatch(setMapStateData(newMapState));
         setMapStateTransitionInProgress(false);
       }, 200);
+    } else {
+      console.log('NO SAVED MAP DATA')
     }
   }
 
@@ -352,7 +357,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
                   getCircleLocs(
                     new Microsoft.Maps.Location(newlySelectedLocationCoords?.[0], newlySelectedLocationCoords?.[1]),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
+                    parseInt(polygonSides ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS), // change here
                     true
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               }
@@ -363,7 +368,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           ...mapState,
           mapData: {
             ...newMapDataForAPIs,
-            color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
+            color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
             ready: true,
             editable: userCanEdit,
           },
@@ -405,7 +410,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ...mapState,
         mapData: {
           ...newMapDataForAPIs,
-          color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
           ready: true,
           editable: userCanEdit,
         },
@@ -436,7 +441,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ...mapState,
         mapData: {
           ...newMapDataForAPIs,
-          color: APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR as ColorRGB,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
           ready: true,
           editable: userCanEdit,
         },

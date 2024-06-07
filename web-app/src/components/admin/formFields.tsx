@@ -334,7 +334,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
   }
   
   return (
-    <div className={`bg-white flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200 cursor-pointer ${customWrapperClass}`}>
+    <div className={`bg-white flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200${disabled ? ' opacity-50' : ''} cursor-pointer ${customWrapperClass}`}>
       <label
         className={`block text-sm font-display font-semibold text-field-label-valid`}
       >

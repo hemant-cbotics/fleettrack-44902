@@ -281,7 +281,7 @@ const ScreenAdminDetailAccount = () => {
                     ? handleEditInformation
                     : () => setUserCanEdit(!userCanEdit)
                 }
-                disabled={isLoadingEditAccount}
+                disabled={isLoadingEditAccount || (userCanEdit && !!Object.keys(errors).length)}
               />
             </div>
           </div>

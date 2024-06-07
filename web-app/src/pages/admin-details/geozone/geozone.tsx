@@ -333,7 +333,7 @@ const ScreenAdminDetailGeozone = () => {
                         variant="success"
                         label={tMain("save")}
                         onClick={handleEditGeozone}
-                        disabled={!isFormValid || isLoadingEditGeozone}
+                        disabled={isLoadingEditGeozone || !!Object.keys(errors).length}
                       />
                     </div>
                   </>
@@ -355,7 +355,7 @@ const ScreenAdminDetailGeozone = () => {
                         variant="primary"
                         label={userCanEdit ? tMain("update") : tMain("edit")}
                         onClick={userCanEdit ? handleEditGeozone : () => setUserCanEdit(!userCanEdit)}
-                        disabled={isLoadingEditGeozone}
+                        disabled={isLoadingEditGeozone || (userCanEdit && !!Object.keys(errors).length)}
                       />
                     </div>
                   </>

@@ -8,6 +8,8 @@ interface HeaderViewProps {
   filterChange: () => void;
   groupSelectorCallback: () => void;
 }
+
+// NOT IN USE
 const HeaderView: FC<HeaderViewProps> = ({ title, filterChange, groupSelectorCallback }) => {
   return (
     <header

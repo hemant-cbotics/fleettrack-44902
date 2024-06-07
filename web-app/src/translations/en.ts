@@ -594,7 +594,7 @@ export const language_en = {
   mapOverview: {
     heading: "Map Overview",
     listing_heading: "Listing",
-    search_placeholder: "Search Vehicle here...",
+    search_placeholder: "Search vehicles here...",
     filter: {
       heading: "Filters",
       address: "Find Address",

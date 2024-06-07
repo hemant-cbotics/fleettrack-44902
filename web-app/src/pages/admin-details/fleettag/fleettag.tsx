@@ -240,7 +240,7 @@ const ScreenAdminDetailFleettag = () => {
                       variant="success"
                       label={tMain("save")}
                       onClick={handleEditFleettag}
-                      disabled={isLoadingEditFleettag}
+                      disabled={isLoadingEditFleettag || !!Object.keys(errors).length}
                     />
                   </div>
                 </>
@@ -262,7 +262,7 @@ const ScreenAdminDetailFleettag = () => {
                       variant="primary"
                       label={userCanEdit ? tMain("update") : tMain("edit")}
                       onClick={userCanEdit ? handleEditFleettag : () => setUserCanEdit(!userCanEdit)}
-                      disabled={isLoadingEditFleettag}
+                      disabled={isLoadingEditFleettag || (userCanEdit && !!Object.keys(errors).length)}
                     />
                   </div>
                 </>
