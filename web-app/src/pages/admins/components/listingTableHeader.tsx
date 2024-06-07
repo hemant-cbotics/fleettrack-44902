@@ -11,6 +11,7 @@ export type TListingFilters = {
 type TListingTableHeaderProps = {
   heading: string;
   searchBoxPlaceholder?: string;
+  searchBoxValue?: string;
   searchBoxOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   filters?: TListingFilters[];
   activeFilterSlug?: string;
@@ -20,6 +21,7 @@ type TListingTableHeaderProps = {
 const ListingTableHeader: FC<TListingTableHeaderProps> = ({
   heading,
   searchBoxPlaceholder,
+  searchBoxValue,
   searchBoxOnChange,
   filters,
   activeFilterSlug,
@@ -64,6 +66,7 @@ const ListingTableHeader: FC<TListingTableHeaderProps> = ({
         {searchBoxPlaceholder && searchBoxOnChange && (
           <AppSearchBox
             placeholder={searchBoxPlaceholder}
+            value={searchBoxValue}
             onChange={searchBoxOnChange}
           />
         )}
