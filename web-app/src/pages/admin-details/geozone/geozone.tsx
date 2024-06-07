@@ -18,7 +18,7 @@ import AppSearchBox from "../../../components/searchBox";
 import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
 import { useFormik } from "formik";
 import Accordian from "../../../components/accordian";
-import { geozoneDetailsInitialValues, geozoneDetailsYupValidationSchema } from "./validation";
+import { geozoneDetailsInitialValues, geozoneDetailsYupValidationSchema, TFormFieldNames } from "./validation";
 import { GeozoneDetailForm } from "./geozone-form";
 import { TModalsState, setModalsData, setMapStateData } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +32,7 @@ import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
 import { TMapState } from "../../../types/map";
 import { getCircleLocs } from "../../../utils/map";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import { getGeozoneShapeDescription } from "../../../utils/geozone";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -121,17 +122,7 @@ const ScreenAdminDetailGeozone = () => {
   const [ deleteSingleGeozoneApiTrigger, {isLoading: isLoadingDeleteGeozone}] = useDeleteSingleGeozoneMutation();
 
   // prepare list data for geozone list
-  const listData: TListData[] = !!results
-    ? (results || ([] as OrganizationGeozone[])).map(
-        (item: OrganizationGeozone, index: number) => ({
-          id: item?.id,
-          zone_id: item?.zone_id || "-",
-          zone_type: item?.zone_type || "-",
-          description: item?.description || "-",
-          radius: item?.radius || "-",
-        })
-      )
-    : [];
+  const listData: OrganizationGeozone[] = results ?? [];
 
   // formik
   const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
@@ -193,7 +184,8 @@ const ScreenAdminDetailGeozone = () => {
                   getCircleLocs(
                     new Microsoft.Maps.Location(APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude, APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
+                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
+                    true
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               } : {
                 centerPosition: APP_CONFIG.MAPS.DEFAULTS.CENTER,
@@ -206,14 +198,14 @@ const ScreenAdminDetailGeozone = () => {
         zone_type: dataSingleGeozone?.zone_type || "",
         geocode: dataSingleGeozone?.geocode || "",
         lat_lng: dataSingleGeozone?.lat_lng || `${APP_CONFIG.MAPS.DEFAULTS.CENTER.latitude},${APP_CONFIG.MAPS.DEFAULTS.CENTER.longitude}`,
-        overlap_priority: dataSingleGeozone?.overlap_priority || 0,
+        overlap_priority: dataSingleGeozone?.overlap_priority || geozoneDetailsInitialValues.overlap_priority,
         groups: dataSingleGeozone?.groups || [],
         assign_group: dataSingleGeozone?.groups.map(item => ({ value: `${item.id}`, label: item.name })) || [],
         reverse_geocode: dataSingleGeozone?.reverse_geocode || false,
         arrival_geozone: dataSingleGeozone?.arrival_geozone || false,
         departure_zone: dataSingleGeozone?.departure_zone || false,
-        zone_color: dataSingleGeozone?.zone_color || "",
-        speed_limit: dataSingleGeozone?.speed_limit || "",
+        zone_color: dataSingleGeozone?.zone_color || geozoneDetailsInitialValues.zone_color,
+        speed_limit: dataSingleGeozone?.speed_limit || geozoneDetailsInitialValues.speed_limit,
       });
       setUserCanEdit(!!isNewEntity?.current);
       setTimeout(() => { setFormikValuesReady(true); }, 200); // simulate render delay for select pre-selected values
@@ -223,7 +215,31 @@ const ScreenAdminDetailGeozone = () => {
   // handle edit geozone
   const handleEditGeozone = () => {
     if(userCanEdit) {
+      const checkValue = mapState?.mapDataForAPIs ?? values.properties;
+      switch(values.zone_type) {
+        case "Route":
+          if(!checkValue?.locs || checkValue?.locs.length < 2) {
+            toast.error(t("toast.route_points_required"));
+            return;
+          }
+          break;
+        case "Polygon":
+          if(!checkValue?.locs || checkValue?.locs.length < 3) {
+            toast.error(t("toast.polygon_points_required"));
+            return;
+          }
+          break;
+        case "Circle":
+        default:
+          if(!checkValue?.centerPosition || !checkValue?.radius) {
+            toast.error(t("toast.circle_points_required"));
+            return;
+          }
+          break;
+      }
       formik.handleSubmit();
+    } else {
+      toast.error(t("toast.edit_not_allowed"));
     }
   }
 
@@ -248,7 +264,13 @@ const ScreenAdminDetailGeozone = () => {
     handleChange,
     handleBlur,
     handleSubmit,
+    dirty,
   } = formik;
+
+  const invalidFields =
+    Object.keys(errors)
+      .filter(key => !!errors[key as TFormFieldNames]);
+  const isFormValid = invalidFields.length === 0 && dirty;
   
   return (
       <>
@@ -276,7 +298,7 @@ const ScreenAdminDetailGeozone = () => {
                 }
               />
               <div>
-                {listData?.map((item: any, index: number) => (
+                {listData?.map((item, index: number) => (
                   <AdminListingColumnItem
                     key={index}
                     selected={parseInt(geozoneId) === item.id}
@@ -285,10 +307,10 @@ const ScreenAdminDetailGeozone = () => {
                         `${routeUrls.dashboardChildren.adminChildren.geozones}/${item.id}`
                       )
                     }
-                    title={item.zone_id}
-                    description={item.zone_type}
-                    asideText={item.radius}
-                    bottomText={geozoneDescriptionDisplayText(item.description, "-")}
+                    title={`${item.zone_id}`}
+                    description={`${item.zone_type}`}
+                    asideText={getGeozoneShapeDescription(item) ?? '-'}
+                    bottomText={geozoneDescriptionDisplayText(`${item.description}`, "-")}
                   />
                 ))}
               </div>

@@ -27,6 +27,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import {
+  TFormFieldNames,
   userDetailsInitialValues,
   userDetailsYupValidationSchema,
 } from "./validation";
@@ -188,7 +189,12 @@ const ScreenAdminDetailUser = () => {
       )
     : [];
 
-  const { values, errors, touched, handleChange, handleBlur, handleSubmit } = formik;
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit, dirty } = formik;
+
+  const invalidFields =
+    Object.keys(errors)
+      .filter(key => !!errors[key as TFormFieldNames]);
+  const isFormValid = invalidFields.length === 0 && dirty;
 
   // handle edit user
   const handleEditUser = () => {

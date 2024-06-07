@@ -20,6 +20,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { useFormik } from "formik";
 import {
+  TFormFieldNames,
   vehicleFormInitialValues,
   vehicleFormValidationSchema,
 } from "./validation";
@@ -236,7 +237,14 @@ const ScreenAdminDetailVehicle = () => {
     handleChange,
     handleBlur,
     handleSubmit,
+    dirty,
   } = formik;
+
+  console.log('errors', errors);
+  const invalidFields =
+    Object.keys(errors)
+      .filter(key => !!errors[key as TFormFieldNames]);
+  const isFormValid = invalidFields.length === 0 && dirty;
 
   // handle delete vehicle
   const handleDeleteVehicle = () => {

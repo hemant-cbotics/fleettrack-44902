@@ -6,7 +6,7 @@
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
+import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
 import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
@@ -39,6 +39,7 @@ import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { setMapStateData } from "../../../api/store/commonSlice";
 import { getCircleLocs } from "../../../utils/map";
 import { GeozoneVehicleGroup } from "../../../api/types/Geozone";
+import { ColorRGB } from "../../../types/common";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -68,6 +69,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   loadingData,
  }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
+  const { t: tMap } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.map" });
   const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
@@ -148,36 +150,65 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
 
   const [mapStateTransitionInProgress, setMapStateTransitionInProgress] = useState(false);
 
-  // set map data on form load
-  useEffect(() => {
-    if(!!!values.properties || Object.keys(values.properties).length === 0) return;
+  const loadResetMapDataWithInitialValues = () => {
+    console.log('[loadResetMapDataWithInitialValues]')
     const savedMapData = values.properties as TGeozoneMapData;
     if (!!savedMapData
     && Object.keys(savedMapData).length > 0) {
-      console.log('SAVED MAP DATA', savedMapData as TGeozoneMapDataCircle)
-      console.log('>> new values', JSON.stringify(values.properties));
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('SAVED MAP DATA', JSON.stringify(savedMapData));
       setMapStateTransitionInProgress(true)
+      if(values.zone_type === 'Polygon') {
+        setPolygonSides(`${(savedMapData as TGeozoneMapDataPolygon)?.locs?.length ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS}`);
+      }
+      const newMapState: TMapState = {
+        ...mapState,
+        mapCenter: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+        mapData: {
+          // ...mapState?.mapData,
+          centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
+          ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
+          radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+          ready: true,
+          editable: userCanEdit,
+        },
+      }
+      console.log('newMapState', newMapState)
       setTimeout(() => {
-        dispatch(setMapStateData({
-          ...mapState,
-          mapCenter: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-          mapData: {
-            // ...mapState?.mapData,
-            centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-            ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
-            radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-            ready: true,
-            editable: userCanEdit,
-          },
-        }));
+        dispatch(setMapStateData(newMapState));
         setMapStateTransitionInProgress(false);
       }, 200);
+    } else {
+      console.log('NO SAVED MAP DATA')
     }
+  }
+
+  // set map data on form load
+  useEffect(() => {
+    if(!!!values.properties || Object.keys(values.properties).length === 0) return;
+    loadResetMapDataWithInitialValues();
   }, [values.properties]);
+
+  // update map data on color change
+  useEffect(() => {
+    setMapStateTransitionInProgress(true)
+    setTimeout(() => {
+      dispatch(setMapStateData({
+        ...mapState,
+        mapData: {
+          ...mapState?.mapData,
+          color:
+            APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+        },
+      }));
+      setMapStateTransitionInProgress(false);
+    }, 200);
+  }, [values.zone_color]);
 
   // update form values on map data change
   useEffect(() => {
     const mapDataToSave = { ...mapState?.mapData } as TGeozoneMapData;
+    delete mapDataToSave.color;
     delete mapDataToSave.ready;
     delete mapDataToSave.editable;
     console.log('[CHANGE] to values.properties for saving map changes is DISABLED!', JSON.stringify(mapState?.mapDataForAPIs))
@@ -306,7 +337,6 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       dispatch(setMapStateData({
         ...mapState,
         mapData: {
-          // ...mapState?.mapData,
           ready: false,
         },
       }));
@@ -327,7 +357,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
                   getCircleLocs(
                     new Microsoft.Maps.Location(newlySelectedLocationCoords?.[0], newlySelectedLocationCoords?.[1]),
                     APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS
+                    parseInt(polygonSides ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS), // change here
+                    true
                   ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
               }
             : { radius: APP_CONFIG.MAPS.DEFAULTS.RADIUS }
@@ -337,6 +368,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           ...mapState,
           mapData: {
             ...newMapDataForAPIs,
+            color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
             ready: true,
             editable: userCanEdit,
           },
@@ -348,35 +380,172 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     }
   }
 
+  // shape controls
+  const [polygonSides, setPolygonSides] = useState<string>(`${APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS}`);
+  const handlePolygonSidesChange = (e: any) => {
+    const newPolygonSides = e?.value;
+    setPolygonSides(newPolygonSides);
+
+    // update map state
+    dispatch(setMapStateData({
+      ...mapState,
+      mapData: {
+        ready: false,
+      },
+    }));
+    setTimeout(() => {
+      console.info('[handlePolygonSidesChange] Setting map data with new polygone sides value', newPolygonSides)
+      const Microsoft = (window as any).Microsoft;
+      const newMapDataForAPIs: TGeozoneMapDataForAPIs = {
+        ...mapState?.mapData,
+        locs:
+          getCircleLocs(
+            new Microsoft.Maps.Location(mapState.mapData?.centerPosition?.latitude, mapState.mapData?.centerPosition?.longitude),
+            APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+            newPolygonSides,
+            true
+          ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude })),
+      }
+      dispatch(setMapStateData({
+        ...mapState,
+        mapData: {
+          ...newMapDataForAPIs,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+          ready: true,
+          editable: userCanEdit,
+        },
+        mapDataForAPIs: newMapDataForAPIs,
+      }));
+    }, 200);
+  }
+  const removeRoutePoint = (pointIndex: number) => {
+    // update map state
+    dispatch(setMapStateData({
+      ...mapState,
+      mapData: {
+        ready: false,
+      },
+    }));
+    setTimeout(() => {
+      console.info('[removeRoutePoint] Remove route point at index', pointIndex, typeof pointIndex)
+      const Microsoft = (window as any).Microsoft;
+      let newRouteLocs = [ ...(mapState.mapData?.locs ?? []) ];
+      if(newRouteLocs.length > 0) {
+        newRouteLocs.splice(pointIndex, 1);
+      }
+      const newMapDataForAPIs: TGeozoneMapDataForAPIs = {
+        ...mapState?.mapData,
+        locs: [ ...newRouteLocs ],
+      }
+      dispatch(setMapStateData({
+        ...mapState,
+        mapData: {
+          ...newMapDataForAPIs,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+          ready: true,
+          editable: userCanEdit,
+        },
+        mapDataForAPIs: newMapDataForAPIs,
+      }));
+    }, 200);
+  }
+
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
       {/* mapData: {JSON.stringify(mapData)} */}
-      {mapState?.mapData?.ready && !loadingData && !mapStateTransitionInProgress ? (<>
-        <BasicMap
-          className="col-span-12 bg-gray-200 h-96"
-          mapRef={mapRef}
-          mapData={mapState?.mapData}
-          setMapData={() => {}}
-          onMapReady={handleMapReady}
-        />
-        <div className="col-span-12 flex gap-8 mb-4">
-          {userCanEdit && (<>
-            {values.zone_type === 'Circle' && (<div className="flex items-center gap-2">
-              <img src={MapMarkerBlue} alt="" />
-              <span className="font-bold text-sm text-[#5959FF]">{t('bluePushpin')}</span>
-            </div>)}
-            <div className="flex items-center gap-2">
-              <img src={MapMarkerRed} alt="" />
-              <span className="font-bold text-sm text-[#FF3F4F]">{t('redPushpin')}</span>
+      {mapState?.mapData?.ready && !loadingData && !mapStateTransitionInProgress ? (
+          <div className="relative col-span-12 grid grid-cols-12">
+            <BasicMap
+              className="col-span-12 bg-gray-200 h-96"
+              mapRef={mapRef}
+              mapData={mapState?.mapData}
+              setMapData={() => {}}
+              onMapReady={handleMapReady}
+            />
+            <div className="col-span-12 flex gap-4 mt-4">
+              {userCanEdit && (<>
+                {values.zone_type === 'Circle' && (<div className="flex items-center gap-2">
+                  <img src={MapMarkerBlue} alt="" />
+                  <span className="font-bold text-sm text-[#5959FF]">{t('bluePushpin')}</span>
+                </div>)}
+                <div className="flex items-center gap-2">
+                  <img src={MapMarkerRed} alt="" />
+                  <span className="font-bold text-sm text-[#FF3F4F]">{t('redPushpin')}</span>
+                </div>
+                <AdminFormFieldSubmit
+                  customWrapperClass="col-span-6 ml-auto"
+                  type="button"
+                  variant="primary-like"
+                  label={tMap('reset_map')}
+                  onClick={loadResetMapDataWithInitialValues}
+                  disabled={loadingData}
+                />
+              </>)}
             </div>
-          </>)}
-        </div>
-      </>) : (<>
-        <div className="col-span-12 bg-gray-200 h-96 flex items-center justify-center relative">
-          <MapLoadingAnimation />
-        </div>
-        <div className="col-span-12 flex gap-8 mb-4"></div>
-      </>)}
+            {userCanEdit && values.zone_type !== 'Circle' && (
+            <div className="absolute top-4 left-4 z-[200] bg-white p-4 rounded-lg shadow text-sm">
+              {/* <h4 className="font-bold text-lg mb-2">{tMap('shape_controls')}</h4> */}
+              {values.zone_type === 'Polygon' && (
+                <>
+                  <h4 className="font-bold text-lg mb-2">{tMap('polygon_sides')}</h4>
+                  <AdminFormFieldDropdown
+                    loadingData={loadingData}
+                    label={false}
+                    id="polygon_sides"
+                    name="polygon_sides"
+                    options={
+                      "*"
+                        .repeat(APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS_RANGE[1] - APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS_RANGE[0] + 1).split("")
+                        .map((item, i) => i + APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS_RANGE[0])
+                        .map((side) => ({ value: `${side}`, label: `${side}` }))}
+                    value={polygonSides}
+                    onChange={handlePolygonSidesChange}
+                  />
+                </>
+              )}
+              {values.zone_type === 'Route' && (
+                <>
+                  <h4 className="font-bold text-lg">{tMap('route_points')}</h4>
+                  <p className="text-[10px] leading-3 text-gray-400 mb-2 max-w-40">{tMap('create_route_point')}</p>
+                  <div className="max-h-64 overflow-auto">
+                    <div className="flex flex-col gap-2">
+                    {!!mapState?.mapData?.locs?.length && mapState?.mapData?.locs?.length > 0 && (
+                      <>
+                        {mapState?.mapData?.locs.map((locItem, i) => (
+                          <div className="flex items-center bg-gray-50 rounded-lg gap-2 py-1 px-2" key={`loc_${i}`}>
+                            <span className="font-semibold text-xs bg-gray-400 text-white px-1 rounded">{i + 1}</span>
+                            <span className="font-semibold text-xs text-gray-500 leading-4 tracking-tighter">
+                              {locItem.latitude.toFixed(5)}, {locItem.longitude.toFixed(5)}
+                            </span>
+                            {userCanEdit && (
+                              <img
+                                src={CloseIcon}
+                                className="size-5 cursor-pointer opacity-80 hover:opacity-40"
+                                onClick={() => { removeRoutePoint(i) }}
+                              />
+                            )}
+                          </div>
+                          ))
+                        }
+                      </>
+                    )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>)}
+          </div>
+        ) : (
+          <>
+            <div className="col-span-12 bg-gray-200 h-96 flex items-center justify-center relative">
+              <MapLoadingAnimation />
+              {APP_CONFIG.DEBUG.MAPS && (<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-8">
+                <h4 className="font-bold text-lg text-black">{!mapState?.mapData || Object.keys(mapState?.mapData).length < 2 ? 'Map data not received' : ''}</h4>
+              </div>)}
+            </div>
+            <div className="col-span-12 flex gap-8 mb-4"></div>
+          </>
+        )}
       {loadingData ? <PseudoSelect label={t("description")} /> : 
         (<AdminFormFieldAsyncDropdown
           loadingData={loadingData || isFetchingAutosuggest}
@@ -471,6 +640,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         error={errors.lat_lng}
         touched={touched.lat_lng}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldDropdown

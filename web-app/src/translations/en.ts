@@ -451,6 +451,8 @@ export const language_en = {
         add_selected: "Add Selected",
         remove_selected: "Remove Selected",
         remove_all: "Remove All",
+        vehicle_count_1: "1 vehicle",
+        vehicle_count: "{{count}} vehicles",
         toast: {
           group_updated: "Group has been updated successfully.",
           group_deleted: "Group has been deleted successfully.",
@@ -527,6 +529,10 @@ export const language_en = {
           geozone_deleted: "Geozone has been deleted successfully.",
           updation_failed: "Failed to update geozone. Please check the information that you have entered.",
           deletion_failed: "Failed to delete geozone. Please check the information that you have entered.",
+          route_points_required: "Please drop at least two route points to create a route geozone.",
+          polygon_points_required: "Please create a polygon with at least three sides to create a polygon geozone.",
+          circle_points_required: "Please create a circle to create a circle geozone.",
+          edit_not_allowed: "You are not allowed to edit this geozone.",
         },
         form: {
           bluePushpin: "Drag the Blue Pin to move the Zone",
@@ -546,12 +552,17 @@ export const language_en = {
           speed_limit: "Speed Limit",
         },
         map: {
-          polygonEdit: {
+          reset_map: "Reset Map",
+          shape_controls: "Shape Controls", // deprecated
+          polygon_sides: "Polygon Sides",
+          route_points: "Route Points",
+          create_route_point: "Click anywhere on the map to create a new route point",
+          polygonEdit: { // deprecated
             heading: "Edit Geozone Polygon",
             sub_heading: "You can drag the blue pushpins around to reshape the polygon.",
             ok_button: "OK",
           },
-          routeEdit: {
+          routeEdit: { // deprecated
             heading: "Edit Geozone Route",
             sub_heading: "You can drag the blue pushpins around to reshape the route.",
             ok_button: "OK",
@@ -580,7 +591,7 @@ export const language_en = {
   mapOverview: {
     heading: "Map Overview",
     listing_heading: "Listing",
-    search_placeholder: "Search Vehicle here...",
+    search_placeholder: "Search vehicles here...",
     filter: {
       heading: "Filters",
       address: "Find Address",

@@ -1,3 +1,5 @@
+import { TGeozoneMapDataForAPIs } from "../../types/map";
+
 export type GeozoneType = 'Circle' | 'Polygon' | 'Route';
 
 export type GeozoneVehicleGroup = {
@@ -13,7 +15,7 @@ export type OrganizationGeozone = {
   zone_id: string;
   zone_type: GeozoneType;
   // city: string | null;
-  properties: {};
+  properties: TGeozoneMapDataForAPIs;
   description: string | null;
   geocode: string | null;
   radius: string | null;
@@ -23,7 +25,7 @@ export type OrganizationGeozone = {
   arrival_geozone: boolean;
   departure_zone: boolean;
   zone_color: string;
-  speed_limit: string | null;
+  speed_limit: number | null;
   is_active: boolean;
   organization: number;
   groups: GeozoneVehicleGroup[];

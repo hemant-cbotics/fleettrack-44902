@@ -15,7 +15,6 @@ const dragLabelPoints = {
   // subTitle: 'to reshape',
   // title: 'Drag',
 }
-const polygonColorRGB: ColorRGB = [150, 0, 50];
 
 export const mapOperations = (props: TMapOperationsProps) => {
 
@@ -34,6 +33,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
   }
 
   const renderMapObjects = () => {
+    const color = (props.mapData.color ?? APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR) as ColorRGB;
     let refCenter = new Microsoft.Maps.Location(
       (props.mapData as TGeozoneMapDataPolygon).centerPosition.latitude,
       (props.mapData as TGeozoneMapDataPolygon).centerPosition.longitude
@@ -47,13 +47,13 @@ export const mapOperations = (props: TMapOperationsProps) => {
       refCenter,
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        color: `rgba(${polygonColorRGB.join(',')},0.2)`,
+        color: `rgba(${color.join(',')},0.2)`,
         // icon: MapMarkerRed,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelCenter : {})
       }
     );
-    props.mapRef.current.map.entities.push(props.mapRef.current.objects.mPushpins.pCentre); // add the pushpin to the map
+    // props.mapRef.current.map.entities.push(props.mapRef.current.objects.mPushpins.pCentre); // add the pushpin to the map
 
     // ------------------------------------------------------------------------------------------------------------
     // TODO: when editing a polygon, we identified that extra pushpins is added to the map - this needs to be fixed
@@ -67,7 +67,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         ? (props.mapData as TGeozoneMapDataPolygon).locs.map((point: TLatLng) => new Microsoft.Maps.Location(point.latitude, point.longitude))
         : getCircleLocs(refCenter, props.mapRef.current.objects.circleRadius, APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS, true);
 
-    polygonPoints.pop();
+    // polygonPoints.pop(); // causing issues with the polygon
     // use the polygon points to create pushpins
     polygonPoints?.forEach((polygonPoint: any, index: number) => {
       const newPushpin = new Microsoft.Maps.Pushpin(
@@ -89,7 +89,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
           // redraw the polygon
           const polygonPointLocations = props.mapRef.current.objects.mPushpins.pPoints.map((point: any) => point.getLocation());
           console.log('polygonPointLocations', polygonPointLocations)
-          renderPolygon(props.mapRef, refCenter, polygonPointLocations, polygonColorRGB);
+          renderPolygon(props.mapRef, refCenter, polygonPointLocations, color);
           // update the map data
           console.log('[setMapData] via mapOperations (radius dragend)');
           props.setMapData({
@@ -108,7 +108,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     });
 
     // render the polygon
-    renderPolygon(props.mapRef, refCenter, polygonPoints, polygonColorRGB);
+    renderPolygon(props.mapRef, refCenter, polygonPoints, color);
   }
 
   // load map modules before rendering the map objects
@@ -135,7 +135,6 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
   if(APP_CONFIG.DEBUG.MAPS) console.log('[mapUpdatesHandler]', action, value);
 
   const Microsoft = (window as any).Microsoft;
-  const refCenter = props.mapRef.current.map.getCenter();
 
   switch(action) {
     case 'edit':
@@ -148,6 +147,7 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
       });
       // show the infobox
       if(false) {
+        const refCenter = props.mapRef.current.map?.getCenter();
         props.mapRef.current.objects.mInfobox = new Microsoft.Maps.Infobox(refCenter, {
           title: i18n.t('admins.geozones.detailsPage.map.polygonEdit.heading'),
           description: i18n.t('admins.geozones.detailsPage.map.polygonEdit.sub_heading'),

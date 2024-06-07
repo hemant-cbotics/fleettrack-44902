@@ -24,7 +24,7 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data, isLoading = false, lis
         <thead className="sticky top-0 bg-white border-b border-gray-500">
           <tr>
             {columns?.map((column, index) => (
-              <th key={index} className="px-4 py-3 text-left text-sm font-semibold text-black leading-6 whitespace-nowrap">
+              <th key={index} className={`px-4 ${index === columns.length - 1 ? "pl-3 pr-12" : "py-3"} text-left text-sm font-semibold text-black leading-6 whitespace-nowrap`}>
                 {column}
               </th>
             ))}
@@ -36,7 +36,14 @@ const AdminTable: FC<AdminTableProps> = ({ columns, data, isLoading = false, lis
               if(!!rowData.navLink) navigate(rowData.navLink, { state: listingQueryParams });
             }}>
               {rowData.cellData.map((cellData, i) => (
-                <td key={`row_${index}_cell_${i}`} className="px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700">
+                <td key={`row_${index}_cell_${i}`} className={`px-4 py-3 whitespace-nowrap text-xs font-medium leading-6 text-gray-700`}>
+                  {/* {i === rowData.cellData.length - 1 && (
+                    <div className="relative">
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        Buttons
+                      </div>
+                    </div>
+                  )} */}
                   {cellData}
                 </td>)
               )}

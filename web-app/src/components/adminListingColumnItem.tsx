@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 type TAdminListingColumnItemProps = {
-  selected: boolean;
+  selected?: boolean;
   onClick: () => void;
   title: string;
   description: string;
@@ -10,7 +10,7 @@ type TAdminListingColumnItemProps = {
 };
 
 const AdminListingColumnItem: FC<TAdminListingColumnItemProps> = ({
-  selected,
+  selected = false,
   onClick,
   title,
   description = '',
@@ -32,7 +32,7 @@ const AdminListingColumnItem: FC<TAdminListingColumnItemProps> = ({
           {!!description && (<p className="font-normal text-[10px] leading-4 text-gray-500 mt-[2px]">
             {description}
           </p>)}
-          <p className="font-medium text-xs leading-5 text-gray-700 mt-1">
+          <p className="font-medium text-xs leading-4 text-gray-700 mt-1">
             {bottomText}
           </p>
         </div>

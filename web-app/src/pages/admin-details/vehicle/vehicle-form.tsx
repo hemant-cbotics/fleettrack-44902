@@ -115,6 +115,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.creation_date}
         touched={touched.creation_date}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -142,6 +143,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         error={errors.firmware_version}
         touched={touched.firmware_version}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <div className="col-span-12 grid grid-cols-12">

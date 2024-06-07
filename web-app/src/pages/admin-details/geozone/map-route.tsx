@@ -19,8 +19,6 @@ const dragLabelPoints = {
   // title: "Drag",
 };
 
-const routeColorRGB: ColorRGB = [0, 0, 150];
-
 export const mapOperations = (props: TMapOperationsProps) => {
 
   const Microsoft = (window as any).Microsoft;
@@ -39,6 +37,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
   };
 
   const renderMapObjects = () => {
+    const color = (props.mapData.color ?? APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR) as ColorRGB;
     let refCenter = new Microsoft.Maps.Location(
       (props.mapData as TGeozoneMapDataRoute).centerPosition.latitude,
       (props.mapData as TGeozoneMapDataRoute).centerPosition.longitude
@@ -57,7 +56,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
       refCenter,
       {
         anchor: new Microsoft.Maps.Point(16, 32),
-        color: `rgba(${routeColorRGB.join(",")},0.2)`,
+        color: `rgba(${color.join(",")},0.2)`,
         // icon: MapMarkerRed,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelCenter : {}),
@@ -88,6 +87,8 @@ export const mapOperations = (props: TMapOperationsProps) => {
       props.mapRef.current.map,
       "click",
       function (e: any) {
+        if(!props.mapData.editable) return; // do nothing if not editable
+
         // Get the location of the click event
         const location = e.location;
 
@@ -116,7 +117,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
             props.mapRef,
             refCenter,
             routePointLocations,
-            routeColorRGB
+            color
           );
           // update the map data
           console.log("[setMapData] via mapOperations (radius dragend)");
@@ -136,7 +137,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
             locs: routePointLocations.map((point: any) => ({ latitude: point.latitude, longitude: point.longitude } as TLatLng)),
           } as TGeozoneMapData
         );
-        renderRoute(props.mapRef, refCenter, routePoints, routeColorRGB);
+        renderRoute(props.mapRef, refCenter, routePoints, color);
       }
     );
 
@@ -150,7 +151,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         routePoints = routePointLocations;
         console.log("routePointLocations", routePointLocations);
         // Draw the new route
-        renderRoute(props.mapRef, refCenter, routePointLocations, routeColorRGB);
+        renderRoute(props.mapRef, refCenter, routePointLocations, color);
         // update the map data
         console.log("[setMapData] via mapOperations (radius dragend)");
         props.setMapData({
@@ -166,7 +167,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
     });
 
     // render the polygon
-    renderRoute(props.mapRef, refCenter, routePoints, routeColorRGB);
+    renderRoute(props.mapRef, refCenter, routePoints, color);
   };
 
   // load map modules before rendering the map objects
