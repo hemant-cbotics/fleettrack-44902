@@ -15,7 +15,6 @@ const dragLabelRadius = {
   // subTitle: 'to resize',
   // title: 'Drag',
 }
-const circleColorRGB: ColorRGB = [0, 150, 50];
 
 export const mapOperations: TMapOperations = (props) => {
 
@@ -34,6 +33,7 @@ export const mapOperations: TMapOperations = (props) => {
   }
 
   const renderMapObjects = () => {
+    const color = (props.mapData.color ?? APP_CONFIG.MAPS.DEFAULTS.ZONE_COLOR) as ColorRGB;
     let refCenter = new Microsoft.Maps.Location(
       (props.mapData as TGeozoneMapDataCircle).centerPosition.latitude,
       (props.mapData as TGeozoneMapDataCircle).centerPosition.longitude
@@ -67,7 +67,7 @@ export const mapOperations: TMapOperations = (props) => {
         );
         const distanceFromCenter = getDistanceFromCenter(c, r);
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
-        renderCircle(props.mapRef, refCenter, distanceFromCenter, circleColorRGB);
+        renderCircle(props.mapRef, refCenter, distanceFromCenter, color);
         // update radius line
         props.mapRef.current.objects.mRadiusLine?.setLocations([
           props.mapRef.current.objects.mPushpins.pCentre.getLocation(),
@@ -104,7 +104,7 @@ export const mapOperations: TMapOperations = (props) => {
       props.mapRef.current.objects.mPushpins.pCentre.getLocation(),
       props.mapRef.current.objects.mPushpins.pRadius.getLocation()
     ], {
-      strokeColor: new Microsoft.Maps.Color(200, circleColorRGB[0], circleColorRGB[1], circleColorRGB[2]),
+      strokeColor: new Microsoft.Maps.Color(200, color[0], color[1], color[2]),
       strokeThickness: 2,
       strokeDashArray: [4, 4]
     });
@@ -120,7 +120,7 @@ export const mapOperations: TMapOperations = (props) => {
         const r = props.mapRef.current.objects.mPushpins.pRadius as any;
         const distanceFromCenter = getDistanceFromCenter(c, r);
         props.mapRef.current.objects.circleRadius = distanceFromCenter; // update the circle radius
-        renderCircle(props.mapRef, refCenter, distanceFromCenter, circleColorRGB);
+        renderCircle(props.mapRef, refCenter, distanceFromCenter, color);
         // update radius line
         props.mapRef.current.objects.mRadiusLine?.setLocations([
           props.mapRef.current.objects.mPushpins.pCentre.getLocation(),
@@ -141,7 +141,7 @@ export const mapOperations: TMapOperations = (props) => {
     );
 
     // render the circle
-    renderCircle(props.mapRef, refCenter, props.mapRef.current.objects.circleRadius, circleColorRGB);
+    renderCircle(props.mapRef, refCenter, props.mapRef.current.objects.circleRadius, color);
   }
 
   // load map modules before rendering the map objects

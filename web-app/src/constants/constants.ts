@@ -1,3 +1,5 @@
+import { ColorRGB } from "../types/common";
+
 export const APP_CONFIG = {
   APP_NAME: "FleetTrack",
   PASSWORD: {
@@ -42,6 +44,22 @@ export const APP_CONFIG = {
       RADIUS: 0.6,
       POLYGON_POINTS_RANGE: [3, 12],
       POLYGON_POINTS: 6,
+      ZONE_COLOR: [0, 150, 100],
+    },
+    COLORS: {
+      Default: [0, 150, 100] as ColorRGB,
+      Black: [0, 0, 0] as ColorRGB,
+      Brown: [139, 69, 19] as ColorRGB,
+      Red: [200, 0, 0] as ColorRGB,
+      Orange: [200, 100, 0] as ColorRGB,
+      Yellow: [200, 200, 0] as ColorRGB,
+      Green: [0, 200, 0] as ColorRGB,
+      Blue: [0, 0, 200] as ColorRGB,
+      Purple: [100, 0, 200] as ColorRGB,
+      Gray: [100, 100, 100] as ColorRGB,
+      White: [255, 255, 255] as ColorRGB,
+      Cyan: [0, 200, 200] as ColorRGB,
+      Pink: [200, 0, 200] as ColorRGB,
     }
   },
 }

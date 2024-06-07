@@ -32,6 +32,7 @@ import { geozoneDescriptionDisplayText } from "../../admins/geozones/geozones";
 import { TMapState } from "../../../types/map";
 import { getCircleLocs } from "../../../utils/map";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import { getGeozoneShapeDescription } from "../../../utils/geozone";
 
 const ScreenAdminDetailGeozone = () => {
   const { geozoneId } = useParams<{ geozoneId: any }>();
@@ -121,17 +122,7 @@ const ScreenAdminDetailGeozone = () => {
   const [ deleteSingleGeozoneApiTrigger, {isLoading: isLoadingDeleteGeozone}] = useDeleteSingleGeozoneMutation();
 
   // prepare list data for geozone list
-  const listData: TListData[] = !!results
-    ? (results || ([] as OrganizationGeozone[])).map(
-        (item: OrganizationGeozone, index: number) => ({
-          id: item?.id,
-          zone_id: item?.zone_id || "-",
-          zone_type: item?.zone_type || "-",
-          description: item?.description || "-",
-          radius: item?.radius || "-",
-        })
-      )
-    : [];
+  const listData: OrganizationGeozone[] = results ?? [];
 
   // formik
   const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
@@ -252,7 +243,6 @@ const ScreenAdminDetailGeozone = () => {
     dirty,
   } = formik;
 
-  console.log('errors', errors)
   const invalidFields =
     Object.keys(errors)
       .filter(key => !!errors[key as TFormFieldNames]);
@@ -284,7 +274,7 @@ const ScreenAdminDetailGeozone = () => {
                 }
               />
               <div>
-                {listData?.map((item: any, index: number) => (
+                {listData?.map((item, index: number) => (
                   <AdminListingColumnItem
                     key={index}
                     selected={parseInt(geozoneId) === item.id}
@@ -293,10 +283,10 @@ const ScreenAdminDetailGeozone = () => {
                         `${routeUrls.dashboardChildren.adminChildren.geozones}/${item.id}`
                       )
                     }
-                    title={item.zone_id}
-                    description={item.zone_type}
-                    asideText={item.radius}
-                    bottomText={geozoneDescriptionDisplayText(item.description, "-")}
+                    title={`${item.zone_id}`}
+                    description={`${item.zone_type}`}
+                    asideText={getGeozoneShapeDescription(item) ?? '-'}
+                    bottomText={geozoneDescriptionDisplayText(`${item.description}`, "-")}
                   />
                 ))}
               </div>

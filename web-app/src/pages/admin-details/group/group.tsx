@@ -31,6 +31,7 @@ import { useDebouncedCallback } from "use-debounce";
 import AdminsGroupsHeader from "./header";
 import GroupVehicleItem from "./vehicleItem";
 import { TGroupListItem, TListData } from "./type";
+import AdminListingColumnItem from "../../../components/adminListingColumnItem";
 
 
 const ScreenAdminDetailGroup = () => {
@@ -104,16 +105,7 @@ const ScreenAdminDetailGroup = () => {
   const { vehicles: groupVehicles } = dataSingleGroup ?? {};
 
   // prepare list data for group list
-  const listData: TListData[] = !!results
-    ? (results || ([] as OrganizationGroup[])).map(
-        (item: OrganizationGroup, index: number) => ({
-          id: item?.id,
-          name: item?.name || "-",
-          description: item?.description || "-",
-          is_active: item?.is_active,
-        })
-      )
-    : [];
+  const listData: OrganizationGroup[] = !!results ? results : [];
 
   // prepare all vehicle list
   const allVehicleList: TGroupListItem[] = !!allVehicles
@@ -256,7 +248,7 @@ const ScreenAdminDetailGroup = () => {
         } />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="lg:grid lg:grid-cols-12 py-2 gap-4">
-          <div className={`hidden xl:block lg:col-span-3 space-y-4${isFetchingOrgGroups ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' xl:hidden' : ''}`}>
+          <div className={`hidden xl:block lg:col-span-3 space-y-4${isFetchingOrgGroups ? ' opacity-40 pointer-events-none' : ''}${isNewEntity?.current ? ' xl:hidden' : ''} relative flex flex-col`}>
           <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={t("search_placeholder")}
@@ -264,33 +256,21 @@ const ScreenAdminDetailGroup = () => {
                 debouncedSetSearchKeyword(e.target.value)
               }
             />
-            <div>
-              {listData?.map((item: any, index: number) => (
-                <div
+            <div className="absolute top-[100px] max-h-[calc(100vh-150px)] overflow-auto">
+              {listData?.map((item, index: number) => (
+                <AdminListingColumnItem
                   key={index}
-                  className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                    parseInt(groupId) === item.id ? "bg-blue-200" : ""
-                  }`}
+                  selected={parseInt(groupId) === item.id}
                   onClick={() =>
                     navigate(
                       `${routeUrls.dashboardChildren.adminChildren.groups}/${item.id}`
                     )
                   }
-                >
-                  <div className="grid grid-cols-4">
-                    <div className="col-span-3">
-                      <p className="font-semibold text-sm leading-6 text-blue-900">
-                        {item.name}
-                      </p>
-                      <p className="font-normal text-xs leading-6 text-gray-500">
-                        {item.description}
-                      </p>
-                    </div>
-                    <div className="col-span-1 font-bold text-xs leading-4 text-right">
-                      {item.is_active}
-                    </div>
-                  </div>
-                </div>
+                  title={`${item.name}`}
+                  description={`${item.description}`}
+                  asideText={``} // ${item.is_active ? tMain("admins.filters.active") : tMain("admins.filters.inactive")}`}
+                  bottomText={item.vehicles.length === 1 ? t('vehicle_count_1') : t('vehicle_count', { count: item.vehicles.length})}
+                />
               ))}
             </div>
           </div>
@@ -347,7 +327,7 @@ const ScreenAdminDetailGroup = () => {
                   </>
                 )}
             </div>
-            <div className="w-full px-5">
+            <div className="w-full">
               <AdminFormFieldInput
                 label={t("group_description")}
                 type="text"
@@ -362,8 +342,8 @@ const ScreenAdminDetailGroup = () => {
                 disabled={!userCanEdit}
               />
             </div>
-            <div className="flex items-center py-3 px-5">
-              <p className="font-semibold text-xl leading-10 tracking-tighter text-blue-800">Vehicles</p>
+            <div className="flex items-center py-3">
+              <p className="font-semibold text-xl leading-10 text-accent-blue-dark">Vehicles</p>
               <div className="flex-grow"></div>
               <div className="w-1/2">
                 <AdminFormFieldCheckbox
@@ -431,6 +411,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("add_all")}
                     onClick={handleAddAll}
+                    disabled={!userCanEdit}
                   />
                 </div>
                 <div className="relative">
@@ -448,6 +429,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("add_selected")}
                     onClick={handleAddSelected}
+                    disabled={!userCanEdit}
                   />
                 </div>
                 <div className="relative">
@@ -465,6 +447,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("remove_selected")}
                     onClick={handleRemoveSelected}
+                    disabled={!userCanEdit}
                   />
                 </div>
                 <div className="relative">
@@ -482,6 +465,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("remove_all")}
                     onClick={handleRemoveAll}
+                    disabled={!userCanEdit}
                   />
                 </div>
                 <div className="flex-grow"></div>

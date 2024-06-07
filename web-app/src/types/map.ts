@@ -1,3 +1,5 @@
+import { ColorRGB } from "./common";
+
 export type TLatLng = {
   latitude: number;
   longitude: number;
@@ -25,7 +27,8 @@ export type TGeozoneMapDataForAPIs =
 
 export type TGeozoneMapData = TGeozoneMapDataForAPIs & {
   ready?: boolean,
-  editable?: boolean
+  editable?: boolean,
+  color?: ColorRGB,
 };
 
 // map state in redux store
