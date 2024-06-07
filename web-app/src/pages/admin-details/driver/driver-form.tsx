@@ -58,6 +58,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         touched={touched.driver_id}
         disabled={!userCanEdit}
         detailsFormField={true}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -114,6 +115,7 @@ export const DriverGeneralDetailForm: FC<DriverGeneralDetailFormProps> = ({
         disabled={!userCanEdit}
         detailsFormField={true}
         customWrapperClass="col-span-12"
+        readOnly={true}
       />
 
       <AdminFormFieldInput
