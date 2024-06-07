@@ -25,7 +25,7 @@ export type OrganizationGeozone = {
   arrival_geozone: boolean;
   departure_zone: boolean;
   zone_color: string;
-  speed_limit: string | null;
+  speed_limit: number | null;
   is_active: boolean;
   organization: number;
   groups: GeozoneVehicleGroup[];

@@ -15,11 +15,11 @@ export const geozoneDetailsInitialValues: Partial<OrganizationGeozone> & { assig
   lat_lng: "",
   overlap_priority: 0,
   assign_group: [],
-  reverse_geocode: false,
-  arrival_geozone: false,
-  departure_zone: false,
+  reverse_geocode: true,
+  arrival_geozone: true,
+  departure_zone: true,
   zone_color: "",
-  speed_limit: "0.0",
+  speed_limit: 0.0,
 }
 
 // validation schema for the form
