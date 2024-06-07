@@ -215,7 +215,31 @@ const ScreenAdminDetailGeozone = () => {
   // handle edit geozone
   const handleEditGeozone = () => {
     if(userCanEdit) {
+      const checkValue = mapState?.mapDataForAPIs ?? values.properties;
+      switch(values.zone_type) {
+        case "Route":
+          if(!checkValue?.locs || checkValue?.locs.length < 2) {
+            toast.error(t("toast.route_points_required"));
+            return;
+          }
+          break;
+        case "Polygon":
+          if(!checkValue?.locs || checkValue?.locs.length < 3) {
+            toast.error(t("toast.polygon_points_required"));
+            return;
+          }
+          break;
+        case "Circle":
+        default:
+          if(!checkValue?.centerPosition || !checkValue?.radius) {
+            toast.error(t("toast.circle_points_required"));
+            return;
+          }
+          break;
+      }
       formik.handleSubmit();
+    } else {
+      toast.error(t("toast.edit_not_allowed"));
     }
   }
 
