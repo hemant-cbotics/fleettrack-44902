@@ -568,7 +568,7 @@ export const language_en = {
             ok_button: "OK",
           },
           polygonError: {
-            dragend: "An error occurred while dragging the pushpin. Please ensure the pushpin is forming the polygon.",
+            dragend: "An error occurred while dragging the pushpin. Please ensure all pushpins are forming a proper polygon.",
           }
         }
       },
