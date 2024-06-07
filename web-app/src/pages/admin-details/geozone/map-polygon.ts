@@ -116,7 +116,8 @@ export const mapOperations = (props: TMapOperationsProps) => {
             console.error(error);
             toast.error(i18n.t('admins.geozones.detailsPage.map.polygonError.dragend'));
             newPushpin.setLocation(originalLocation); // Reset the pushpin to its original location
-            renderPolygon(props.mapRef, refCenter, polygonPoints, color);
+            const polygonPointLocations = props.mapRef.current.objects.mPushpins.pPoints.map((point: any) => point.getLocation());
+            renderPolygon(props.mapRef, refCenter, polygonPointLocations , color);
           }
         }
       );
