@@ -75,6 +75,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.last_event_time}
         touched={touched.last_event_time}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -88,6 +89,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.last_status_code}
         touched={touched.last_status_code}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -102,6 +104,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         touched={touched.in_range}
         disabled={!userCanEdit}
         customInputClass={values.in_range === "Yes" ? "text-green-500" : "text-red-500"}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -115,6 +118,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.in_range_device_id}
         touched={touched.in_range_device_id}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -128,6 +132,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.last_location}
         touched={touched.last_location}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -141,6 +146,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.last_address}
         touched={touched.last_address}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -154,6 +160,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.last_altitude}
         touched={touched.last_altitude}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -167,6 +174,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         error={errors.distance_travelled}
         touched={touched.distance_travelled}
         disabled={!userCanEdit}
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -181,6 +189,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         touched={touched.tag_signal_strength}
         disabled={!userCanEdit}
         customWrapperClass="col-span-4"
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -195,6 +204,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         touched={touched.tag_battery_level}
         disabled={!userCanEdit}
         customWrapperClass="col-span-4"
+        readOnly={true}
       />
 
       <AdminFormFieldInput
@@ -209,6 +219,7 @@ export const FleettagDetailForm: FC<FleettagDetailFormProps> = ({
         touched={touched.temprature}
         disabled={!userCanEdit}
         customWrapperClass="col-span-4"
+        readOnly={true}
       />
     </div>
   );
