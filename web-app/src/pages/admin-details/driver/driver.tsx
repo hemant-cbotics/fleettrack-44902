@@ -28,14 +28,15 @@ import {
 import { useDeleteSingleDriverMutation, useEditOrganizationDriverMutation, useOrganizationDriversQuery, useSingleOrganizationDriverQuery } from "../../../api/network/adminApiServices";
 import { TListData } from "./type";
 import { OrganizationDriver } from "../../../api/types/Driver";
-import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { useDispatch, useSelector } from "react-redux";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TListingQueryParams, TModalsState, setListingQueryParams, setModalsData } from "../../../api/store/commonSlice";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import Pagination, { TPaginationSelected } from "../../admins/components/pagination";
 
 const ScreenAdminDetailDriver = () => {
   const { driverId } = useParams<{ driverId: any }>();
@@ -47,6 +48,8 @@ const ScreenAdminDetailDriver = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { drivers: orgDriversQueryParams } = listingQueryParams;
 
   // flag to idenfiy if driver is coming from create new driver popup
   const isNewEntity = useRef<boolean>(!!locationState?.new);
@@ -56,24 +59,9 @@ const ScreenAdminDetailDriver = () => {
 
   // prepare query params for fetching organization drivers
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
-  const [orgDriversQueryParams, setOrgDriversQueryParams] = useState<
-    OrganizationEntityListingPayload
-  >(
-    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
-      ? locationState
-      : {
-          organization_id: thisUserOrganizationId,
-          page: 1,
-          page_size: 10,
-          search: "",
-          is_active: "both",
-        }) as OrganizationEntityListingPayload
-  );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgDriversQueryParams((prev) => {
-      return { ...prev, page: 1, search: value };
-    });
+    dispatch(setListingQueryParams({ ...listingQueryParams, drivers: { ...orgDriversQueryParams, search: value } }));
   }, 500);
 
   // fetch organization drivers
@@ -82,7 +70,7 @@ const ScreenAdminDetailDriver = () => {
     isFetching: isFetchingOrgDrivers,
     error,
   } = useOrganizationDriversQuery(orgDriversQueryParams);
-  const { results } = dataOrgDrivers || {};
+  const { results, count } = dataOrgDrivers || {};
 
   // fetch single driver details
   const { data: dataSingleDriver, isFetching: isFetchingSingleDriver } = useSingleOrganizationDriverQuery( { organization_id: thisUserOrganizationId, driver_id: parseInt(driverId) }, { skip: !driverId });
@@ -235,11 +223,12 @@ const ScreenAdminDetailDriver = () => {
             <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={tAdmin("search_placeholder")}
+              value={orgDriversQueryParams?.search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
             />
-            <div>
+            <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               {listData?.map((item: any, index: number) => (
                 <AdminListingColumnItem
                   key={index}
@@ -256,6 +245,20 @@ const ScreenAdminDetailDriver = () => {
                 />
               ))}
             </div>
+            {!isFetchingOrgDrivers && (
+              <Pagination
+                pageSize={orgDriversQueryParams.page_size}
+                handlePageSizeChange={(e: TSelectboxOption | null) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, drivers: { ...orgDriversQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
+                }}
+                totalPages={count ? Math.ceil(count / orgDriversQueryParams.page_size) : 1}
+                forcePage={orgDriversQueryParams.page - 1}
+                handlePageClick={(data: TPaginationSelected) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, drivers: { ...orgDriversQueryParams, page: data?.selected + 1 }}));
+                }}
+                onlyPageChange={true}
+              />
+            )}
           </div>
           <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'col-span-12 xl:col-span-9'}`}>
             <div className="flex items-center gap-4">

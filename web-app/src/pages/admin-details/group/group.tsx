@@ -8,8 +8,8 @@
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
-import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { setListingQueryParams, setModalsData, TListingQueryParams, TModalsState } from "../../../api/store/commonSlice";
+import { AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
 import HeaderView from "../../../components/admin/headerView";
 import AppSearchBox from "../../../components/searchBox";
 import { APP_CONFIG } from "../../../constants/constants";
@@ -32,6 +32,7 @@ import AdminsGroupsHeader from "./header";
 import GroupVehicleItem from "./vehicleItem";
 import { TGroupListItem, TListData } from "./type";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import Pagination, { TPaginationSelected } from "../../admins/components/pagination";
 
 
 const ScreenAdminDetailGroup = () => {
@@ -40,6 +41,8 @@ const ScreenAdminDetailGroup = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'admins.groups.detailsPage'});
   const { t: tMain } = useTranslation();
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { groups: orgGroupsQueryParams } = listingQueryParams;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -69,7 +72,7 @@ const ScreenAdminDetailGroup = () => {
 
   // prepare query params for fetching organization groups
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-  const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
+  const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = React.useState({
     organization_id: thisUserOrganizationId ?? 0,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.LARGE_PAGE_SIZE,
@@ -86,9 +89,7 @@ const ScreenAdminDetailGroup = () => {
     useOrganizationGroupsQuery(orgGroupsQueryParams);
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgGroupsQueryParams((prev) => {
-      return { ...prev, page: 1, search: value };
-    });
+    dispatch(setListingQueryParams({ ...listingQueryParams, groups: { ...orgGroupsQueryParams, search: value }}));
   }, 500);
 
   // fetch single group details
@@ -99,9 +100,9 @@ const ScreenAdminDetailGroup = () => {
   const [ deleteSingleGroupApiTrigger, {isLoading: isLoadingDeleteGroup}] = useDeleteSingleGroupMutation();
 
   // fetch organization vehicles
-  const {data: dataOrgVehicles, isFetching: isFetchingOrgVehicles} = useOrganizationVehiclesQuery(orgGroupsQueryParams);
+  const {data: dataOrgVehicles, isFetching: isFetchingOrgVehicles} = useOrganizationVehiclesQuery(orgVehiclesQueryParams);
   const { results: allVehicles } = dataOrgVehicles ?? {};
-  const { results } = dataOrgGroups ?? {};
+  const { results, count } = dataOrgGroups ?? {};
   const { vehicles: groupVehicles } = dataSingleGroup ?? {};
 
   // prepare list data for group list
@@ -252,11 +253,12 @@ const ScreenAdminDetailGroup = () => {
           <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={t("search_placeholder")}
+              value={orgGroupsQueryParams.search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
             />
-            <div className="absolute top-[100px] max-h-[calc(100vh-150px)] overflow-auto">
+            <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               {listData?.map((item, index: number) => (
                 <AdminListingColumnItem
                   key={index}
@@ -273,6 +275,20 @@ const ScreenAdminDetailGroup = () => {
                 />
               ))}
             </div>
+            {!isFetchingOrgGroups && (
+              <Pagination
+                pageSize={orgGroupsQueryParams.page_size}
+                handlePageSizeChange={(e: TSelectboxOption | null) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, groups: { ...orgGroupsQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
+                }}
+                totalPages={count ? Math.ceil(count / orgGroupsQueryParams.page_size) : 1}
+                forcePage={orgGroupsQueryParams.page - 1}
+                handlePageClick={(data: TPaginationSelected) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, groups: { ...orgGroupsQueryParams, page: data?.selected + 1 }}));
+                }}
+                onlyPageChange={true}
+              />
+            )}
           </div>
           <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'col-span-12 xl:col-span-9'} space-y-4`}>
             <div className="flex items-center gap-4">

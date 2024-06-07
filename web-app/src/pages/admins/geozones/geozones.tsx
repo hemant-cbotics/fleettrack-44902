@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import HeaderView from "../../../components/admin/headerView";
 import { APP_CONFIG } from "../../../constants/constants";
 import ListingPageSubHeader from "../components/listingPageSubHeader";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TListingQueryParams, TModalsState, setListingQueryParams, setModalsData } from "../../../api/store/commonSlice";
 import ListingTableHeader from "../components/listingTableHeader";
 import { useDebouncedCallback } from "use-debounce";
 import { useState } from "react";
@@ -60,6 +60,8 @@ const ScreenDashboardAdminGeozones = () => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.geozones'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { geoZones: orgGeozonesQueryParams } = listingQueryParams;
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
 
@@ -76,16 +78,8 @@ const ScreenDashboardAdminGeozones = () => {
       })
     );
 
-  // geozones query params
-  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-  const [orgGeozonesQueryParams, setOrgGeozonesQueryParams] = useState({
-    organization_id: thisUserOrganizationId ?? 0,
-    page: 1,
-    page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
-  });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgGeozonesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, search: value }}));
   }, 500);
 
   // fetch geozones data
@@ -137,6 +131,7 @@ const ScreenDashboardAdminGeozones = () => {
         <ListingTableHeader
           heading={t("listing_heading")}
           searchBoxPlaceholder={t("search_placeholder")}
+          searchBoxValue={orgGeozonesQueryParams.search}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
         <EditListingColumnsModal
@@ -155,19 +150,12 @@ const ScreenDashboardAdminGeozones = () => {
             <Pagination
               pageSize={orgGeozonesQueryParams.page_size}
               handlePageSizeChange={(e: TSelectboxOption | null) => {
-                setOrgGeozonesQueryParams((prev) => { return {
-                  ...prev,
-                  page: 1,
-                  page_size: parseInt(`${e?.value}`)
-                }})
+                dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, page_size: parseInt(`${e?.value}`) }}));
               }}
               totalPages={count ? Math.ceil(count / orgGeozonesQueryParams.page_size) : 1}
               forcePage={orgGeozonesQueryParams.page - 1}
               handlePageClick={(data: TPaginationSelected) => {
-                setOrgGeozonesQueryParams((prev) => { return {
-                  ...prev,
-                  page: data?.selected + 1
-                }})
+                dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, page: data?.selected + 1 }}));
               }}
             />
           )}

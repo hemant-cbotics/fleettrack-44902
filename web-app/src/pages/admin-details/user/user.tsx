@@ -35,13 +35,14 @@ import { routeUrls } from "../../../navigation/routeUrls";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useDebouncedCallback } from "use-debounce";
 import AppSearchBox from "../../../components/searchBox";
-import { AdminFormFieldSubmit } from "../../../components/admin/formFields";
+import { AdminFormFieldSubmit, TSelectboxOption } from "../../../components/admin/formFields";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TListingQueryParams, TModalsState, setListingQueryParams, setModalsData } from "../../../api/store/commonSlice";
 import DeleteConfirmation from "../../../components/admin/deleteConfirmation";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import AdminListingColumnItem from "../../../components/adminListingColumnItem";
+import Pagination, { TPaginationSelected } from "../../admins/components/pagination";
 
 const ScreenAdminDetailUser = () => {
   const { userId } = useParams<{ userId: any }>();
@@ -53,7 +54,9 @@ const ScreenAdminDetailUser = () => {
   const dispatch = useDispatch();
 
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
-
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { users: orgUsersQueryParams } = listingQueryParams;
+  
   // flag to idenfiy if user is coming from create new user popup
   const isNewEntity = React.useRef<boolean>(!!locationState?.new);
 
@@ -61,18 +64,8 @@ const ScreenAdminDetailUser = () => {
   const [userCanEdit, setUserCanEdit] = useState<boolean>(!!isNewEntity?.current);
   
   // prepare query params for fetching organization users
-  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
-  const [orgUsersQueryParams, setOrgUsersQueryParams] = React.useState<OrganizationEntityListingPayload>(
-    (!!(locationState as OrganizationEntityListingPayload)?.organization_id
-      ? locationState
-      : {
-        organization_id: thisUserOrganizationId,
-        page: 1,
-        page_size: 10,
-        search: "",
-      }) as OrganizationEntityListingPayload);
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgUsersQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetch organization users
@@ -92,7 +85,7 @@ const ScreenAdminDetailUser = () => {
   // user mutations
   const [ editOrganizationUserApiTrigger, { isLoading: isLoadingEditUser }] = useEditOrganizationUserMutation();
   const [ deleteSingleUserApiTrigger, { isLoading: isLoadingDeleteUser }] = useDeleteSingleUserMutation();
-  const { results } = dataOrgUsers || {};
+  const { results, count } = dataOrgUsers || {};
 
   // formik
   const [formikValuesReady, setFormikValuesReady] = useState<boolean>(false);
@@ -231,9 +224,10 @@ const ScreenAdminDetailUser = () => {
             <div className="font-bold text-lg leading-6 mt-2 mb-3">{t("listing_heading")}</div>
             <AppSearchBox
               placeholder={tAdmin('search_placeholder')}
+              value={orgUsersQueryParams.search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
             />
-            <div>
+            <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               {listData?.map((item: any, index: number) => (
                 <AdminListingColumnItem
                   key={index}
@@ -250,6 +244,20 @@ const ScreenAdminDetailUser = () => {
                 />
               ))}
             </div>
+            {!isFetchingOrgUsers && (
+            <Pagination
+              pageSize={orgUsersQueryParams.page_size}
+              handlePageSizeChange={(e: TSelectboxOption | null) => {
+                  dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
+                }}
+              totalPages={count ? Math.ceil(count / orgUsersQueryParams.page_size) : 1}
+              forcePage={orgUsersQueryParams.page - 1}
+              handlePageClick={(data: TPaginationSelected) => {
+                dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: data?.selected + 1 }}));
+              }}
+              onlyPageChange={true}
+            />
+          )}
           </div>
           <div className={`${isNewEntity?.current ? 'lg:col-span-12' : 'col-span-12 xl:col-span-9'}`}>
             <div className="flex items-center gap-4">

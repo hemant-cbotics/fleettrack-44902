@@ -19,7 +19,7 @@ import { useLoggedInUserData } from "../../../utils/user";
 import { TAdminTableRowData } from "../components/types";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { TSelectboxOption } from "../../../components/admin/formFields";
-import { setModalsData, TModalsState } from "../../../api/store/commonSlice";
+import { setListingQueryParams, setModalsData, TListingQueryParams, TModalsState } from "../../../api/store/commonSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AdminsFleetTagsCreateNew from "./createNewFleettag";
 import { localStorageKeys, useLocalStorage } from "../../../utils/localStorageItems";
@@ -43,6 +43,8 @@ const ScreenDashboardAdminFleetTags = () => {
   const { t: tFilters } = useTranslation('translation', { keyPrefix: 'admins.filters'});
   const { t } = useTranslation('translation', { keyPrefix: 'admins.fleettags'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
+  const { fleetTags: orgFleetTagsQueryParams } = listingQueryParams;
   const dispatch = useDispatch();
 
   // columns
@@ -60,14 +62,8 @@ const ScreenDashboardAdminFleetTags = () => {
 
   // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
-  const [orgFleetTagsQueryParams, setOrgFleetTagsQueryParams] = React.useState({
-    organization_id: thisUserOrganizationId ?? 0,
-    page: 1,
-    page_size: APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
-    search: ""
-  });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setOrgFleetTagsQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleetTagsQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetching fleettags data
@@ -115,6 +111,7 @@ const ScreenDashboardAdminFleetTags = () => {
         <ListingTableHeader
           heading={t("listing_heading")}
           searchBoxPlaceholder={t("search_placeholder")}
+          searchBoxValue={orgFleetTagsQueryParams.search}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
         />
         <EditListingColumnsModal
@@ -133,19 +130,12 @@ const ScreenDashboardAdminFleetTags = () => {
             <Pagination
               pageSize={orgFleetTagsQueryParams.page_size}
               handlePageSizeChange={(e: TSelectboxOption | null) => {
-                setOrgFleetTagsQueryParams((prev) => { return {
-                  ...prev,
-                  page: 1,
-                  page_size: parseInt(`${e?.value}`)
-                }})
+                dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleetTagsQueryParams, page: 1, page_size: parseInt(`${e?.value}`) }}));
               }}
               totalPages={count ? Math.ceil(count / orgFleetTagsQueryParams.page_size) : 1}
               forcePage={orgFleetTagsQueryParams.page - 1}
               handlePageClick={(data: TPaginationSelected) => {
-                setOrgFleetTagsQueryParams((prev) => { return {
-                  ...prev,
-                  page: data?.selected + 1
-                }})
+                dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleetTagsQueryParams, page: data?.selected + 1 }}));
               }}
             />
           )}
