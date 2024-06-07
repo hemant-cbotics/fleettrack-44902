@@ -567,6 +567,9 @@ export const language_en = {
             sub_heading: "You can drag the blue pushpins around to reshape the route.",
             ok_button: "OK",
           },
+          polygonError: {
+            dragend: "An error occurred while dragging the pushpin. Please ensure the pushpin is forming the polygon.",
+          }
         }
       },
     },

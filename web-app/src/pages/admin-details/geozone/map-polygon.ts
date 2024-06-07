@@ -6,6 +6,7 @@ import { TMapOperationsProps, TMapUpdatesHandler } from "./type";
 import { getCircleLocs, renderPolygon } from "../../../utils/map";
 import { ColorRGB } from "../../../types/common";
 import i18n from "../../../services/i18n";
+import { toast } from "react-toastify";
 
 const dragLabelCenter = {
   // subTitle: 'to reposition',
@@ -81,26 +82,42 @@ export const mapOperations = (props: TMapOperationsProps) => {
       );
       props.mapRef.current.map.entities.push(newPushpin);
 
+      // add event listener for dragstart event on the edge pushpin
+      let originalLocation: any = null;
+      Microsoft.Maps.Events.addHandler(
+        newPushpin,
+        'dragstart',
+        (args: any) => {
+          originalLocation = newPushpin.getLocation();
+        }
+      );
+
       // add event listener for dragend event on the edge pushpin
       Microsoft.Maps.Events.addHandler(
         newPushpin,
         'dragend',
         (args: any) => {
-          // redraw the polygon
-          const polygonPointLocations = props.mapRef.current.objects.mPushpins.pPoints.map((point: any) => point.getLocation());
-          console.log('polygonPointLocations', polygonPointLocations)
-          renderPolygon(props.mapRef, refCenter, polygonPointLocations, color);
-          // update the map data
-          console.log('[setMapData] via mapOperations (radius dragend)');
-          props.setMapData({
+          try {
+            // redraw the polygon
+            const polygonPointLocations = props.mapRef.current.objects.mPushpins.pPoints.map((point: any) => point.getLocation());
+            console.log('polygonPointLocations', polygonPointLocations)
+            renderPolygon(props.mapRef, refCenter, polygonPointLocations, color);
+            // update the map data
+            console.log('[setMapData] via mapOperations (radius dragend)');
+            props.setMapData({
               ...props.mapData,
               centerPosition: {
                 latitude: refCenter.latitude,
                 longitude: refCenter.longitude
               },
               locs: polygonPointLocations.map((point: any) => ({ latitude: point.latitude, longitude: point.longitude } as TLatLng)),
-            } as TGeozoneMapData
-          );
+            });
+          } catch (error) {
+            console.error(error);
+            toast.error(i18n.t('admins.geozones.detailsPage.map.polygonError.dragend'));
+            newPushpin.setLocation(originalLocation); // Reset the pushpin to its original location
+            renderPolygon(props.mapRef, refCenter, polygonPoints, color);
+          }
         }
       );
 
