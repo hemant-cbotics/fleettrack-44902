@@ -198,7 +198,7 @@ const ScreenAdminDetailGroup = () => {
   const handleCancelButton = () => {
     setCurrentGroupVehicleList(groupVehicleList);
     setCurrentDescription(dataSingleGroup?.description ?? "");
-    setUserCanEdit(false);
+    isNewEntity?.current ? setUserCanEdit(true) : setUserCanEdit(false);
   }
 
   // handle edit group
