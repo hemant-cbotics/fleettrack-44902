@@ -154,7 +154,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   const [mapStateTransitionInProgress, setMapStateTransitionInProgress] = useState(false);
 
   const loadResetMapDataWithInitialValues = () => {
-    console.log('[loadResetMapDataWithInitialValues]')
+    if(APP_CONFIG.DEBUG.GEOZONES) console.log('[loadResetMapDataWithInitialValues]')
     const mapDataFromSavedRecord = values.properties as TGeozoneMapData;
     if (!!mapDataFromSavedRecord
     && Object.keys(mapDataFromSavedRecord).length > 0) {
@@ -179,9 +179,9 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         editable: userCanEdit,
         ready: true
       });
-      console.log('newMapState', newMapState)
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('newMapState', newMapState)
       setTimeout(() => {
-        console.log('[D] DISPATCH TO PRELOAD MAP STATE DATA FROM SAVED RECORD')
+        if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO PRELOAD MAP STATE DATA FROM SAVED RECORD')
         dispatch(setMapStateData(newMapState));
         setMapStateTransitionInProgress(false);
       }, 200);
@@ -202,7 +202,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     if(!mapState) return;
     setMapStateTransitionInProgress(true)
     setTimeout(() => {
-      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON COLOR CHANGE')
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON COLOR CHANGE')
       dispatch(setMapStateData({
         ...geozonePrepareMapState({
           seedMapState: mapState,
@@ -227,7 +227,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     setMapStateTransitionInProgress(true)
     setTimeout(() => {
       const shapeType = e?.value as GeozoneType;
-      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON ZONE TYPE CHANGE');
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON ZONE TYPE CHANGE');
       const newMapState = 
         geozonePrepareMapState({
           seedMapState: mapState,
@@ -240,27 +240,14 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
           editable: userCanEdit,
         });
-      console.log('newMapState', newMapState);
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('newMapState', newMapState);
       dispatch(setMapStateData(newMapState));
       setMapStateTransitionInProgress(false);
     }, 200);
   };
 
-  // update form values on map data change
-  // useEffect(() => {
-  //   const mapDataToSave = { ...mapState?.mapData } as TGeozoneMapData;
-  //   delete mapDataToSave.color;
-  //   delete mapDataToSave.ready;
-  //   delete mapDataToSave.editable;
-  //   console.log('[CHANGE] to values.properties for saving map changes is DISABLED!', JSON.stringify(mapState?.mapDataForAPIs))
-  //   dispatch(setMapStateData({
-  //     ...mapState,
-  //     mapDataForAPIs: mapDataToSave,
-  //   }));
-  // }, [mapState?.mapData]);
-
   useEffect(() => {
-    console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON USER CAN EDIT CHANGE');
+    if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON USER CAN EDIT CHANGE');
     dispatch(setMapStateData({
       ...mapState,
       mapData: {
@@ -292,12 +279,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     if(mapState?.mapData?.centerPosition?.latitude === 0) {
       console.error('MAP DATA ISSUE - lat = 0')
     } else {
-      // TODO: Issue when old polygon shows on new polygon map lies here - below code is setting old polygon on new map
-      console.log('>> sending map operations',
-        `LOCS: ${JSON.stringify((mapState?.mapData?.locs ?? []).length ?? 0)}`,
-        `CENTER: ${JSON.stringify((mapState?.mapData)?.centerPosition)}`,
-        `RADIUS: ${JSON.stringify((mapState?.mapData)?.radius)}`,
-        `COLOR: ${JSON.stringify((mapState?.mapData)?.color)}`);
+      if(APP_CONFIG.DEBUG.GEOZONES)
+        console.log('>> sending map operations',
+          `LOCS: ${JSON.stringify((mapState?.mapData?.locs ?? []).length ?? 0)}`,
+          `CENTER: ${JSON.stringify((mapState?.mapData)?.centerPosition)}`,
+          `RADIUS: ${JSON.stringify((mapState?.mapData)?.radius)}`,
+          `COLOR: ${JSON.stringify((mapState?.mapData)?.color)}`);
       const applicableMapOperations =
         values.zone_type === 'Route'
           ? mapOperationsRoute
@@ -308,8 +295,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         mapRef,
         mapData: { ...mapState?.mapData },
         setMapData: (newMapData: TGeozoneMapData) => {
-          console.log('[setMapData] via handleMapReady - dispatch(setMapStateData({...', JSON.stringify(mapState))
-          console.log('[D] DISPATCH TO UPDATE MAP STATE DATA WHEN USER MAKES CHANGES ON THE MAP');
+          if(APP_CONFIG.DEBUG.GEOZONES) console.log('[setMapData] via handleMapReady - dispatch(setMapStateData({...', JSON.stringify(mapState))
+          if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA WHEN USER MAKES CHANGES ON THE MAP');
           dispatch(setMapStateData(
             geozonePrepareMapState({
               seedMapState: mapState,
@@ -343,7 +330,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   // useDebouncedCallback(
     async (inputValue: string) => {
       const autosuggestResponse = await autosuggestQuery(inputValue)
-      console.log('autosuggestResponse', autosuggestResponse)
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('autosuggestResponse', autosuggestResponse)
       const { data } = autosuggestResponse;
       const firstResultSet = data?.resourceSets?.[0];
       const options = !!firstResultSet?.estimatedTotal && firstResultSet?.estimatedTotal > 0
@@ -356,7 +343,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           })
         : [];
       const newAutosuggestResults = firstResultSet?.resources?.[0]?.value ?? [];
-      console.log('newAutosuggestResults', newAutosuggestResults)
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('newAutosuggestResults', newAutosuggestResults)
       // setAutosuggestResults(newAutosuggestResults);
       // setAutosuggestDropOptions(options);
       return options;
@@ -369,14 +356,14 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     const newlySelectedLocation = e.value;
     const newlySelectedLocationJSON = JSON.parse(e.value) as TAutosuggestOptionValue;
     formikSetValue('description', newlySelectedLocation);
-    console.log('newlySelectedLocation', newlySelectedLocation);
-    console.log('newlySelectedLocationJSON', newlySelectedLocationJSON);
+    if(APP_CONFIG.DEBUG.GEOZONES) console.log('newlySelectedLocation', newlySelectedLocation);
+    if(APP_CONFIG.DEBUG.GEOZONES) console.log('newlySelectedLocationJSON', newlySelectedLocationJSON);
     const geocodeResponse = await geocodeQuery(
       newlySelectedLocationJSON.itemJSON.address
     );
-    console.log('geocodeResponse', geocodeResponse);
+    if(APP_CONFIG.DEBUG.GEOZONES) console.log('geocodeResponse', geocodeResponse);
     const newlySelectedLocationCoords = geocodeResponse.data?.resourceSets?.[0]?.resources?.[0]?.point?.coordinates;
-    console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
+    if(APP_CONFIG.DEBUG.GEOZONES) console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
     if(!!newlySelectedLocationCoords?.[0] && !!newlySelectedLocationCoords?.[1]) {
 
       // update lat_lng field value
@@ -385,8 +372,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       // update map state
       setMapStateTransitionInProgress(true);
       setTimeout(() => {
-        console.info('[handleAutosuggestChange] Setting map data with new location coords', newlySelectedLocationCoords)
-        console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON LOCATION DROPDOWN CHANGE');
+        if(APP_CONFIG.DEBUG.GEOZONES) console.info('[handleAutosuggestChange] Setting map data with new location coords', newlySelectedLocationCoords)
+        if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON LOCATION DROPDOWN CHANGE');
         dispatch(setMapStateData({
           ...geozonePrepareMapState({
             seedMapState: mapState,
@@ -401,19 +388,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
             radius: mapState?.mapData?.radius ?? undefined,
             color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
             editable: userCanEdit,
-          })
-          // ...mapState,
-          // mapCenter: {
-          //   latitude: newlySelectedLocationCoords?.[0],
-          //   longitude: newlySelectedLocationCoords?.[1],
-          // },
-          // mapData: {
-          //   ...newMapDataForAPIs,
-          //   color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
-          //   ready: true,
-          //   editable: userCanEdit,
-          // },
-          // mapDataForAPIs: newMapDataForAPIs,
+          }),
         }));
         setMapStateTransitionInProgress(false);
       }, 200);
@@ -431,8 +406,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     // update map state
     setMapStateTransitionInProgress(true);
     setTimeout(() => {
-      console.info('[handlePolygonSidesChange] Setting map data with new polygone sides value', newPolygonSides)
-      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON POLYGON SIDES CHANGE');
+      if(APP_CONFIG.DEBUG.GEOZONES) console.info('[handlePolygonSidesChange] Setting map data with new polygone sides value', newPolygonSides)
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON POLYGON SIDES CHANGE');
       dispatch(setMapStateData({
         ...geozonePrepareMapState({
           seedMapState: mapState,
@@ -455,7 +430,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     // update map state
     setMapStateTransitionInProgress(true);
     setTimeout(() => {
-      console.info('[removeRoutePoint] Remove route point at index', pointIndex, typeof pointIndex)
+      if(APP_CONFIG.DEBUG.GEOZONES) console.info('[removeRoutePoint] Remove route point at index', pointIndex, typeof pointIndex)
       let newRouteLocs = [ ...(mapState.mapData?.locs ?? []) ];
       if(newRouteLocs.length > 0) {
         newRouteLocs.splice(pointIndex, 1);
@@ -464,7 +439,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ...mapState?.mapData,
         locs: [ ...newRouteLocs ],
       }
-      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON ROUTE POINT REMOVE');
+      if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON ROUTE POINT REMOVE');
       dispatch(setMapStateData({
         ...mapState,
         mapData: {
@@ -600,24 +575,6 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           customWrapperClass="col-span-12"
         />)
       }
-      {/* <AdminFormFieldInput
-        label={t("description")}
-        type="text"
-        id="description"
-        name="description"
-        value={values.description}
-        // onChange={handleChange}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          handleChange(e)
-          debouncedSetSearchKeyword(e.target.value)
-        }}
-        onBlur={handleBlur}
-        error={errors.description}
-        touched={touched.description}
-        disabled={!userCanEdit}
-        detailsFormField={true}
-        customWrapperClass="col-span-12"
-      /> */}
 
       {/* <AdminFormFieldDropdown
         loadingData={loadingData}

@@ -86,9 +86,6 @@ export const geozonePrepareMapDataForAPIs: TGeozonePrepareMapDataForAPIs =
           break;
       }
     }
-    console.log('x shapeType: ', shapeType);
-    console.log('x seedMapData: ', seedMapData);
-    console.log('x returning mapDataForAPIs: ', mapDataForAPIs);
     return mapDataForAPIs;
   };
 
@@ -113,8 +110,6 @@ export const geozonePrepareMapState: TGeozonePrepareMapState =
     editable,
     ready,
   }) => {
-    console.log('. seedMapData', seedMapData);
-    console.log('. locs', locs);
     const mapCenter = centerPosition ?? seedMapState.mapCenter;
     const mapDataForAPIs =
       geozonePrepareMapDataForAPIs({
