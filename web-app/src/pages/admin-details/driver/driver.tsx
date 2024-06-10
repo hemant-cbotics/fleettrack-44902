@@ -227,6 +227,9 @@ const ScreenAdminDetailDriver = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 debouncedSetSearchKeyword(e.target.value)
               }
+              onClear={() => {
+                debouncedSetSearchKeyword("")
+              }}
             />
             <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               {listData?.map((item: any, index: number) => (

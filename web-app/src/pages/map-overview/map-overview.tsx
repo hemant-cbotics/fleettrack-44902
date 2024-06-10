@@ -161,6 +161,9 @@ const ScreenMapOverview = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   debouncedSetSearchKeyword(e.target.value)
                 }
+                onClear={() => {
+                  debouncedSetSearchKeyword("")
+                }}
               />
             </div>
             {/* <div className="px-3 font-bold text-lg leading-6">
