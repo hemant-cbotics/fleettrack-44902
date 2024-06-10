@@ -223,6 +223,7 @@ const ScreenAdminDetailFleettag = () => {
                   dispatch(setListingQueryParams({ ...listingQueryParams, fleetTags: { ...orgFleettagsQueryParams, page: data?.selected + 1 }}));
                 }}
                 onlyPageChange={true}
+                size={1}
               />
             )}
           </div>

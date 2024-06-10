@@ -257,6 +257,7 @@ const ScreenAdminDetailDriver = () => {
                   dispatch(setListingQueryParams({ ...listingQueryParams, drivers: { ...orgDriversQueryParams, page: data?.selected + 1 }}));
                 }}
                 onlyPageChange={true}
+                size={1}
               />
             )}
           </div>

@@ -322,6 +322,7 @@ const ScreenAdminDetailVehicle = () => {
                   dispatch(setListingQueryParams({ ...listingQueryParams, vehicles: { ...orgVehiclesQueryParams, page: data?.selected + 1 }}));
                 }}
                 onlyPageChange={true}
+                size={1}
             />
           )}
           </div>
