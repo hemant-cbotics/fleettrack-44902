@@ -8,7 +8,7 @@ import { LandingFormFieldInput, LandingFormFieldSubmit } from "../../../componen
 import { ResendCode } from "./resend-code";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData, TPreLoginUserData } from "../../../api/store/commonSlice";
+import { setListingQueryParams, setUserData, TListingQueryParams, TPreLoginUserData } from "../../../api/store/commonSlice";
 import { useResendEmailOtpMutation, useVerifyEmailOtpMutation } from "../../../api/network/authApiService";
 import { useEffect } from "react";
 import { VerifyEmailOtpResponseSuccess } from "../../../api/types/Onboarding";
@@ -21,6 +21,7 @@ const ScreenTwoFactorAuthentication = () => {
   const {t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'twoFactorAuthenticationScreen'});
   const navigate = useNavigate();
+  const listingQueryParams: TListingQueryParams = useSelector((state: any) => state.commonReducer.listingQueryParams);
   const dispatch = useDispatch();
   const { setSessionStorageItem } = useSessionStorage();
 
@@ -72,6 +73,15 @@ const ScreenTwoFactorAuthentication = () => {
               setSessionStorageItem(sessionStorageKeys.user, (data as VerifyEmailOtpResponseSuccess)?.user);
               setSessionStorageItem(sessionStorageKeys.accessToken, (data as VerifyEmailOtpResponseSuccess).token);
               setSessionStorageItem(sessionStorageKeys.ownerOrganization, (data as VerifyEmailOtpResponseSuccess).owner_organization);
+              dispatch(setListingQueryParams({
+                ...listingQueryParams,
+                users: { ...listingQueryParams.users, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
+                vehicles: { ...listingQueryParams.vehicles, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
+                drivers: { ...listingQueryParams.drivers, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
+                groups: { ...listingQueryParams.groups, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
+                fleetTags: { ...listingQueryParams.fleetTags, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
+                geoZones: { ...listingQueryParams.geoZones, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id }
+              }));
               toast.success(t('toast.code_verified'));
               navigate(routeUrls.dashboard);
             } else {
