@@ -256,6 +256,7 @@ const ScreenAdminDetailUser = () => {
                 dispatch(setListingQueryParams({ ...listingQueryParams, users: { ...orgUsersQueryParams, page: data?.selected + 1 }}));
               }}
               onlyPageChange={true}
+              size={1}
             />
           )}
           </div>

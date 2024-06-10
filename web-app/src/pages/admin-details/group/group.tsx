@@ -287,6 +287,7 @@ const ScreenAdminDetailGroup = () => {
                   dispatch(setListingQueryParams({ ...listingQueryParams, groups: { ...orgGroupsQueryParams, page: data?.selected + 1 }}));
                 }}
                 onlyPageChange={true}
+                size={1}
               />
             )}
           </div>

@@ -18,6 +18,7 @@ type TPaginatonProps = {
   forcePage: number;
   handlePageClick: (data: TPaginationSelected) => void;
   onlyPageChange?: boolean;
+  size?: 1 | 2;
 }
 
 const Pagination: FC<TPaginatonProps> = ({
@@ -27,7 +28,8 @@ const Pagination: FC<TPaginatonProps> = ({
   totalPages = 1,
   forcePage,
   handlePageClick,
-  onlyPageChange = false
+  onlyPageChange = false,
+  size = 2,
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "pagination" });
   return (
@@ -50,16 +52,16 @@ const Pagination: FC<TPaginatonProps> = ({
         onPageChange={handlePageClick}
         pageCount={totalPages}
         forcePage={forcePage}
-        pageRangeDisplayed={3}
+        pageRangeDisplayed={2}
         marginPagesDisplayed={2}
-        containerClassName="flex space-x-2 items-center text-sm"
-        pageClassName="border border-gray-200 rounded-lg"
-        pageLinkClassName="block px-4 py-2 text-gray-600"
-        activeClassName="bg-accent-blue-pale text-accent-blue-dark"
-        previousClassName="border border-gray-200 px-4 py-2 rounded-lg"
-        nextClassName="border border-gray-200 px-4 py-2 rounded-lg"
-        disabledClassName="text-gray-400 opacity-50"
-        disabledLinkClassName="cursor-default"
+        containerClassName={`flex space-x-${size} items-center ${size === 1 ? "text-xs" : "text-sm"}`}
+        pageClassName={`border border-gray-200 rounded-lg`}
+        pageLinkClassName={`block px-${size*2} py-${size} text-gray-600`}
+        activeClassName={`bg-accent-blue-pale text-accent-blue-dark`}
+        previousClassName={`border border-gray-200 px-${size*2} py-${size} rounded-lg`}
+        nextClassName={`border border-gray-200 px-${size*2} py-${size} rounded-lg`}
+        disabledClassName={`text-gray-400 opacity-50`}
+        disabledLinkClassName={`cursor-default`}
         breakLabel="..."
         previousLabel="Prev"
         nextLabel="Next"
