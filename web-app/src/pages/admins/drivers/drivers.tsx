@@ -138,6 +138,7 @@ const ScreenDashboardAdminDrivers = () => {
           searchBoxPlaceholder={t("search_placeholder")}
           searchBoxValue={orgDriversQueryParams.search}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
+          searchBoxOnClear={() => debouncedSetSearchKeyword("")}
           filters={filters}
           activeFilterSlug={activeFilterSlug}
           handleFilterChange={(slug) => setActiveFilterSlug(slug)}
