@@ -1,4 +1,5 @@
 import { APP_CONFIG } from "../../constants/constants";
+import { customClisteredPinCallback } from "../../utils/map";
 import { TMapOperations, TMPushpin } from "./type";
 
 export const mapOperations: TMapOperations = (props) => {
@@ -42,13 +43,7 @@ export const mapOperations: TMapOperations = (props) => {
     var clusterLayer = new Microsoft.Maps.ClusterLayer(
       props.mapRef.current.objects.mPushpins.map((pushpinObject) => pushpinObject.pushpin),
       {
-        clusteredPinCallback: (cluster: any) => {
-          // customize clustered pushpin.
-          cluster.setOptions({
-              // icon: MapMarkerRed,
-              color: 'rgb(200, 0, 0)',
-          });
-        }
+        clusteredPinCallback: customClisteredPinCallback
       }
     );
     props.mapRef.current.map.layers.insert(clusterLayer);

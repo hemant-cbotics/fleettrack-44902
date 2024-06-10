@@ -50,6 +50,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         anchor: new Microsoft.Maps.Point(16, 32),
         color: `rgba(${color.join(',')},0.2)`,
         // icon: MapMarkerRed,
+        visible: props.mapData.editable,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelCenter : {})
       }
@@ -76,6 +77,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         {
           anchor: new Microsoft.Maps.Point(16, 32),
           icon: MapMarkerRed,
+          visible: props.mapData.editable,
           draggable: props.mapData.editable,
           ...(props.mapData.editable ? dragLabelPoints : {})
         }
@@ -159,6 +161,7 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
       // edge pushpins are draggable
       props.mapRef.current.objects.mPushpins?.pPoints?.forEach((pushpin: any) => {
         pushpin.setOptions({
+          visible: value,
           draggable: value,
           // ...(value ? dragLabelPoints : {})
         });

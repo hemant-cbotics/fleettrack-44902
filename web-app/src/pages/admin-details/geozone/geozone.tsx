@@ -204,7 +204,7 @@ const ScreenAdminDetailGeozone = () => {
   // handle edit geozone
   const handleEditGeozone = () => {
     if(userCanEdit) {
-      const checkValue = mapState?.mapDataForAPIs ?? values.properties;
+      const checkValue = mapState?.mapDataForAPIs; // ?? values.properties;
       switch(values.zone_type) {
         case "Route":
           if(!checkValue?.locs || checkValue?.locs.length < 2) {

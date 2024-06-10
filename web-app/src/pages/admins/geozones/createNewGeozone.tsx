@@ -49,7 +49,6 @@ const AdminsGeozonesCreateNew = () => {
               createOrgGeozoneAPITrigger({
                 organization: thisUserOrganizationId ?? 0,
                 zone_id: values.id,
-                // zone_city: values.city,
                 zone_type: values.type
               })
                 .unwrap()
@@ -109,18 +108,6 @@ const AdminsGeozonesCreateNew = () => {
                   error={errors.id}
                   touched={touched.id}
                 />
-
-                {/* <AdminFormFieldDropdown
-                  label={t("city")}
-                  id="city"
-                  name="city"
-                  // value={values.city}
-                  onChange={(e) => setFieldValue("city", e)}
-                  onBlur={(e) => {setTouched({city: true}); handleBlur(e)}}
-                  error={errors.city}
-                  touched={touched.city}
-                  disabled={true}
-                /> */}
 
                 <AdminFormFieldDropdown
                   label={t("type")}

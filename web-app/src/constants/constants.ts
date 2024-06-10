@@ -44,7 +44,7 @@ export const APP_CONFIG = {
       RADIUS: 0.6,
       POLYGON_POINTS_RANGE: [3, 12],
       POLYGON_POINTS: 6,
-      ZONE_COLOR: [0, 150, 100],
+      ZONE_COLOR: [0, 150, 100] as ColorRGB,
     },
     COLORS: {
       Default: [0, 150, 100] as ColorRGB,
