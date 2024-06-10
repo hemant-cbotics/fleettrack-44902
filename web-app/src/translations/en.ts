@@ -613,6 +613,12 @@ export const language_en = {
       timezone: "Timezone",
       auto_refresh_timer: "Auto Refresh Timer",
     },
+    vehicleFilter: {
+      heading: "Filters",
+      date: "Date",
+      time: "Time",
+      timezone: "Timezone",
+    },
     report: {
       heading: "Report",
     },

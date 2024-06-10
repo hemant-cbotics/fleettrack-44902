@@ -17,4 +17,13 @@ export const formInitialValues = {
   auto_refresh_timer: "",
 }
 
+export const dateInitialValues = {
+  date: "",
+  time: "",
+  timezone: "",
+}
+
+export const dateValidationSchema = Yup.object().shape({
+});
+
 export const YupValidationSchema = Yup.object().shape({});
