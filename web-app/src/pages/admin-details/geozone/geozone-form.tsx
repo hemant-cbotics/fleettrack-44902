@@ -38,8 +38,10 @@ import MapMarkerRed from "../../../assets/svg/map-marker-red.svg";
 import MapMarkerBlue from "../../../assets/svg/map-marker-blue.svg";
 import { setMapStateData } from "../../../api/store/commonSlice";
 import { getCircleLocs } from "../../../utils/map";
-import { GeozoneVehicleGroup } from "../../../api/types/Geozone";
+import { GeozoneType, GeozoneVehicleGroup } from "../../../api/types/Geozone";
 import { ColorRGB } from "../../../types/common";
+import { useLocation } from "react-router-dom";
+import { geozonePrepareMapDataForAPIs, geozonePrepareMapState } from "./util";
 
 export interface GeozoneDetailFormProps {
   values: typeof geozoneDetailsInitialValues;
@@ -70,6 +72,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
  }) => {
   const { t } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.form" });
   const { t: tMap } = useTranslation("translation", { keyPrefix: "admins.geozones.detailsPage.map" });
+  const { state: locationState } = useLocation();
   const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
@@ -152,29 +155,33 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
 
   const loadResetMapDataWithInitialValues = () => {
     console.log('[loadResetMapDataWithInitialValues]')
-    const savedMapData = values.properties as TGeozoneMapData;
-    if (!!savedMapData
-    && Object.keys(savedMapData).length > 0) {
-      if(APP_CONFIG.DEBUG.GEOZONES) console.log('SAVED MAP DATA', JSON.stringify(savedMapData));
+    const mapDataFromSavedRecord = values.properties as TGeozoneMapData;
+    if (!!mapDataFromSavedRecord
+    && Object.keys(mapDataFromSavedRecord).length > 0) {
+      if(APP_CONFIG.DEBUG.GEOZONES)
+        console.log('SAVED MAP DATA: ',
+          `LOCS: ${JSON.stringify(((mapDataFromSavedRecord as TGeozoneMapDataPolygon)?.locs ?? []).length ?? 0)}`,
+          `CENTER: ${JSON.stringify((mapDataFromSavedRecord as TGeozoneMapDataCircle)?.centerPosition)}`,
+          `RADIUS: ${JSON.stringify((mapDataFromSavedRecord as TGeozoneMapDataCircle)?.radius)}`);
       setMapStateTransitionInProgress(true)
       if(values.zone_type === 'Polygon') {
-        setPolygonSides(`${(savedMapData as TGeozoneMapDataPolygon)?.locs?.length ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS}`);
+        setPolygonSides(`${(mapDataFromSavedRecord as TGeozoneMapDataPolygon)?.locs?.length ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS}`);
       }
-      const newMapState: TMapState = {
-        ...mapState,
-        mapCenter: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-        mapData: {
-          // ...mapState?.mapData,
-          centerPosition: (savedMapData as TGeozoneMapDataCircle)?.centerPosition ?? userCurrPos,
-          ...(values.zone_type !== 'Circle' && (savedMapData as TGeozoneMapDataPolygon)?.locs && { locs: (savedMapData as TGeozoneMapDataPolygon)?.locs }),
-          radius: (savedMapData as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
-          ready: true,
-          editable: userCanEdit,
-        },
-      }
+      const newMapState: TMapState = geozonePrepareMapState({
+        seedMapState: mapState,
+        shapeType: values.zone_type as GeozoneType,
+        seedMapData: mapDataFromSavedRecord,
+        centerPosition: mapDataFromSavedRecord?.centerPosition ?? APP_CONFIG.MAPS.DEFAULTS.CENTER,
+        polygonSides: (mapDataFromSavedRecord as TGeozoneMapDataPolygon)?.locs?.length ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS,
+        locs: (mapDataFromSavedRecord as TGeozoneMapDataPolygon)?.locs ?? undefined,
+        radius: (mapDataFromSavedRecord as TGeozoneMapDataCircle)?.radius ?? APP_CONFIG.MAPS.DEFAULTS.RADIUS,
+        color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+        editable: userCanEdit,
+        ready: true
+      });
       console.log('newMapState', newMapState)
       setTimeout(() => {
+        console.log('[D] DISPATCH TO PRELOAD MAP STATE DATA FROM SAVED RECORD')
         dispatch(setMapStateData(newMapState));
         setMapStateTransitionInProgress(false);
       }, 200);
@@ -185,41 +192,75 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
 
   // set map data on form load
   useEffect(() => {
-    if(!!!values.properties || Object.keys(values.properties).length === 0) return;
+    if(!!!values.properties || Object.keys(values.properties).length === 0 || loadingData) return;
     loadResetMapDataWithInitialValues();
-  }, [values.properties]);
+  }, [values.properties, locationState?.new, loadingData]);
 
   // update map data on color change
-  useEffect(() => {
+  const handleGeozoneColorChange = (e: any) => {
+    formikSetValue('zone_color', e.value);
+    if(!mapState) return;
     setMapStateTransitionInProgress(true)
     setTimeout(() => {
+      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON COLOR CHANGE')
       dispatch(setMapStateData({
-        ...mapState,
-        mapData: {
-          ...mapState?.mapData,
-          color:
-            APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
-        },
+        ...geozonePrepareMapState({
+          seedMapState: mapState,
+          shapeType: values.zone_type as GeozoneType,
+          seedMapData: mapState?.mapData ?? undefined,
+          centerPosition: mapState.mapData?.centerPosition ?? APP_CONFIG.MAPS.DEFAULTS.CENTER,
+          polygonSides,
+          locs: mapState?.mapData?.locs ?? undefined,
+          radius: mapState?.mapData?.radius ?? undefined,
+          color: APP_CONFIG.MAPS.COLORS[e?.value as keyof typeof APP_CONFIG.MAPS.COLORS],
+          editable: userCanEdit,
+        }),
       }));
       setMapStateTransitionInProgress(false);
     }, 200);
-  }, [values.zone_color]);
+  };
+
+  // update map data on zone type change
+  const handleGeozoneTypeChange = (e: any) => {
+    formikSetValue("zone_type", e?.value);
+    if(!mapState) return;
+    setMapStateTransitionInProgress(true)
+    setTimeout(() => {
+      const shapeType = e?.value as GeozoneType;
+      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON ZONE TYPE CHANGE');
+      const newMapState = 
+        geozonePrepareMapState({
+          seedMapState: mapState,
+          shapeType,
+          seedMapData: undefined,
+          centerPosition: mapState.mapData?.centerPosition ?? APP_CONFIG.MAPS.DEFAULTS.CENTER,
+          polygonSides,
+          locs: undefined,
+          radius: mapState?.mapData?.radius ?? undefined,
+          color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+          editable: userCanEdit,
+        });
+      console.log('newMapState', newMapState);
+      dispatch(setMapStateData(newMapState));
+      setMapStateTransitionInProgress(false);
+    }, 200);
+  };
 
   // update form values on map data change
-  useEffect(() => {
-    const mapDataToSave = { ...mapState?.mapData } as TGeozoneMapData;
-    delete mapDataToSave.color;
-    delete mapDataToSave.ready;
-    delete mapDataToSave.editable;
-    console.log('[CHANGE] to values.properties for saving map changes is DISABLED!', JSON.stringify(mapState?.mapDataForAPIs))
-    dispatch(setMapStateData({
-      ...mapState,
-      mapDataForAPIs: mapDataToSave,
-    }));
-  }, [mapState?.mapData]);
+  // useEffect(() => {
+  //   const mapDataToSave = { ...mapState?.mapData } as TGeozoneMapData;
+  //   delete mapDataToSave.color;
+  //   delete mapDataToSave.ready;
+  //   delete mapDataToSave.editable;
+  //   console.log('[CHANGE] to values.properties for saving map changes is DISABLED!', JSON.stringify(mapState?.mapDataForAPIs))
+  //   dispatch(setMapStateData({
+  //     ...mapState,
+  //     mapDataForAPIs: mapDataToSave,
+  //   }));
+  // }, [mapState?.mapData]);
 
   useEffect(() => {
-    console.log('[setMapData] via useEffect', { userCanEdit })
+    console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON USER CAN EDIT CHANGE');
     dispatch(setMapStateData({
       ...mapState,
       mapData: {
@@ -246,12 +287,17 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
 
   // carry out map operations on map ready
   const handleMapReady =
-  useCallback(
+  // useCallback(
   () => {
     if(mapState?.mapData?.centerPosition?.latitude === 0) {
       console.error('MAP DATA ISSUE - lat = 0')
     } else {
-      console.log('>> sending map operations', JSON.stringify({ ...mapState?.mapData }))
+      // TODO: Issue when old polygon shows on new polygon map lies here - below code is setting old polygon on new map
+      console.log('>> sending map operations',
+        `LOCS: ${JSON.stringify((mapState?.mapData?.locs ?? []).length ?? 0)}`,
+        `CENTER: ${JSON.stringify((mapState?.mapData)?.centerPosition)}`,
+        `RADIUS: ${JSON.stringify((mapState?.mapData)?.radius)}`,
+        `COLOR: ${JSON.stringify((mapState?.mapData)?.color)}`);
       const applicableMapOperations =
         values.zone_type === 'Route'
           ? mapOperationsRoute
@@ -262,32 +308,35 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         mapRef,
         mapData: { ...mapState?.mapData },
         setMapData: (newMapData: TGeozoneMapData) => {
-          const mapDataToSave = { ...newMapData } as TGeozoneMapData;
-          delete mapDataToSave.ready;
-          delete mapDataToSave.editable;
           console.log('[setMapData] via handleMapReady - dispatch(setMapStateData({...', JSON.stringify(mapState))
-          dispatch(setMapStateData({
-            ...mapState,
-            mapData: {
-              ...mapState?.mapData,
-              ...newMapData,
-            },
-            mapDataForAPIs: { ...mapDataToSave } as TGeozoneMapDataForAPIs,
-          }));
+          console.log('[D] DISPATCH TO UPDATE MAP STATE DATA WHEN USER MAKES CHANGES ON THE MAP');
+          dispatch(setMapStateData(
+            geozonePrepareMapState({
+              seedMapState: mapState,
+              shapeType: values.zone_type as GeozoneType,
+              seedMapData: newMapData,
+              centerPosition: newMapData.centerPosition,
+              polygonSides,
+              locs: newMapData.locs,
+              radius: newMapData.radius,
+              color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+              editable: userCanEdit,
+            }),
+          ));
         },
       })
     }
   }
-  , [mapState?.mapData]);
+  // , [mapState?.mapData, values.properties, userCanEdit]);
 
-  const [autoSuggestKeyword, setAutoSuggestKeyword] = useState<string>("");
-  const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    setAutoSuggestKeyword(value);
-  }, 500);
+  // const [autoSuggestKeyword, setAutoSuggestKeyword] = useState<string>("");
+  // const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
+  //   setAutoSuggestKeyword(value);
+  // }, 500);
 
   const [autosuggestQuery, { isFetching: isFetchingAutosuggest }] = useLazyAutosuggestAddressQuery()
-  const [autosuggestResults, setAutosuggestResults] = useState<BingAutosuggestResItem[]>([]);
-  const [autosuggestDropOptions, setAutosuggestDropOptions] = useState<TSelectboxOption[]>([]);
+  // const [autosuggestResults, setAutosuggestResults] = useState<BingAutosuggestResItem[]>([]);
+  // const [autosuggestDropOptions, setAutosuggestDropOptions] = useState<TSelectboxOption[]>([]);
 
   const loadOptionsHandlerAutosuggest =
   // TODO: enable debouncing, currently causing issues with autosuggest
@@ -308,8 +357,8 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         : [];
       const newAutosuggestResults = firstResultSet?.resources?.[0]?.value ?? [];
       console.log('newAutosuggestResults', newAutosuggestResults)
-      setAutosuggestResults(newAutosuggestResults);
-      setAutosuggestDropOptions(options);
+      // setAutosuggestResults(newAutosuggestResults);
+      // setAutosuggestDropOptions(options);
       return options;
     }
   // , 500);
@@ -334,46 +383,39 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
       formikSetValue("lat_lng", `${newlySelectedLocationCoords?.[0]},${newlySelectedLocationCoords?.[1]}`);
       
       // update map state
-      dispatch(setMapStateData({
-        ...mapState,
-        mapData: {
-          ready: false,
-        },
-      }));
+      setMapStateTransitionInProgress(true);
       setTimeout(() => {
         console.info('[handleAutosuggestChange] Setting map data with new location coords', newlySelectedLocationCoords)
-        const Microsoft = (window as any).Microsoft;
-        const newMapDataForAPIs: TGeozoneMapDataForAPIs = {
-          ...mapState?.mapData,
-          centerPosition: {
-            latitude: newlySelectedLocationCoords?.[0],
-            longitude: newlySelectedLocationCoords?.[1],
-          },
-          ...(
-            values.zone_type === 'Route'
-            ? { locs: [] }
-            : values.zone_type === 'Polygon'
-            ? { locs:
-                  getCircleLocs(
-                    new Microsoft.Maps.Location(newlySelectedLocationCoords?.[0], newlySelectedLocationCoords?.[1]),
-                    APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-                    parseInt(polygonSides ?? APP_CONFIG.MAPS.DEFAULTS.POLYGON_POINTS), // change here
-                    true
-                  ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude }))
-              }
-            : { radius: APP_CONFIG.MAPS.DEFAULTS.RADIUS }
-          ),
-        }
+        console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON LOCATION DROPDOWN CHANGE');
         dispatch(setMapStateData({
-          ...mapState,
-          mapData: {
-            ...newMapDataForAPIs,
+          ...geozonePrepareMapState({
+            seedMapState: mapState,
+            shapeType: values.zone_type as GeozoneType,
+            seedMapData: undefined,
+            centerPosition: {
+              latitude: newlySelectedLocationCoords?.[0],
+              longitude: newlySelectedLocationCoords?.[1],
+            },
+            polygonSides,
+            locs: undefined,
+            radius: mapState?.mapData?.radius ?? undefined,
             color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
-            ready: true,
             editable: userCanEdit,
-          },
-          mapDataForAPIs: newMapDataForAPIs,
+          })
+          // ...mapState,
+          // mapCenter: {
+          //   latitude: newlySelectedLocationCoords?.[0],
+          //   longitude: newlySelectedLocationCoords?.[1],
+          // },
+          // mapData: {
+          //   ...newMapDataForAPIs,
+          //   color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
+          //   ready: true,
+          //   editable: userCanEdit,
+          // },
+          // mapDataForAPIs: newMapDataForAPIs,
         }));
+        setMapStateTransitionInProgress(false);
       }, 200);
     } else {
       console.error('GEOCODE RESPONSE ISSUE - no coordinates')
@@ -387,48 +429,33 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
     setPolygonSides(newPolygonSides);
 
     // update map state
-    dispatch(setMapStateData({
-      ...mapState,
-      mapData: {
-        ready: false,
-      },
-    }));
+    setMapStateTransitionInProgress(true);
     setTimeout(() => {
       console.info('[handlePolygonSidesChange] Setting map data with new polygone sides value', newPolygonSides)
-      const Microsoft = (window as any).Microsoft;
-      const newMapDataForAPIs: TGeozoneMapDataForAPIs = {
-        ...mapState?.mapData,
-        locs:
-          getCircleLocs(
-            new Microsoft.Maps.Location(mapState.mapData?.centerPosition?.latitude, mapState.mapData?.centerPosition?.longitude),
-            APP_CONFIG.MAPS.DEFAULTS.RADIUS,
-            newPolygonSides,
-            true
-          ).map((loc: any) => ({ latitude: loc.latitude, longitude: loc.longitude })),
-      }
+      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON POLYGON SIDES CHANGE');
       dispatch(setMapStateData({
-        ...mapState,
-        mapData: {
-          ...newMapDataForAPIs,
+        ...geozonePrepareMapState({
+          seedMapState: mapState,
+          shapeType: values.zone_type as GeozoneType,
+          seedMapData: undefined,
+          centerPosition: mapState.mapData?.centerPosition,
+          polygonSides: newPolygonSides,
+          locs: undefined,
+          radius: mapState?.mapData?.radius ?? undefined,
           color: APP_CONFIG.MAPS.COLORS[values.zone_color as keyof typeof APP_CONFIG.MAPS.COLORS],
-          ready: true,
           editable: userCanEdit,
-        },
-        mapDataForAPIs: newMapDataForAPIs,
+        })
       }));
+      setMapStateTransitionInProgress(false);
     }, 200);
   }
+
+  // remove route point
   const removeRoutePoint = (pointIndex: number) => {
     // update map state
-    dispatch(setMapStateData({
-      ...mapState,
-      mapData: {
-        ready: false,
-      },
-    }));
+    setMapStateTransitionInProgress(true);
     setTimeout(() => {
       console.info('[removeRoutePoint] Remove route point at index', pointIndex, typeof pointIndex)
-      const Microsoft = (window as any).Microsoft;
       let newRouteLocs = [ ...(mapState.mapData?.locs ?? []) ];
       if(newRouteLocs.length > 0) {
         newRouteLocs.splice(pointIndex, 1);
@@ -437,6 +464,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         ...mapState?.mapData,
         locs: [ ...newRouteLocs ],
       }
+      console.log('[D] DISPATCH TO UPDATE MAP STATE DATA ON ROUTE POINT REMOVE');
       dispatch(setMapStateData({
         ...mapState,
         mapData: {
@@ -447,12 +475,17 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         },
         mapDataForAPIs: newMapDataForAPIs,
       }));
+      setMapStateTransitionInProgress(false);
     }, 200);
   }
 
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      {/* mapData: {JSON.stringify(mapData)} */}
+      {APP_CONFIG.DEBUG.GEOZONES && (<div className="col-span-12">
+        <p>mapStateTransitionInProgress: {mapStateTransitionInProgress ? 'true' : 'false'}</p>
+        <p>userCanEdit: {userCanEdit ? 'true' : 'false'}</p>
+        <p>loadingData: {loadingData ? 'true' : 'false'}</p>
+      </div>)}
       {mapState?.mapData?.ready && !loadingData && !mapStateTransitionInProgress ? (
           <div className="relative col-span-12 grid grid-cols-12">
             <BasicMap
@@ -562,7 +595,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
           }}
           error={errors.description}
           touched={touched.description}
-          disabled={!userCanEdit}
+          disabled={!userCanEdit || loadingData || mapStateTransitionInProgress}
           detailsFormField={true}
           customWrapperClass="col-span-12"
         />)
@@ -610,12 +643,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         id="zone_type"
         name="zone_type"
         value={values.zone_type}
-        onChange={(e) => {formikSetValue("zone_type", e?.value)}}
+        onChange={handleGeozoneTypeChange}
         onBlur={(e) => {formikSetTouched("zone_type", true); handleBlur(e)}}
         error={errors.zone_type}
         touched={touched.zone_type}
         options={ZONE_TYPES_OPTIONS}
-        disabled={!userCanEdit}
+        disabled={!userCanEdit || loadingData || mapStateTransitionInProgress}
         detailsFormField={true}
       />
 
@@ -736,12 +769,12 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         id="zone_color"
         name="zone_color"
         value={values.zone_color}
-        onChange={(e) => {formikSetValue("zone_color", e?.value)}}
+        onChange={handleGeozoneColorChange}
         onBlur={(e) => {formikSetTouched("zone_color", true); handleBlur(e)}}
         error={errors.zone_color}
         touched={touched.zone_color}
         options={ZONE_COLOR_OPTIONS}
-        disabled={!userCanEdit}
+        disabled={!userCanEdit || loadingData || mapStateTransitionInProgress}
         detailsFormField={true}
       />
 

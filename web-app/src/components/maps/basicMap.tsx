@@ -68,7 +68,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
     }
     // get user's current position, use if available
     if(userCurrPos) {
-      console.log('[basicMap] APP HAS USER CURR POS')
+      // console.log('[basicMap] APP HAS USER CURR POS')
       currPosRetrievedCallback(userCurrPos);
     } else {
       console.log('[basicMap] APP DOES NOT HAVE USER CURR POS YET')

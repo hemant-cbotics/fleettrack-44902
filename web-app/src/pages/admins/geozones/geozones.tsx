@@ -45,7 +45,7 @@ const all_columns = [
 export const geozoneDescriptionDisplayText = (description: string | null, defaultText: string) => {
   let displayText = defaultText;
   try {
-    if(description) {
+    if(description && description !== "null") {
       const descriptionObj: TAutosuggestOptionValue = JSON.parse(description);
       displayText = descriptionObj.labelText;
     }

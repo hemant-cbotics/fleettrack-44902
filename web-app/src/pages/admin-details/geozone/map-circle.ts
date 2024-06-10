@@ -47,6 +47,7 @@ export const mapOperations: TMapOperations = (props) => {
       {
         anchor: new Microsoft.Maps.Point(16, 32),
         icon: MapMarkerBlue,
+        visible: props.mapData.editable,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelCenter : {})
       }
@@ -93,6 +94,7 @@ export const mapOperations: TMapOperations = (props) => {
       {
         anchor: new Microsoft.Maps.Point(16, 32),
         icon: MapMarkerRed,
+        visible: props.mapData.editable,
         draggable: props.mapData.editable,
         ...(props.mapData.editable ? dragLabelRadius : {})
       }
@@ -106,7 +108,8 @@ export const mapOperations: TMapOperations = (props) => {
     ], {
       strokeColor: new Microsoft.Maps.Color(200, color[0], color[1], color[2]),
       strokeThickness: 2,
-      strokeDashArray: [4, 4]
+      strokeDashArray: [4, 4],
+      visible: props.mapData.editable,
     });
     props.mapRef.current.map.entities.push(props.mapRef.current.objects.mRadiusLine);
 
@@ -171,12 +174,17 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
   switch(action) {
     case 'edit':
       props.mapRef.current.objects.mPushpins?.pCentre?.setOptions({
+        visible: value,
         draggable: value,
         ...(value ? dragLabelCenter : {})
       });
       props.mapRef.current.objects.mPushpins?.pRadius?.setOptions({
+        visible: value,
         draggable: value,
         ...(value ? dragLabelRadius : {})
+      });
+      props.mapRef.current.objects.mRadiusLine?.setOptions({
+        visible: value
       });
       break;
     default:
