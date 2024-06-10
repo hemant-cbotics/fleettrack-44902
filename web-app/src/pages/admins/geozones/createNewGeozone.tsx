@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
-import { TModalsState, setModalsData, setMapStateData } from "../../../api/store/commonSlice";
+import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
 import { Formik } from "formik";
 import { TFormFieldNames, YupValidationSchema, formInitialValues } from "./validation";
 import { AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
@@ -18,13 +18,11 @@ import { toast } from "react-toastify";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import { ZONE_TYPES_OPTIONS } from "./constants";
-import { TMapState } from "../../../types/map";
 
 const AdminsGeozonesCreateNew = () => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.geozones.create_new'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
-  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -51,26 +49,12 @@ const AdminsGeozonesCreateNew = () => {
               createOrgGeozoneAPITrigger({
                 organization: thisUserOrganizationId ?? 0,
                 zone_id: values.id,
-                // zone_city: values.city,
                 zone_type: values.type
               })
                 .unwrap()
                 .then((data) => {
                   if(!!data?.created_at) {
                     dispatch(setModalsData({ ...modalsState, showCreateGeozone: false }));
-                    // const mapDataToSave = { ...mapState?.mapData };
-                    // delete mapDataToSave?.locs;
-                    // delete mapDataToSave.color;
-                    // delete mapDataToSave.ready;
-                    // delete mapDataToSave.editable;
-                    // dispatch(setMapStateData({
-                    //   ...mapState,
-                    //   mapData: {
-                    //     ...mapDataToSave,
-                    //     ready: false,
-                    //   },
-                    //   mapDataForAPIs: mapDataToSave,
-                    // }));
                     toast.success(t('create_success'), { autoClose: 10000 });
                     navigate(`${routeUrls.dashboardChildren.adminChildren.geozones}/${data?.id}`, { state: { new: true } });
                   } else {
@@ -124,18 +108,6 @@ const AdminsGeozonesCreateNew = () => {
                   error={errors.id}
                   touched={touched.id}
                 />
-
-                {/* <AdminFormFieldDropdown
-                  label={t("city")}
-                  id="city"
-                  name="city"
-                  // value={values.city}
-                  onChange={(e) => setFieldValue("city", e)}
-                  onBlur={(e) => {setTouched({city: true}); handleBlur(e)}}
-                  error={errors.city}
-                  touched={touched.city}
-                  disabled={true}
-                /> */}
 
                 <AdminFormFieldDropdown
                   label={t("type")}

@@ -576,24 +576,6 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         />)
       }
 
-      {/* <AdminFormFieldDropdown
-        loadingData={loadingData}
-        label={t("city")}
-        id="city"
-        name="city"
-        value={values.city}
-        onChange={(e) => {formikSetValue("city", e?.value)}}
-        onBlur={(e) => {formikSetTouched("city", true); handleBlur(e)}}
-        error={errors.city}
-        touched={touched.city}
-        options={[
-          { label: "ABC", value: "abc" },
-          { label: "DEF", value: "def" },
-          { label: "GHI", value: "ghi" },
-        ]}
-        disabled={true}
-      /> */}
-
       <AdminFormFieldDropdown
         loadingData={loadingData}
         label={t("zone_type")}
