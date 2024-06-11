@@ -164,5 +164,27 @@ export const customClisteredPinCallback = (cluster: any) => {
       anchor: new Microsoft.Maps.Point(radius, radius),
       textOffset: new Microsoft.Maps.Point(0, radius - 8) //Subtract 8 to compensate for height of text.
   });
+
+  // add click event to cluster
+  Microsoft.Maps.Events.addHandler(cluster, 'click', clusterClicked);
+}
+
+function clusterClicked(e: any) {
+  const Microsoft = (window as any).Microsoft;
+
+  if (e.target.containedPushpins) {
+      var locs = [];
+      for (var i = 0, len = e.target.containedPushpins.length; i < len; i++) {
+          //Get the location of each pushpin.
+          locs.push(e.target.containedPushpins[i].getLocation());
+      }
+
+      //Create a bounding box for the pushpins.
+      var bounds = Microsoft.Maps.LocationRect.fromLocations(locs);
+
+      //Zoom into the bounding box of the cluster. 
+      //Add a padding to compensate for the pixel area of the pushpins.
+      (window as any)?.map?.map?.setView({ bounds: bounds, padding: 100 });
+  }
 }
 

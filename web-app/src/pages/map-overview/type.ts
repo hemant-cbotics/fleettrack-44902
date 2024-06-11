@@ -24,6 +24,7 @@ export type TMapRef = {
   map: any;
   objects: {
     mPushpins: TMPushpin[];
+    mClusterLayer: any;
   }
 }
 
@@ -43,4 +44,5 @@ export type TMapOperationsProps = {
   setMapData: (mapData: TMapData) => void;
   dataPoints: TDataPoint[];
 }
-export type TMapOperations = (props: TMapOperationsProps) => void;
+export type TMapOperations = (props: TMapOperationsProps, checkedVehicles: string[]) => void;
+export type TMapUpdatesHandler = (props: TMapOperationsProps, action: 'checkedUpdated', value?: any) => void;

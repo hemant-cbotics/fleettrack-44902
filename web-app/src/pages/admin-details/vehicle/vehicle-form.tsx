@@ -470,6 +470,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
       <div className="grid grid-cols-12 col-span-12">
         <AdminFormFieldInput
+          customWrapperClass="col-span-6 lg:mr-2"
           label={t("maximum_speed")}
           type="text"
           id="maximum_speed"
@@ -487,6 +488,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       <div className="grid grid-cols-12 col-span-12">
         {loadingData ? <PseudoSelect label={t("driver_id")} /> : 
         (<AdminFormFieldAsyncDropdown
+          customWrapperClass="col-span-6 lg:mr-2"
           loadingData={loadingData}
           label={t("driver_id")}
           id="driver_id"
@@ -494,6 +496,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           value={values.driver_id}
           options={[{ value: values.driver_id, label: `#${values.driver_id} ${values.driver_name}` }]}
           loadOptions={loadOptionsHandlerDriver}
+          noOptionsMessage={() => t("driver_id_no_item")}
           onChange={(e) => {
             formikSetValue("driver_id", e?.value);
             const selectedDriver = dropdownSearchResults.find((item) => item.id === parseInt(`${e?.value}`));
@@ -504,8 +507,8 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
             formikSetTouched("driver_id", true);
             handleBlur(e);
           }}
-          error={errors.fuel_type}
-          touched={touched.fuel_type}
+          error={errors.driver_id}
+          touched={touched.driver_id}
           disabled={!userCanEdit}
           detailsFormField={true}
         />)}

@@ -1,8 +1,8 @@
 import { APP_CONFIG } from "../../constants/constants";
 import { customClisteredPinCallback } from "../../utils/map";
-import { TMapOperations, TMPushpin } from "./type";
+import { TMapOperations, TMapUpdatesHandler, TMPushpin } from "./type";
 
-export const mapOperations: TMapOperations = (props) => {
+export const mapOperations: TMapOperations = (props, checkedVehicles) => {
 
   const Microsoft = (window as any).Microsoft;
   (window as any).map = props.mapRef.current;
@@ -10,16 +10,10 @@ export const mapOperations: TMapOperations = (props) => {
   // create a namespace for map objects
   props.mapRef.current.objects = {
     mPushpins: [],
+    mClusterLayer: null,
   }
 
   const renderMapObjects = () => {
-    // let refCenter = new Microsoft.Maps.Location(
-    //   props.mapData.centerPosition.latitude,
-    //   props.mapData.centerPosition.longitude
-    // )
-    // if(APP_CONFIG.DEBUG.MAPS) console.log('Dropping center at', refCenter.latitude, refCenter.longitude);
-    // props.mapRef.current.map.setView({ center: refCenter }); // set the view to the center
-
     // create pushpins
     props.dataPoints.forEach((dataPoint) => {
       const thisPushpin = new Microsoft.Maps.Pushpin(
@@ -28,6 +22,7 @@ export const mapOperations: TMapOperations = (props) => {
           anchor: new Microsoft.Maps.Point(16, 32),
           // icon: MapMarkerRed,
           color: 'rgb(240, 0, 0)',
+          visible: checkedVehicles.includes(dataPoint.id),
         }
       );
       const thisPushpinObject: TMPushpin = {
@@ -40,13 +35,13 @@ export const mapOperations: TMapOperations = (props) => {
     });
 
     // Create a ClusterLayer and add it to the map.
-    var clusterLayer = new Microsoft.Maps.ClusterLayer(
+    props.mapRef.current.objects.mClusterLayer = new Microsoft.Maps.ClusterLayer(
       props.mapRef.current.objects.mPushpins.map((pushpinObject) => pushpinObject.pushpin),
       {
         clusteredPinCallback: customClisteredPinCallback
       }
     );
-    props.mapRef.current.map.layers.insert(clusterLayer);
+    props.mapRef.current.map.layers.insert(props.mapRef.current.objects.mClusterLayer);
 
     // center the map to the polygon
     setTimeout(() => centerMapToDataPoints(), 1000);
@@ -83,3 +78,25 @@ export const mapOperations: TMapOperations = (props) => {
 
   return null;
 }
+
+export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
+  if(APP_CONFIG.DEBUG.MAPS) console.log('[mapUpdatesHandler]', action, value);
+  switch(action) {
+    case 'checkedUpdated':
+      const checkedVehicles = value as string[];
+      props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+        pushpinObject.pushpin.setOptions({
+          visible: checkedVehicles.includes(pushpinObject.id)
+        });
+      });
+      props.mapRef.current.objects.mClusterLayer?.setPushpins(
+        props.mapRef.current.objects.mPushpins
+          .filter((pushpin) => checkedVehicles.includes(pushpin.id))
+          .map((pushpinObject) => pushpinObject.pushpin)
+      );
+      break;
+    default:
+      break;
+  }  
+}
+

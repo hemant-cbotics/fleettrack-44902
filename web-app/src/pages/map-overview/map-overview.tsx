@@ -6,27 +6,28 @@ import { useDebouncedCallback } from "use-debounce";
 import { useOrganizationVehiclesQuery } from "../../api/network/adminApiServices";
 import { setMapStateData, setModalsData, TModalsState } from "../../api/store/commonSlice";
 import { OrganizationEntityListingPayload } from "../../api/types/Admin";
-import AdminListingColumnItem from "../../components/adminListingColumnItem";
+import FilterIcon from "../../assets/svg/filter-icon.svg";
+import GroupFilterIcon from "../../assets/svg/group-filter-icon.svg";
+import SortIcon from "../../assets/svg/sort-icon.svg";
 import BasicMap, { MapLoadingAnimation } from "../../components/maps/basicMap";
+import MapVehicleListingColumnItem from "../../components/mapVehicleListingColumnItem";
 import AppSearchBox from "../../components/searchBox";
+import TickCheckbox from "../../components/tickCheckbox";
 import { APP_CONFIG } from "../../constants/constants";
 import { TMapState } from "../../types/map";
 import { useLoggedInUserData } from "../../utils/user";
 import { dummyCoords } from "./dummyData";
-import GroupList from "./groupList";
-import { mapOperations } from "./map";
+import { mapOperations, mapUpdatesHandler } from "./map";
 import MapFilter from "./mapFilter";
 import { TDataPoint, TMapData, TMapRef } from "./type";
-import GroupFilterIcon from "../../assets/svg/group-filter-icon.svg";
-import FilterIcon from "../../assets/svg/filter-icon.svg";
-import SortIcon from "../../assets/svg/sort-icon.svg";
-import VehicleFilter from "./vehiclesFilter";
 import VehicleDetails from "./vehicleDetails";
+import VehicleFilter from "./vehiclesFilter";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
   const { t } = useTranslation("translation", { keyPrefix: "mapOverview" });
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "dashboard.sidemenu.admins" });
+  const { t: tMain } = useTranslation();
   const [selectedGroups, setSelectedGroups] = useState<string>();
   const navigate = useNavigate();
 
@@ -36,6 +37,23 @@ const ScreenMapOverview = () => {
   const modalsState: TModalsState = useSelector(
     (state: any) => state.commonReducer.modals
   );
+
+  const [selectedVehicle, setSelectedVehicle] = useState<string>();
+  const [checkedVehicles, setCheckedVehicles] = useState<string[]>([]);
+
+  // update map data on checked vehicles change
+  useEffect(() => {
+    mapUpdatesHandler(
+      {
+        mapRef,
+        mapData: { ...mapState?.mapData } as TMapData,
+        setMapData: () => {},
+        dataPoints,
+      },
+      'checkedUpdated',
+      checkedVehicles
+    );
+  }, [checkedVehicles]);
 
   // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
@@ -64,6 +82,7 @@ const ScreenMapOverview = () => {
     map: null,
     objects: {
       mPushpins: [],
+      mClusterLayer: null,
     },
   });
 
@@ -105,42 +124,24 @@ const ScreenMapOverview = () => {
   const handleMapReady =
   useCallback(
   () => {
-    mapOperations({
-      mapRef,
-      mapData: { ...mapState?.mapData } as TMapData,
-      setMapData: () => {},
-      dataPoints,
-    })
-    // if(mapState?.mapData?.centerPosition?.latitude === 0) {
-    //   console.error('MAP DATA ISSUE - lat = 0')
-    // } else {
-    //   console.log('>> sending map operations', JSON.stringify({ ...mapState?.mapData }))
-    //   const applicableMapOperations =
-    //     values.zone_type === 'Route'
-    //       ? mapOperationsRoute
-    //     : values.zone_type === 'Polygon'
-    //       ? mapOperationsPolygon
-    //       : mapOperationsCircle;
-    //   applicableMapOperations({
-    //     mapRef,
-    //     mapData: { ...mapState?.mapData },
-    //     setMapData: (newMapData: TGeozoneMapData) => {
-    //       const mapDataToSave = { ...newMapData } as TGeozoneMapData;
-    //       delete mapDataToSave.ready;
-    //       delete mapDataToSave.editable;
-    //       console.log('[setMapData] via handleMapReady - dispatch(setMapStateData({...', JSON.stringify(mapState))
-    //       dispatch(setMapStateData({
-    //         ...mapState,
-    //         mapData: {
-    //           ...mapState?.mapData,
-    //           ...newMapData,
-    //         },
-    //         mapDataForAPIs: { ...mapDataToSave } as TGeozoneMapDataForAPIs,
-    //       }));
-    //     },
-    //   })
-    // }
+    mapOperations(
+      {
+        mapRef,
+        mapData: { ...mapState?.mapData } as TMapData,
+        setMapData: () => {},
+        dataPoints,
+      },
+      checkedVehicles
+    );
   }, [mapState?.mapData]);
+
+  const handleChangeCheckAllVehicles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setCheckedVehicles(dataPoints.map((item) => item.id));
+    } else {
+      setCheckedVehicles([]);
+    }
+  };
 
   return (
     <>
@@ -173,14 +174,27 @@ const ScreenMapOverview = () => {
               />
             </div>
             <div className="flex justify-between p-4 items-center">
-                <div className="flex bg-blue-200 py-1 px-2 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showGroupSelector: true }));}}>
-                  <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
-                  <img src={GroupFilterIcon} alt="group-filter-icon"/>
-                </div>
-                <div className="flex gap-6">
-                  <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
-                  <img src={SortIcon} alt="sort-icon" className="cursor-pointer" />
-                </div>
+              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showGroupSelector: true }));}}>
+                <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
+                <img src={GroupFilterIcon} alt="group-filter-icon"/>
+              </div>
+              <div className="flex gap-6">
+                <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
+                <img src={SortIcon} alt="sort-icon" className="cursor-pointer" />
+              </div>
+            </div>
+            <div className="flex px-4 gap-3">
+              <TickCheckbox
+                id={`checkAllVehicles`}
+                isChecked={checkedVehicles.length === dataPoints?.length}
+                handleChange={handleChangeCheckAllVehicles}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <label
+                htmlFor={`checkAllVehicles`}
+                className="font-semibold text-sm leading-6 text-gray-900 cursor-pointer">
+                {tMain("select_all")}
+              </label>
             </div>
             <VehicleFilter />
             {/* <div className="px-3 font-bold text-lg leading-6">
@@ -189,13 +203,28 @@ const ScreenMapOverview = () => {
             <div className="mt-4 flex-grow overflow-auto">
               {dataPoints
                 ?.map((vehicleItem, index: number) => (
-                <AdminListingColumnItem
+                <MapVehicleListingColumnItem
                   key={index}
-                  onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }));}}
-                  title={`${vehicleItem.vehicle_model} ${vehicleItem.vehicle_make}`}
-                  description={vehicleItem.vin}
                   asideText={'Driving'}
                   bottomText={`${vehicleItem.licence_plate}`}
+                  checked={checkedVehicles.includes(vehicleItem.id)}
+                  description={vehicleItem.vin}
+                  id={`checkedVehicle-${vehicleItem.id}`}
+                  onClickCheckbox={() => {
+                    if (checkedVehicles.includes(vehicleItem.id)) {
+                      setCheckedVehicles(
+                        checkedVehicles.filter((id: any) => id !== vehicleItem.id)
+                      );
+                    } else {
+                      setCheckedVehicles([...checkedVehicles, vehicleItem.id]);
+                    }
+                  }}
+                  onClick={() => {
+                    setSelectedVehicle(vehicleItem.id);
+                    dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }))
+                  }}
+                  title={`${vehicleItem.vehicle_model} ${vehicleItem.vehicle_make}`}
+                  selected={selectedVehicle === vehicleItem.id}
                 />
                 // <GroupList
                 //   key={index}

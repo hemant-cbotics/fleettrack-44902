@@ -228,7 +228,8 @@ const ScreenAdminDetailVehicle = () => {
     dirty,
   } = formik;
 
-  console.log('errors', errors);
+  // console.log('values', values);
+  // console.log('errors', errors);
   const invalidFields =
     Object.keys(errors)
       .filter(key => !!errors[key as TFormFieldNames]);

@@ -65,8 +65,9 @@ export const vehicleFormValidationSchema = Yup.object().shape({
   creation_date: Yup.date().required("Creation Date is required"),
   short_name: Yup.string().required("Short Name is required"),
   ignition_input: Yup.string().required("Ignition Input is required"),
-  driver_id: Yup.number().required("Driver ID is required"),
-  driver_name: Yup.string().required("Driver Name is required"),
+  driver_id: Yup.number()
+    .required("Driver ID is required")
+    .min(1, "Please select a driver"),
 });
 
 export const groupMembershipFormValidationSchema = Yup.object().shape({});

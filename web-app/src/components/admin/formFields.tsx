@@ -283,11 +283,33 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
         inputId={id}
         classNames={{
           control: (state) =>
-            `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none ${
+            `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border-2 focus-visible:outline-4 focus-visible:shadow-none ${
               state.isFocused ? 'border-red-600' : 'border-grey-300'
             } ${
                 state.isDisabled ? 'bg-gray-400' : ''
               } ${inputClass} ${customSelectboxClass}`,
+        }}
+        styles={{
+          control: (state) => {
+            return {
+              ...state,
+              border: !!error
+                ? `2px solid #D0021B`
+                : state.isFocused
+                ? '2px solid #005FCC'
+                : '1px solid #e5e7eb',
+              borderRadius: '6px',
+              boxShadow: 'none',
+              outline: 'none',
+              '&:hover': {
+                borderColor: !!error
+                ? '#D0021B'
+                : state.isFocused
+                ? '#005FCC'
+                : '#e5e7eb',
+              },
+            }
+          },
         }}
         placeholder={placeholder}
         cacheOptions
