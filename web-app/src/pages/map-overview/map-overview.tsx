@@ -116,6 +116,7 @@ const ScreenMapOverview = () => {
             coords: dummyCoords?.[index] ?? dummyCoords[0],
           }))
       );
+      setCheckedVehicles(dataOrgVehicles?.results?.map((item) => item.id) ?? []);
       loadResetMapDataWithInitialValues();
     }
   }, [dataOrgVehicles, isFetchingOrgVehicles]);
