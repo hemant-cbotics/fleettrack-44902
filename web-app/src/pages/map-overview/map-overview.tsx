@@ -19,6 +19,7 @@ import MapFilter from "./mapFilter";
 import { TDataPoint, TMapData, TMapRef } from "./type";
 import GroupFilterIcon from "../../assets/svg/group-filter-icon.svg";
 import FilterIcon from "../../assets/svg/filter-icon.svg";
+import SortIcon from "../../assets/svg/sort-icon.svg";
 import VehicleFilter from "./vehiclesFilter";
 import VehicleDetails from "./vehicleDetails";
 
@@ -173,8 +174,9 @@ const ScreenMapOverview = () => {
                   <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
                   <img src={GroupFilterIcon} alt="group-filter-icon"/>
                 </div>
-                <div>
+                <div className="flex gap-6">
                   <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
+                  <img src={SortIcon} alt="sort-icon" className="cursor-pointer" />
                 </div>
             </div>
             <VehicleFilter />
