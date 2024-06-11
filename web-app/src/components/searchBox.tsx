@@ -22,9 +22,7 @@ const AppSearchBox: React.FC<TSearchBoxProps> = ({
       <input
         type="text"
         placeholder={placeholder}
-        defaultValue={value}
         value={searchText}
-        // value={value}  // TODO: Uncomment this line to make the input controlled
         onChange={(e) => {
           setSearchText(e.target.value);
           onChange?.(e)
