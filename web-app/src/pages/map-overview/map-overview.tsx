@@ -20,6 +20,7 @@ import { TDataPoint, TMapData, TMapRef } from "./type";
 import GroupFilterIcon from "../../assets/svg/group-filter-icon.svg";
 import FilterIcon from "../../assets/svg/filter-icon.svg";
 import VehicleFilter from "./vehiclesFilter";
+import VehicleDetails from "./vehicleDetails";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
@@ -185,7 +186,7 @@ const ScreenMapOverview = () => {
                 ?.map((vehicleItem, index: number) => (
                 <AdminListingColumnItem
                   key={index}
-                  onClick={() => {}}
+                  onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }));}}
                   title={`${vehicleItem.vehicle_model} ${vehicleItem.vehicle_make}`}
                   description={vehicleItem.vin}
                   asideText={'Driving'}
@@ -260,6 +261,7 @@ const ScreenMapOverview = () => {
                 </div>)}
               </div>
             )}
+            <VehicleDetails />
           </div>
         </div>
       </div>

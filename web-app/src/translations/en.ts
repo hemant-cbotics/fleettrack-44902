@@ -619,8 +619,13 @@ export const language_en = {
       time: "Time",
       timezone: "Timezone",
     },
-    report: {
-      heading: "Report",
+    details: {
+      heading: "Details",
+      message: "Message",
+      send_location: "Send Location",
+      street_view: "Street View",
+      forecast: "Forecast",
+      vehicle_map_view: "Vehicle Map View",
     },
     groupSelector: {
       heading: "Group Selector",
