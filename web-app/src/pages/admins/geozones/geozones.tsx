@@ -79,7 +79,7 @@ const ScreenDashboardAdminGeozones = () => {
     );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, search: value }}));
+    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetch geozones data
