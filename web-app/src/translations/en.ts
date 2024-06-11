@@ -613,8 +613,19 @@ export const language_en = {
       timezone: "Timezone",
       auto_refresh_timer: "Auto Refresh Timer",
     },
-    report: {
-      heading: "Report",
+    vehicleFilter: {
+      heading: "Filters",
+      date: "Date",
+      time: "Time",
+      timezone: "Timezone",
+    },
+    details: {
+      heading: "Details",
+      message: "Message",
+      send_location: "Send Location",
+      street_view: "Street View",
+      forecast: "Forecast",
+      vehicle_map_view: "Vehicle Map View",
     },
     groupSelector: {
       heading: "Group Selector",

@@ -74,7 +74,7 @@ const ScreenAdminDetailGeozone = () => {
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, search: value }}));
+    dispatch(setListingQueryParams({ ...listingQueryParams, geoZones: { ...orgGeozonesQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetch organization geozones

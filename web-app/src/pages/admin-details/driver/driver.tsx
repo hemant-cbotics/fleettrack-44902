@@ -61,7 +61,7 @@ const ScreenAdminDetailDriver = () => {
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    dispatch(setListingQueryParams({ ...listingQueryParams, drivers: { ...orgDriversQueryParams, search: value } }));
+    dispatch(setListingQueryParams({ ...listingQueryParams, drivers: { ...orgDriversQueryParams, page: 1, search: value } }));
   }, 500);
 
   // fetch organization drivers

@@ -57,7 +57,7 @@ const ScreenDashboardAdminGroups = () => {
     );
 
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
-    dispatch(setListingQueryParams({ ...listingQueryParams, groups: { ...orgGroupsQueryParams, search: value }}));
+    dispatch(setListingQueryParams({ ...listingQueryParams, groups: { ...orgGroupsQueryParams, page: 1, search: value }}));
   }, 500);
 
   // fetch groups data
