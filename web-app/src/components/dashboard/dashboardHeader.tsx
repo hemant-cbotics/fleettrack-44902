@@ -86,6 +86,7 @@ const DashboardHeader = () => {
             wrapperClassName="w-64 max-w-full"
             placeholder={t("type_here_to_search")}
             onChange={() => {}}
+            onClear={() => {}}
           />
         </div>
         <div className="lg:col-span-8 flex justify-end">

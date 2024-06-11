@@ -113,6 +113,7 @@ const ScreenDashboardAdminFleetTags = () => {
           searchBoxPlaceholder={t("search_placeholder")}
           searchBoxValue={orgFleetTagsQueryParams.search}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
+          searchBoxOnClear={() => debouncedSetSearchKeyword("")}
         />
         <EditListingColumnsModal
           columns={columns}

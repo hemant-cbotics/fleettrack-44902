@@ -13,6 +13,7 @@ type TListingTableHeaderProps = {
   searchBoxPlaceholder?: string;
   searchBoxValue?: string;
   searchBoxOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchBoxOnClear?: () => void;
   filters?: TListingFilters[];
   activeFilterSlug?: string;
   handleFilterChange?: (slug: FilterType) => void;
@@ -23,6 +24,7 @@ const ListingTableHeader: FC<TListingTableHeaderProps> = ({
   searchBoxPlaceholder,
   searchBoxValue,
   searchBoxOnChange,
+  searchBoxOnClear,
   filters,
   activeFilterSlug,
   handleFilterChange
@@ -68,6 +70,7 @@ const ListingTableHeader: FC<TListingTableHeaderProps> = ({
             placeholder={searchBoxPlaceholder}
             value={searchBoxValue}
             onChange={searchBoxOnChange}
+            onClear={searchBoxOnClear}
           />
         )}
         {/* <div className="relative ml-4">

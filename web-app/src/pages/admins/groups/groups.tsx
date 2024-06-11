@@ -101,6 +101,7 @@ const ScreenDashboardAdminGroups = () => {
           searchBoxPlaceholder={t("search_placeholder")}
           searchBoxValue={orgGroupsQueryParams.search}
           searchBoxOnChange={(e: React.ChangeEvent<HTMLInputElement>) => debouncedSetSearchKeyword(e.target.value)}
+          searchBoxOnClear={() => debouncedSetSearchKeyword("")}
         />
         <EditListingColumnsModal
           columns={columns}

@@ -167,6 +167,9 @@ const ScreenMapOverview = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   debouncedSetSearchKeyword(e.target.value)
                 }
+                onClear={() => {
+                  debouncedSetSearchKeyword("")
+                }}
               />
             </div>
             <div className="flex justify-between p-4 items-center">
