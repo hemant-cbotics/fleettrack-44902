@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLoggedInUserData } from "../../../utils/user";
-import { TModalsState, setModalsData } from "../../../api/store/commonSlice";
+import { TModalsState, setModalsData, setMapStateData } from "../../../api/store/commonSlice";
 import { Formik } from "formik";
 import { TFormFieldNames, YupValidationSchema, formInitialValues } from "./validation";
 import { AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit } from "../../../components/admin/formFields";
@@ -18,11 +18,16 @@ import { toast } from "react-toastify";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import { ZONE_TYPES_OPTIONS } from "./constants";
+import { geozonePrepareMapState } from "../../admin-details/geozone/util";
+import { TMapState } from "../../../types/map";
+import { GeozoneType } from "../../../api/types/Geozone";
+import { APP_CONFIG } from "../../../constants/constants";
 
 const AdminsGeozonesCreateNew = () => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation('translation', { keyPrefix: 'admins.geozones.create_new'});
   const modalsState: TModalsState = useSelector((state: any) => state.commonReducer.modals);
+  const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -46,6 +51,17 @@ const AdminsGeozonesCreateNew = () => {
             initialValues={formInitialValues}
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
+              // clear previous mapState
+              if(APP_CONFIG.DEBUG.GEOZONES) console.log('[D] DISPATCH TO CLEAR MAP STATE DATA BEFORE NAVIGATING TO NEW GEOZONE PAGE');
+              dispatch(setMapStateData(
+                geozonePrepareMapState({
+                  seedMapState: mapState,
+                  shapeType: ZONE_TYPES_OPTIONS[2].value as GeozoneType,
+                  seedMapData: undefined,
+                  locs: [],
+                })
+              ));
+              // api call
               createOrgGeozoneAPITrigger({
                 organization: thisUserOrganizationId ?? 0,
                 zone_id: values.id,
