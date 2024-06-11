@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.8ccd97e8.css",
-    "main.js": "/static/js/main.f4ca5bea.js",
+    "main.css": "/static/css/main.1188e498.css",
+    "main.js": "/static/js/main.f34b1182.js",
     "static/js/453.1965c8d6.chunk.js": "/static/js/453.1965c8d6.chunk.js",
     "static/media/landing2.png": "/static/media/landing2.c9711f9ad4940aa90eda.png",
     "service-worker.js": "/service-worker.js",
@@ -11,6 +11,7 @@
     "static/media/setting-icon.svg": "/static/media/setting-icon.1c35c3f6f71369734bba9a67b2298cfb.svg",
     "static/media/group-admin-icon.svg": "/static/media/group-admin-icon.ac9fedfc357244f4f4613e3b82b0f443.svg",
     "static/media/menuicon-users.svg": "/static/media/menuicon-users.618099ec20c61a52c600173d3c01c174.svg",
+    "static/media/filter-icon.svg": "/static/media/filter-icon.4102111f444e230fb4247ba333a3d0ad.svg",
     "static/media/help-icon.svg": "/static/media/help-icon.fb4c044da5e4859e0ccb4b18f86917e2.svg",
     "static/media/menuicon-truck.svg": "/static/media/menuicon-truck.c73357f632e6724c3d86f80e3af8234b.svg",
     "static/media/manage-rule-icon.svg": "/static/media/manage-rule-icon.a609030ed3c35737e7a403f197fdcdab.svg",
@@ -25,7 +26,9 @@
     "static/media/fast-backward-icon.svg": "/static/media/fast-backward-icon.eb250b44e292afe73f5eef75694d17e1.svg",
     "static/media/map-overview-icon.svg": "/static/media/map-overview-icon.f2059163be0d7f12a8f017ffc05afa33.svg",
     "static/media/notification-icon.svg": "/static/media/notification-icon.169254e06f964a75da72406e93c454ed.svg",
+    "static/media/sort-icon.svg": "/static/media/sort-icon.a2c67cc6549b71c7ffdab69385118586.svg",
     "static/media/camera-admin-icon.svg": "/static/media/camera-admin-icon.d750c61052bb3d7d0128da1d32959a1e.svg",
+    "static/media/video-camera-icon.svg": "/static/media/video-camera-icon.6f56fef1bd934c18b8435fb50c8271e7.svg",
     "static/media/loadingAnimation.svg": "/static/media/loadingAnimation.4fc101780e60c2b0e54578a5f8ea842e.svg",
     "static/media/close-icon.svg": "/static/media/close-icon.a6252c8fa173afba42ebe654348cbf88.svg",
     "static/media/buttonicon-plus.svg": "/static/media/buttonicon-plus.f675f5e0a9a91bd8add3f44a7c590e79.svg",
@@ -33,6 +36,7 @@
     "index.html": "/index.html",
     "static/media/edit-icon.svg": "/static/media/edit-icon.baa67a48776d44409e746cb3dbf4d78e.svg",
     "static/media/backward-icon.svg": "/static/media/backward-icon.f89ae921b352c9c865dee0fbdbe58e78.svg",
+    "static/media/group-filter-icon.svg": "/static/media/group-filter-icon.460b12cb936e5cab6e57451176fbb648.svg",
     "static/media/forward-icon.svg": "/static/media/forward-icon.e4c777568514f6f8ca045330bfdccc26.svg",
     "static/media/collapse-icon.svg": "/static/media/collapse-icon.38249231cc21a4a4315c0f0fb15f01a2.svg",
     "static/media/expand-more-icon.svg": "/static/media/expand-more-icon.e4acf936b3d9a4825ee8d83ddaaa47a0.svg",
@@ -40,12 +44,12 @@
     "static/media/map-marker-blue.svg": "/static/media/map-marker-blue.03c9e1dcd9e0a8b4a63c769d65b02e4a.svg",
     "static/media/map-marker-red.svg": "/static/media/map-marker-red.a210757b03c70f1bcf4ef6dd82354b0e.svg",
     "static/media/left-arrow-icon.svg": "/static/media/left-arrow-icon.a63cb2d52fd0a5d442ac22f9e6ad76dd.svg",
-    "main.8ccd97e8.css.map": "/static/css/main.8ccd97e8.css.map",
-    "main.f4ca5bea.js.map": "/static/js/main.f4ca5bea.js.map",
+    "main.1188e498.css.map": "/static/css/main.1188e498.css.map",
+    "main.f34b1182.js.map": "/static/js/main.f34b1182.js.map",
     "453.1965c8d6.chunk.js.map": "/static/js/453.1965c8d6.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8ccd97e8.css",
-    "static/js/main.f4ca5bea.js"
+    "static/css/main.1188e498.css",
+    "static/js/main.f34b1182.js"
   ]
 }
