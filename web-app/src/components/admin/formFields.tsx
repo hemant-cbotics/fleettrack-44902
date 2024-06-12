@@ -70,7 +70,7 @@ export const AdminFormFieldInput: FC<AdminFormFieldInputProps> = ({
         value={value}
         disabled={disabled}
         readOnly={readOnly}
-        className={`mt-1 w-full h-11 px-3 rounded-md text-sm shadow-sm focus-visible:outline-4 focus-visible:shadow-none${
+        className={`mt-1 w-full h-11 px-3 rounded-md text-sm shadow-sm enabled:outline-accent-blue-dark focus-visible:outline-4 focus-visible:shadow-none${
           touched ? " touched" : ""
         } ${disabled || readOnly ? "bg-gray-100" : "bg-white"} ${inputClass} ${customInputClass}`}
       />
@@ -190,12 +190,12 @@ const RealSelect: FC<AdminFormFieldDropdownProps> = ({
       <Select
         inputId={id}
         classNames={{
-          control: (state) =>
+          control: (controlProps) =>
             `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border focus-visible:outline-4 focus-visible:shadow-none ${
-              state.isFocused ? 'border-red-600' : 'border-grey-300'
+              controlProps.isFocused ? 'border-red-600' : 'border-grey-300'
             } ${
-                state.isDisabled ? 'bg-gray-400' : ''
-              } ${inputClass} ${customSelectboxClass}`,
+                controlProps.isDisabled ? 'bg-gray-400' : ''
+              } ${inputClass} ${customSelectboxClass}`
         }}
         placeholder={placeholder}
         options={options}
@@ -281,30 +281,34 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
 
       <AsyncSelect
         inputId={id}
+        name={name}
         classNames={{
-          control: (state) =>
-            `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border-2 focus-visible:outline-4 focus-visible:shadow-none ${
-              state.isFocused ? 'border-red-600' : 'border-grey-300'
+          control: (controlProps) => {
+            // console.log('classNames state', controlProps)
+            return `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border-2 focus-visible:outline-4 focus-visible:shadow-none ${inputClass} ${customSelectboxClass} ${
+              controlProps.isFocused ? 'border-red-600' : 'border-grey-300'
             } ${
-                state.isDisabled ? 'bg-gray-400' : ''
-              } ${inputClass} ${customSelectboxClass}`,
+                controlProps.isDisabled ? 'bg-gray-400' : ''
+              }`
+          },
         }}
         styles={{
-          control: (state) => {
+          control: (styles, controlProps) => {
+            // console.log('styles state', styles, controlProps)
             return {
-              ...state,
-              border: !!error
+              ...styles,
+              border: !!error && !controlProps.isDisabled
                 ? `2px solid #D0021B`
-                : state.isFocused
+                : controlProps.isFocused
                 ? '2px solid #005FCC'
                 : '1px solid #e5e7eb',
               borderRadius: '6px',
               boxShadow: 'none',
               outline: 'none',
               '&:hover': {
-                borderColor: !!error
+                borderColor: !!error && !controlProps.isDisabled
                 ? '#D0021B'
-                : state.isFocused
+                : controlProps.isFocused
                 ? '#005FCC'
                 : '#e5e7eb',
               },
@@ -356,12 +360,12 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
   }
   
   return (
-    <div className={`bg-white flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200${disabled ? ' opacity-50' : ''} cursor-pointer ${customWrapperClass}`}>
-      <label
-        className={`block text-sm font-display font-semibold text-field-label-valid`}
-      >
+    <label
+      htmlFor={id}
+      className={`bg-white flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200${disabled ? ' opacity-50' : ''} cursor-pointer ${customWrapperClass}`}>
+      <span className={`block text-sm font-display font-semibold text-field-label-valid`}>
         {label}
-      </label>
+      </span>
       <div>
         <input
           type={type}
@@ -383,10 +387,10 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
                 name: name
               }
             })}
-          className="relative w-12 h-7 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:start-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"
+          className="relative w-12 h-7 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:start-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500 peer-focus:outline outline-2 outline-accent-blue-dark"
         ></div>
       </div>
-    </div>
+    </label>
   );
 };
 

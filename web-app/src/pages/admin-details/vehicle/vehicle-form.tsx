@@ -5,32 +5,32 @@
  * These components are used to render the form for editing the vehicle details.
  */
 
-import { Formik } from "formik";
+import { FormikProps } from "formik";
 import { FC, useEffect, useState } from "react";
-import { groupMembershipFormValidationSchema } from "./validation";
+import { useTranslation } from "react-i18next";
+import { useLazyOrganizationDriversQuery, useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
+import { OrganizationDriver } from "../../../api/types/Driver";
+import { OrganizationGroup } from "../../../api/types/Group";
+import CloseIcon from "../../../assets/svg/close-icon.svg";
 import {
   AdminFormFieldAsyncDropdown,
   AdminFormFieldCheckbox,
   AdminFormFieldDropdown,
   AdminFormFieldInput,
   PseudoSelect,
-  TSelectboxOption,
+  TSelectboxOption
 } from "../../../components/admin/formFields";
-import { useTranslation } from "react-i18next";
-import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
-import { useLazyOrganizationDriversQuery, useOrganizationDriversQuery, useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
-import { useLoggedInUserData } from "../../../utils/user";
-import { OrganizationGroup } from "../../../api/types/Group";
-import CloseIcon from "../../../assets/svg/close-icon.svg";
 import { APP_CONFIG } from "../../../constants/constants";
-import { OrganizationDriver } from "../../../api/types/Driver";
-import { useDebouncedCallback } from "use-debounce";
+import { useLoggedInUserData } from "../../../utils/user";
+import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
+import { vehicleFormInitialValues } from "./validation";
 
 interface VehicleDetailFormProps {
   values: any;
   errors: any;
   touched: any;
   handleChange: (event: React.ChangeEvent<any>) => void;
+  formik?: FormikProps<typeof vehicleFormInitialValues>;
   formikSetValue: (field: string, value: any, shouldValidate?: boolean) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
   formikSetTouched: (
@@ -47,6 +47,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
   errors,
   touched,
   handleChange,
+  formik,
   formikSetValue,
   handleBlur,
   formikSetTouched,
@@ -152,6 +153,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
 
       <div className="col-span-12 grid grid-cols-12">
         <AdminFormFieldInput
+          customWrapperClass="col-span-6 lg:mr-2"
           label={t("unique_id")}
           type="text"
           id="unique_id"
@@ -166,8 +168,9 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         />
       </div>
 
-      <div className="grid grid-cols-8 col-span-12">
+      <div className="grid grid-cols-12 col-span-12">
         <AdminFormFieldCheckbox
+          customWrapperClass="col-span-6 lg:mr-2"
           label={t("is_active")}
           id="is_active"
           type="checkbox"
@@ -502,6 +505,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
             const selectedDriver = dropdownSearchResults.find((item) => item.id === parseInt(`${e?.value}`));
             formikSetValue("driver_name", selectedDriver?.name);
             formikSetValue("driver_phone_number", selectedDriver?.phone);
+            formik?.validateForm(); // TODO: fix issue where validation error clears once driver is selected
           }}
           onBlur={(e) => {
             formikSetTouched("driver_id", true);

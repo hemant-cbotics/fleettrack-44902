@@ -18,7 +18,7 @@ import { APP_CONFIG } from "../../../constants/constants";
 import AppSearchBox from "../../../components/searchBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { routeUrls } from "../../../navigation/routeUrls";
-import { useFormik } from "formik";
+import { FormikProps, useFormik } from "formik";
 import {
   TFormFieldNames,
   vehicleFormInitialValues,
@@ -110,7 +110,7 @@ const ScreenAdminDetailVehicle = () => {
       setFormikValuesReady(false);
     }
   }, [isFetchingSingleVehicle]);
-  const formik = useFormik({
+  const formik: FormikProps<typeof vehicleFormInitialValues> = useFormik<typeof vehicleFormInitialValues>({
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
@@ -413,6 +413,7 @@ const ScreenAdminDetailVehicle = () => {
                   handleChange={handleChange}
                   formikSetValue={formik.setFieldValue}
                   handleBlur={handleBlur}
+                  formik={formik}
                   formikSetTouched={formik.setFieldTouched}
                   userCanEdit={userCanEdit}
                   loadingData={isFetchingSingleVehicle || !formikValuesReady}
