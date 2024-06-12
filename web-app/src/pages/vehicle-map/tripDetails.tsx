@@ -2,6 +2,37 @@ import { FC, useState } from "react";
 import StartLocation from "../../assets/svg/start-location.svg";
 import EndLocation from "../../assets/svg/end-location.svg";
 import { useTranslation } from "react-i18next";
+import AcceleratedIcon from "../../assets/svg/accelerated-icon.svg";
+import ButtonPressedIcon from "../../assets/svg/button-pressed-icon.svg";
+import DeAcceleratedIcon from "../../assets/svg/de-accelerated-icon.svg";
+import DistractedDrivingIcon from "../../assets/svg/distracted-driving-icon.svg";
+
+const events = [
+  {
+    name: "Accelerated",
+    icon: AcceleratedIcon,
+    date: "May 07, 2024",
+    time: "10:00 AM",
+  },
+  {
+    name: "Button Pressed",
+    icon: ButtonPressedIcon,
+    date: "May 07, 2024",
+    time: "10:00 AM",
+  },
+  {
+    name: "De-Accelerated",
+    icon: DeAcceleratedIcon,
+    date: "May 07, 2024",
+    time: "10:00 AM",
+  },
+  {
+    name: "Distracted Driving",
+    icon: DistractedDrivingIcon,
+    date: "May 07, 2024",
+    time: "10:00 AM",
+  },
+]
 
 type TripDetailsProps = {
   tripData: {
@@ -99,7 +130,20 @@ const TripDetails: FC<TripDetailsProps> = ({
             )}
           </div>
           {showEvents && (
-            <p onClick={() => setShowEvents(false)}>Events...</p>
+            <div className="space-y-3" onClick={() => setShowEvents(false)}>
+              {events.map((event, index) => (
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-1">
+                    <img src={event.icon} alt="icon"/>
+                    <p className="font-medium text-sm leading-4">{event.name}</p>
+                  </div>
+                  <div className="space-y-1 text-right font-medium text-xs leading-3 text-gray-500">
+                    <p>{event.date}</p>
+                    <p>{event.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
