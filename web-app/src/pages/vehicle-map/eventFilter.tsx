@@ -159,7 +159,47 @@ const EventFilter = () => {
                     </Accordian>
 
                     <Accordian title="Specific Events" hasDetailsPage={false}>
-                      <p>Not Available</p>
+                      <div className="col-span-6 space-y-3">
+                        <AdminFormFieldCheckbox 
+                          label={t("idling")}
+                          id="idling"
+                          type="checkbox"
+                          name="idling"
+                          checked={values.idling}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+
+                        <AdminFormFieldCheckbox 
+                          label={t("speeding")}
+                          id="speeding"
+                          type="checkbox"
+                          name="speeding"
+                          checked={values.speeding}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+
+                        <AdminFormFieldCheckbox 
+                          label={t("traffic")}
+                          id="traffic"
+                          type="checkbox"
+                          name="traffic"
+                          checked={values.traffic}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+
+                        <AdminFormFieldCheckbox 
+                          label={t("weather")}
+                          id="weather"
+                          type="checkbox"
+                          name="weather"
+                          checked={values.weather}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+                      </div>
                     </Accordian>
                   </div>
 
