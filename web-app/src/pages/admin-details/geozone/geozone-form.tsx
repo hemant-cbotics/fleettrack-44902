@@ -6,7 +6,7 @@
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldSubmit, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
+import { AdminFormFieldAsyncDropdown, AdminFormFieldCheckbox, AdminFormFieldDropdown, AdminFormFieldInput, AdminFormFieldPillItem, AdminFormFieldPillList, AdminFormFieldSubmit, PillItem, PseudoSelect, TSelectboxOption } from "../../../components/admin/formFields";
 import { OVERLAP_PRIORITY_OPTIONS, ZONE_COLOR_OPTIONS, ZONE_TYPES_OPTIONS } from "./constants";
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
@@ -635,14 +635,16 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         detailsFormField={true}
       />
 
-      <div className={`col-span-12 p-3 gap-2 ${userCanEdit ? 'bg-white' : 'bg-gray-100'} border border-gray-200 rounded-lg flex items-start flex-wrap min-h-24`}>
-        {selectedGroups?.map((option: GeozoneVehicleGroup, i: number) => (
-          <div className="flex items-center bg-gray-200 rounded-lg gap-2 py-1 px-2" key={`${option.id}_${i}`}>
-            <span className="p-1 font-semibold text-sm text-gray-500 leading-4 tracking-tighter">{option.name}</span>
-            {userCanEdit && (<img src={CloseIcon} alt={option.name} className="size-5 cursor-pointer opacity-80 hover:opacity-40" onClick={() => onRemoveFromGroup(option)}/>)}
-          </div>
+      <AdminFormFieldPillList disabled={!userCanEdit}>
+        {selectedGroups.map((group, i) => (
+          <AdminFormFieldPillItem // TODO: Fix prefill on change item from left column
+            key={`pillItem_${i}`}
+            disabled={!userCanEdit}
+            item={group as PillItem}
+            onRemove={() => onRemoveFromGroup(group)}
+          />
         ))}
-      </div>
+      </AdminFormFieldPillList>
 
       <AdminFormFieldDropdown
         loadingData={loadingData}
@@ -658,6 +660,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         disabled={!userCanEdit}
         detailsFormField={true}
         customWrapperClass="col-span-12"
+        placeholder={t("assign_group_placeholder")}
       />
 
       <AdminFormFieldCheckbox

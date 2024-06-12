@@ -1,6 +1,7 @@
 import { FC, ReactNode, useState } from "react";
 import Select, { GroupBase, OptionsOrGroups } from "react-select";
 import AsyncSelect from "react-select/async";
+import CloseIcon from "../../assets/svg/close-icon.svg";
 
 type AdminFormFieldInputProps = {
   label: string;
@@ -458,4 +459,51 @@ export const AdminFormFieldSubmit: FC<AdminFormFieldSubmitProps> = ({ type = 'su
       </button>
     </div>
   );
+}
+
+type AdminFormFieldPillListProps = {
+  customWrapperClass?: string;
+  disabled?: boolean;
+  children?: ReactNode;
+};
+
+export const AdminFormFieldPillList: FC<AdminFormFieldPillListProps> = ({
+  customWrapperClass = "col-span-12",
+  disabled = false,
+  children,
+}) => {
+  return (
+    <div className={`${customWrapperClass} p-3 gap-2 ${!disabled ? "bg-white" : "bg-gray-100"} border border-gray-300 rounded-lg flex items-start flex-wrap min-h-24`}>
+      {children}
+    </div>
+  )
+}
+
+export type PillItem = {
+  name: string;
+};
+type AdminFormFieldPillItemProps = {
+  disabled: boolean;
+  item: PillItem;
+  onRemove: (item: any) => void;
+};
+
+export const AdminFormFieldPillItem: FC<AdminFormFieldPillItemProps> = ({
+  disabled,
+  item,
+  onRemove,
+}) => {
+  return (
+    <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2">
+      <span className="p-1 font-semibold text-sm text-gray-500 leading-4 tracking-tighter">{item.name}</span>
+      {!disabled && (
+        <img
+          src={CloseIcon}
+          alt={item.name}
+          className="size-5 cursor-pointer opacity-80 hover:opacity-40"
+          onClick={() => onRemove(item)}
+        />
+      )}
+    </div>
+  )
 }

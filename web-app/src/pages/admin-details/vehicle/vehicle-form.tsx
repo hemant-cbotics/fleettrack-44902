@@ -6,7 +6,7 @@
  */
 
 import { FormikProps } from "formik";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLazyOrganizationDriversQuery, useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
 import { OrganizationDriver } from "../../../api/types/Driver";
@@ -17,6 +17,9 @@ import {
   AdminFormFieldCheckbox,
   AdminFormFieldDropdown,
   AdminFormFieldInput,
+  AdminFormFieldPillItem,
+  AdminFormFieldPillList,
+  PillItem,
   PseudoSelect,
   TSelectboxOption
 } from "../../../components/admin/formFields";
@@ -787,14 +790,16 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
           disabled={!userCanEdit}
         />
       </div>
-      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
-        {selectedGroups?.map((option:any) => (
-          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
-            <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
-            <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
-          </div>
+      <AdminFormFieldPillList disabled={!userCanEdit}>
+        {selectedGroups.map((group: any, i: number) => (
+          <AdminFormFieldPillItem // TODO: Fix prefill on change item from left column
+            key={`pillItem_${i}`}
+            disabled={!userCanEdit}
+            item={group as PillItem}
+            onRemove={() => onRemoveFromGroup(group)}
+          />
         ))}
-      </div>
+      </AdminFormFieldPillList>
       <AdminFormFieldDropdown
         loadingData={loadingData}
         label={t("list_of_groups")}
