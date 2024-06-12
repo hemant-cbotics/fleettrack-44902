@@ -375,6 +375,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
           onChange={handleChange}
           onBlur={onBlur}
           className="mt-1 w-12 h-11 px-3 disabled:bg-gray-200 disabled:border-gray-300 rounded-md text-sm shadow-sm sr-only peer focus-visible:outline-4 focus-visible:shadow-none"
+          disabled={disabled}
         />
         <div
           onClick={() =>

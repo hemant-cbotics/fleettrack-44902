@@ -272,6 +272,7 @@ export const language_en = {
         accord_general_details: "General Details",
         accord_authorized_groups: "Authorized Groups",
         accord_user_access_control: "User Access Control",
+        select_group_to_add: "Select a group to add",
         toast: {
           user_updated: "User has been updated successfully.",
           user_deleted: "User has been deleted successfully.",

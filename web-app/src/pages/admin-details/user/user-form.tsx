@@ -17,6 +17,7 @@ import { DEFAULT_OVERLAY_OPTIONS, FIRST_LOGIN_PAGE_OPTIONS, TIMEZONE_OPTIONS, US
 import { useLoggedInUserData } from "../../../utils/user";
 import { useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
 import { OrganizationGroup } from "../../../api/types/Group";
+import { useTranslation } from "react-i18next";
 
 interface UserGeneralDetailFormProps {
   values: any;
@@ -272,6 +273,7 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   userCanEdit,
   loadingData,
 }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "admins.users.detailsPage" });
 
   // selected groups mechanism
   const [selectedGroups, setSelectedGroups] = React.useState(values.authorized_groups);
@@ -324,17 +326,17 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
 
   return (
     <div className="px-5 pt-4 pb-8 bg-gray-100 grid grid-cols-12 gap-4">
-      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
+      <div className={`col-span-12 p-3 gap-2 ${userCanEdit ? "bg-white" : "bg-gray-100"} border border-gray-300 rounded-lg flex items-start flex-wrap min-h-24`}>
         {selectedGroups?.map((option:any) => (
           <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
             <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
-            <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
+            {!!userCanEdit && (<img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>)}
           </div>
         ))}
       </div>
       <AdminFormFieldDropdown
         loadingData={loadingData}
-        label="Authorized Groups"
+        label={t("select_group_to_add")}
         id="authorized_groups"
         name="authorized_groups"
         value={filteredGroupData?.[0]?.value}
