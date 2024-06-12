@@ -9,6 +9,10 @@ export const formInitialValues = {
   driver_check_in: false,
   driver_check_out: false,
   driver_unbelted: false,
+  idling: false,
+  speeding: false,
+  traffic: false,
+  weather: false,
 };
 
 export const formValidationSchema = Yup.object().shape({});

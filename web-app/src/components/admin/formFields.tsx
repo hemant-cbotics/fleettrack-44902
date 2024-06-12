@@ -314,9 +314,7 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
 
 type AdminFormFieldChecboxProps = Omit<AdminFormFieldInputProps, "value"> & {
   checked?: boolean;
-  hasIcon?: boolean;
   icon?: string | null;
-  iconColor?: string;
 };
 
 export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
@@ -330,9 +328,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
   touched,
   error,
   disabled = false,
-  hasIcon = false,
   icon = null,
-  iconColor = "green",
   customWrapperClass = "col-span-4",
 }) => {
   const handleChange = (e:any) => {
@@ -341,13 +337,9 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
   
   return (
     <div className={`bg-white flex justify-between items-center p-3 rounded-lg shadow-sm border-gray-200${disabled ? ' opacity-50' : ''} cursor-pointer ${customWrapperClass}`}>
-      <div className="flex gap-2">
-        {hasIcon && (
-          <div className={`rounded-full ${iconColor === "green" ? "bg-green-600" : "bg-red-600"} flex items-center ${icon ? "p-1" : "p-3"}`}>
-            {icon && (
-              <img src={icon} alt="icon"/>
-            )}
-          </div>
+      <div className="flex gap-2 items-center">
+        {icon && (
+          <img src={icon} alt="icon"/>
         )}
         <label
           className={`block text-sm font-display font-semibold text-field-label-valid`}

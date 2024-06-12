@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import { formInitialValues, formValidationSchema } from "./validation";
 import Accordian from "../../components/accordian";
-import { AdminFormFieldCheckbox } from "../../components/admin/formFields";
+import { AdminFormFieldCheckbox, AdminFormFieldSubmit } from "../../components/admin/formFields";
+import AllEventIcon from "../../assets/svg/all-event-icon.svg";
 import AcceleratedIcon from "../../assets/svg/accelerated-icon.svg";
 import ButtonPressedIcon from "../../assets/svg/button-pressed-icon.svg";
 import DeAcceleratedIcon from "../../assets/svg/de-accelerated-icon.svg";
@@ -75,8 +76,7 @@ const EventFilter = () => {
                           checked={values.all_event}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          hasIcon={true}
-                          iconColor="green"
+                          icon={AllEventIcon}
                         />
 
                         <AdminFormFieldCheckbox 
@@ -87,9 +87,7 @@ const EventFilter = () => {
                           checked={values.accelerated}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          hasIcon={true}
                           icon={AcceleratedIcon}
-                          iconColor="green"
                         />
 
                         <AdminFormFieldCheckbox 
@@ -100,9 +98,7 @@ const EventFilter = () => {
                           checked={values.button_pressed}
                           onChange={handleChange}
                           onBlur={handleBlur} 
-                          hasIcon={true}
                           icon={ButtonPressedIcon}
-                          iconColor="green"
                         />
 
                         <AdminFormFieldCheckbox 
@@ -113,9 +109,7 @@ const EventFilter = () => {
                           checked={values.d_accelerated}
                           onChange={handleChange}
                           onBlur={handleBlur} 
-                          hasIcon={true}
                           icon={DeAcceleratedIcon}
-                          iconColor="red"
                         />
 
                         <AdminFormFieldCheckbox 
@@ -126,9 +120,7 @@ const EventFilter = () => {
                           checked={values.distracted_driving}
                           onChange={handleChange}
                           onBlur={handleBlur} 
-                          hasIcon={true}
                           icon={DistractedDrivingIcon}
-                          iconColor="red"
                         />
 
                         <AdminFormFieldCheckbox 
@@ -138,10 +130,8 @@ const EventFilter = () => {
                           name="driver_check_in"
                           checked={values.driver_check_in}
                           onChange={handleChange}
-                          onBlur={handleBlur} 
-                          hasIcon={true}
+                          onBlur={handleBlur}
                           icon={CheckInIcon}
-                          iconColor="green"
                         />
 
                         <AdminFormFieldCheckbox 
@@ -152,9 +142,7 @@ const EventFilter = () => {
                           checked={values.driver_check_out}
                           onChange={handleChange}
                           onBlur={handleBlur} 
-                          hasIcon={true}
                           icon={CheckOutIcon}
-                          iconColor="red"
                         />
 
                         <AdminFormFieldCheckbox 
@@ -165,17 +153,69 @@ const EventFilter = () => {
                           checked={values.driver_unbelted}
                           onChange={handleChange}
                           onBlur={handleBlur} 
-                          hasIcon={true}
                           icon={DriverUnbeltIcon}
-                          iconColor="red"
                         />
                       </div>
                     </Accordian>
 
                     <Accordian title="Specific Events" hasDetailsPage={false}>
-                      <p>Not Available</p>
+                      <div className="col-span-6 space-y-3">
+                        <AdminFormFieldCheckbox 
+                          label={t("idling")}
+                          id="idling"
+                          type="checkbox"
+                          name="idling"
+                          checked={values.idling}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+
+                        <AdminFormFieldCheckbox 
+                          label={t("speeding")}
+                          id="speeding"
+                          type="checkbox"
+                          name="speeding"
+                          checked={values.speeding}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+
+                        <AdminFormFieldCheckbox 
+                          label={t("traffic")}
+                          id="traffic"
+                          type="checkbox"
+                          name="traffic"
+                          checked={values.traffic}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+
+                        <AdminFormFieldCheckbox 
+                          label={t("weather")}
+                          id="weather"
+                          type="checkbox"
+                          name="weather"
+                          checked={values.weather}
+                          onChange={handleChange}
+                          onBlur={handleBlur} 
+                        />
+                      </div>
                     </Accordian>
                   </div>
+
+                  <AdminFormFieldSubmit 
+                    label={tMain("confirm")}
+                    type="button"
+                    variant="primary"
+                    onClick={hideModal} 
+                  />
+
+                  <AdminFormFieldSubmit 
+                    label={tMain("cancel")}
+                    type="button"
+                    variant="danger-transparent"
+                    onClick={hideModal} 
+                  />
                 </form>
               );
             }}
