@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import { formInitialValues, formValidationSchema } from "./validation";
 import Accordian from "../../components/accordian";
-import { AdminFormFieldCheckbox } from "../../components/admin/formFields";
+import { AdminFormFieldCheckbox, AdminFormFieldSubmit } from "../../components/admin/formFields";
 import AllEventIcon from "../../assets/svg/all-event-icon.svg";
 import AcceleratedIcon from "../../assets/svg/accelerated-icon.svg";
 import ButtonPressedIcon from "../../assets/svg/button-pressed-icon.svg";
@@ -162,6 +162,20 @@ const EventFilter = () => {
                       <p>Not Available</p>
                     </Accordian>
                   </div>
+
+                  <AdminFormFieldSubmit 
+                    label={tMain("confirm")}
+                    type="button"
+                    variant="primary"
+                    onClick={hideModal} 
+                  />
+
+                  <AdminFormFieldSubmit 
+                    label={tMain("cancel")}
+                    type="button"
+                    variant="danger-transparent"
+                    onClick={hideModal} 
+                  />
                 </form>
               );
             }}
