@@ -1,58 +1,107 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import LandingWrapper from "../../../components/landing";
+import { useNavigate } from "react-router-dom";
+import LandingWrapper from "../../../components/landing/landing";
 import { routeUrls } from "../../../navigation/routeUrls";
 import { useTranslation } from "react-i18next";
+import { Formik } from "formik";
+import { formInitialValues, TFormFieldNames, YupValidationSchema } from "./validation";
+import { LandingFormFieldInput, LandingFormFieldSubmit } from "../../../components/landing/formFields";
+import { useForgotPasswordMutation } from "../../../api/network/authApiService";
+import { APP_CONFIG } from "../../../constants/constants";
+import { toast } from "react-toastify";
+import { ForgotPasswordResponseSuccess } from "../../../api/types/Onboarding";
+import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
+import { useDispatch } from "react-redux";
+import { setPreLoginUserData } from "../../../api/store/commonSlice";
 
 const ScreenForgotPassword = () => {
-  const { t } = useTranslation();
+  const { t: tMain } = useTranslation();
+  const { t } = useTranslation('translation', { keyPrefix: 'forgotPasswordScreen' });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [forgotPasswordApiTrigger, { isLoading }] = useForgotPasswordMutation()
 
   return (
     <LandingWrapper>
 
-      <form action="#" className="mt-8 grid grid-cols-6 gap-6">
+      <Formik
+        initialValues={formInitialValues}
+        validationSchema={YupValidationSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          if(APP_CONFIG.TOASTS.INFO) toast.info(t('toast.sending_reset_code'));
+          forgotPasswordApiTrigger({ email: values.email })
+            .unwrap()
+            .then((data) => {
+              if((data as ForgotPasswordResponseSuccess)?.message) {
+                dispatch(setPreLoginUserData({ email: values.email }));
+                toast.success(t('toast.reset_code_sent'), { autoClose: 15000 });
+                navigate(routeUrls.resetPassword);
+              } else {
+                toast.error(tMain('toast.general_error'));
+              }
+            })
+            .catch((error) => {
+              const errors = !!error?.data?.message ? serializeErrorKeyValues(error?.data?.message) : [t('toast.reset_code_failed')];
+              toast.error(errors?.join(' '));
+            })
+            .finally(() => {
+              setSubmitting(false);
+            });
+        }}
+      >{({
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isSubmitting,
+        dirty,
+      }) => {
+        const invalidFields =
+          Object.keys(errors)
+            .filter(key => !!errors[key as TFormFieldNames]);
+        const isFormValid = invalidFields.length === 0 && dirty;
 
-        <h1 className="col-span-6 mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-          {t("reset_your_password")}
-        </h1>
+        return (
+        <form className="p-8 bg-white grid grid-cols-6 gap-6 rounded-3xl shadow-2xl" onSubmit={handleSubmit}>
 
-        <p className="col-span-6 mt-0 leading-relaxed text-gray-500">
-          {t("reset_email_sent")}
-        </p>
+          <h2 className="col-span-6 text-3xl font-bold text-heading-black">
+            {t("heading")}
+          </h2>
 
-        <div role="alert" className="col-span-6 rounded border-s-4 border-red-500 bg-red-50 p-4">
-          <strong className="block font-bold text-red-800"> Something went wrong </strong>
-
-          <p className="mt-2 text-sm text-red-700">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo quasi assumenda numquam deserunt
-            consectetur autem nihil quos debitis dolor culpa.
+          <p className="col-span-6 mt-0 leading-relaxed text-gray-500">
+            {t("sub_heading")}
           </p>
-        </div>
 
-        <div className="col-span-6">
-          <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> {t("email")} </label>
-
-          <input
+          <LandingFormFieldInput
+            label={tMain('email_address')}
             type="email"
             id="Email"
             name="email"
-            className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-          />
-        </div>
-
-        <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-          <button
-            className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
-          >
-            {t("send_me_the_link")}
-          </button>
-
-          <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-            {t("already_have_an_account")}{" "}
-            <Link to={routeUrls.loginPage} className="text-gray-700 underline"> {t("go_back_to_login")} </Link>.
-          </p>
-        </div>
-      </form>
+            placeholder={tMain('email_address_placeholder')}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.email}
+            touched={touched.email}
+            error={errors.email} />
+          
+          <LandingFormFieldSubmit
+            label={t('submit_button')}
+            variant="primary"
+            disabled={!isFormValid || isSubmitting} />
+      
+          <LandingFormFieldSubmit
+            label={tMain('cancel')}
+            type="button"
+            variant="secondary"
+            disabled={isSubmitting}
+            onClick={() => navigate(routeUrls.loginPage)} />
+            
+        </form>
+      )}}
+      </Formik>
     </LandingWrapper>
   );
 }
