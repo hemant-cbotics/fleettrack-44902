@@ -210,15 +210,25 @@ const ScreenMapOverview = () => {
                 <MapVehicleListingColumnItem
                   key={index}
                   asideText={
-                    <span className={`flex gap-1 leading-3 text-[10px] ${dataPoint.is_active ? "text-field-success" : "text-field-error-dark"}`}>
-                      {t("vehicleStatus.idle_active")}
+                    <span className={`flex items-center justify-end gap-1 leading-3 text-[10px] ${dataPoint.is_active ? "text-field-success" : "text-field-error-dark"}`}>
+                      {t(
+                        dataPoint.coords.length > 2
+                        ? "vehicleStatus.driving"
+                        : dataPoint.is_active
+                          ? "vehicleStatus.idle_active"
+                          : "vehicleStatus.idle_inactive"
+                      )}
                       <div dangerouslySetInnerHTML={{ __html:
-                        mapVehicleIconWrapped(
-                          dataPoint.coords.length > 2
-                          ? 'driving'
-                          : dataPoint.is_active
-                          ? 'idle_active' : 'idle_inactive'
-                        )
+                        dataPoint.coords.length > 2
+                          ? mapVehicleIconWrapped(
+                              'driving',
+                              false,
+                              45
+                            )
+                          : mapVehicleIconWrapped(
+                              dataPoint.is_active
+                              ? 'idle_active' : 'idle_inactive'
+                            )
                       }} />
                     </span>
                   }

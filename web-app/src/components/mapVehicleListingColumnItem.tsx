@@ -26,13 +26,13 @@ const MapVehicleListingColumnItem: FC<TMapVehicleListingColumnItemProps> = ({
 }) => {
   return (
     <div
-      className={`border-b px-4 py-3 border-gray-300 ${
+      className={`border-b ps-4 pe-2 py-3 border-gray-300 ${
         selected ? "bg-accent-blue-paleO66" : "hover:bg-accent-blue-paleO66 cursor-pointer"
       }`}
       onClick={onClick}
     >
-      <div className="grid grid-cols-8">
-        <div className="col-span-6 flex items-start gap-3">
+      <div className="grid grid-cols-12">
+        <div className="col-span-8 flex items-start gap-3">
           {checked !== null && (
             <TickCheckbox
               id={id}
@@ -53,7 +53,7 @@ const MapVehicleListingColumnItem: FC<TMapVehicleListingColumnItemProps> = ({
             </p>
           </div>
         </div>
-        <div className="col-span-2 font-bold text-xs leading-4 text-right">
+        <div className="col-span-4 font-bold text-xs leading-4 text-right">
           {asideText}
         </div>
       </div>
