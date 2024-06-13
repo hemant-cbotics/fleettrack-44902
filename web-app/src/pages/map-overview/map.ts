@@ -2,7 +2,7 @@ import { mapVehicleIconWrapped } from "../../assets/svg/vehicle-wrapped";
 import { APP_CONFIG } from "../../constants/constants";
 import { customClisteredPinCallback } from "../../utils/map";
 import { mapInfoBoxContent } from "./common";
-import { TDataPoint, TMapOperations, TMapUpdatesHandler, TMPushpin } from "./type";
+import { TDataPoint, TMapOperations, TMapOperationsProps, TMapUpdatesHandler, TMPushpin } from "./type";
 
 export const mapOperations: TMapOperations = (props, checkedVehicles) => {
 
@@ -67,7 +67,7 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
         thisPushpinInfoBox.setOptions({ visible: true });
       });
       Microsoft.Maps.Events.addHandler(thisPushpin, 'mouseout', (e: any) => {
-        thisPushpinInfoBox.setOptions({ visible: false });
+        thisPushpinInfoBox.setOptions({ visible: mapGetPushpinCountWithinMapBounds(props) <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD ? true : false });
       });
       Microsoft.Maps.Events.addHandler(thisPushpin, 'click', (e: any) => {
         props.onDataPointPushpinClick?.(dataPoint);
@@ -94,6 +94,20 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
 
     // center the map to the polygon
     setTimeout(() => mapCenterToDataPoints(props, checkedVehicles), 1000);
+
+    // zoom event listener
+    Microsoft.Maps.Events.addHandler(props.mapRef.current.map, 'viewchangeend', () => {
+      // show all infoboxes if only 6 pushpins are visible in bounds
+      if(mapGetPushpinCountWithinMapBounds(props) <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD) {
+        props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+          pushpinObject.infobox.setOptions({ visible: true });
+        });
+      } else {
+        props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+          pushpinObject.infobox.setOptions({ visible: false });
+        });
+      }
+    });
   }
 
   // load map modules before rendering the map objects
@@ -117,6 +131,7 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
 export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
   const Microsoft = (window as any).Microsoft;
   if(APP_CONFIG.DEBUG.MAPS) console.log('[mapUpdatesHandler]', action, value);
+  // const pushpinsWithinBounds = mapGetPushpinCountWithinMapBounds(props)
   switch(action) {
     case 'checkedUpdated':
       const checkedVehicles = value as string[];
@@ -137,7 +152,8 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
         pushpinObject.infobox.setOptions({
           visible:
             checkedVehicles.includes(pushpinObject.id)
-            && checkedVehicles.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_THRESHOLD
+            && checkedVehicles.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
+            // && pushpinsWithinBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
         });
       });
       mapCenterToDataPoints(props, checkedVehicles);
@@ -214,8 +230,11 @@ const mapCenterToDataPoints: TMapOperations = (props, value) => {
     padding: 5,
     animate: true
   });
-  // show the infobox if there is only 6 (APP_CONFIG.MAPS.SHOW_INFOBOX_THRESHOLD) or less visible pushpins
-  if(visibleDataPoints.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_THRESHOLD) {
+  // show the infobox if there is only 6 (APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD) or less visible pushpins
+  // const pushpinsWithinBounds = mapGetPushpinCountWithinMapBounds(props)
+  if(visibleDataPoints.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
+  // && pushpinsWithinBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
+  ) {
     visibleDataPoints.forEach((dataPoint) => {
       const pushpinObject = props.mapRef.current.objects.mPushpins.find((pushpinObject) => pushpinObject.id === dataPoint.id);
       if(pushpinObject) {
@@ -256,4 +275,12 @@ const mapVehicleStateIconAngle = (dataPoint: TDataPoint) => {
     angle = Math.atan2(point2.y - point1.y, point2.x - point1.x) * 180 / Math.PI;
   }
   return angle;
+}
+
+const mapGetPushpinCountWithinMapBounds = (props: TMapOperationsProps) => {
+  const Microsoft = (window as any).Microsoft;
+  const mapBounds = props.mapRef?.current?.map?.getBounds();
+  if(!mapBounds) return 0;
+  const pushpins = props.mapRef.current.objects.mPushpins;
+  return pushpins.filter((pushpinObject) => mapBounds.contains(pushpinObject.pushpin.getLocation())).length;
 }
