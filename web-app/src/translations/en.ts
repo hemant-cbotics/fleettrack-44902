@@ -641,5 +641,28 @@ export const language_en = {
       sub_heading: "Please select the group you wish to view.",
     },
   },
+  vehicleMap: {
+    selected_vehicle: "Selected Vehicle",
+    tripDetails: {
+      duration: "Duration",
+      total_events: "Total Events",
+      view_details: "View Details",
+    },
+    eventFilter: {
+      heading: "Event Filter",
+      all_event: "All Event",
+      accelerated: "Accelerated",
+      button_pressed: "Button Pressed",
+      d_accelerated: "D Accelerated",
+      distracted_driving: "Distracted Driving",
+      driver_check_in: "Driver Check In",
+      driver_check_out: "Driver Check Out",
+      driver_unbelted: "Driver Unbelted",
+      idling: "Idling",
+      speeding: "Speeding",
+      traffic: "Traffic",
+      weather: "Weather",
+    },
+  },
   confirm: "Confirm",
 };

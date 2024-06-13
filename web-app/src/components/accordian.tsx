@@ -8,20 +8,22 @@ interface AccordianProps {
   children: React.ReactNode;
   openByDefault?: boolean;
   collapsible?: boolean;
+  hasDetailsPage?: boolean;
 }
 
 const Accordian: FC<AccordianProps> = ({
   title,
   children,
   openByDefault = false,
-  collapsible = true
+  collapsible = true,
+  hasDetailsPage = true,
 }) => {
     const [isOpen, setIsOpen] = useState(openByDefault);
 
     return (
-      <div className="border-b border-gray-200">
+      <div className={`${hasDetailsPage ? "border-b border-gray-200" : ""}`}>
         <div
-          className={`px-5 py-[10px] flex justify-between items-center${collapsible ? " cursor-pointer" : ''}`}
+          className={`${hasDetailsPage ? "px-5" : ""} py-[10px] flex justify-between items-center${collapsible ? " cursor-pointer" : ''}`}
           {...(collapsible ? { onClick: () => setIsOpen(!isOpen) } : {})}
         >
           <div className="text-lg font-semibold leading-10 tracking-tighter text-blue-900">{title}</div>

@@ -444,7 +444,7 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
-      providesTags: [AdminApiTags.GROUP_CREATED, AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_DELETED],
+      providesTags: [AdminApiTags.GROUP_CREATED, AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_DELETED, AdminApiTags.VEHICLE_MODIFIED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -482,7 +482,7 @@ export const AdminAPIs = createApi({
           method: API_METHODS.GET,
         };
       },
-      providesTags: [AdminApiTags.GROUP_SINGLE],
+      providesTags: [AdminApiTags.GROUP_SINGLE, AdminApiTags.VEHICLE_MODIFIED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
