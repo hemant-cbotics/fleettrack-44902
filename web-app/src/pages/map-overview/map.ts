@@ -19,9 +19,8 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
     // create pushpins
     props.dataPoints.forEach((dataPoint) => {
       let angle = mapVehicleStateIconAngle(dataPoint);
-      if(angle !== 0) {
+      if(angle !== 0 && APP_CONFIG.DEBUG.MAPS) {
         // temporary polyline for testing
-        // TODO: remove this line
         const thisPolyline = new Microsoft.Maps.Polyline(
           [
             new Microsoft.Maps.Location(dataPoint.coords[0], dataPoint.coords[1]),
@@ -165,7 +164,7 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
         if(pushpinObj.focus) {
           props.mapRef.current.map.setView({
             center: pushpinObjectFocus.pushpin.getLocation(),
-            zoom: props.mapRef.current.map.getZoom() + 1,
+            zoom: Math.min(8, props.mapRef.current.map.getZoom() + 1),
             animate: true,
           });
         }
