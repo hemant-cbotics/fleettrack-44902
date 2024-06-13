@@ -9,6 +9,7 @@ import { OrganizationEntityListingPayload } from "../../api/types/Admin";
 import FilterIcon from "../../assets/svg/filter-icon.svg";
 import GroupFilterIcon from "../../assets/svg/group-filter-icon.svg";
 import SortIcon from "../../assets/svg/sort-icon.svg";
+import { mapVehicleIconWrapped } from "../../assets/svg/vehicle-wrapped";
 import BasicMap, { MapLoadingAnimation } from "../../components/maps/basicMap";
 import MapVehicleListingColumnItem from "../../components/mapVehicleListingColumnItem";
 import AppSearchBox from "../../components/searchBox";
@@ -62,7 +63,7 @@ const ScreenMapOverview = () => {
     page: 1,
     page_size: 30, // APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
     search: "",
-    is_active: "active"
+    is_active: "both",
   });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgVehiclesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
@@ -144,6 +145,8 @@ const ScreenMapOverview = () => {
     }
   };
 
+  // TODO: display active and inactive both vehicles on map
+
   return (
     <>
       {/* <HeaderView
@@ -206,7 +209,12 @@ const ScreenMapOverview = () => {
                 ?.map((vehicleItem, index: number) => (
                 <MapVehicleListingColumnItem
                   key={index}
-                  asideText={'Driving'}
+                  asideText={
+                    <span className={`flex gap-1 leading-3 text-[10px] ${vehicleItem.is_active ? "text-field-success" : "text-field-error-dark"}`}>
+                      {t("vehicleStatus.idle_active")}
+                      <div dangerouslySetInnerHTML={{ __html: mapVehicleIconWrapped(vehicleItem.is_active ? 'idle_active' : 'idle_inactive') }} />
+                    </span>
+                  }
                   bottomText={`${vehicleItem.licence_plate}`}
                   checked={checkedVehicles.includes(vehicleItem.id)}
                   description={vehicleItem.vin}

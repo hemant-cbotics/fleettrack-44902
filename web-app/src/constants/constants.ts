@@ -2,6 +2,10 @@ import { ColorRGB } from "../types/common";
 
 export const APP_CONFIG = {
   APP_NAME: "FleetTrack",
+  COLORS: { // should stay consistent with tailwind.config.js
+    GREEN: '#009007',
+    RED: '#D0021B',
+  },
   PASSWORD: {
     MIN_LENGTH: 8,
   },
@@ -60,6 +64,7 @@ export const APP_CONFIG = {
       White: [255, 255, 255] as ColorRGB,
       Cyan: [0, 200, 200] as ColorRGB,
       Pink: [200, 0, 200] as ColorRGB,
-    }
+    },
+    VEHICLE_ICON_SIZE: 28,
   },
 }

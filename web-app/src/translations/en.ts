@@ -599,6 +599,11 @@ export const language_en = {
     heading: "Map Overview",
     listing_heading: "Listing",
     search_placeholder: "Search vehicles here...",
+    vehicleStatus: {
+      driving: "Driving",
+      idle_active: "Idle (Active)",
+      idle_inactive: "Idle (In-active)",
+    },
     filter: {
       heading: "Filters",
       address: "Find Address",

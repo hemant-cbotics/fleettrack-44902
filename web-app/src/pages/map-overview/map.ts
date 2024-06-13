@@ -1,3 +1,4 @@
+import { mapVehicleIconWrapped } from "../../assets/svg/vehicle-wrapped";
 import { APP_CONFIG } from "../../constants/constants";
 import { customClisteredPinCallback } from "../../utils/map";
 import { TMapOperations, TMapUpdatesHandler, TMPushpin } from "./type";
@@ -16,12 +17,16 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
   const renderMapObjects = () => {
     // create pushpins
     props.dataPoints.forEach((dataPoint) => {
+      // console.log('dataPoint', dataPoint)
       const thisPushpin = new Microsoft.Maps.Pushpin(
         new Microsoft.Maps.Location(dataPoint.coords[0], dataPoint.coords[1]),
         {
-          anchor: new Microsoft.Maps.Point(16, 32),
-          // icon: MapMarkerRed,
-          color: 'rgb(240, 0, 0)',
+          anchor: new Microsoft.Maps.Point(
+            APP_CONFIG.MAPS.VEHICLE_ICON_SIZE / 2,
+            APP_CONFIG.MAPS.VEHICLE_ICON_SIZE / 2
+          ),
+          icon:
+            mapVehicleIconWrapped(dataPoint.is_active ? 'driving' : 'idle_inactive'),
           visible: checkedVehicles.includes(dataPoint.id),
         }
       );

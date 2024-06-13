@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import TickCheckbox from "./tickCheckbox";
 
 type TMapVehicleListingColumnItemProps = {
-  asideText: string;
+  asideText: ReactNode | string;
   bottomText: string;
   checked?: boolean | null;
   description: string;
@@ -31,8 +31,8 @@ const MapVehicleListingColumnItem: FC<TMapVehicleListingColumnItemProps> = ({
       }`}
       onClick={onClick}
     >
-      <div className="grid grid-cols-4">
-        <div className="col-span-3 flex items-start gap-3">
+      <div className="grid grid-cols-8">
+        <div className="col-span-6 flex items-start gap-3">
           {checked !== null && (
             <TickCheckbox
               id={id}
@@ -53,7 +53,7 @@ const MapVehicleListingColumnItem: FC<TMapVehicleListingColumnItemProps> = ({
             </p>
           </div>
         </div>
-        <div className="col-span-1 font-bold text-xs leading-4 text-right">
+        <div className="col-span-2 font-bold text-xs leading-4 text-right">
           {asideText}
         </div>
       </div>
