@@ -24,12 +24,14 @@ export type TMapRef = {
   map: any;
   objects: {
     mPushpins: TMPushpin[];
+    mClusterLayer: any;
   }
 }
 
 export type TMPushpin = {
   id: string;
   pushpin: any;
+  infobox: any;
 }
 
 export type TMapData = {
@@ -42,5 +44,15 @@ export type TMapOperationsProps = {
   mapData: TMapData;
   setMapData: (mapData: TMapData) => void;
   dataPoints: TDataPoint[];
+  onDataPointPushpinClick?: (dataPoint: TDataPoint) => void;
 }
-export type TMapOperations = (props: TMapOperationsProps) => void;
+export type TMapOperations = (
+  props: TMapOperationsProps,
+  checkedVehicles: string[],
+) => void;
+
+export type TMapUpdatesHandler = (
+  props: TMapOperationsProps,
+  action: 'checkedUpdated' | 'focusPushpin' | 'centerToPushpin',
+  value?: any
+) => void;

@@ -42,7 +42,7 @@ module.exports = {
             dark: '#005B90',
             text: '#3D78B1',
           },
-          green: '#22c55d'
+          green: '#009007' // '#22c55d'
         },
         modal: {
           overlay: 'rgba(0, 0, 0, 0.25)',

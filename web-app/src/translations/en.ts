@@ -272,6 +272,8 @@ export const language_en = {
         accord_general_details: "General Details",
         accord_authorized_groups: "Authorized Groups",
         accord_user_access_control: "User Access Control",
+        select_group_to_add: "Select a group to add",
+        select_group_to_add_placeholder: "Select a group",
         toast: {
           user_updated: "User has been updated successfully.",
           user_deleted: "User has been deleted successfully.",
@@ -343,6 +345,7 @@ export const language_en = {
           ignition_input: "Ignition Input",
           maximum_speed: "Maximum Speed",
           driver_id: "Driver ID",
+          driver_id_no_item: "No driver found. Type to search...",
           driver_name: "Driver Name",
           driver_phone_number: "Driver Phone",
           fuel_type: "Fuel Type",
@@ -574,6 +577,7 @@ export const language_en = {
       },
     },
   },
+  select_all: "Select All",
   yes: "Yes",
   no: "No",
   active: "Active",
@@ -595,6 +599,11 @@ export const language_en = {
     heading: "Map Overview",
     listing_heading: "Listing",
     search_placeholder: "Search vehicles here...",
+    vehicleStatus: {
+      driving: "Driving",
+      idle_active: "Idle (Active)",
+      idle_inactive: "Idle (In-active)",
+    },
     filter: {
       heading: "Filters",
       address: "Find Address",

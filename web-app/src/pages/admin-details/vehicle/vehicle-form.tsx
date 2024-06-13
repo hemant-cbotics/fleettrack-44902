@@ -5,32 +5,35 @@
  * These components are used to render the form for editing the vehicle details.
  */
 
-import { Formik } from "formik";
-import { FC, useEffect, useState } from "react";
-import { groupMembershipFormValidationSchema } from "./validation";
+import { FormikProps } from "formik";
+import { FC, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLazyOrganizationDriversQuery, useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
+import { OrganizationDriver } from "../../../api/types/Driver";
+import { OrganizationGroup } from "../../../api/types/Group";
+import CloseIcon from "../../../assets/svg/close-icon.svg";
 import {
   AdminFormFieldAsyncDropdown,
   AdminFormFieldCheckbox,
   AdminFormFieldDropdown,
   AdminFormFieldInput,
+  AdminFormFieldPillItem,
+  AdminFormFieldPillList,
+  PillItem,
   PseudoSelect,
-  TSelectboxOption,
+  TSelectboxOption
 } from "../../../components/admin/formFields";
-import { useTranslation } from "react-i18next";
-import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
-import { useLazyOrganizationDriversQuery, useOrganizationDriversQuery, useOrganizationGroupsQuery } from "../../../api/network/adminApiServices";
-import { useLoggedInUserData } from "../../../utils/user";
-import { OrganizationGroup } from "../../../api/types/Group";
-import CloseIcon from "../../../assets/svg/close-icon.svg";
 import { APP_CONFIG } from "../../../constants/constants";
-import { OrganizationDriver } from "../../../api/types/Driver";
-import { useDebouncedCallback } from "use-debounce";
+import { useLoggedInUserData } from "../../../utils/user";
+import { ASSET_TYPE_OPTIONS, EQUIPMENT_STATUS_OPTIONS, FUEL_TYPE_OPTIONS, IGNITION_INPUT_OPTIONS, MAP_ROUTE_COLOR_OPTIONS, RECORDER_ON_OPTIONS, RECORDER_TYPE_OPTIONS, VEHICLE_CLASS_OPTIONS } from "./constants";
+import { vehicleFormInitialValues } from "./validation";
 
 interface VehicleDetailFormProps {
   values: any;
   errors: any;
   touched: any;
   handleChange: (event: React.ChangeEvent<any>) => void;
+  formik?: FormikProps<typeof vehicleFormInitialValues>;
   formikSetValue: (field: string, value: any, shouldValidate?: boolean) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
   formikSetTouched: (
@@ -47,6 +50,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
   errors,
   touched,
   handleChange,
+  formik,
   formikSetValue,
   handleBlur,
   formikSetTouched,
@@ -152,6 +156,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
 
       <div className="col-span-12 grid grid-cols-12">
         <AdminFormFieldInput
+          customWrapperClass="col-span-6 lg:mr-2"
           label={t("unique_id")}
           type="text"
           id="unique_id"
@@ -166,8 +171,9 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
         />
       </div>
 
-      <div className="grid grid-cols-8 col-span-12">
+      <div className="grid grid-cols-12 col-span-12">
         <AdminFormFieldCheckbox
+          customWrapperClass="col-span-6 lg:mr-2"
           label={t("is_active")}
           id="is_active"
           type="checkbox"
@@ -470,6 +476,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       />
       <div className="grid grid-cols-12 col-span-12">
         <AdminFormFieldInput
+          customWrapperClass="col-span-6 lg:mr-2"
           label={t("maximum_speed")}
           type="text"
           id="maximum_speed"
@@ -487,6 +494,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
       <div className="grid grid-cols-12 col-span-12">
         {loadingData ? <PseudoSelect label={t("driver_id")} /> : 
         (<AdminFormFieldAsyncDropdown
+          customWrapperClass="col-span-6 lg:mr-2"
           loadingData={loadingData}
           label={t("driver_id")}
           id="driver_id"
@@ -494,18 +502,20 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
           value={values.driver_id}
           options={[{ value: values.driver_id, label: `#${values.driver_id} ${values.driver_name}` }]}
           loadOptions={loadOptionsHandlerDriver}
+          noOptionsMessage={() => t("driver_id_no_item")}
           onChange={(e) => {
             formikSetValue("driver_id", e?.value);
             const selectedDriver = dropdownSearchResults.find((item) => item.id === parseInt(`${e?.value}`));
             formikSetValue("driver_name", selectedDriver?.name);
             formikSetValue("driver_phone_number", selectedDriver?.phone);
+            formik?.validateForm(); // TODO: fix issue where validation error clears once driver is selected
           }}
           onBlur={(e) => {
             formikSetTouched("driver_id", true);
             handleBlur(e);
           }}
-          error={errors.fuel_type}
-          touched={touched.fuel_type}
+          error={errors.driver_id}
+          touched={touched.driver_id}
           disabled={!userCanEdit}
           detailsFormField={true}
         />)}
@@ -780,14 +790,16 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
           disabled={!userCanEdit}
         />
       </div>
-      <div className="col-span-12 p-3 gap-2 bg-white border border-black rounded-lg flex items-start flex-wrap min-h-24">
-        {selectedGroups?.map((option:any) => (
-          <div className="flex items-center bg-gray-200 rounded-lg gap-3 py-1 px-2" key={option.id}>
-            <span className="font-normal text-sm leading-4 tracking-tighter">{option.name}</span>
-            <img src={CloseIcon} alt={option.label} className="size-5 cursor-pointer" onClick={() => onRemoveFromGroup(option)}/>
-          </div>
+      <AdminFormFieldPillList disabled={!userCanEdit}>
+        {selectedGroups.map((group: any, i: number) => (
+          <AdminFormFieldPillItem // TODO: Fix prefill on change item from left column
+            key={`pillItem_${i}`}
+            disabled={!userCanEdit}
+            item={group as PillItem}
+            onRemove={() => onRemoveFromGroup(group)}
+          />
         ))}
-      </div>
+      </AdminFormFieldPillList>
       <AdminFormFieldDropdown
         loadingData={loadingData}
         label={t("list_of_groups")}

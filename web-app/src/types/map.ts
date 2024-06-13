@@ -42,3 +42,6 @@ export type TMapState = {
   mapData?: TGeozoneMapData; // data to be displayed on the map
   mapDataForAPIs?: TGeozoneMapDataForAPIs; // data to be sent to APIs
 }
+
+export type TMapVehicleIconState =
+  'driving' | 'idle_active' | 'idle_inactive' | 'stopped' | 'online' | 'offline';

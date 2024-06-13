@@ -18,7 +18,7 @@ import { APP_CONFIG } from "../../../constants/constants";
 import AppSearchBox from "../../../components/searchBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { routeUrls } from "../../../navigation/routeUrls";
-import { useFormik } from "formik";
+import { FormikProps, useFormik } from "formik";
 import {
   TFormFieldNames,
   vehicleFormInitialValues,
@@ -110,7 +110,7 @@ const ScreenAdminDetailVehicle = () => {
       setFormikValuesReady(false);
     }
   }, [isFetchingSingleVehicle]);
-  const formik = useFormik({
+  const formik: FormikProps<typeof vehicleFormInitialValues> = useFormik<typeof vehicleFormInitialValues>({
     initialValues: vehicleFormInitialValues,
     validationSchema: vehicleFormValidationSchema,
     onSubmit: (values) => {
@@ -150,7 +150,7 @@ const ScreenAdminDetailVehicle = () => {
         vehicle_make: values.vehicle_make,
         vehicle_model: values.vehicle_model,
         vin: values.vin,
-        group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)).join(','),
+        group_ids: values.list_of_groups?.map((item: any) => parseInt(item.id)).join(',') || '',
         all_vehicles: values.all_vehicles,
         driver: values.driver_id
       };
@@ -228,7 +228,8 @@ const ScreenAdminDetailVehicle = () => {
     dirty,
   } = formik;
 
-  console.log('errors', errors);
+  // console.log('values', values);
+  // console.log('errors', errors);
   const invalidFields =
     Object.keys(errors)
       .filter(key => !!errors[key as TFormFieldNames]);
@@ -412,6 +413,7 @@ const ScreenAdminDetailVehicle = () => {
                   handleChange={handleChange}
                   formikSetValue={formik.setFieldValue}
                   handleBlur={handleBlur}
+                  formik={formik}
                   formikSetTouched={formik.setFieldTouched}
                   userCanEdit={userCanEdit}
                   loadingData={isFetchingSingleVehicle || !formikValuesReady}

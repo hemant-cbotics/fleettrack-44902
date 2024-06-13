@@ -54,7 +54,7 @@ const Pagination: FC<TPaginatonProps> = ({
         forcePage={forcePage}
         pageRangeDisplayed={2}
         marginPagesDisplayed={2}
-        containerClassName={`flex space-x-${size} items-center ${size === 1 ? "text-xs" : "text-sm"}`}
+        containerClassName={`flex gap-${size} items-center ${size === 1 ? "text-xs" : "text-sm"} `}
         pageClassName={`border border-gray-200 rounded-lg`}
         pageLinkClassName={`block px-${size*2} py-${size} text-gray-600`}
         activeClassName={`bg-accent-blue-pale text-accent-blue-dark`}
