@@ -39,7 +39,7 @@ const ScreenMapOverview = () => {
     (state: any) => state.commonReducer.modals
   );
 
-  const [selectedVehicle, setSelectedVehicle] = useState<string>();
+  const [selectedVehicle, setSelectedVehicle] = useState<string | null>();
   const [checkedVehicles, setCheckedVehicles] = useState<string[]>([]);
 
   // update map data on checked vehicles change
@@ -55,6 +55,51 @@ const ScreenMapOverview = () => {
       checkedVehicles
     );
   }, [checkedVehicles]);
+
+  // handle vehicle selection
+  const selectMapVehicle = (vehicleId: string | null) => {
+    setSelectedVehicle(prevVehicleId => {
+      mapUpdatesHandler(
+        {
+          mapRef,
+          mapData: { ...mapState?.mapData } as TMapData,
+          setMapData: () => {},
+          dataPoints,
+        },
+        'focusPushpin',
+        { id: selectedVehicle, focus: false }
+      );
+      if (prevVehicleId === vehicleId) {
+        dispatch(setModalsData({ ...modalsState, showVehicleDetails: false }))
+        return null;
+      }
+      return vehicleId;
+    });
+  }
+
+  // update map view on vehicle selection
+  useEffect(() => {
+    if (!!selectedVehicle) {
+      dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }))
+      mapUpdatesHandler(
+        {
+          mapRef,
+          mapData: { ...mapState?.mapData } as TMapData,
+          setMapData: () => {},
+          dataPoints,
+        },
+        'focusPushpin',
+        { id: selectedVehicle, focus: true }
+      );
+    }
+  }, [selectedVehicle]);
+
+  // reset selectedVehicle state on modal close
+  useEffect(() => {
+    if (!modalsState.showVehicleDetails) {
+      selectMapVehicle(null);
+    }
+  }, [modalsState.showVehicleDetails]);
 
   // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
@@ -246,8 +291,7 @@ const ScreenMapOverview = () => {
                     }
                   }}
                   onClick={() => {
-                    setSelectedVehicle(dataPoint.id);
-                    dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }))
+                    selectMapVehicle(dataPoint.id);
                   }}
                   title={`${dataPoint.vehicle_model} ${dataPoint.vehicle_make}`}
                   selected={selectedVehicle === dataPoint.id}

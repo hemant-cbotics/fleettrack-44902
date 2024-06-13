@@ -45,4 +45,8 @@ export type TMapOperationsProps = {
   dataPoints: TDataPoint[];
 }
 export type TMapOperations = (props: TMapOperationsProps, checkedVehicles: string[]) => void;
-export type TMapUpdatesHandler = (props: TMapOperationsProps, action: 'checkedUpdated', value?: any) => void;
+export type TMapUpdatesHandler = (
+  props: TMapOperationsProps,
+  action: 'checkedUpdated' | 'focusPushpin' | 'centerToPushpin',
+  value?: any
+) => void;
