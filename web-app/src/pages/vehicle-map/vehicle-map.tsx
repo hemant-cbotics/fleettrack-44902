@@ -10,6 +10,8 @@ import BasicMap, { MapLoadingAnimation } from "../../components/maps/basicMap";
 import VehicleDetails from "../map-overview/vehicleDetails";
 import { useTranslation } from "react-i18next";
 import EventFilter from "./eventFilter";
+import { useState } from "react";
+import SortingFilter from "./sortingFilter";
 
 const tripsData = [
   {
@@ -79,6 +81,8 @@ const tripsData = [
 
 const ScreenVehicleMap = () => {
 
+  const [showSortingDropdown, setShowSortingDropdown] = useState(false);
+  const [selectedSorting, setSelectedSorting] = useState("Latest First");
   const { t } = useTranslation("translation", { keyPrefix: "vehicleMap" });
   const dispatch = useDispatch();
 
@@ -108,9 +112,11 @@ const ScreenVehicleMap = () => {
             </div>
               <div className="flex justify-between p-4 items-center">
                 <p className="font-medium text-lg leading-6">Trips</p>
-                <div className="flex gap-6">
+                <div className="flex gap-6 relative">
                   <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
-                  <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showEventFilter: true }));}}/>
+                  {/* <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showEventFilter: true }));}}/> */}
+                  <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => setShowSortingDropdown(!showSortingDropdown)}/>
+                  <SortingFilter showSortingDropdown={showSortingDropdown} selectedSorting={selectedSorting} setSelectedSorting={(item) => setSelectedSorting(item)}/>
                 </div>
               </div>
               <VehicleFilter />
