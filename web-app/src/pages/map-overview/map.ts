@@ -17,7 +17,25 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
   const renderMapObjects = () => {
     // create pushpins
     props.dataPoints.forEach((dataPoint) => {
-      // console.log('dataPoint', dataPoint)
+      let angle = 0;
+      if(dataPoint.coords.length > 2) {
+        console.log('dataPoint', dataPoint)
+        const point1 = { x: dataPoint.coords[0], y: dataPoint.coords[1] }
+        const point2 = { x: dataPoint.coords[2], y: dataPoint.coords[3] }
+        angle = Math.atan2(point2.y - point1.y, point2.x - point1.x) * 180 / Math.PI;
+        console.log('angle', angle)
+        const thisPolyline = new Microsoft.Maps.Polyline(
+          [
+            new Microsoft.Maps.Location(dataPoint.coords[0], dataPoint.coords[1]),
+            new Microsoft.Maps.Location(dataPoint.coords[2], dataPoint.coords[3])
+          ],
+          {
+            strokeColor: 'blue',
+            strokeThickness: 5,
+          }
+        );
+        props.mapRef.current.map.entities.push(thisPolyline);
+      }
       const thisPushpin = new Microsoft.Maps.Pushpin(
         new Microsoft.Maps.Location(dataPoint.coords[0], dataPoint.coords[1]),
         {
@@ -26,7 +44,14 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
             APP_CONFIG.MAPS.VEHICLE_ICON_SIZE / 2
           ),
           icon:
-            mapVehicleIconWrapped(dataPoint.is_active ? 'driving' : 'idle_inactive'),
+            mapVehicleIconWrapped(
+              dataPoint.coords.length > 2
+              ? 'driving'
+              : dataPoint.is_active
+              ? 'idle_active' : 'idle_inactive',
+              false,
+              angle
+            ),
           visible: checkedVehicles.includes(dataPoint.id),
         }
       );

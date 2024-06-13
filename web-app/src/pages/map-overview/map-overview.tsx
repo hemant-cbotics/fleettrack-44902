@@ -206,34 +206,41 @@ const ScreenMapOverview = () => {
             </div> */}
             <div className="mt-4 flex-grow overflow-auto">
               {dataPoints
-                ?.map((vehicleItem, index: number) => (
+                ?.map((dataPoint, index: number) => (
                 <MapVehicleListingColumnItem
                   key={index}
                   asideText={
-                    <span className={`flex gap-1 leading-3 text-[10px] ${vehicleItem.is_active ? "text-field-success" : "text-field-error-dark"}`}>
+                    <span className={`flex gap-1 leading-3 text-[10px] ${dataPoint.is_active ? "text-field-success" : "text-field-error-dark"}`}>
                       {t("vehicleStatus.idle_active")}
-                      <div dangerouslySetInnerHTML={{ __html: mapVehicleIconWrapped(vehicleItem.is_active ? 'idle_active' : 'idle_inactive') }} />
+                      <div dangerouslySetInnerHTML={{ __html:
+                        mapVehicleIconWrapped(
+                          dataPoint.coords.length > 2
+                          ? 'driving'
+                          : dataPoint.is_active
+                          ? 'idle_active' : 'idle_inactive'
+                        )
+                      }} />
                     </span>
                   }
-                  bottomText={`${vehicleItem.licence_plate}`}
-                  checked={checkedVehicles.includes(vehicleItem.id)}
-                  description={vehicleItem.vin}
-                  id={`checkedVehicle-${vehicleItem.id}`}
+                  bottomText={`${dataPoint.licence_plate}`}
+                  checked={checkedVehicles.includes(dataPoint.id)}
+                  description={dataPoint.vin}
+                  id={`checkedVehicle-${dataPoint.id}`}
                   onClickCheckbox={() => {
-                    if (checkedVehicles.includes(vehicleItem.id)) {
+                    if (checkedVehicles.includes(dataPoint.id)) {
                       setCheckedVehicles(
-                        checkedVehicles.filter((id: any) => id !== vehicleItem.id)
+                        checkedVehicles.filter((id: any) => id !== dataPoint.id)
                       );
                     } else {
-                      setCheckedVehicles([...checkedVehicles, vehicleItem.id]);
+                      setCheckedVehicles([...checkedVehicles, dataPoint.id]);
                     }
                   }}
                   onClick={() => {
-                    setSelectedVehicle(vehicleItem.id);
+                    setSelectedVehicle(dataPoint.id);
                     dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }))
                   }}
-                  title={`${vehicleItem.vehicle_model} ${vehicleItem.vehicle_make}`}
-                  selected={selectedVehicle === vehicleItem.id}
+                  title={`${dataPoint.vehicle_model} ${dataPoint.vehicle_make}`}
+                  selected={selectedVehicle === dataPoint.id}
                 />
                 // <GroupList
                 //   key={index}
