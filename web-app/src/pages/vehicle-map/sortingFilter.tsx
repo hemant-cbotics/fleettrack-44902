@@ -11,6 +11,7 @@ type SortingFilterProps = {
   setSelectedSorting: (item:any) => void,
 }
 
+// TODO , maybe make it as general component to use in various place
 const SortingFilter:FC<SortingFilterProps> = ({showSortingDropdown = false, selectedSorting, setSelectedSorting}) => {
   return (
     <div
