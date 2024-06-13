@@ -127,6 +127,7 @@ const ScreenMapOverview = () => {
   });
   const debouncedSetSearchKeyword = useDebouncedCallback((value: string) => {
     setOrgVehiclesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    selectMapVehicle(null);
   }, 500);
 
   const {
@@ -272,52 +273,58 @@ const ScreenMapOverview = () => {
               {t("listing_heading")}
             </div> */}
             <div className="mt-4 flex-grow overflow-auto">
-              {dataPoints
-                ?.map((dataPoint, index: number) => (
-                <MapVehicleListingColumnItem
-                  key={index}
-                  asideText={
-                    <span className={`flex items-center justify-end gap-1 leading-3 text-[10px] ${dataPoint.is_active ? "text-field-success" : "text-field-error-dark"}`}>
-                      {t(
-                        dataPoint.coords.length > 2
-                        ? "vehicleStatus.driving"
-                        : dataPoint.is_active
-                          ? "vehicleStatus.idle_active"
-                          : "vehicleStatus.idle_inactive"
-                      )}
-                      <div dangerouslySetInnerHTML={{ __html:
-                        dataPoint.coords.length > 2 // TODO: change this check
-                          ? mapVehicleIconWrapped(
-                              'driving',
-                              false,
-                              45
-                            )
-                          : mapVehicleIconWrapped(
-                              mapVehicleStateIconSlug(dataPoint)
-                            )
-                      }} />
-                    </span>
-                  }
-                  bottomText={`${dataPoint.licence_plate}`}
-                  checked={checkedVehicles.includes(dataPoint.id)}
-                  description={dataPoint.vin}
-                  id={`checkedVehicle-${dataPoint.id}`}
-                  onClickCheckbox={() => {
-                    if (checkedVehicles.includes(dataPoint.id)) {
-                      setCheckedVehicles(
-                        checkedVehicles.filter((id: any) => id !== dataPoint.id)
-                      );
-                    } else {
-                      setCheckedVehicles([...checkedVehicles, dataPoint.id]);
+              {dataPoints.length > 0 ? (
+                <>{dataPoints
+                  ?.map((dataPoint, index: number) => (
+                  <MapVehicleListingColumnItem
+                    key={index}
+                    asideText={
+                      <span className={`flex items-center justify-end gap-1 leading-3 text-[10px] ${dataPoint.is_active ? "text-field-success" : "text-field-error-dark"}`}>
+                        {t(
+                          dataPoint.coords.length > 2
+                          ? "vehicleStatus.driving"
+                          : dataPoint.is_active
+                            ? "vehicleStatus.idle_active"
+                            : "vehicleStatus.idle_inactive"
+                        )}
+                        <div dangerouslySetInnerHTML={{ __html:
+                          dataPoint.coords.length > 2 // TODO: change this check
+                            ? mapVehicleIconWrapped(
+                                'driving',
+                                false,
+                                45
+                              )
+                            : mapVehicleIconWrapped(
+                                mapVehicleStateIconSlug(dataPoint)
+                              )
+                        }} />
+                      </span>
                     }
-                  }}
-                  onClick={() => {
-                    selectMapVehicle(dataPoint.id);
-                  }}
-                  title={mapVehicleDisplayTitle(dataPoint)}
-                  selected={selectedVehicle === dataPoint.id}
-                />
-              ))}
+                    bottomText={`${dataPoint.licence_plate}`}
+                    checked={checkedVehicles.includes(dataPoint.id)}
+                    description={dataPoint.vin}
+                    id={`checkedVehicle-${dataPoint.id}`}
+                    onClickCheckbox={() => {
+                      if (checkedVehicles.includes(dataPoint.id)) {
+                        setCheckedVehicles(
+                          checkedVehicles.filter((id: any) => id !== dataPoint.id)
+                        );
+                      } else {
+                        setCheckedVehicles([...checkedVehicles, dataPoint.id]);
+                      }
+                    }}
+                    onClick={() => {
+                      selectMapVehicle(dataPoint.id);
+                    }}
+                    title={mapVehicleDisplayTitle(dataPoint)}
+                    selected={selectedVehicle === dataPoint.id}
+                  />
+                ))}</>
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-gray-400 text-lg font-bold">{tMain("no_items_found")}</p>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex-grow relative">

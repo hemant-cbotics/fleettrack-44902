@@ -58,7 +58,7 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
           visible: false,
           showPointer: false,
           showCloseButton: false,
-          offset: new Microsoft.Maps.Point(-(64 + 8), 10) // for w-32 p-2
+          offset: new Microsoft.Maps.Point(-(64 + 8), 12) // for w-32 p-2
         }
       );
       thisPushpinInfoBox.setMap(props.mapRef.current.map); // add the infobox to the map
@@ -120,16 +120,26 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
   switch(action) {
     case 'checkedUpdated':
       const checkedVehicles = value as string[];
+      // update the visibility of the pushpins
       props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
         pushpinObject.pushpin.setOptions({
           visible: checkedVehicles.includes(pushpinObject.id)
         });
       });
+      // update the cluster layer with the updated pushpins
       props.mapRef.current.objects.mClusterLayer?.setPushpins(
         props.mapRef.current.objects.mPushpins
           .filter((pushpin) => checkedVehicles.includes(pushpin.id))
           .map((pushpinObject) => pushpinObject.pushpin)
       );
+      // update visibility of the infoboxes
+      props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+        pushpinObject.infobox.setOptions({
+          visible:
+            checkedVehicles.includes(pushpinObject.id)
+            && checkedVehicles.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_THRESHOLD
+        });
+      });
       mapCenterToDataPoints(props, checkedVehicles);
       break;
     case 'centerToPushpin':
@@ -204,6 +214,31 @@ const mapCenterToDataPoints: TMapOperations = (props, value) => {
     padding: 5,
     animate: true
   });
+  // show the infobox if there is only 6 (APP_CONFIG.MAPS.SHOW_INFOBOX_THRESHOLD) or less visible pushpins
+  if(visibleDataPoints.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_THRESHOLD) {
+    visibleDataPoints.forEach((dataPoint) => {
+      const pushpinObject = props.mapRef.current.objects.mPushpins.find((pushpinObject) => pushpinObject.id === dataPoint.id);
+      if(pushpinObject) {
+        pushpinObject.infobox.setOptions({
+          visible: true
+        });
+      }
+    });
+  } else {
+    props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+      pushpinObject.infobox.setOptions({
+        visible: false
+      });
+    });
+  }
+  // limit the zoom level to 7
+  if(visibleDataPoints.length === 1
+  && props.mapRef.current.map.getZoom() > 7) {
+    props.mapRef.current.map.setView({
+      zoom: 7,
+      animate: true
+    });
+  }
 }
 
 export const mapVehicleStateIconSlug = (dataPoint: TDataPoint | undefined) => {

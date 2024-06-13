@@ -66,5 +66,6 @@ export const APP_CONFIG = {
       Pink: [200, 0, 200] as ColorRGB,
     },
     VEHICLE_ICON_SIZE: 28,
+    SHOW_INFOBOX_THRESHOLD: 6,
   },
 }
