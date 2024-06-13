@@ -44,6 +44,7 @@ export type TMapOperationsProps = {
   mapData: TMapData;
   setMapData: (mapData: TMapData) => void;
   dataPoints: TDataPoint[];
+  onDataPointPushpinClick?: (dataPoint: TDataPoint) => void;
 }
 export type TMapOperations = (
   props: TMapOperationsProps,

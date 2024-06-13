@@ -69,6 +69,9 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
       Microsoft.Maps.Events.addHandler(thisPushpin, 'mouseout', (e: any) => {
         thisPushpinInfoBox.setOptions({ visible: false });
       });
+      Microsoft.Maps.Events.addHandler(thisPushpin, 'click', (e: any) => {
+        props.onDataPointPushpinClick?.(dataPoint);
+      });
       
       const thisPushpinObject: TMPushpin = {
         id: dataPoint.id,
@@ -112,6 +115,7 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
 }
 
 export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
+  const Microsoft = (window as any).Microsoft;
   if(APP_CONFIG.DEBUG.MAPS) console.log('[mapUpdatesHandler]', action, value);
   switch(action) {
     case 'checkedUpdated':
@@ -162,9 +166,14 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
           )
         });
         if(pushpinObj.focus) {
+          const zoomLevel = Math.min(8, props.mapRef.current.map.getZoom() + 1);
           props.mapRef.current.map.setView({
-            center: pushpinObjectFocus.pushpin.getLocation(),
-            zoom: Math.min(8, props.mapRef.current.map.getZoom() + 1),
+            center: new Microsoft.Maps.Location(
+              pushpinObjectFocus.pushpin.getLocation().latitude,
+              pushpinObjectFocus.pushpin.getLocation().longitude
+                + 0.0001 * Math.pow(2, 15 - zoomLevel) // shift the center a bit to show the infobox
+            ),
+            zoom: zoomLevel,
             animate: true,
           });
         }

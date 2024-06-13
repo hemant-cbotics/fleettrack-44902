@@ -82,7 +82,7 @@ const ScreenMapOverview = () => {
           dataPoints,
         },
         'focusPushpin',
-        { id: selectedVehicle, focus: false }
+        { id: prevVehicleId ?? selectedVehicle, focus: false }
       );
       if (prevVehicleId === vehicleId) {
         dispatch(setModalsData({ ...modalsState, showVehicleDetails: false }))
@@ -192,6 +192,13 @@ const ScreenMapOverview = () => {
         mapData: { ...mapState?.mapData } as TMapData,
         setMapData: () => {},
         dataPoints,
+        onDataPointPushpinClick: (dataPoint: TDataPoint) => {
+          selectMapVehicle(
+            selectedVehicle === dataPoint.id
+            ? null
+            : dataPoint.id
+          );
+        }
       },
       checkedVehicles
     );
@@ -310,52 +317,6 @@ const ScreenMapOverview = () => {
                   title={mapVehicleDisplayTitle(dataPoint)}
                   selected={selectedVehicle === dataPoint.id}
                 />
-                // <GroupList
-                //   key={index}
-                //   name={item.name}
-                //   color="red"
-                //   noOfVehicles={item.listOfVehicles.length}
-                //   openByDefault={index === 0 ? true : false}
-                // >
-                //   {item.listOfVehicles
-                //     ?.map((vehicle: any, index: number) => (
-                //       <div
-                //         key={index}
-                //         className={`border-b px-3 py-2 border-gray-200 cursor-pointer ${
-                //           deviceId === vehicle.id ? "bg-blue-200" : ""
-                //           }`}
-                //         onClick={() => { dispatch(setModalsData({ ...modalsState, showDeviceReport: true })); }}>
-                //         <div className="grid grid-cols-4">
-                //           <div className="col-span-3 flex space-x-2">
-                //             <div className="flex items-center">
-                //               {/* <img src={DeviceIcon} alt={`device-img${vehicle.id}`} className="p-2 bg-gray-200 rounded-full"/> */}
-                //               <input
-                //                 type="checkbox"
-                //                 className="size-4 rounded border-gray-300 disabled:bg-gray-200 disabled:border-gray-300"
-                //                 id={vehicle.id}
-                //                 onChange={() => { }}
-                //               />
-                //             </div>
-                //             <div>
-                //               <p className="font-semibold text-sm leading-6 text-blue-900">
-                //                 {vehicle.name}
-                //               </p>
-                //               <p className="font-normal text-xs leading-6 text-gray-500">
-                //                 {vehicle.description}
-                //               </p>
-                //               <p className="font-normal text-base leading-6 text-gray-700">
-                //                 {vehicle.vin}
-                //               </p>
-                //             </div>
-                //           </div>
-                //           <div className="col-span-1 font-bold text-xs leading-4 text-right text-green-700 space-y-1">
-                //             {vehicle.is_active ? "Active" : "Inactive"}
-                //           </div>
-                //         </div>
-                //       </div>
-                //     ))
-                //   }
-                // </GroupList>
               ))}
             </div>
           </div>
