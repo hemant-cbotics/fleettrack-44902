@@ -1,6 +1,7 @@
 import { mapVehicleIconWrapped } from "../../assets/svg/vehicle-wrapped";
 import { APP_CONFIG } from "../../constants/constants";
 import { customClisteredPinCallback } from "../../utils/map";
+import { mapInfoBoxContent } from "./common";
 import { TDataPoint, TMapOperations, TMapUpdatesHandler, TMPushpin } from "./type";
 
 export const mapOperations: TMapOperations = (props, checkedVehicles) => {
@@ -33,6 +34,7 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
         );
         props.mapRef.current.map.entities.push(thisPolyline);
       }
+      // create a pushpin
       const thisPushpin = new Microsoft.Maps.Pushpin(
         new Microsoft.Maps.Location(dataPoint.coords[0], dataPoint.coords[1]),
         {
@@ -49,9 +51,30 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
           visible: checkedVehicles.includes(dataPoint.id),
         }
       );
+      // create an infobox for the pushpin
+      const thisPushpinInfoBox = new Microsoft.Maps.Infobox(
+        new Microsoft.Maps.Location(dataPoint.coords[0], dataPoint.coords[1]),
+        {
+          htmlContent: mapInfoBoxContent(dataPoint),
+          visible: false,
+          showPointer: false,
+          showCloseButton: false,
+          offset: new Microsoft.Maps.Point(-(64 + 8), 10) // for w-32 p-2
+        }
+      );
+      thisPushpinInfoBox.setMap(props.mapRef.current.map); // add the infobox to the map
+      // add event listeners
+      Microsoft.Maps.Events.addHandler(thisPushpin, 'mouseover', (e: any) => {
+        thisPushpinInfoBox.setOptions({ visible: true });
+      });
+      Microsoft.Maps.Events.addHandler(thisPushpin, 'mouseout', (e: any) => {
+        thisPushpinInfoBox.setOptions({ visible: false });
+      });
+      
       const thisPushpinObject: TMPushpin = {
         id: dataPoint.id,
         pushpin: thisPushpin,
+        infobox: thisPushpinInfoBox,
       }
       // props.mapRef.current.map.entities.push(thisPushpin); // add the pushpin to the map
       props.mapRef.current.objects.mPushpins.push(thisPushpinObject); // add the pushpin to the objects
@@ -107,6 +130,10 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
       mapCenterToDataPoints(props, checkedVehicles);
       break;
     case 'centerToPushpin':
+      if(!!value && value.length > 0) {
+        mapCenterToDataPoints(props, value as string[]);
+        return;
+      }
       const pushpinId = value as string;
       const pushpinObject = props.mapRef.current.objects.mPushpins.find((pushpinObject) => pushpinObject.id === pushpinId);
       if(pushpinObject) {
@@ -135,6 +162,13 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
             mapVehicleStateIconAngle(dataPoint)
           )
         });
+        if(pushpinObj.focus) {
+          props.mapRef.current.map.setView({
+            center: pushpinObjectFocus.pushpin.getLocation(),
+            zoom: props.mapRef.current.map.getZoom() + 1,
+            animate: true,
+          });
+        }
       }
       break;
     default:
@@ -164,7 +198,7 @@ const mapCenterToDataPoints: TMapOperations = (props, value) => {
   });
 }
 
-const mapVehicleStateIconSlug = (dataPoint: TDataPoint | undefined) => {
+export const mapVehicleStateIconSlug = (dataPoint: TDataPoint | undefined) => {
   if(!!dataPoint && dataPoint.coords.length > 2) return 'driving';
   return !!dataPoint && dataPoint.is_active ? 'idle_active' : 'idle_inactive';
 }

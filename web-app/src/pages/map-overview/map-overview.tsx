@@ -17,8 +17,9 @@ import TickCheckbox from "../../components/tickCheckbox";
 import { APP_CONFIG } from "../../constants/constants";
 import { TMapState } from "../../types/map";
 import { useLoggedInUserData } from "../../utils/user";
+import { mapVehicleDisplayTitle } from "./common";
 import { dummyCoords } from "./dummyData";
-import { mapOperations, mapUpdatesHandler } from "./map";
+import { mapOperations, mapUpdatesHandler, mapVehicleStateIconSlug } from "./map";
 import MapFilter from "./mapFilter";
 import { TDataPoint, TMapData, TMapRef } from "./type";
 import VehicleDetails from "./vehicleDetails";
@@ -58,6 +59,20 @@ const ScreenMapOverview = () => {
 
   // handle vehicle selection
   const selectMapVehicle = (vehicleId: string | null) => {
+    // center map to all selected vehicles
+    if(vehicleId === null) {
+      mapUpdatesHandler(
+        {
+          mapRef,
+          mapData: { ...mapState?.mapData } as TMapData,
+          setMapData: () => {},
+          dataPoints,
+        },
+        'centerToPushpin',
+        checkedVehicles
+      );
+    }
+    // center map to selected vehicle and update the vehicle icon to focussed state
     setSelectedVehicle(prevVehicleId => {
       mapUpdatesHandler(
         {
@@ -264,15 +279,14 @@ const ScreenMapOverview = () => {
                           : "vehicleStatus.idle_inactive"
                       )}
                       <div dangerouslySetInnerHTML={{ __html:
-                        dataPoint.coords.length > 2
+                        dataPoint.coords.length > 2 // TODO: change this check
                           ? mapVehicleIconWrapped(
                               'driving',
                               false,
                               45
                             )
                           : mapVehicleIconWrapped(
-                              dataPoint.is_active
-                              ? 'idle_active' : 'idle_inactive'
+                              mapVehicleStateIconSlug(dataPoint)
                             )
                       }} />
                     </span>
@@ -293,7 +307,7 @@ const ScreenMapOverview = () => {
                   onClick={() => {
                     selectMapVehicle(dataPoint.id);
                   }}
-                  title={`${dataPoint.vehicle_model} ${dataPoint.vehicle_make}`}
+                  title={mapVehicleDisplayTitle(dataPoint)}
                   selected={selectedVehicle === dataPoint.id}
                 />
                 // <GroupList

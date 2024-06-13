@@ -31,6 +31,7 @@ export type TMapRef = {
 export type TMPushpin = {
   id: string;
   pushpin: any;
+  infobox: any;
 }
 
 export type TMapData = {
@@ -44,7 +45,11 @@ export type TMapOperationsProps = {
   setMapData: (mapData: TMapData) => void;
   dataPoints: TDataPoint[];
 }
-export type TMapOperations = (props: TMapOperationsProps, checkedVehicles: string[]) => void;
+export type TMapOperations = (
+  props: TMapOperationsProps,
+  checkedVehicles: string[],
+) => void;
+
 export type TMapUpdatesHandler = (
   props: TMapOperationsProps,
   action: 'checkedUpdated' | 'focusPushpin' | 'centerToPushpin',
