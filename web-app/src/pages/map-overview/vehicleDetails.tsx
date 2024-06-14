@@ -5,75 +5,15 @@ import { TModalsState, setModalsData } from "../../api/store/commonSlice";
 import CloseIcon from "../../assets/svg/close-icon.svg";
 import VideoCameraIcon from "../../assets/svg/video-camera-icon.svg";
 import { AdminFormFieldSubmit } from "../../components/admin/formFields";
+import { FC } from "react";
+import { useSingleOrganizationVehicleQuery } from "../../api/network/adminApiServices";
+import { useLoggedInUserData } from "../../utils/user";
 
-const listData = [
-  {
-    name: "Date/Time",
-    value: "2021-09-01 12:00:00"
-  },
-  {
-    name: "Status",
-    value: "Active"
-  },
-  {
-    name: "Latitiude/Longitude",
-    value: "37.7749° N, 122.4194° W"
-  },
-  {
-    name: "Speed",
-    value: "45 km/h"
-  },
-  {
-    name: "Heading",
-    value: "North"
-  },
-  {
-    name: "Address",
-    value: "San Francisco, California"
-  },
-  {
-    name: "Driver",
-    value: "John Doe"
-  },
-  {
-    name: "Driver Phone",
-    value: "+1 123 456 7890"
-  },
-  {
-    name: "Speed Limit",
-    value: "50 km/h"
-  },
-  {
-    name: "First Ignition",
-    value: "2021-09-01 12:00:00"
-  },
-  {
-    name: "Groups",
-    value: "Group 1, Group 2"
-  },
-  {
-    name: "Asset",
-    value: "Asset 1"
-  },
-  {
-    name: "Last Valid Event",
-    value: "2021-09-01 12:00:00"
-  },
-  {
-    name: "Has Impact",
-    value: "Yes"
-  },
-  {
-    name: "Has Fleettag",
-    value: "Yes"
-  },
-  {
-    name: "Incidient",
-    value: "Sample Incident"
-  }
-]
+type VehicleDetailsProps = {
+  vehicleId: any;
+}
 
-const VehicleDetails = () => {
+const VehicleDetails:FC<VehicleDetailsProps> = ({vehicleId}) => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation("translation", {
     keyPrefix: "mapOverview.details",
@@ -86,17 +26,85 @@ const VehicleDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // fetch single vehicle details
+  const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId");
+  const { data: dataSingleVehicle, isFetching: isFetchingSingleVehicle, } = useSingleOrganizationVehicleQuery({ organization_id: thisUserOrganizationId, vehicle_id: vehicleId },{ skip: !vehicleId });
+
+  const listData = [
+    {
+      name: "Current Ignition Status",
+      value: dataSingleVehicle?.ignition_input
+    },
+    {
+      name: "Date/Time",
+      value: dataSingleVehicle?.created_at
+    },
+    {
+      name: "GPS",
+      value: "Not Available"
+    },
+    {
+      name: "Speed",
+      value: "Not Available"
+    },
+    {
+      name: "Speed Limit",
+      value: "Not Available"
+    },
+    {
+      name: "Status",
+      value: dataSingleVehicle?.is_active ? 
+        <span className="text-green-700">Active</span> : <span className="text-red-700">Inactive</span>,
+    },
+    {
+      name: "Latitude/Longitude",
+      value: "Not Available"
+    },
+    {
+      name: "Address",
+      value: "Not Available"
+    },
+    {
+      name: "Driver",
+      value: dataSingleVehicle?.driver?.name
+    },
+    {
+      name: "Driver Phone",
+      value: dataSingleVehicle?.driver?.phone
+    },
+    {
+      name: "First Ignition",
+      value: "Not Available"
+    },
+    {
+      name: "Groups",
+      value: dataSingleVehicle?.groups?.map((group: any) => group.name).join(", ")
+    },
+    {
+      name: "Last Valid Event",
+      value: "Not Available"
+    },
+    {
+      name: "Has Impact",
+      value: "Not Available"
+    },
+    {
+      name: "Has Fleettag",
+      value: "Not Available"
+    },
+  ]
+
   const hideModal = () => {
     dispatch(setModalsData({ ...modalsState, showVehicleDetails: false }));
   };
 
-  if (modalsState.showVehicleDetails === false) return null;
+  if (modalsState.showVehicleDetails === false || !vehicleId) return null;
 
   return (
     <>
       {/* <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"> */}
         {/* <div className="fixed w-full h-screen bg-modal-overlay z-overlay"></div> */}
-        <div className="absolute mx-auto max-w-[calc(100vw-4rem)] w-[330px] z-modal top-1 right-1 bg-white">
+        <div className={`absolute mx-auto max-w-[calc(100vw-4rem)] w-[330px] z-modal top-1 right-1 bg-white ${isFetchingSingleVehicle ? "opacity-40" : ""}`}>
           <div className="p-6 rounded-3xl shadow-2xl space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-base font-semibold leading-6 text-heading-black">
@@ -106,8 +114,8 @@ const VehicleDetails = () => {
             </div>
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm font-semibold leading-6 text-blue-700">Chevrolet Silverado</p>
-                <p className="text-sm font-medium leading-6 text-gray-500">10022</p>
+                <p className="text-sm font-semibold leading-6 text-blue-700"> {dataSingleVehicle?.vehicle_model + " " + dataSingleVehicle?.vehicle_make} </p>
+                <p className="text-sm font-medium leading-6 text-gray-500"> {dataSingleVehicle?.licence_plate} </p>
               </div>
               <img src={VideoCameraIcon} alt="video-camera-icon" className="p-3 rounded-full bg-blue-200"/>
             </div>
