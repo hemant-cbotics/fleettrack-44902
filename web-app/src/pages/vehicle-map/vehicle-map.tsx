@@ -147,7 +147,7 @@ const ScreenVehicleMap = () => {
                 </div>)}
               </div>
             )} */}
-            <VehicleDetails vehicleId="4e025c2-0025-4982-ae76-e33643354caa"/> // TODO implement API's for this
+            <VehicleDetails vehicleId="4e025c2-0025-4982-ae76-e33643354caa"/>
             </div>
         </div>
       </div>

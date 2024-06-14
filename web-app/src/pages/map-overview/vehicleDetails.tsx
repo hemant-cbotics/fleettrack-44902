@@ -54,7 +54,7 @@ const VehicleDetails:FC<VehicleDetailsProps> = ({vehicleId}) => {
     {
       name: "Status",
       value: dataSingleVehicle?.is_active ? 
-        <span className="text-green-700">Active</span> : <span className="text-red-700">Inactive</span>,
+      <span className="text-green-700">Active</span> : <span className="text-red-700">Inactive</span>,
     },
     {
       name: "Latitude/Longitude",
@@ -102,79 +102,73 @@ const VehicleDetails:FC<VehicleDetailsProps> = ({vehicleId}) => {
 
   return (
     <>
-      {/* <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"> */}
-        {/* <div className="fixed w-full h-screen bg-modal-overlay z-overlay"></div> */}
-        <div className={`absolute mx-auto max-w-[calc(100vw-4rem)] w-[330px] z-modal top-1 right-1 bg-white ${isFetchingSingleVehicle ? "opacity-40" : ""}`}>
-          <div className="p-6 rounded-3xl shadow-2xl space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-base font-semibold leading-6 text-heading-black">
-                {t("heading")}
-              </h2>
-              <img src={CloseIcon} alt="close-icon" className="p-1 bg-blue-200 rounded-full cursor-pointer" onClick={hideModal}/>
+    {/* <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"> */}
+      {/* <div className="fixed w-full h-screen bg-modal-overlay z-overlay"></div> */}
+      <div className={`absolute flex flex-col gap-6 px-4 p-4 mx-auto max-w-[calc(100vw-4rem)] w-[330px] z-modal top-2 right-2 bottom-2 bg-white shadow-2xl rounded-lg overflow-hidden ${isFetchingSingleVehicle ? "opacity-40" : ""}`}>
+        {/* <div className="flex-grow-1 px-4 pt-3 pb-4 space-y-6"> */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-bold leading-6 text-heading-black">
+              {t("heading")}
+            </h2>
+            <img src={CloseIcon} alt="close-icon" className="p-1 rounded-full cursor-pointer" onClick={hideModal}/>
+          </div>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-base font-semibold leading-6 text-accent-blue-dark">{dataSingleVehicle?.vehicle_make + " " + dataSingleVehicle?.vehicle_model}</p>
+              <p className="text-sm font-medium leading-6 text-gray-400">{dataSingleVehicle?.licence_plate}</p>
             </div>
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm font-semibold leading-6 text-blue-700"> {dataSingleVehicle?.vehicle_model + " " + dataSingleVehicle?.vehicle_make} </p>
-                <p className="text-sm font-medium leading-6 text-gray-500"> {dataSingleVehicle?.licence_plate} </p>
-              </div>
-              <img src={VideoCameraIcon} alt="video-camera-icon" className="p-3 rounded-full bg-blue-200"/>
-            </div>
-            <div className="flex gap-4">
-              <div className="w-32">
-                <AdminFormFieldSubmit
-                  label={t("message")}
-                  type="button"
-                  variant="primary"
-                  onClick={() => {}}
-                />
-              </div>
-              {/* <div className="flex-grow"></div> */}
-              <div className="w-34">
-                <AdminFormFieldSubmit
-                  label={t("send_location")}
-                  type="button"
-                  variant="primary"
-                  onClick={() => {}}
-                />
-              </div>
-            </div>
-            <div className="space-y-6 max-h-[280px] overflow-y-auto">
-              {listData?.map((item, index) => (
-                <div key={index}>
-                  <p className="text-xs font-normal leading-5 tracking-tighter text-gray-400">{item.name}</p>
-                  <p className="text-sm font-medium leading-5 tracking-tighter">{item.value}</p>
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-4">
-              <div className="w-32">
-                <AdminFormFieldSubmit
-                  label={t("street_view")}
-                  type="button"
-                  variant="primary"
-                  onClick={() => {}}
-                />
-              </div>
-              {/* <div className="flex-grow"></div> */}
-              <div className="w-32">
-                <AdminFormFieldSubmit
-                  label={t("forecast")}
-                  type="button"
-                  variant="primary"
-                  onClick={() => {}}
-                />
-              </div>
-            </div>
+            <img src={VideoCameraIcon} alt="video-camera-icon" className="p-3 rounded-full bg-accent-blue-pale"/>
+          </div>
+          <div className="flex gap-4">
             <AdminFormFieldSubmit
-              label={t("vehicle_map_view")}
+              customWrapperClass="flex-1"
+              label={t("message")}
               type="button"
               variant="primary"
-              onClick={() => {}} 
+              onClick={() => {}}
+            />
+            <AdminFormFieldSubmit
+              customWrapperClass="flex-1"
+              label={t("send_location")}
+              type="button"
+              variant="primary"
+              onClick={() => {}}
             />
           </div>
-        </div>
-      {/* </div> */}
-    </>
+          <div className="space-y-6 flex-grow overflow-y-auto">
+            {listData?.map((item, index) => (
+              <div key={index}>
+                <p className="text-xs font-normal leading-5 Xtracking-tighter text-gray-400">{item.name}</p>
+                <p className="text-sm font-medium leading-5 tracking-tighter">{item.value}</p>
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-4">
+            <AdminFormFieldSubmit
+              customWrapperClass="flex-1"
+              label={t("street_view")}
+              type="button"
+              variant="primary"
+              onClick={() => {}}
+            />
+            <AdminFormFieldSubmit
+              customWrapperClass="flex-1"
+              label={t("forecast")}
+              type="button"
+              variant="primary"
+              onClick={() => {}}
+            />
+          </div>
+          <AdminFormFieldSubmit
+            label={t("vehicle_map_view")}
+            type="button"
+            variant="primary"
+            onClick={() => {}} 
+          />
+        {/* </div> */}
+      </div>
+    {/* </div> */}
+  </>
   )
 }
 
