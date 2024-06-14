@@ -24,6 +24,8 @@ import MapFilter from "./mapFilter";
 import { TDataPoint, TMapData, TMapRef } from "./type";
 import VehicleDetails from "./vehicleDetails";
 import VehicleFilter from "./vehiclesFilter";
+import SearchIcon from "../../assets/svg/search-icon.svg";
+import MapLayersIcon from "../../assets/svg/map-layers.svg";
 import LayerFilters from "./layerFilters";
 import SortingFilter from "../../components/sortingFilter";
 
@@ -47,7 +49,6 @@ const ScreenMapOverview = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>();
   const [checkedVehicles, setCheckedVehicles] = useState<string[]>([]);
 
-  console.log(selectedVehicle)
   // update map data on checked vehicles change
   useEffect(() => {
     mapUpdatesHandler(
@@ -100,7 +101,12 @@ const ScreenMapOverview = () => {
   // update map view on vehicle selection
   useEffect(() => {
     if (!!selectedVehicle) {
-      dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }))
+      dispatch(setModalsData({
+        ...modalsState,
+        showLayerFilter: false,
+        showVehicleFilter: false,
+        showVehicleDetails: true
+      }))
       mapUpdatesHandler(
         {
           mapRef,
@@ -143,6 +149,13 @@ const ScreenMapOverview = () => {
     useOrganizationVehiclesQuery(orgVehiclesQueryParams, { skip: !mapState?.mapScriptLoaded });
   
   const [dataPoints, setDataPoints] = useState<TDataPoint[]>([]);
+
+  // show address searchbox
+  const [showAddressSearchbox, setShowAddressSearchbox] = useState(false);
+  const debouncedSetSearchAddress = useDebouncedCallback((value: string) => {
+    // setOrgVehiclesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    // selectMapVehicle(null);
+  }, 500);
 
   // common map ref to be used for various map operations
   const mapRef = React.useRef<TMapRef>({
@@ -251,12 +264,19 @@ const ScreenMapOverview = () => {
               />
             </div>
             <div className="flex justify-between p-4 items-center">
-              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showLayerFilter: true }));}}> {/* TODO: this needs to be changed */}
+              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {}}> {/* TODO: this needs to be changed */}
                 <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
                 <img src={GroupFilterIcon} alt="group-filter-icon"/>
               </div>
               <div className="flex gap-6 relative">
-                <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
+                <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {
+                  dispatch(setModalsData({
+                    ...modalsState,
+                    showVehicleDetails: false,
+                    showLayerFilter: false,
+                    showVehicleFilter: true
+                  }));
+                }}/>
                 <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => setShowSortingDropdown(!showSortingDropdown)}/>
                 <SortingFilter showSortingDropdown={showSortingDropdown} selectedSorting={selectedSorting} setSelectedSorting={(item) => setSelectedSorting(item)}/>
               </div>
@@ -315,11 +335,17 @@ const ScreenMapOverview = () => {
                         setCheckedVehicles(
                           checkedVehicles.filter((id: any) => id !== dataPoint.id)
                         );
+                        // hide vehicle details popup if unchecked
+                        dispatch(setModalsData({ ...modalsState, showVehicleDetails: false }));
                       } else {
                         setCheckedVehicles([...checkedVehicles, dataPoint.id]);
                       }
                     }}
                     onClick={() => {
+                      if(!checkedVehicles.includes(dataPoint.id)) {
+                        // select the vehicle if not already selected
+                        setCheckedVehicles([...checkedVehicles, dataPoint.id]);
+                      }
                       selectMapVehicle(dataPoint.id);
                     }}
                     title={mapVehicleDisplayTitle(dataPoint)}
@@ -333,15 +359,55 @@ const ScreenMapOverview = () => {
               )}
             </div>
           </div>
-          <div className="flex-grow relative">
+          <div className="flex-grow relative map-overview-map-wrapper">
             {!isFetchingOrgVehicles && !mapStateTransitionInProgress ? (
-              <BasicMap
-                className="bg-gray-200 h-full w-full"
-                mapRef={mapRef}
-                mapData={mapState?.mapData}
-                // setMapData={() => {}}
-                onMapReady={handleMapReady}
-              />
+              <>
+                <BasicMap
+                  className="bg-gray-200 h-full w-full"
+                  mapRef={mapRef}
+                  mapData={mapState?.mapData}
+                  // setMapData={() => {}}
+                  onMapReady={handleMapReady}
+                />
+                {!!mapState?.mapData?.ready && (<div className="absolute flex gap-2 top-5 right-5 z-[999]">
+                  {
+                    showAddressSearchbox ? (
+                      <AppSearchBox
+                        wrapperClassName="relative w-64"
+                        inputClassName="w-full rounded-md border-gray-300 py-2.5 ps-10 shadow-sm sm:text-sm"
+                        placeholder={t("search_placeholder")}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          debouncedSetSearchAddress(e.target.value)
+                        }
+                        onClear={() => {
+                          debouncedSetSearchAddress("")
+                          setShowAddressSearchbox(false)
+                        }}
+                      />
+                    ) : (
+                      <button
+                        className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                        type="button"
+                        onClick={() => setShowAddressSearchbox(true)}>
+                        <img className="size-4 grayscale opacity-70" src={SearchIcon} alt="" />
+                      </button>
+                    )
+                  }
+                  <button
+                    className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                    type="button"
+                    onClick={() => {
+                      dispatch(setModalsData({
+                        ...modalsState,
+                        showVehicleDetails: false,
+                        showVehicleFilter: false,
+                        showLayerFilter: true
+                      }));
+                    }}>
+                    <img className="size-[22px] grayscale opacity-70 translate-y-[1px]" src={MapLayersIcon} alt="" />
+                  </button>
+                </div>)}
+              </>
             ) : (
               <div className="h-full w-full flex items-center justify-center relative">
                 <MapLoadingAnimation

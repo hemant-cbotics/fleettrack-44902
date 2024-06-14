@@ -24,19 +24,19 @@ const TickCheckbox: FC<TickCheckboxProps> = ({
     <>
       {skinned ? (
       <span className={`group ${wrapperClass}`}>
-        <img
-          src={isChecked ? CheckboxChecked : Checkbox}
-          alt="checkbox"
-          className="group-hover:opacity-80"
-        />
         <input
           checked={isChecked}
-          className="opacity-0 absolute w-6 h-6 cursor-pointer"
+          className="opacity-0 absolute w-6 h-6 peer cursor-pointer"
           disabled={disabled}
           id={id}
           onClick={onClick}
           onChange={handleChange}
           type="checkbox"
+        />
+        <img
+          src={isChecked ? CheckboxChecked : Checkbox}
+          alt="checkbox"
+          className="group-hover:opacity-80 rounded-sm pointer-events-none touch-none peer-hover:ring-2 peer-hover:ring-accent-blue-pale peer-focus:ring-2 peer-focus:ring-accent-blue-dark"
         />
       </span>
       ) : (

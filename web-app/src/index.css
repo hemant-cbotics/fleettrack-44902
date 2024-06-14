@@ -134,3 +134,8 @@ textarea {
 .MicrosoftMap * {
   box-sizing: content-box;
 }
+
+.map-overview-map-wrapper .NavBar_MapTypeButtonContainer,
+.vehicle-map-wrapper .NavBar_MapTypeButtonContainer {
+  visibility: hidden;
+}
