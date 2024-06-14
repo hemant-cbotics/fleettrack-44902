@@ -24,6 +24,8 @@ import MapFilter from "./mapFilter";
 import { TDataPoint, TMapData, TMapRef } from "./type";
 import VehicleDetails from "./vehicleDetails";
 import VehicleFilter from "./vehiclesFilter";
+import SearchIcon from "../../assets/svg/search-icon.svg";
+import MapLayersIcon from "../../assets/svg/map-layers.svg";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
@@ -138,6 +140,13 @@ const ScreenMapOverview = () => {
     useOrganizationVehiclesQuery(orgVehiclesQueryParams, { skip: !mapState?.mapScriptLoaded });
   
   const [dataPoints, setDataPoints] = useState<TDataPoint[]>([]);
+
+  // show address searchbox
+  const [showAddressSearchbox, setShowAddressSearchbox] = useState(false);
+  const debouncedSetSearchAddress = useDebouncedCallback((value: string) => {
+    // setOrgVehiclesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
+    // selectMapVehicle(null);
+  }, 500);
 
   // common map ref to be used for various map operations
   const mapRef = React.useRef<TMapRef>({
@@ -327,15 +336,45 @@ const ScreenMapOverview = () => {
               )}
             </div>
           </div>
-          <div className="flex-grow relative">
+          <div className="flex-grow relative map-overview-map-wrapper">
             {!isFetchingOrgVehicles && !mapStateTransitionInProgress ? (
-              <BasicMap
-                className="bg-gray-200 h-full w-full"
-                mapRef={mapRef}
-                mapData={mapState?.mapData}
-                // setMapData={() => {}}
-                onMapReady={handleMapReady}
-              />
+              <>
+                <BasicMap
+                  className="bg-gray-200 h-full w-full"
+                  mapRef={mapRef}
+                  mapData={mapState?.mapData}
+                  // setMapData={() => {}}
+                  onMapReady={handleMapReady}
+                />
+                {!!mapState?.mapData?.ready && (<div className="absolute flex gap-2 top-5 right-5 z-[999]">
+                  {
+                    showAddressSearchbox ? (
+                      <AppSearchBox
+                        wrapperClassName="relative w-64"
+                        inputClassName="w-full rounded-md border-gray-300 py-2.5 ps-10 shadow-sm sm:text-sm"
+                        placeholder={t("search_placeholder")}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          debouncedSetSearchAddress(e.target.value)
+                        }
+                        onClear={() => {
+                          debouncedSetSearchAddress("")
+                          setShowAddressSearchbox(false)
+                        }}
+                      />
+                    ) : (
+                      <button
+                        className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                        type="button"
+                        onClick={() => setShowAddressSearchbox(true)}>
+                        <img className="size-4 grayscale opacity-70" src={SearchIcon} alt="" />
+                      </button>
+                    )
+                  }
+                  <button className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm" type="button">
+                    <img className="size-[22px] grayscale opacity-70 translate-y-[1px]" src={MapLayersIcon} alt="" />
+                  </button>
+                </div>)}
+              </>
             ) : (
               <div className="h-full w-full flex items-center justify-center relative">
                 <MapLoadingAnimation
