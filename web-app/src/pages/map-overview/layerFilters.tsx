@@ -68,7 +68,7 @@ const LayerFilters = () => {
   if (modalsState.showLayerFilter === false) return null;
   return (
     <>
-      <div className="absolute p-6 rounded-lg gap-3 mx-auto max-w-[calc(100vw-4rem)] w-[588px] z-modal top-1 right-1 bg-gray-100">
+      <div className="absolute p-6 rounded-lg gap-3 mx-auto max-w-[calc(100vw-4rem)] w-[588px] z-modal top-5 right-5 bg-gray-100">
           <Formik
             initialValues={LayerFilterInitialValues}
             validationSchema={LayerFilterValidationSchema}
@@ -104,8 +104,8 @@ const LayerFilters = () => {
                   <div className="p-4 flex justify-between">
                       {ViewList?.map((item, index) => (
                         <div key={index} className="gap-2 cursor-pointer items-center justify-center" onClick={() => setFieldValue("view", item.name)}>
-                          <img src={item.src} alt="road-map-view" className={`rounded-full border-2 ${item.name === values.view ? "border-blue-700" : ""} `} />
-                          <p className={`font-semibold text-base leading-10 text-center ${item.name === values.view ? "text-blue-700" : ""}`}>
+                          <img src={item.src} alt="road-map-view" className={`rounded-full border-2 ${item.name === values.view ? "border-accent-blue-dark" : ""} `} />
+                          <p className={`font-semibold text-xs leading-10 text-center ${item.name === values.view ? "text-accent-blue-dark" : ""}`}>
                             {item.name}
                           </p>
                         </div>

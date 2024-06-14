@@ -101,7 +101,12 @@ const ScreenMapOverview = () => {
   // update map view on vehicle selection
   useEffect(() => {
     if (!!selectedVehicle) {
-      dispatch(setModalsData({ ...modalsState, showVehicleDetails: true }))
+      dispatch(setModalsData({
+        ...modalsState,
+        showLayerFilter: false,
+        showVehicleFilter: false,
+        showVehicleDetails: true
+      }))
       mapUpdatesHandler(
         {
           mapRef,
@@ -259,12 +264,19 @@ const ScreenMapOverview = () => {
               />
             </div>
             <div className="flex justify-between p-4 items-center">
-              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showLayerFilter: true }));}}> {/* TODO: this needs to be changed */}
+              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {}}> {/* TODO: this needs to be changed */}
                 <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
                 <img src={GroupFilterIcon} alt="group-filter-icon"/>
               </div>
               <div className="flex gap-6 relative">
-                <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
+                <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {
+                  dispatch(setModalsData({
+                    ...modalsState,
+                    showVehicleDetails: false,
+                    showLayerFilter: false,
+                    showVehicleFilter: true
+                  }));
+                }}/>
                 <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => setShowSortingDropdown(!showSortingDropdown)}/>
                 <SortingFilter showSortingDropdown={showSortingDropdown} selectedSorting={selectedSorting} setSelectedSorting={(item) => setSelectedSorting(item)}/>
               </div>
@@ -381,7 +393,17 @@ const ScreenMapOverview = () => {
                       </button>
                     )
                   }
-                  <button className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm" type="button">
+                  <button
+                    className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                    type="button"
+                    onClick={() => {
+                      dispatch(setModalsData({
+                        ...modalsState,
+                        showVehicleDetails: false,
+                        showVehicleFilter: false,
+                        showLayerFilter: true
+                      }));
+                    }}>
                     <img className="size-[22px] grayscale opacity-70 translate-y-[1px]" src={MapLayersIcon} alt="" />
                   </button>
                 </div>)}
