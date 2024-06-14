@@ -8,31 +8,44 @@ import { getUserIntials } from "../../utils/string";
 import { Formik } from "formik";
 import { LayerFilterInitialValues, LayerFilterValidationSchema } from "./validation";
 import { AdminFormFieldCheckbox, AdminFormFieldSubmit } from "../../components/admin/formFields";
+import RoadMapView from "../../assets/images/road-map-view.png"
+import SatelliteMapView from "../../assets/images/satellite-map-view.png"
+import OrdnanceMapView from "../../assets/images/ordnance-map-view.png"
+import BirdsEyeMapView from "../../assets/images/birdseye-map-view.png"
+import StreetsideMapView from "../../assets/images/streetside-map-view.png"
+import ThreeDMapView from "../../assets/images/3d-map-view.png"
+
 
 const ViewList = [
   {
     id: 1,
     name: "Road",
+    src: RoadMapView
   },
   {
     id: 2,
     name: "Satellite",
+    src: SatelliteMapView
   },
   {
     id: 3,
-    name: "Ordinance",
+    name: "Ordnance",
+    src: OrdnanceMapView
   },
   {
     id: 4,
     name: "Bird's Eye",
+    src: BirdsEyeMapView
   },
   {
     id: 5,
     name: "Streetside",
+    src: StreetsideMapView
   },
   {
     id: 6,
     name: "3D",
+    src: ThreeDMapView
   }
 ]
 
@@ -91,7 +104,7 @@ const LayerFilters = () => {
                   <div className="p-4 flex justify-between">
                       {ViewList?.map((item, index) => (
                         <div key={index} className="gap-2 cursor-pointer items-center justify-center" onClick={() => setFieldValue("view", item.name)}>
-                          <AppAvatar initials={getUserIntials(item.name)}/>
+                          <img src={item.src} alt="road-map-view" className={`rounded-full border-2 ${item.name === values.view ? "border-blue-700" : ""} `} />
                           <p className={`font-semibold text-base leading-10 text-center ${item.name === values.view ? "text-blue-700" : ""}`}>
                             {item.name}
                           </p>
