@@ -251,7 +251,7 @@ const ScreenMapOverview = () => {
               />
             </div>
             <div className="flex justify-between p-4 items-center">
-              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showLayerFilter: true }));}}> 
+              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showLayerFilter: true }));}}> {/* TODO: this needs to be changed */}
                 <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
                 <img src={GroupFilterIcon} alt="group-filter-icon"/>
               </div>
