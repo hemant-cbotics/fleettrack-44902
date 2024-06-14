@@ -11,7 +11,7 @@ import VehicleDetails from "../map-overview/vehicleDetails";
 import { useTranslation } from "react-i18next";
 import EventFilter from "./eventFilter";
 import { useState } from "react";
-import SortingFilter from "./sortingFilter";
+import SortingFilter from "../../components/sortingFilter";
 
 const tripsData = [
   {
@@ -147,7 +147,7 @@ const ScreenVehicleMap = () => {
                 </div>)}
               </div>
             )} */}
-            <VehicleDetails />
+            <VehicleDetails vehicleId="4e025c2-0025-4982-ae76-e33643354caa"/> {/* TODO: this needs to be made dynamic */}
             </div>
         </div>
       </div>

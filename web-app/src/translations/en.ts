@@ -628,6 +628,16 @@ export const language_en = {
       time: "Time",
       timezone: "Timezone",
     },
+    layerFilter: {
+      heading: "Layer Filter",
+      additional_filters: "Additional Filters",
+      traffic: "Traffic",
+      weather: "Weather",
+      three_d_building: "3D Building",
+      clustering: "Clustering",
+      hide_geozones: "Hide Geozones",
+      manage_geozones: "Manage Geozones",
+    },
     details: {
       heading: "Details",
       message: "Message",

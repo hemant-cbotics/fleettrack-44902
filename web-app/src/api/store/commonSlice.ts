@@ -26,6 +26,7 @@ export type TModalsState = {
   showVehicleDetails: boolean;
   showVehicleFilter: boolean;
   showEventFilter: boolean;
+  showLayerFilter: boolean;
 }
 const ownerOrganization = sessionStorage.getItem("ownerOrganization")
 
@@ -73,7 +74,8 @@ const initialState: TAppCommonState = {
     showGroupSelector: false,
     showVehicleDetails: false,
     showVehicleFilter: false,
-    showEventFilter: false
+    showEventFilter: false,
+    showLayerFilter: false
   },
   listingQueryParams: {
     users: {

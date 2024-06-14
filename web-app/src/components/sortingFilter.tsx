@@ -1,5 +1,5 @@
 import { FC } from "react";
-import CheckedIcon from "../../assets/svg/checked-icon.svg"
+import CheckedIcon from "../assets/svg/checked-icon.svg"
 
 const SortingItems = [
   "Latest First", "Oldest First" , "Alphabetical (A to Z)", "Alphabetical (Z to A)"
