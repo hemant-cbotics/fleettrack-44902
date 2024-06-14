@@ -96,18 +96,7 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
     setTimeout(() => mapCenterToDataPoints(props, checkedVehicles), 1000);
 
     // zoom event listener
-    Microsoft.Maps.Events.addHandler(props.mapRef.current.map, 'viewchangeend', () => {
-      // show all infoboxes if only 6 pushpins are visible in bounds
-      if(mapGetPushpinCountWithinMapBounds(props) <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD) {
-        props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
-          pushpinObject.infobox.setOptions({ visible: true });
-        });
-      } else {
-        props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
-          pushpinObject.infobox.setOptions({ visible: false });
-        });
-      }
-    });
+    Microsoft.Maps.Events.addHandler(props.mapRef.current.map, 'viewchangeend', () => handleMapViewChangeEnd(props));
   }
 
   // load map modules before rendering the map objects
@@ -148,15 +137,18 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
           .map((pushpinObject) => pushpinObject.pushpin)
       );
       // update visibility of the infoboxes
-      props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
-        pushpinObject.infobox.setOptions({
-          visible:
-            checkedVehicles.includes(pushpinObject.id)
-            && checkedVehicles.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
-            // && pushpinsWithinBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
-        });
-      });
+      // props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+      //   pushpinObject.infobox.setOptions({
+      //     visible:
+      //       checkedVehicles.includes(pushpinObject.id)
+      //       && checkedVehicles.length <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
+      //       // && pushpinsWithinBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
+      //   });
+      // });
       mapCenterToDataPoints(props, checkedVehicles);
+      if(checkedVehicles.length === 0) {
+        handleMapViewChangeEnd(props);
+      }
       break;
     case 'centerToPushpin':
       if(!!value && value.length > 0) {
@@ -278,9 +270,52 @@ const mapVehicleStateIconAngle = (dataPoint: TDataPoint) => {
 }
 
 const mapGetPushpinCountWithinMapBounds = (props: TMapOperationsProps) => {
-  const Microsoft = (window as any).Microsoft;
   const mapBounds = props.mapRef?.current?.map?.getBounds();
   if(!mapBounds) return 0;
   const pushpins = props.mapRef.current.objects.mPushpins;
-  return pushpins.filter((pushpinObject) => mapBounds.contains(pushpinObject.pushpin.getLocation())).length;
+  return pushpins.filter(
+    (pushpinObject) =>
+      mapPushpinLiesWithinMapBounds(pushpinObject.pushpin, props.mapRef?.current?.map)
+  ).length;
 }
+
+const mapPushpinLiesWithinMapBounds = (pushpin: any, mapObj: any) => {
+  const mapBounds = mapObj.getBounds();
+  if(!mapBounds) return false;
+  return mapBounds.contains(pushpin.getLocation()) && pushpin.getVisible();
+}
+
+const handleMapViewChangeEnd = (props: TMapOperationsProps) => {
+  const pushpinCountWithinMapBounds = mapGetPushpinCountWithinMapBounds(props);
+  const showInfoboxes = pushpinCountWithinMapBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD;
+  if(APP_CONFIG.DEBUG.MAPS) console.log(`viewchangeend count: ${pushpinCountWithinMapBounds} showInfoboxes: ${showInfoboxes}`);
+  // return;
+  if(showInfoboxes) {
+    // show infoboxes for pushpins within the map bounds
+    props.mapRef.current.objects.mPushpins
+      .filter((pushpinObject) => {
+        const loc = pushpinObject.pushpin.getLocation();
+        return props.mapRef.current.map.getBounds().contains(loc);
+      })
+      .forEach((pushpinObject) => {
+        // setTimeout(() => {
+          pushpinObject.infobox.setOptions({
+            visible: // true
+              mapPushpinLiesWithinMapBounds(pushpinObject.pushpin, props.mapRef.current.map)
+              // pushpinObject.pushpin.getVisible() &&
+              // props.mapRef.current.objects.mPushpins.filter((pushpinObject) => {
+              //   const loc = pushpinObject.pushpin.getLocation();
+              //   return props.mapRef.current.map.getBounds().contains(loc);
+              // }).length <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD
+          });
+        // }, 100);
+      });
+  } else {
+    // hide all infoboxes
+    props.mapRef.current.objects.mPushpins.forEach((pushpinObject) => {
+      pushpinObject.infobox.setOptions({ visible: false });
+    });
+  }
+}
+
+// TODO: selecting / deselecting vehicles is casuing brinking of infoboxes (around 6 pushpins)
