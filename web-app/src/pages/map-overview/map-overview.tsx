@@ -323,11 +323,17 @@ const ScreenMapOverview = () => {
                         setCheckedVehicles(
                           checkedVehicles.filter((id: any) => id !== dataPoint.id)
                         );
+                        // hide vehicle details popup if unchecked
+                        dispatch(setModalsData({ ...modalsState, showVehicleDetails: false }));
                       } else {
                         setCheckedVehicles([...checkedVehicles, dataPoint.id]);
                       }
                     }}
                     onClick={() => {
+                      if(!checkedVehicles.includes(dataPoint.id)) {
+                        // select the vehicle if not already selected
+                        setCheckedVehicles([...checkedVehicles, dataPoint.id]);
+                      }
                       selectMapVehicle(dataPoint.id);
                     }}
                     title={mapVehicleDisplayTitle(dataPoint)}
