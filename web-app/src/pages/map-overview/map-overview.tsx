@@ -26,6 +26,8 @@ import VehicleDetails from "./vehicleDetails";
 import VehicleFilter from "./vehiclesFilter";
 import SearchIcon from "../../assets/svg/search-icon.svg";
 import MapLayersIcon from "../../assets/svg/map-layers.svg";
+import LayerFilters from "./layerFilters";
+import SortingFilter from "../../components/sortingFilter";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
@@ -34,6 +36,8 @@ const ScreenMapOverview = () => {
   const { t: tMain } = useTranslation();
   const [selectedGroups, setSelectedGroups] = useState<string>();
   const navigate = useNavigate();
+  const [showSortingDropdown, setShowSortingDropdown] = useState(false);
+  const [selectedSorting, setSelectedSorting] = useState("Latest First");
 
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
   const dispatch = useDispatch();
@@ -255,13 +259,14 @@ const ScreenMapOverview = () => {
               />
             </div>
             <div className="flex justify-between p-4 items-center">
-              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showGroupSelector: true }));}}>
+              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showLayerFilter: true }));}}> {/* TODO: this needs to be changed */}
                 <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
                 <img src={GroupFilterIcon} alt="group-filter-icon"/>
               </div>
-              <div className="flex gap-6">
+              <div className="flex gap-6 relative">
                 <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
-                <img src={SortIcon} alt="sort-icon" className="cursor-pointer" />
+                <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => setShowSortingDropdown(!showSortingDropdown)}/>
+                <SortingFilter showSortingDropdown={showSortingDropdown} selectedSorting={selectedSorting} setSelectedSorting={(item) => setSelectedSorting(item)}/>
               </div>
             </div>
             <div className="flex px-4 gap-3">
@@ -386,7 +391,8 @@ const ScreenMapOverview = () => {
                 </div>)}
               </div>
             )}
-            <VehicleDetails />
+            <VehicleDetails vehicleId={selectedVehicle}/>
+            <LayerFilters />
           </div>
         </div>
       </div>
