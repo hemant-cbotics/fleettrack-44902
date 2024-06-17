@@ -26,6 +26,7 @@ export const onMapScriptLoaded = (props: TOnMapScriptLoadedProps) => {
         props.currentPosition.longitude
       ),
       zoom: 14,
+      showLocateMeButton: false,
       // showZoomButtons: false,
       // showDashboard: false,
       // showScalebar: false,

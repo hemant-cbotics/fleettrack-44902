@@ -10,6 +10,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        'base-text': '#2E3B36',
         'panel-gray': '#f5f4f7',
         heading: {
           black: '#1e1e1e',
