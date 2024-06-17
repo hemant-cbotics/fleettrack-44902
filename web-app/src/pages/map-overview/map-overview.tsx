@@ -474,7 +474,10 @@ const ScreenMapOverview = () => {
                 </div>)}
               </div>
             )}
-            <VehicleDetails vehicleId={selectedVehicle}/>
+            <VehicleDetails
+              vehicleId={selectedVehicle}
+              vehicleData={dataPoints.find((vehicle) => vehicle.id === selectedVehicle)}
+            />
             <LayerFilters />
           </div>
         </div>

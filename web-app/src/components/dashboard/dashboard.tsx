@@ -83,7 +83,7 @@ const DashboardWrapper: FC = () => {
   // , [mapState]);
   
   return (
-    <section className={`container-dashboard bg-white${modalActive ? " h-screen overflow-hidden" : ""}`}>
+    <section className={`container-dashboard bg-white text-base-text ${modalActive ? " h-screen overflow-hidden" : ""}`}>
       <div className="flex min-h-screen grid-cols-12">
         <aside className="h-screen w-64 fixed top-0 left-0">
           <Sidemenu />

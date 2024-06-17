@@ -139,3 +139,13 @@ textarea {
 .vehicle-map-wrapper .NavBar_MapTypeButtonContainer {
   visibility: hidden;
 }
+
+.map-overview-map-wrapper,
+.vehicle-map-wrapper {
+  .MicrosoftMap .NavBar_Container.V8MapStyle {
+    .NavBar_Zoom.NavBar_Button,
+    .NavBar_Zoom.NavBar_Button {
+      margin-top: 8px;
+    }
+  }
+}
