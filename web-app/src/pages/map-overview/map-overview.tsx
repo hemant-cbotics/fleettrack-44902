@@ -55,12 +55,7 @@ const ScreenMapOverview = () => {
   // update map data on checked vehicles change
   useEffect(() => {
     mapUpdatesHandler(
-      {
-        mapRef,
-        mapData: { ...mapState?.mapData } as TMapData,
-        setMapData: () => {},
-        dataPoints,
-      },
+      getMapOpsProps(),
       'checkedUpdated',
       checkedVehicles
     );
@@ -71,12 +66,7 @@ const ScreenMapOverview = () => {
     // center map to all selected vehicles
     if(vehicleId === null) {
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'centerToPushpin',
         checkedVehicles
       );
@@ -84,12 +74,7 @@ const ScreenMapOverview = () => {
     // center map to selected vehicle and update the vehicle icon to focussed state
     setSelectedVehicle(prevVehicleId => {
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'focusPushpin',
         { id: prevVehicleId ?? selectedVehicle, focus: false }
       );
@@ -111,12 +96,7 @@ const ScreenMapOverview = () => {
         showVehicleDetails: true
       }))
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'focusPushpin',
         { id: selectedVehicle, focus: true }
       );
@@ -152,6 +132,16 @@ const ScreenMapOverview = () => {
     useOrganizationVehiclesQuery(orgVehiclesQueryParams, { skip: !mapState?.mapScriptLoaded });
   
   const [dataPoints, setDataPoints] = useState<TDataPoint[]>([]);
+
+  // helper function to get map operations props
+  const getMapOpsProps = useCallback(() => {
+    return {
+      mapRef,
+      mapData: { ...mapState?.mapData } as TMapData,
+      setMapData: () => {},
+      dataPoints,
+    };
+  }, [mapState, dataPoints]);
 
   // show address searchbox
   const [showAddressSearchbox, setShowAddressSearchbox] = useState(false);
@@ -202,12 +192,7 @@ const ScreenMapOverview = () => {
 
       // center map to newly selected location
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'centerToCoords',
         {
           center: newlySelectedLocationCoords,
@@ -270,10 +255,7 @@ const ScreenMapOverview = () => {
   () => {
     mapOperations(
       {
-        mapRef,
-        mapData: { ...mapState?.mapData } as TMapData,
-        setMapData: () => {},
-        dataPoints,
+        ...getMapOpsProps(),
         onDataPointPushpinClick: (dataPoint: TDataPoint) => {
           selectMapVehicle(
             selectedVehicle === dataPoint.id
@@ -449,6 +431,12 @@ const ScreenMapOverview = () => {
                         searchStyle={true}
                         searchStyleOnClear={() => {
                           setShowAddressSearchbox(false);
+                          // reset map to default view
+                          mapUpdatesHandler(
+                            getMapOpsProps(),
+                            'centerToPushpin',
+                            checkedVehicles
+                          );
                         }}
                       />
                     ) : (
