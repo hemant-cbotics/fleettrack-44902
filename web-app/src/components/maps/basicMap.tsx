@@ -29,6 +29,14 @@ export const MapLoadingAnimation: FC<TMapLoadingAnimationProps> = ({
   </div>
 );
 
+export const getDefaultMapLayerOptions = (mapState: TMapState) => ({
+  traffic: mapState?.mapLayerOptions?.traffic ?? false,
+  weather: mapState?.mapLayerOptions?.weather ?? false,
+  threeDBuildings: mapState?.mapLayerOptions?.threeDBuildings ?? false,
+  clusters: mapState?.mapLayerOptions?.clusters ?? true,
+  geozones: mapState?.mapLayerOptions?.geozones ?? true,
+});
+
 const BasicMap: FC<TBasicMapProps> = React.memo(({
   className = '',
   mapRef,
@@ -51,11 +59,14 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
       if(mapState?.mapScriptLoaded) {
         onMapScriptLoaded({
           mapRef,
+          mapType: mapState?.mapType ?? 'road',
+          mapLayerOptions: getDefaultMapLayerOptions(mapState),
           currentPosition: mapData?.centerPosition ?? currPos,
           setLoadingMap,
           onMapReadyCallback: () => {
             dispatch(setMapStateData({
               ...mapState,
+              mapType: mapState?.mapType ?? 'road',
               pageMapLoaded: true,
             }));
             onMapReady?.();

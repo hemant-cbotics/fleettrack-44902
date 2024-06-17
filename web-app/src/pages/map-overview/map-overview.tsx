@@ -15,7 +15,7 @@ import MapVehicleListingColumnItem from "../../components/mapVehicleListingColum
 import AppSearchBox from "../../components/searchBox";
 import TickCheckbox from "../../components/tickCheckbox";
 import { APP_CONFIG } from "../../constants/constants";
-import { TMapState } from "../../types/map";
+import { TMapLayerOptions, TMapState, TMapType } from "../../types/map";
 import { useLoggedInUserData } from "../../utils/user";
 import { mapVehicleDisplayTitle } from "./common";
 import { dummyCoords } from "./dummyData";
@@ -276,6 +276,28 @@ const ScreenMapOverview = () => {
     }
   };
 
+  const handleMapTypeChange = (mapType: TMapType) => {
+    dispatch(setMapStateData({
+      ...mapState,
+      mapType,
+    }));
+    setMapStateTransitionInProgress(true);
+    setTimeout(() => {
+      setMapStateTransitionInProgress(false);
+    }, 100);
+  }
+
+  const handleMapLayerChange = (mapLayerOptions: TMapLayerOptions) => {
+    dispatch(setMapStateData({
+      ...mapState,
+      mapLayerOptions,
+    }));
+    setMapStateTransitionInProgress(true);
+    setTimeout(() => {
+      setMapStateTransitionInProgress(false);
+    }, 100);
+  }
+
   // TODO: display active and inactive both vehicles on map
 
   return (
@@ -441,7 +463,7 @@ const ScreenMapOverview = () => {
                       />
                     ) : (
                       <button
-                        className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                        className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-md"
                         type="button"
                         onClick={() => setShowAddressSearchbox(true)}>
                         <img className="size-4 grayscale opacity-70" src={SearchIcon} alt="" />
@@ -449,7 +471,7 @@ const ScreenMapOverview = () => {
                     )
                   }
                   <button
-                    className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                    className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-md"
                     type="button"
                     onClick={() => {
                       dispatch(setModalsData({
@@ -478,7 +500,10 @@ const ScreenMapOverview = () => {
               vehicleId={selectedVehicle}
               vehicleData={dataPoints.find((vehicle) => vehicle.id === selectedVehicle)}
             />
-            <LayerFilters />
+            <LayerFilters
+              onMapTypeChange={handleMapTypeChange}
+              onMapLayerChange={handleMapLayerChange}
+            />
           </div>
         </div>
       </div>

@@ -23,18 +23,17 @@ export const dateInitialValues = {
   timezone: "",
 }
 
-export const LayerFilterInitialValues = {
-  view: "Road",
-  traffic: false,
-  weather: false,
-  three_d_building: false,
-  clustering: false,
-  hide_geozones: false,
-}
-
 export const dateValidationSchema = Yup.object().shape({
 });
 
 export const YupValidationSchema = Yup.object().shape({});
 
+export const layerFilterInitialValues = {
+  view: "road",
+  traffic: false,
+  weather: false,
+  three_d_building: false,
+  clustering: true,
+  hide_geozones: false,
+}
 export const LayerFilterValidationSchema = Yup.object().shape({});

@@ -143,6 +143,8 @@ textarea {
 .map-overview-map-wrapper,
 .vehicle-map-wrapper {
   .MicrosoftMap .NavBar_Container.V8MapStyle {
+    z-index: 1010;
+
     .NavBar_Zoom.NavBar_Button,
     .NavBar_Zoom.NavBar_Button {
       margin-top: 8px;
