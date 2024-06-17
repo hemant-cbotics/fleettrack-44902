@@ -1,6 +1,7 @@
 import { FC, ReactNode, useState } from "react";
-import Select, { GroupBase, OptionsOrGroups } from "react-select";
+import Select, { components, CSSObjectWithLabel, GroupBase, OptionsOrGroups } from "react-select";
 import AsyncSelect from "react-select/async";
+import SearchIcon from "../../assets/svg/search-icon.svg";
 import CloseIcon from "../../assets/svg/close-icon.svg";
 
 type AdminFormFieldInputProps = {
@@ -119,6 +120,8 @@ type AdminFormFieldAsyncDropdownProps = AdminFormFieldDropdownProps & {
   noOptionsMessage?: (obj: { inputValue: string }) => string;
   defaultOption?: TSelectboxOption;
   loadOptions: ((inputValue: string, callback: (options: OptionsOrGroups<TSelectboxOption, GroupBase<TSelectboxOption>>) => void) => void/* | Promise<...>*/) | undefined;
+  searchStyle?: boolean;
+  searchStyleOnClear?: () => void;
 }
 
 export const PseudoSelect: FC<{
@@ -252,6 +255,8 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
   customWrapperClass = "col-span-6",
 
   menuPlacement = "auto",
+  searchStyle = false,
+  searchStyleOnClear = () => {}
 }) => {
   const fieldHasError = detailsFormField ?  !disabled && !!error : touched && !!error;
   let wrapperClass = fieldHasError ? "" : "";
@@ -286,12 +291,12 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
         classNames={{
           control: (controlProps) => {
             // console.log('classNames state', controlProps)
-            return `mt-1 w-full h-11 px-1 rounded-md bg-white text-sm shadow-sm border-2 focus-visible:outline-4 focus-visible:shadow-none ${inputClass} ${customSelectboxClass} ${
+            return `${!!label ? 'mt-1' : ''} w-full h-11 px-1${searchStyle && ' pl-7'} rounded-md bg-white text-sm shadow-sm border-2 focus-visible:outline-4 focus-visible:shadow-none ${inputClass} ${customSelectboxClass} ${
               controlProps.isFocused ? 'border-red-600' : 'border-grey-300'
             } ${
                 controlProps.isDisabled ? 'bg-gray-400' : ''
               }`
-          },
+          }
         }}
         styles={{
           control: (styles, controlProps) => {
@@ -315,6 +320,30 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
               },
             }
           },
+          valueContainer: (styles, valueContainerProps) => {
+            let customStyles: CSSObjectWithLabel = {};
+            if(searchStyle) {
+              customStyles = {
+                overflow: searchStyle ? 'visible' : 'hidden',
+                '&:before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '10px',
+                  transform: 'translateY(-50%)',
+                  width: '16px',
+                  height: '16px',
+                  background: `url(${SearchIcon}) no-repeat center`,
+                  backgroundSize: 'contain',
+                  marginLeft: '-24px',
+                }
+              }
+            }
+            return {
+              ...styles,
+              ...customStyles,
+            }
+          },
         }}
         placeholder={placeholder}
         cacheOptions
@@ -325,6 +354,35 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
         menuPlacement={menuPlacement}
         defaultValue={defaultOption}
         noOptionsMessage={noOptionsMessage}
+        {...(searchStyle && {
+          components: {
+            DropdownIndicator: () => null,
+            IndicatorSeparator:() => null,
+            ClearIndicator: (props) => {
+              // reference: https://codesandbox.io/p/sandbox/react-select-custom-clearindicator-c8fxv?file=%2Fexample.js%3A18%2C48-18%2C71
+              // reference: https://codesandbox.io/p/sandbox/react-select-custom-valuecontainer-nnvmu?file=%2Findex.js%3A14%2C24-35%2C2
+              const clearValue = () => {
+                props.clearValue();
+                // props.selectProps?.onClear && props.selectProps.onClear();
+                searchStyleOnClear?.();
+              };
+            
+              const innerProps = {
+                ...props.innerProps,
+                onMouseDown: clearValue,
+                onTouchEnd: clearValue,
+              };
+              return (
+                <components.ClearIndicator {...props} innerProps={innerProps}>
+                  <span className="block cursor-pointer">
+                    <img src={CloseIcon} alt="" className="size-5 opacity-50" />
+                  </span>
+                </components.ClearIndicator>
+              )
+            },
+          },
+          isClearable: true,
+        })}
       />
       {fieldHasError && (
         <p
