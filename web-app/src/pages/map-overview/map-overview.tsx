@@ -28,6 +28,9 @@ import SearchIcon from "../../assets/svg/search-icon.svg";
 import MapLayersIcon from "../../assets/svg/map-layers.svg";
 import LayerFilters from "./layerFilters";
 import SortingFilter from "../../components/sortingFilter";
+import { AdminFormFieldAsyncDropdown, TSelectboxOption } from "../../components/admin/formFields";
+import { useLazyAutosuggestAddressQuery, useLazyGeocodeQuery } from "../../api/network/mapApiServices";
+import { TAutosuggestOptionValue } from "./type";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
@@ -52,12 +55,7 @@ const ScreenMapOverview = () => {
   // update map data on checked vehicles change
   useEffect(() => {
     mapUpdatesHandler(
-      {
-        mapRef,
-        mapData: { ...mapState?.mapData } as TMapData,
-        setMapData: () => {},
-        dataPoints,
-      },
+      getMapOpsProps(),
       'checkedUpdated',
       checkedVehicles
     );
@@ -68,12 +66,7 @@ const ScreenMapOverview = () => {
     // center map to all selected vehicles
     if(vehicleId === null) {
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'centerToPushpin',
         checkedVehicles
       );
@@ -81,12 +74,7 @@ const ScreenMapOverview = () => {
     // center map to selected vehicle and update the vehicle icon to focussed state
     setSelectedVehicle(prevVehicleId => {
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'focusPushpin',
         { id: prevVehicleId ?? selectedVehicle, focus: false }
       );
@@ -108,12 +96,7 @@ const ScreenMapOverview = () => {
         showVehicleDetails: true
       }))
       mapUpdatesHandler(
-        {
-          mapRef,
-          mapData: { ...mapState?.mapData } as TMapData,
-          setMapData: () => {},
-          dataPoints,
-        },
+        getMapOpsProps(),
         'focusPushpin',
         { id: selectedVehicle, focus: true }
       );
@@ -150,12 +133,77 @@ const ScreenMapOverview = () => {
   
   const [dataPoints, setDataPoints] = useState<TDataPoint[]>([]);
 
+  // helper function to get map operations props
+  const getMapOpsProps = useCallback(() => {
+    return {
+      mapRef,
+      mapData: { ...mapState?.mapData } as TMapData,
+      setMapData: () => {},
+      dataPoints,
+    };
+  }, [mapState, dataPoints]);
+
   // show address searchbox
   const [showAddressSearchbox, setShowAddressSearchbox] = useState(false);
   const debouncedSetSearchAddress = useDebouncedCallback((value: string) => {
     // setOrgVehiclesQueryParams((prev) => { return { ...prev, page: 1, search: value }});
     // selectMapVehicle(null);
   }, 500);
+  const [autosuggestQuery, { isFetching: isFetchingAutosuggest }] = useLazyAutosuggestAddressQuery()
+
+  const loadOptionsHandlerAutosuggest =
+  // TODO: enable debouncing, currently causing issues with autosuggest
+  // useDebouncedCallback(
+    async (inputValue: string) => {
+      const autosuggestResponse = await autosuggestQuery(inputValue)
+      if(APP_CONFIG.DEBUG.MAPS) console.log('autosuggestResponse', autosuggestResponse)
+      const { data } = autosuggestResponse;
+      const firstResultSet = data?.resourceSets?.[0];
+      const options = !!firstResultSet?.estimatedTotal && firstResultSet?.estimatedTotal > 0
+        ? firstResultSet?.resources?.[0]?.value?.map((item) => {
+            const labelText = item?.name ?? `${item?.address?.formattedAddress} - ${item?.address?.countryRegion}`; // TODO: standardize
+            return {
+              value: JSON.stringify({ labelText, itemJSON: item } as TAutosuggestOptionValue),
+              label: labelText, // to show icon, add ${item.__type === 'LocalBusiness' ? '💲' : '📍'}
+            } as TSelectboxOption
+          })
+        : [];
+      const newAutosuggestResults = firstResultSet?.resources?.[0]?.value ?? [];
+      if(APP_CONFIG.DEBUG.MAPS) console.log('newAutosuggestResults', newAutosuggestResults)
+      return options;
+    }
+  // , 500);
+
+  const [geocodeQuery, { isFetching: isFetchingGeocode }] = useLazyGeocodeQuery();
+
+  const handleAutosuggestChange = async (e: any) => {
+    const newlySelectedLocation = e?.value;
+    if(!!!newlySelectedLocation) return;
+    const newlySelectedLocationJSON = JSON.parse(e.value) as TAutosuggestOptionValue;
+    if(APP_CONFIG.DEBUG.MAPS) console.log('newlySelectedLocation', newlySelectedLocation);
+    if(APP_CONFIG.DEBUG.MAPS) console.log('newlySelectedLocationJSON', newlySelectedLocationJSON);
+    const geocodeResponse = await geocodeQuery(
+      newlySelectedLocationJSON.itemJSON.address
+    );
+    if(APP_CONFIG.DEBUG.MAPS) console.log('geocodeResponse', geocodeResponse);
+    const newlySelectedLocationCoords = geocodeResponse.data?.resourceSets?.[0]?.resources?.[0]?.point?.coordinates;
+    if(APP_CONFIG.DEBUG.MAPS) console.log('newlySelectedLocationCoords', newlySelectedLocationCoords);
+    if(!!newlySelectedLocationCoords?.[0] && !!newlySelectedLocationCoords?.[1]) {
+
+      // center map to newly selected location
+      mapUpdatesHandler(
+        getMapOpsProps(),
+        'centerToCoords',
+        {
+          center: newlySelectedLocationCoords,
+          zoom: 6,
+        }
+      );
+
+    } else {
+      console.error('GEOCODE RESPONSE ISSUE - no coordinates')
+    }
+  }
 
   // common map ref to be used for various map operations
   const mapRef = React.useRef<TMapRef>({
@@ -207,10 +255,7 @@ const ScreenMapOverview = () => {
   () => {
     mapOperations(
       {
-        mapRef,
-        mapData: { ...mapState?.mapData } as TMapData,
-        setMapData: () => {},
-        dataPoints,
+        ...getMapOpsProps(),
         onDataPointPushpinClick: (dataPoint: TDataPoint) => {
           selectMapVehicle(
             selectedVehicle === dataPoint.id
@@ -372,16 +417,26 @@ const ScreenMapOverview = () => {
                 {!!mapState?.mapData?.ready && (<div className="absolute flex gap-2 top-5 right-5 z-[999]">
                   {
                     showAddressSearchbox ? (
-                      <AppSearchBox
-                        wrapperClassName="relative w-64"
-                        inputClassName="w-full rounded-md border-gray-300 py-2.5 ps-10 shadow-sm sm:text-sm"
-                        placeholder={t("search_placeholder")}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          debouncedSetSearchAddress(e.target.value)
-                        }
-                        onClear={() => {
-                          debouncedSetSearchAddress("")
-                          setShowAddressSearchbox(false)
+                      <AdminFormFieldAsyncDropdown
+                        loadingData={isFetchingAutosuggest}
+                        label={''}
+                        id="search_address"
+                        name="search_address"
+                        noOptionsMessage={() => t("search_address_no_items")}
+                        placeholder={t("search_address_placeholder")}
+                        loadOptions={loadOptionsHandlerAutosuggest}
+                        onChange={handleAutosuggestChange}
+                        detailsFormField={true}
+                        customWrapperClass="relative w-72"
+                        searchStyle={true}
+                        searchStyleOnClear={() => {
+                          setShowAddressSearchbox(false);
+                          // reset map to default view
+                          mapUpdatesHandler(
+                            getMapOpsProps(),
+                            'centerToPushpin',
+                            checkedVehicles
+                          );
                         }}
                       />
                     ) : (

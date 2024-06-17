@@ -198,6 +198,16 @@ export const mapUpdatesHandler: TMapUpdatesHandler = (props, action, value) => {
         }
       }
       break;
+    case 'centerToCoords':
+      const coords = value as { center: number[], zoom: number };
+      if(coords.center.length === 2) {
+        props.mapRef.current.map.setView({
+          center: new Microsoft.Maps.Location(coords.center[0], coords.center[1]),
+          zoom: coords.zoom ?? 5,
+          animate: true,
+        });
+      }
+      break;
     default:
       break;
   }  

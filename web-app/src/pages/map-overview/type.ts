@@ -1,3 +1,4 @@
+import { BingAutosuggestResItem } from "../../api/types/Map";
 import { OrganizationVehicle } from "../../api/types/Vehicle";
 import { TLatLng } from "../../types/map";
 
@@ -53,6 +54,11 @@ export type TMapOperations = (
 
 export type TMapUpdatesHandler = (
   props: TMapOperationsProps,
-  action: 'checkedUpdated' | 'focusPushpin' | 'centerToPushpin',
+  action: 'checkedUpdated' | 'focusPushpin' | 'centerToPushpin' | 'centerToCoords',
   value?: any
 ) => void;
+
+export type TAutosuggestOptionValue = {
+  labelText: string;
+  itemJSON: BingAutosuggestResItem;
+}
