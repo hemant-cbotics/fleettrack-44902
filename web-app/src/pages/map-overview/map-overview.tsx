@@ -21,7 +21,7 @@ import { mapVehicleDisplayTitle } from "./common";
 import { dummyCoords } from "./dummyData";
 import { mapOperations, mapUpdatesHandler, mapVehicleStateIconSlug } from "./map";
 import MapFilter from "./mapFilter";
-import { TDataPoint, TMapData, TMapRef } from "./type";
+import { TDataPoint, TMapData, TMemoizedMapOperationsProps, TMapRef } from "./type";
 import VehicleDetails from "./vehicleDetails";
 import VehicleFilter from "./vehiclesFilter";
 import SearchIcon from "../../assets/svg/search-icon.svg";
@@ -134,13 +134,26 @@ const ScreenMapOverview = () => {
   const [dataPoints, setDataPoints] = useState<TDataPoint[]>([]);
 
   // helper function to get map operations props
-  const getMapOpsProps = useCallback(() => {
+  const getMapOpsProps: TMemoizedMapOperationsProps = useCallback(() => {
     return {
       mapRef,
+      mapState,
       mapData: { ...mapState?.mapData } as TMapData,
       mapLayerOptions: mapState?.mapLayerOptions as TMapLayerOptions,
       setMapData: () => {},
       dataPoints,
+      onViewChangeEnd: (center, zoom) => {
+        if(APP_CONFIG.DEBUG.MAPS) console.log("onViewChangeEnd", center, zoom);
+        dispatch(setMapStateData({
+          ...mapState,
+          mapCenter: center,
+          mapZoom: zoom,
+          mapData: {
+            ...mapState.mapData,
+            centerPosition: center
+          }
+        }));
+      },
     };
   }, [mapState, dataPoints]);
 

@@ -6,6 +6,8 @@ import { TGeozoneMapData, TLatLng, TMapState } from "../../types/map";
 import { mapGetCurrentPosition } from "../../utils/map";
 import { useDispatch, useSelector } from "react-redux";
 import { setMapStateData, setUserCurrPosData } from "../../api/store/commonSlice";
+import { useLocation } from "react-router-dom";
+import { routeUrls } from "../../navigation/routeUrls";
 
 type TBasicMapProps = {
   className?: string;
@@ -47,6 +49,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
   const initRef = React.useRef(false);
   const userCurrPos: TLatLng = useSelector((state: any) => state.commonReducer.userCurrPos);
   const mapState: TMapState = useSelector((state: any) => state.commonReducer.mapState);
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
 
   const [loadingMap, setLoadingMap] = React.useState(true);
@@ -59,6 +62,8 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
       if(mapState?.mapScriptLoaded) {
         onMapScriptLoaded({
           mapRef,
+          mapStateToSetToLastViewOnLoad: // set to last view if user is on map overview page - prevent momentary flicker to default location
+            pathname === routeUrls.dashboardChildren.map_overview ? mapState : null,
           mapType: mapState?.mapType ?? 'road',
           mapLayerOptions: getDefaultMapLayerOptions(mapState),
           currentPosition: mapData?.centerPosition ?? currPos,

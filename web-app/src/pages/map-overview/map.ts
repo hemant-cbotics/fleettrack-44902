@@ -318,7 +318,18 @@ const handleMapViewChangeEnd = (props: TMapOperationsProps) => {
   const pushpinCountWithinMapBounds = mapGetPushpinCountWithinMapBounds(props);
   const showInfoboxes = pushpinCountWithinMapBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD;
   if(APP_CONFIG.DEBUG.MAPS) console.log(`viewchangeend count: ${pushpinCountWithinMapBounds} showInfoboxes: ${showInfoboxes}`);
-  // return;
+  
+  // update mapState with new center and zoom
+  if(!!props.mapRef.current.map?.getCenter) {
+    props?.onViewChangeEnd?.(
+      {
+        latitude: props.mapRef.current.map?.getCenter().latitude,
+        longitude: props.mapRef.current.map?.getCenter().longitude
+      },
+      props.mapRef.current.map.getZoom()
+    );
+  }
+
   if(showInfoboxes) {
     // show infoboxes for pushpins within the map bounds
     props.mapRef.current.objects.mPushpins

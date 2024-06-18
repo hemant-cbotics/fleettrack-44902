@@ -1,10 +1,11 @@
 import React from "react";
 import { APP_CONFIG } from "../../constants/constants";
 import { TMapRef } from "../../pages/admin-details/geozone/type";
-import { TLatLng, TMapLayerOptions, TMapType } from "../../types/map";
+import { TLatLng, TMapLayerOptions, TMapState, TMapType } from "../../types/map";
 
 type TOnMapScriptLoadedProps = {
   mapRef: React.MutableRefObject<TMapRef>;
+  mapStateToSetToLastViewOnLoad: TMapState | null; // set to last view if user is on map overview page - prevent momentary flicker to default location
   mapType: TMapType;
   mapLayerOptions: TMapLayerOptions;
   currentPosition: TLatLng;
@@ -24,10 +25,10 @@ export const onMapScriptLoaded = (props: TOnMapScriptLoadedProps) => {
       navigationBarMode: Microsoft.Maps.NavigationBarMode.square, // 'square', 'default'
       disableScrollWheelZoom: true,
       center: new Microsoft.Maps.Location(
-        props.currentPosition.latitude,
-        props.currentPosition.longitude
+        props?.mapStateToSetToLastViewOnLoad?.mapCenter?.latitude ?? props.currentPosition.latitude,
+        props?.mapStateToSetToLastViewOnLoad?.mapCenter?.longitude ?? props.currentPosition.longitude
       ),
-      zoom: 14,
+      zoom: props?.mapStateToSetToLastViewOnLoad?.mapZoom ?? 14,
       showLocateMeButton: false,
       // showZoomButtons: false,
       // showDashboard: false,
