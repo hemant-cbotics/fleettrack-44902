@@ -1,6 +1,6 @@
 import { BingAutosuggestResItem } from "../../api/types/Map";
 import { OrganizationVehicle } from "../../api/types/Vehicle";
-import { TLatLng } from "../../types/map";
+import { TLatLng, TMapLayerOptions, TMapState } from "../../types/map";
 
 export type TVehicleList = {
   id: string;
@@ -42,11 +42,15 @@ export type TMapData = {
 
 export type TMapOperationsProps = {
   mapRef: React.MutableRefObject<TMapRef>;
+  mapState: TMapState;
   mapData: TMapData;
+  mapLayerOptions: TMapLayerOptions;
   setMapData: (mapData: TMapData) => void;
   dataPoints: TDataPoint[];
   onDataPointPushpinClick?: (dataPoint: TDataPoint) => void;
+  onViewChangeEnd?: (center: TLatLng, zoom: number) => void; // save last view (center and zoom) to store
 }
+export type TMemoizedMapOperationsProps = () => TMapOperationsProps;
 export type TMapOperations = (
   props: TMapOperationsProps,
   checkedVehicles: string[],

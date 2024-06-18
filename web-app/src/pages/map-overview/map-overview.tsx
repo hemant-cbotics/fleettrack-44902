@@ -15,13 +15,13 @@ import MapVehicleListingColumnItem from "../../components/mapVehicleListingColum
 import AppSearchBox from "../../components/searchBox";
 import TickCheckbox from "../../components/tickCheckbox";
 import { APP_CONFIG } from "../../constants/constants";
-import { TMapState } from "../../types/map";
+import { TMapLayerOptions, TMapState, TMapType } from "../../types/map";
 import { useLoggedInUserData } from "../../utils/user";
 import { mapVehicleDisplayTitle } from "./common";
 import { dummyCoords } from "./dummyData";
 import { mapOperations, mapUpdatesHandler, mapVehicleStateIconSlug } from "./map";
 import MapFilter from "./mapFilter";
-import { TDataPoint, TMapData, TMapRef } from "./type";
+import { TDataPoint, TMapData, TMemoizedMapOperationsProps, TMapRef } from "./type";
 import VehicleDetails from "./vehicleDetails";
 import VehicleFilter from "./vehiclesFilter";
 import SearchIcon from "../../assets/svg/search-icon.svg";
@@ -134,12 +134,26 @@ const ScreenMapOverview = () => {
   const [dataPoints, setDataPoints] = useState<TDataPoint[]>([]);
 
   // helper function to get map operations props
-  const getMapOpsProps = useCallback(() => {
+  const getMapOpsProps: TMemoizedMapOperationsProps = useCallback(() => {
     return {
       mapRef,
+      mapState,
       mapData: { ...mapState?.mapData } as TMapData,
+      mapLayerOptions: mapState?.mapLayerOptions as TMapLayerOptions,
       setMapData: () => {},
       dataPoints,
+      onViewChangeEnd: (center, zoom) => {
+        if(APP_CONFIG.DEBUG.MAPS) console.log("onViewChangeEnd", center, zoom);
+        dispatch(setMapStateData({
+          ...mapState,
+          mapCenter: center,
+          mapZoom: zoom,
+          mapData: {
+            ...mapState.mapData,
+            centerPosition: center
+          }
+        }));
+      },
     };
   }, [mapState, dataPoints]);
 
@@ -266,7 +280,7 @@ const ScreenMapOverview = () => {
       },
       checkedVehicles
     );
-  }, [mapState?.mapData]);
+  }, [mapState, dataPoints, checkedVehicles, selectedVehicle]); // instead of [mapState?.mapData]
 
   const handleChangeCheckAllVehicles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -275,6 +289,28 @@ const ScreenMapOverview = () => {
       setCheckedVehicles([]);
     }
   };
+
+  const handleMapTypeChange = (mapType: TMapType) => {
+    dispatch(setMapStateData({
+      ...mapState,
+      mapType,
+    }));
+    setMapStateTransitionInProgress(true);
+    setTimeout(() => {
+      setMapStateTransitionInProgress(false);
+    }, 100);
+  }
+
+  const handleMapLayerChange = (mapLayerOptions: TMapLayerOptions) => {
+    setMapStateTransitionInProgress(true);
+    setTimeout(() => {
+      dispatch(setMapStateData({
+        ...mapState,
+        mapLayerOptions,
+      }));
+      setMapStateTransitionInProgress(false);
+    }, 100);
+  }
 
   // TODO: display active and inactive both vehicles on map
 
@@ -441,7 +477,7 @@ const ScreenMapOverview = () => {
                       />
                     ) : (
                       <button
-                        className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                        className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-md"
                         type="button"
                         onClick={() => setShowAddressSearchbox(true)}>
                         <img className="size-4 grayscale opacity-70" src={SearchIcon} alt="" />
@@ -449,7 +485,7 @@ const ScreenMapOverview = () => {
                     )
                   }
                   <button
-                    className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-sm"
+                    className="bg-white hover:bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md shadow-md"
                     type="button"
                     onClick={() => {
                       dispatch(setModalsData({
@@ -478,7 +514,10 @@ const ScreenMapOverview = () => {
               vehicleId={selectedVehicle}
               vehicleData={dataPoints.find((vehicle) => vehicle.id === selectedVehicle)}
             />
-            <LayerFilters />
+            <LayerFilters
+              onMapTypeChange={handleMapTypeChange}
+              onMapLayerChange={handleMapLayerChange}
+            />
           </div>
         </div>
       </div>

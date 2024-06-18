@@ -8,6 +8,7 @@ import { TLatLng, TMapState } from "../../types/map";
 import { APP_CONFIG } from "../../constants/constants";
 import { asyncLoadScript } from "../../utils/common";
 import { mapGetCurrentPosition } from "../../utils/map";
+import { getDefaultMapLayerOptions } from "../maps/basicMap";
 
 interface DashboardWrapperProps extends React.PropsWithChildren {
   children: React.ReactNode;
@@ -64,6 +65,7 @@ const DashboardWrapper: FC = () => {
                   // set map script loaded
                   dispatch(setMapStateData({
                     mapScriptLoaded: true,
+                    mapLayerOptions: getDefaultMapLayerOptions(mapState),
                   }));
 
                 }

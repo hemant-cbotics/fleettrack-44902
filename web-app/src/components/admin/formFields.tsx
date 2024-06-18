@@ -454,7 +454,7 @@ export const AdminFormFieldCheckbox: FC<AdminFormFieldChecboxProps> = ({
                 name: name
               }
             })}
-          className="relative w-12 h-7 bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:start-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500 peer-focus:outline outline-2 outline-accent-blue-dark"
+          className="relative w-12 h-7 pointer-events-none touch-none bg-gray-200 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:start-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500 peer-focus:outline outline-2 outline-accent-blue-dark"
         ></div>
       </div>
     </label>

@@ -92,6 +92,24 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
       }
     );
     props.mapRef.current.map.layers.insert(props.mapRef.current.objects.mClusterLayer);
+    props.mapRef.current.objects.mClusterLayer.setOptions({
+      clusteringEnabled: props.mapLayerOptions?.clustering,
+      // visible: true,
+      // gridSize: APP_CONFIG.MAPS.CLUSTER_GRID_SIZE,
+      // clusterPlacementType: Microsoft.Maps.ClusterPlacementType.Grid,
+      // icon: mapVehicleIconWrapped('cluster', false, 0),
+      // iconTemplate: mapVehicleIconWrapped('cluster', false, 0),
+      // textOffset: new Microsoft.Maps.Point(0, 0),
+      // textTemplate: '{pointCount}',
+      // textOffset: new Microsoft.Maps.Point(0, 0),
+      // textOptions: {
+      //   visible: true,
+      //   color: '#FFFFFF',
+      //   fontSize: 12,
+      //   fontFamily: 'Segoe UI, sans-serif',
+      //   textAnchor: Microsoft.Maps.Anchor.Center,
+      // },
+    });
 
     // center the map to the polygon
     setTimeout(() => mapCenterToDataPoints(props, checkedVehicles), 1000);
@@ -300,7 +318,18 @@ const handleMapViewChangeEnd = (props: TMapOperationsProps) => {
   const pushpinCountWithinMapBounds = mapGetPushpinCountWithinMapBounds(props);
   const showInfoboxes = pushpinCountWithinMapBounds <= APP_CONFIG.MAPS.SHOW_INFOBOX_PUSHPIN_THRESHOLD;
   if(APP_CONFIG.DEBUG.MAPS) console.log(`viewchangeend count: ${pushpinCountWithinMapBounds} showInfoboxes: ${showInfoboxes}`);
-  // return;
+  
+  // update mapState with new center and zoom
+  if(!!props.mapRef.current.map?.getCenter) {
+    props?.onViewChangeEnd?.(
+      {
+        latitude: props.mapRef.current.map?.getCenter().latitude,
+        longitude: props.mapRef.current.map?.getCenter().longitude
+      },
+      props.mapRef.current.map.getZoom()
+    );
+  }
+
   if(showInfoboxes) {
     // show infoboxes for pushpins within the map bounds
     props.mapRef.current.objects.mPushpins
