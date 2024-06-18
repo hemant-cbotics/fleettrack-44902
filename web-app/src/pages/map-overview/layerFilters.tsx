@@ -145,6 +145,7 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
                       onClick={() => {
                         setFieldValue("view", item.name)
                         onMapTypeChange(item.mapType as TMapType)
+                        hideModal()
                       }}>
                       <img src={item.src} alt="road-map-view"
                         className={`rounded-full border-2 ${item.mapType === mapState?.mapType ? "border-accent-blue-dark" : "group-hover:border-accent-blue-bright"} `} />

@@ -604,7 +604,7 @@ export const language_en = {
     vehicleStatus: {
       driving: "Driving",
       idle_active: "Idle (Active)",
-      idle_inactive: "Idle (In-active)",
+      idle_inactive: "Idle (Not responding)",
     },
     filter: {
       heading: "Filters",
