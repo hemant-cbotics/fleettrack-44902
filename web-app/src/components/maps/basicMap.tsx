@@ -32,9 +32,9 @@ export const MapLoadingAnimation: FC<TMapLoadingAnimationProps> = ({
 export const getDefaultMapLayerOptions = (mapState: TMapState) => ({
   traffic: mapState?.mapLayerOptions?.traffic ?? false,
   weather: mapState?.mapLayerOptions?.weather ?? false,
-  threeDBuildings: mapState?.mapLayerOptions?.threeDBuildings ?? false,
-  clusters: mapState?.mapLayerOptions?.clusters ?? true,
-  geozones: mapState?.mapLayerOptions?.geozones ?? true,
+  three_d_building: mapState?.mapLayerOptions?.three_d_building ?? false,
+  clustering: mapState?.mapLayerOptions?.clustering ?? true,
+  hide_geozones: mapState?.mapLayerOptions?.hide_geozones ?? true,
 });
 
 const BasicMap: FC<TBasicMapProps> = React.memo(({

@@ -92,6 +92,24 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
       }
     );
     props.mapRef.current.map.layers.insert(props.mapRef.current.objects.mClusterLayer);
+    props.mapRef.current.objects.mClusterLayer.setOptions({
+      clusteringEnabled: props.mapLayerOptions?.clustering,
+      // visible: true,
+      // gridSize: APP_CONFIG.MAPS.CLUSTER_GRID_SIZE,
+      // clusterPlacementType: Microsoft.Maps.ClusterPlacementType.Grid,
+      // icon: mapVehicleIconWrapped('cluster', false, 0),
+      // iconTemplate: mapVehicleIconWrapped('cluster', false, 0),
+      // textOffset: new Microsoft.Maps.Point(0, 0),
+      // textTemplate: '{pointCount}',
+      // textOffset: new Microsoft.Maps.Point(0, 0),
+      // textOptions: {
+      //   visible: true,
+      //   color: '#FFFFFF',
+      //   fontSize: 12,
+      //   fontFamily: 'Segoe UI, sans-serif',
+      //   textAnchor: Microsoft.Maps.Anchor.Center,
+      // },
+    });
 
     // center the map to the polygon
     setTimeout(() => mapCenterToDataPoints(props, checkedVehicles), 1000);

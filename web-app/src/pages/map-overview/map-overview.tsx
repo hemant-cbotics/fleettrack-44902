@@ -138,6 +138,7 @@ const ScreenMapOverview = () => {
     return {
       mapRef,
       mapData: { ...mapState?.mapData } as TMapData,
+      mapLayerOptions: mapState?.mapLayerOptions as TMapLayerOptions,
       setMapData: () => {},
       dataPoints,
     };
@@ -266,7 +267,7 @@ const ScreenMapOverview = () => {
       },
       checkedVehicles
     );
-  }, [mapState?.mapData]);
+  }, [mapState, dataPoints, checkedVehicles, selectedVehicle]); // instead of [mapState?.mapData]
 
   const handleChangeCheckAllVehicles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -288,12 +289,12 @@ const ScreenMapOverview = () => {
   }
 
   const handleMapLayerChange = (mapLayerOptions: TMapLayerOptions) => {
-    dispatch(setMapStateData({
-      ...mapState,
-      mapLayerOptions,
-    }));
     setMapStateTransitionInProgress(true);
     setTimeout(() => {
+      dispatch(setMapStateData({
+        ...mapState,
+        mapLayerOptions,
+      }));
       setMapStateTransitionInProgress(false);
     }, 100);
   }

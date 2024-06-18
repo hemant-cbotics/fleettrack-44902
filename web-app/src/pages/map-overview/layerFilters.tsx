@@ -16,6 +16,7 @@ import StreetsideMapView from "../../assets/images/streetside-map-view.png"
 import ThreeDMapView from "../../assets/images/3d-map-view.png"
 import { TMapLayerOptions, TMapState, TMapType } from "../../types/map";
 import { FC } from "react";
+import { routeUrls } from "../../navigation/routeUrls";
 
 type TViewListItem = {
   id: number;
@@ -85,6 +86,11 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
     dispatch(setModalsData({ ...modalsState, showLayerFilter: false }));
   };
 
+  const handleClickManageGeozones = () => {
+    navigate(routeUrls.dashboardChildren.adminChildren.geozones);
+    hideModal();
+  };
+
   const handleLayerOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     if(!!name && typeof checked === 'boolean') {
@@ -92,6 +98,7 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
         ...mapState.mapLayerOptions,
         [name]: checked
       });
+      setTimeout(() => hideModal(), 500); // just to give a feel of saving/processing and show toggle animation
     }
   }
 
@@ -167,11 +174,12 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
                       id="weather"
                       type="checkbox"
                       name="weather"
-                      checked={values.weather}
-                      onChange={handleChange}
+                      checked={mapState.mapLayerOptions?.weather}
+                      onChange={handleLayerOptionChange}
                       onBlur={handleBlur}
                       touched={touched.weather}
                       error={errors.weather}
+                      disabled={true}
                     />
 
                     <AdminFormFieldCheckbox
@@ -179,11 +187,12 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
                       id="three_d_building"
                       type="checkbox"
                       name="three_d_building"
-                      checked={values.three_d_building}
-                      onChange={handleChange}
+                      checked={mapState.mapLayerOptions?.three_d_building}
+                      onChange={handleLayerOptionChange}
                       onBlur={handleBlur}
                       touched={touched.three_d_building}
                       error={errors.three_d_building}
+                      disabled={true}
                     />
 
                     <AdminFormFieldCheckbox
@@ -191,8 +200,8 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
                       id="clustering"
                       type="checkbox"
                       name="clustering"
-                      checked={values.clustering}
-                      onChange={handleChange}
+                      checked={mapState.mapLayerOptions?.clustering}
+                      onChange={handleLayerOptionChange}
                       onBlur={handleBlur}
                       touched={touched.clustering}
                       error={errors.clustering}
@@ -203,19 +212,20 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
                       id="hide_geozones"
                       type="checkbox"
                       name="hide_geozones"
-                      checked={values.hide_geozones}
-                      onChange={handleChange}
+                      checked={mapState.mapLayerOptions?.hide_geozones}
+                      onChange={handleLayerOptionChange}
                       onBlur={handleBlur}
                       touched={touched.hide_geozones}
                       error={errors.hide_geozones}
                       customWrapperClass="col-span-8"
+                      disabled={true}
                     />
                     <div className="col-span-8">
                       <AdminFormFieldSubmit
                         label={t("manage_geozones")}
                         type="submit"
                         variant="primary"
-                        onClick={hideModal}
+                        onClick={handleClickManageGeozones}
                         disabled={isSubmitting} 
                       />
                     </div>

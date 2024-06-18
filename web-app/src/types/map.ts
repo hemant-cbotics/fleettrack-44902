@@ -36,9 +36,9 @@ export type TMapType = 'road' | 'aerial' | 'auto' | 'birdseye' | 'collinsBart' |
 export type TMapLayerOptions = {
   traffic: boolean;
   weather: boolean;
-  threeDBuildings: boolean;
-  clusters: boolean;
-  geozones: boolean;
+  three_d_building: boolean;
+  clustering: boolean;
+  hide_geozones: boolean;
 }
 
 // map state in redux store
