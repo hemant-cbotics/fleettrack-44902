@@ -59,7 +59,8 @@ export const mapOperations: TMapOperations = (props, checkedVehicles) => {
           showPointer: false,
           showCloseButton: false,
           // offset: new Microsoft.Maps.Point(-(64 + 8), 12) // for w-32 p-2 // infobox shows above the pushpin
-          offset: new Microsoft.Maps.Point(16, -16) // infobox shows right of the pushpin
+          offset: new Microsoft.Maps.Point(16, -16), // infobox shows right of the pushpin
+          zIndex: APP_CONFIG.MAPS.INFOBOX_ZINDEX,
         }
       );
       thisPushpinInfoBox.setMap(props.mapRef.current.map); // add the infobox to the map

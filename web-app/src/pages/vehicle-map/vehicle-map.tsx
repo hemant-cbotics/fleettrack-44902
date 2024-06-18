@@ -1,17 +1,16 @@
-import { AdminFormFieldDropdown } from "../../components/admin/formFields";
-import { APP_CONFIG } from "../../constants/constants";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { setModalsData, TModalsState } from "../../api/store/commonSlice";
 import FilterIcon from "../../assets/svg/filter-icon.svg";
 import SortIcon from "../../assets/svg/sort-icon.svg";
-import VehicleFilter from "../map-overview/vehiclesFilter";
-import { useDispatch, useSelector } from "react-redux";
-import { TModalsState, setModalsData } from "../../api/store/commonSlice";
-import TripDetails from "./tripDetails";
-import BasicMap, { MapLoadingAnimation } from "../../components/maps/basicMap";
-import VehicleDetails from "../map-overview/vehicleDetails";
-import { useTranslation } from "react-i18next";
-import EventFilter from "./eventFilter";
-import { useState } from "react";
+import { AdminFormFieldDropdown } from "../../components/admin/formFields";
 import SortingFilter from "../../components/sortingFilter";
+import { APP_CONFIG } from "../../constants/constants";
+import VehicleDetails from "../map-overview/vehicleDetails";
+import VehicleFilter from "../map-overview/vehicleFilters";
+import EventFilter from "./eventFilter";
+import TripDetails from "./tripDetails";
 
 const tripsData = [
   {
@@ -115,8 +114,17 @@ const ScreenVehicleMap = () => {
                 <div className="flex gap-6 relative">
                   <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showVehicleFilter: true }));}}/>
                   {/* <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => {dispatch(setModalsData({ ...modalsState, showEventFilter: true }));}}/> */}
-                  <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => setShowSortingDropdown(!showSortingDropdown)}/>
-                  <SortingFilter showSortingDropdown={showSortingDropdown} selectedSorting={selectedSorting} setSelectedSorting={(item) => setSelectedSorting(item)}/>
+                  <button className={`p-1 cursor-pointer${showSortingDropdown && " bg-white rounded-lg relative z-modal"}`}>
+                    <img src={SortIcon} alt="sort-icon" className=""
+                      onClick={() => setShowSortingDropdown(!showSortingDropdown)}
+                    />
+                  </button>
+                  <SortingFilter
+                    showSortingDropdown={showSortingDropdown}
+                    setShowSortingDropdown={setShowSortingDropdown}
+                    selectedSorting={selectedSorting}
+                    setSelectedSorting={(item) => setSelectedSorting(item)}
+                  />
                 </div>
               </div>
               <VehicleFilter />

@@ -50,6 +50,8 @@ module.exports = {
         }
       },
       zIndex: {
+        'map-loading-overlay': 50,
+        'map-popup': '1000',
         'overlay': '9980',
         'modal': '9990',
       },

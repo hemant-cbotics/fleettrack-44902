@@ -30,7 +30,7 @@ const MapFilter = () => {
   if (modalsState.showMapFilter === false) return null;
   return (
     <>
-      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-overlay outline-none focus:outline-none">
         <div
           className="fixed w-full h-screen bg-modal-overlay z-overlay"
           onClick={hideModal}

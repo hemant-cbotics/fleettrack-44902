@@ -26,7 +26,7 @@ export const MapLoadingAnimation: FC<TMapLoadingAnimationProps> = ({
   bgClassName = 'bg-white',
   bgOpacityClassName = 'bg-opacity-90'
 }) => (
-  <div className={`absolute inset-0 flex items-center justify-center ${bgClassName} ${bgOpacityClassName} z-50`}>
+  <div className={`absolute inset-0 flex items-center justify-center ${bgClassName} ${bgOpacityClassName} z-map-loading-overlay`}>
     <img src={LoadingAnimation} alt="Loading animation" className="w-12 h-12" />
   </div>
 );

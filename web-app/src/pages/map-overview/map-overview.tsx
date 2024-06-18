@@ -23,7 +23,7 @@ import { mapOperations, mapUpdatesHandler, mapVehicleStateIconSlug } from "./map
 import MapFilter from "./mapFilter";
 import { TDataPoint, TMapData, TMemoizedMapOperationsProps, TMapRef } from "./type";
 import VehicleDetails from "./vehicleDetails";
-import VehicleFilter from "./vehiclesFilter";
+import VehicleFilters from "./vehicleFilters";
 import SearchIcon from "../../assets/svg/search-icon.svg";
 import MapLayersIcon from "../../assets/svg/map-layers.svg";
 import LayerFilters from "./layerFilters";
@@ -31,13 +31,13 @@ import SortingFilter from "../../components/sortingFilter";
 import { AdminFormFieldAsyncDropdown, TSelectboxOption } from "../../components/admin/formFields";
 import { useLazyAutosuggestAddressQuery, useLazyGeocodeQuery } from "../../api/network/mapApiServices";
 import { TAutosuggestOptionValue } from "./type";
+import GroupSelectorModal from "./groupSelector";
 
 const ScreenMapOverview = () => {
   const { deviceId } = useParams<{ deviceId: any }>();
   const { t } = useTranslation("translation", { keyPrefix: "mapOverview" });
   const { t: tAdmin } = useTranslation("translation", { keyPrefix: "dashboard.sidemenu.admins" });
   const { t: tMain } = useTranslation();
-  const [selectedGroups, setSelectedGroups] = useState<string>();
   const navigate = useNavigate();
   const [showSortingDropdown, setShowSortingDropdown] = useState(false);
   const [selectedSorting, setSelectedSorting] = useState("Latest First");
@@ -312,8 +312,6 @@ const ScreenMapOverview = () => {
     }, 100);
   }
 
-  // TODO: display active and inactive both vehicles on map
-
   return (
     <>
       {/* <HeaderView
@@ -325,7 +323,10 @@ const ScreenMapOverview = () => {
           dispatch(setModalsData({ ...modalsState, showGroupSelector: true }));
         }}
       /> */}
-      {/* <GroupSelectorModal filteredGroupData={filteredGroupData} setFilteredGroupData={setFilteredGroupData} /> */}
+      <GroupSelectorModal
+        filteredGroupData={[]}
+        setFilteredGroupData={() => {}}
+      />
       <div className={`${APP_CONFIG.DES.DASH.P_HORIZ} py-2`}>
         <div className="flex rounded-lg h-[calc(100vh-7rem)] overflow-hidden relative">
           <div
@@ -345,7 +346,15 @@ const ScreenMapOverview = () => {
               />
             </div>
             <div className="flex justify-between p-4 items-center">
-              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {}}> {/* TODO: this needs to be changed */}
+              <div className="flex bg-blue-200 py-2 px-3 rounded-lg gap-2 cursor-pointer" onClick={() => {
+                dispatch(setModalsData({
+                  ...modalsState,
+                  showVehicleDetails: false,
+                  showLayerFilter: false,
+                  showVehicleFilter: false,
+                  showGroupSelector: true
+                }));
+              }}> {/* TODO: this needs to be changed */}
                 <p className="font-medium text-lg leading-6">{tAdmin("groups")}</p>
                 <img src={GroupFilterIcon} alt="group-filter-icon"/>
               </div>
@@ -353,13 +362,23 @@ const ScreenMapOverview = () => {
                 <img src={FilterIcon} alt="filter-icon" className="cursor-pointer" onClick={() => {
                   dispatch(setModalsData({
                     ...modalsState,
+                    showGroupSelector: false,
                     showVehicleDetails: false,
                     showLayerFilter: false,
                     showVehicleFilter: true
                   }));
                 }}/>
-                <img src={SortIcon} alt="sort-icon" className="cursor-pointer" onClick={() => setShowSortingDropdown(!showSortingDropdown)}/>
-                <SortingFilter showSortingDropdown={showSortingDropdown} selectedSorting={selectedSorting} setSelectedSorting={(item) => setSelectedSorting(item)}/>
+                <button className={`p-1 cursor-pointer${showSortingDropdown && " bg-white rounded-lg relative z-modal"}`}>
+                  <img src={SortIcon} alt="sort-icon" className=""
+                    onClick={() => setShowSortingDropdown(!showSortingDropdown)}
+                  />
+                </button>
+                <SortingFilter
+                  showSortingDropdown={showSortingDropdown}
+                  setShowSortingDropdown={setShowSortingDropdown}
+                  selectedSorting={selectedSorting}
+                  setSelectedSorting={(item) => setSelectedSorting(item)}
+                />
               </div>
             </div>
             <div className="flex px-4 gap-3">
@@ -375,7 +394,7 @@ const ScreenMapOverview = () => {
                 {tMain("select_all")}
               </label>
             </div>
-            <VehicleFilter />
+            <VehicleFilters />
             {/* <div className="px-3 font-bold text-lg leading-6">
               {t("listing_heading")}
             </div> */}
@@ -417,7 +436,13 @@ const ScreenMapOverview = () => {
                           checkedVehicles.filter((id: any) => id !== dataPoint.id)
                         );
                         // hide vehicle details popup if unchecked
-                        dispatch(setModalsData({ ...modalsState, showVehicleDetails: false }));
+                        dispatch(setModalsData({
+                          ...modalsState,
+                          showGroupSelector: false,
+                          showLayerFilter: false,
+                          showVehicleFilter: false,
+                          showVehicleDetails: false
+                        }));
                       } else {
                         setCheckedVehicles([...checkedVehicles, dataPoint.id]);
                       }
@@ -435,7 +460,11 @@ const ScreenMapOverview = () => {
                 ))}</>
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <p className="text-gray-400 text-lg font-bold">{tMain("no_items_found")}</p>
+                  {isFetchingOrgVehicles || !mapState?.mapScriptLoaded || !mapState?.pageMapLoaded ? (
+                    <MapLoadingAnimation />
+                  ) : (
+                    <p className="text-gray-400 text-lg font-bold">{tMain("no_items_found")}</p>
+                  )}
                 </div>
               )}
             </div>
@@ -450,7 +479,7 @@ const ScreenMapOverview = () => {
                   // setMapData={() => {}}
                   onMapReady={handleMapReady}
                 />
-                {!!mapState?.mapData?.ready && (<div className="absolute flex gap-2 top-5 right-5 z-[999]">
+                {!!mapState?.mapData?.ready && (<div className={`absolute flex gap-2 top-5 right-5 z-[${APP_CONFIG.MAPS.CONTROL_BUTTONS_ZINDEX}]`}>
                   {
                     showAddressSearchbox ? (
                       <AdminFormFieldAsyncDropdown
@@ -490,8 +519,9 @@ const ScreenMapOverview = () => {
                     onClick={() => {
                       dispatch(setModalsData({
                         ...modalsState,
-                        showVehicleDetails: false,
+                        showGroupSelector: false,
                         showVehicleFilter: false,
+                        showVehicleDetails: false,
                         showLayerFilter: true
                       }));
                     }}>

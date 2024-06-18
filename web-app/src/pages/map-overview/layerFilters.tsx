@@ -105,7 +105,7 @@ const LayerFilters: FC<TLayerFiltersProps> = ({ onMapTypeChange, onMapLayerChang
   if (modalsState.showLayerFilter === false) return null;
   return (
     <>
-      <div className="absolute p-6 rounded-lg gap-3 mx-auto max-w-[calc(100vw-4rem)] w-[588px] z-modal top-5 right-5 bg-gray-100">
+      <div className="absolute p-6 rounded-lg gap-3 mx-auto max-w-[calc(100vw-4rem)] w-[588px] z-map-popup top-5 right-5 bg-white shadow-lg">
         <Formik
           initialValues={layerFilterInitialValues}
           validationSchema={LayerFilterValidationSchema}
