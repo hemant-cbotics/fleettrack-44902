@@ -65,6 +65,7 @@ const DashboardWrapper: FC = () => {
                   // set map script loaded
                   dispatch(setMapStateData({
                     mapScriptLoaded: true,
+                    mapType: 'road',
                     mapLayerOptions: getDefaultMapLayerOptions(mapState),
                   }));
 
