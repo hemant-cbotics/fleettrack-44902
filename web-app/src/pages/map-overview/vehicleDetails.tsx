@@ -128,7 +128,7 @@ const VehicleDetails:FC<VehicleDetailsProps> = ({ vehicleId, vehicleData }) => {
 
   if (modalsState.showVehicleDetails === false || !vehicleId) return null;
 
-  const wrapperClass = `absolute flex flex-col gap-6 px-4 p-4 mx-auto max-w-[calc(100vw-4rem)] w-[330px] z-modal top-2 right-2 bottom-2 bg-white shadow-2xl rounded-lg overflow-hidden`;
+  const wrapperClass = `absolute flex flex-col gap-6 px-4 p-4 mx-auto max-w-[calc(100vw-4rem)] w-[330px] z-map-popup top-2 right-2 bottom-2 bg-white shadow-2xl rounded-lg overflow-hidden`;
 
   if(isFetchingSingleVehicle) return (
     <div className={wrapperClass}>

@@ -143,7 +143,7 @@ textarea {
 .map-overview-map-wrapper,
 .vehicle-map-wrapper {
   .MicrosoftMap .NavBar_Container.V8MapStyle {
-    z-index: 1010;
+    z-index: 200; /* should be same as APP_CONFIG.MAPS.CONTROL_BUTTONS_ZINDEX */
 
     .NavBar_Zoom.NavBar_Button,
     .NavBar_Zoom.NavBar_Button {

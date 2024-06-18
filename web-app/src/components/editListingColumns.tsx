@@ -54,7 +54,7 @@ export const EditListingColumnsModal: FC<TEditListingColumnsModalProps> = ({ col
 
   return (
     <>
-      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-overlay outline-none focus:outline-none">
         <div className="fixed w-full h-screen bg-modal-overlay z-overlay"></div>
         <div className="relative my-6 mx-auto max-w-[calc(100vw-4rem)] w-[560px] z-modal">
           

@@ -67,5 +67,7 @@ export const APP_CONFIG = {
     },
     VEHICLE_ICON_SIZE: 28,
     SHOW_INFOBOX_PUSHPIN_THRESHOLD: 6,
+    INFOBOX_ZINDEX: 100,
+    CONTROL_BUTTONS_ZINDEX: 200, // set explicitly to 200 in `index.scss`
   },
 }

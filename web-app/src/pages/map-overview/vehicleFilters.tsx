@@ -9,7 +9,7 @@ import {
   AdminFormFieldSubmit,
 } from "../../components/admin/formFields";
 
-const VehicleFilter = () => {
+const VehicleFilters = () => {
   const { t: tMain } = useTranslation();
   const { t } = useTranslation("translation", {
     keyPrefix: "mapOverview.vehicleFilter",
@@ -27,7 +27,7 @@ const VehicleFilter = () => {
   if (modalsState.showVehicleFilter === false) return null;
   return (
     <>
-      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+      <div className="justify-center items-start flex overflow-x-hidden overflow-y-auto fixed inset-0 z-overlay outline-none focus:outline-none">
         <div
           className="fixed w-full h-screen bg-modal-overlay z-overlay"
           onClick={hideModal}
@@ -123,4 +123,4 @@ const VehicleFilter = () => {
   );
 };
 
-export default VehicleFilter;
+export default VehicleFilters;
