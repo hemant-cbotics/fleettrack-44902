@@ -431,7 +431,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("add_all")}
                     onClick={handleAddAll}
-                    disabled={!userCanEdit}
+                    disabled={!userCanEdit || currentAllVehicleList.length === 0}
                   />
                 </div>
                 <div className="relative">
@@ -449,7 +449,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("add_selected")}
                     onClick={handleAddSelected}
-                    disabled={!userCanEdit}
+                    disabled={!userCanEdit || leftSelectedVehicles.length === 0}
                   />
                 </div>
                 <div className="relative">
@@ -467,7 +467,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("remove_selected")}
                     onClick={handleRemoveSelected}
-                    disabled={!userCanEdit}
+                    disabled={!userCanEdit || rightSelectedVehicles.length === 0}
                   />
                 </div>
                 <div className="relative">
@@ -485,7 +485,7 @@ const ScreenAdminDetailGroup = () => {
                       </>}
                     titleText={t("remove_all")}
                     onClick={handleRemoveAll}
-                    disabled={!userCanEdit}
+                    disabled={!userCanEdit || currentGroupVehicleList.length === 0}
                   />
                 </div>
                 <div className="flex-grow"></div>

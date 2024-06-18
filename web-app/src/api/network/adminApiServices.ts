@@ -299,7 +299,7 @@ export const AdminAPIs = createApi({
           body: data
         }
       },
-      invalidatesTags: [AdminApiTags.VEHICLE_MODIFIED, AdminApiTags.VEHICLE_SINGLE],
+      invalidatesTags: [AdminApiTags.VEHICLE_MODIFIED, AdminApiTags.VEHICLE_SINGLE, AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_SINGLE],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
@@ -502,7 +502,7 @@ export const AdminAPIs = createApi({
           body: data
         }
       },
-      invalidatesTags: [AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_SINGLE],
+      invalidatesTags: [AdminApiTags.GROUP_MODIFIED, AdminApiTags.GROUP_SINGLE, AdminApiTags.VEHICLE_SINGLE, AdminApiTags.VEHICLE_MODIFIED],
       transformErrorResponse(baseQueryReturnValue) {
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
