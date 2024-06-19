@@ -63,7 +63,7 @@ const BasicMap: FC<TBasicMapProps> = React.memo(({
         onMapScriptLoaded({
           mapRef,
           mapStateToSetToLastViewOnLoad: // set to last view if user is on map overview page - prevent momentary flicker to default location
-            pathname === routeUrls.dashboardChildren.map_overview ? mapState : null,
+            pathname === routeUrls.dashboardChildren.mapsChildren.fleet ? mapState : null,
           mapType: mapState?.mapType ?? 'road',
           mapLayerOptions: getDefaultMapLayerOptions(mapState),
           currentPosition: mapData?.centerPosition ?? currPos,

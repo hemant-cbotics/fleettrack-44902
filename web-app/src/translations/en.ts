@@ -106,7 +106,9 @@ export const language_en = {
   dashboard: {
     sidemenu: {
       dashboard: "Dashboard",
-      map_overview: "Map Overview",
+      maps: "Map Overview",
+      fleet: "Fleet Map",
+      vehicle: "Vehicle Map",
       reports: "Reports",
       manage_roles: "Manage Roles",
       maintenance_admin: "Maintenance Admin",
