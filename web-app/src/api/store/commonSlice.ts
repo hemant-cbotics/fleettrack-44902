@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
-import { VerifyEmailOtpResponseSuccess } from "../types/Onboarding"
+import { LegacyVerifyEmailOtpResponseSuccess } from "../types/Onboarding"
 import { TLatLng } from "../../types/map";
 import { TMapState } from "../../types/map";
 import { APP_CONFIG } from "../../constants/constants";
@@ -31,7 +31,7 @@ export type TModalsState = {
 const ownerOrganization = sessionStorage.getItem("ownerOrganization")
 
 export type TQueryParams = {
-  organization_id: number;
+  organization_id: string;
   page: number;
   page_size: number;
   search: string;
@@ -48,7 +48,7 @@ export type TListingQueryParams = {
 
 export type TAppCommonState = {
   preLoginUserData?: TPreLoginUserData;
-  user?: VerifyEmailOtpResponseSuccess;
+  user?: LegacyVerifyEmailOtpResponseSuccess;
   userCurrPos?: TLatLng;
   mapState?: TMapState;
   modals: TModalsState;
@@ -128,7 +128,7 @@ export const commonSlice = createSlice({
         state.preLoginUserData = { ...(state.preLoginUserData || {}), ...action?.payload }
       }
     },
-    setUserData: (state, action: PayloadAction<VerifyEmailOtpResponseSuccess>) => {
+    setUserData: (state, action: PayloadAction<LegacyVerifyEmailOtpResponseSuccess>) => {
       state.user = action?.payload
     },
     setUserCurrPosData: (state, action: PayloadAction<TLatLng>) => {

@@ -2,7 +2,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_ENDPOINTS, API_SERVER_URL } from './endpoints';
 import { handleAuthErrorCode } from './errorCodes';
-import { ForgotPasswordPayload, ForgotPasswordResponse, LoginPayload, LoginResponse, ResendEmailOtpPayload, ResendEmailOtpResponse, ForgotPasswordVerifyOtpPayload, ForgotPasswordVerifyOtpResponse, VerifyEmailOtpPayload, VerifyEmailOtpResponse, OrganizationInvitationPayload, OrganizationInvitationResponseSuccess, OnboardInvitedUserPayload, OnboardInvitedUserResponse } from '../types/Onboarding';
+import { ForgotPasswordPayload, ForgotPasswordResponse, LoginPayload, LoginResponse, ResendEmailOtpPayload, ResendEmailOtpResponse, ForgotPasswordVerifyOtpPayload, ForgotPasswordVerifyOtpResponse, VerifyEmailOtpPayload, LegacyVerifyEmailOtpResponse, OrganizationInvitationPayload, OrganizationInvitationResponseSuccess, OnboardInvitedUserPayload, OnboardInvitedUserResponse } from '../types/Onboarding';
 import { API_METHODS } from './constants';
 
 // Define a service using a base URL and expected endpoints
@@ -54,7 +54,7 @@ export const AuthAPIs = createApi({
     }),
 
     // verify email otp
-    verifyEmailOtp: builder.mutation<VerifyEmailOtpResponse, VerifyEmailOtpPayload>({
+    verifyEmailOtp: builder.mutation<LegacyVerifyEmailOtpResponse, VerifyEmailOtpPayload>({
       query: (params: VerifyEmailOtpPayload) => {
         return {
           url: API_ENDPOINTS.VERIFY_EMAIL_OTP,
@@ -66,7 +66,7 @@ export const AuthAPIs = createApi({
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
       },
-      transformResponse: async (data: VerifyEmailOtpResponse) => {
+      transformResponse: async (data: LegacyVerifyEmailOtpResponse) => {
         return data;
       },
     }),

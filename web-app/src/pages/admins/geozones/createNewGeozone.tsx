@@ -63,7 +63,7 @@ const AdminsGeozonesCreateNew = () => {
               ));
               // api call
               createOrgGeozoneAPITrigger({
-                organization: thisUserOrganizationId ?? 0,
+                organization: `${thisUserOrganizationId}`,
                 zone_id: values.id,
                 zone_type: values.type
               })

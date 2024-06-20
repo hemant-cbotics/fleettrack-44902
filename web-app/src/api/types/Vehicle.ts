@@ -26,7 +26,7 @@ export type OrganizationVehicle = {
   licence_plate: string;
   map_route_color: string | null;
   maximum_speed: number | null;
-  organization: number;
+  organization: string;
   phone: number | null;
   prev_recorder_id: string | null;
   prev_unique_id: string | null;

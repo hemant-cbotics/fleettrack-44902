@@ -48,7 +48,7 @@ const AdminsDriversCreateNew = () => {
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
               createOrgDriverAPITrigger({
-                organization: thisUserOrganizationId ?? 0,
+                organization: `${thisUserOrganizationId}`,
                 name: values.name,
                 email: values.email,
                 phone: values.phone,

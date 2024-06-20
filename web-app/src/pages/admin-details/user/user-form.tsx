@@ -285,7 +285,7 @@ export const UserAuthorizedGroupsForm: FC<UserGeneralDetailFormProps> = ({
   // prepare group query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
-    organization_id: thisUserOrganizationId ?? 0,
+    organization_id: `${thisUserOrganizationId}`,
     page: 1,
     page_size: 100,
     search: ""

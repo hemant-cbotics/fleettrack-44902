@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setListingQueryParams, setUserData, TListingQueryParams, TPreLoginUserData } from "../../../api/store/commonSlice";
 import { useResendEmailOtpMutation, useVerifyEmailOtpMutation } from "../../../api/network/authApiService";
 import { useEffect } from "react";
-import { VerifyEmailOtpResponseSuccess } from "../../../api/types/Onboarding";
+import { LegacyVerifyEmailOtpResponseSuccess } from "../../../api/types/Onboarding";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
 import { sessionStorageKeys, useSessionStorage } from "../../../utils/sessionStorageItems";
 import { APP_CONFIG } from "../../../constants/constants";
@@ -68,19 +68,19 @@ const ScreenTwoFactorAuthentication = () => {
         })
           .unwrap()
           .then((data) => {
-            if(!!(data as VerifyEmailOtpResponseSuccess)?.token) {
-              dispatch(setUserData(data as VerifyEmailOtpResponseSuccess));
-              setSessionStorageItem(sessionStorageKeys.user, (data as VerifyEmailOtpResponseSuccess)?.user);
-              setSessionStorageItem(sessionStorageKeys.accessToken, (data as VerifyEmailOtpResponseSuccess).token);
-              setSessionStorageItem(sessionStorageKeys.ownerOrganization, (data as VerifyEmailOtpResponseSuccess).owner_organization);
+            if(!!(data as LegacyVerifyEmailOtpResponseSuccess)?.token) {
+              dispatch(setUserData(data as LegacyVerifyEmailOtpResponseSuccess));
+              setSessionStorageItem(sessionStorageKeys.user, (data as LegacyVerifyEmailOtpResponseSuccess)?.user);
+              setSessionStorageItem(sessionStorageKeys.accessToken, (data as LegacyVerifyEmailOtpResponseSuccess).token);
+              setSessionStorageItem(sessionStorageKeys.ownerOrganization, (data as LegacyVerifyEmailOtpResponseSuccess).user.account);
               dispatch(setListingQueryParams({
                 ...listingQueryParams,
-                users: { ...listingQueryParams.users, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
-                vehicles: { ...listingQueryParams.vehicles, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
-                drivers: { ...listingQueryParams.drivers, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
-                groups: { ...listingQueryParams.groups, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
-                fleetTags: { ...listingQueryParams.fleetTags, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id },
-                geoZones: { ...listingQueryParams.geoZones, organization_id: (data as VerifyEmailOtpResponseSuccess).owner_organization.id }
+                users: { ...listingQueryParams.users, organization_id: (data as LegacyVerifyEmailOtpResponseSuccess).user.account.accountid },
+                vehicles: { ...listingQueryParams.vehicles, organization_id: (data as LegacyVerifyEmailOtpResponseSuccess).user.account.accountid },
+                drivers: { ...listingQueryParams.drivers, organization_id: (data as LegacyVerifyEmailOtpResponseSuccess).user.account.accountid },
+                groups: { ...listingQueryParams.groups, organization_id: (data as LegacyVerifyEmailOtpResponseSuccess).user.account.accountid },
+                fleetTags: { ...listingQueryParams.fleetTags, organization_id: (data as LegacyVerifyEmailOtpResponseSuccess).user.account.accountid },
+                geoZones: { ...listingQueryParams.geoZones, organization_id: (data as LegacyVerifyEmailOtpResponseSuccess).user.account.accountid }
               }));
               toast.success(t('toast.code_verified'));
               navigate(routeUrls.dashboard);

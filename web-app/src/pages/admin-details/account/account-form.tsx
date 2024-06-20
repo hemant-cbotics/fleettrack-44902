@@ -755,6 +755,8 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
         detailsFormField={true}
       />
 
+      <div className="col-span-12 pt-6"></div>
+
       <AdminFormFieldInput
         label={t("last_eng_hours_maint_1")}
         type="text"
@@ -825,6 +827,8 @@ export const AccountMaintenanceIntervalLabelForm: FC<AccountGeneralDetailFormPro
           detailsFormField={true}
         />
       </div>
+
+      <div className="col-span-12 pt-6"></div>
 
       <AdminFormFieldInput
         label={t("last_service_time_1")}

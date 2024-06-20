@@ -8,7 +8,7 @@ export type OrganizationUser = {
 export type FilterType = "active" | "inactive" | "both";
 
 export type OrganizationEntityListingPayload = {
-  organization_id: number;
+  organization_id: string;
   page: number;
   page_size: number;
   search?: string;
@@ -28,7 +28,7 @@ export type CreateOrganizationUserResponse = {
   id: string;
   invited_by: number;
   is_accepted: boolean;
-  organization: number;
+  organization: string;
   role: number;
   updated_at: string;
   user: number;
@@ -70,7 +70,7 @@ export type TEditOrganizationUserPayloadData = {
 };
 
 export type CreateOrganizationVehiclePayload = {
-  organization: number;
+  organization: string;
   vehicle_make: string;
   vehicle_model: string;
   vin: string;
@@ -78,47 +78,47 @@ export type CreateOrganizationVehiclePayload = {
 };
 
 export type CreateOrganizationDriverPayload = {
-  organization: number;
+  organization: string;
   name: string;
   email: string;
   phone: string;
 };
 
 export type SingleOrganizationDriverPayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   driver_id: number;
 };
 
 export type EditOrganizationDriverPayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   driver_id: number;
   data: any;
 };
 
 export type SingleOrganizationVehiclePayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   vehicle_id: string;
 };
 
 export type EditOrganizationVehiclePayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   vehicle_id: string;
   data: any;
 };
 
 export type CreateOrganizationGroupPayload = {
-  organization: number | null;
+  organization: string | null;
   name: string;
   description: string;
 };
 
 export type SingleOrganizationGroupPayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   group_id: number;
 };
 
 export type EditOrganizationGroupPayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   group_id: number;
   data: any;
 };
@@ -163,40 +163,40 @@ export type TEditOrganizationVehiclePayloadData = {
 };
 
 export type EditOrganizationAccountPayload = {
-  account_id: number;
+  account_id: string;
   data: any;
 };
 
 export type CreateOrganizationFleettagPayload = {
-  organization: number | null;
+  organization: string | null;
   fleet_tag_name: string;
 };
 
 export type SingleOrganizationFleettagPayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   fleettag_id: number;
 };
 
 export type EditOrganizationFleettagPayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   fleettag_id: number;
   data: any;
 };
 
 export type CreateOrganizationGeozonePayload = {
-  organization: number | null;
+  organization: string | null;
   zone_id: string;
   zone_type: string;
 };
 
 export type SingleOrganizationGeozonePayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   geozone_id: number;
 };
 
 
 export type EditOrganizationGeozonePayload = {
-  organization_id: number | null;
+  organization_id: string | null;
   geozone_id: number;
   data: any;
 };

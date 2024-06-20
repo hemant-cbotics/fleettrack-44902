@@ -13,10 +13,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AppAvatar from "../avatar";
 import { getUserIntials } from "../../utils/string";
 import { useSelector } from "react-redux";
-import { VerifyEmailOtpResponseSuccess } from "../../api/types/Onboarding";
+import { LegacyVerifyEmailOtpResponseSuccess } from "../../api/types/Onboarding";
 import AdminsDropdown from "./adminsDropdown";
 import { sessionStorageKeys, useSessionStorage } from "../../utils/sessionStorageItems";
-import { TUser } from "../../api/types/User";
+import { TLegacyUser } from "../../api/types/User";
 import AppSearchBox from "../searchBox";
 import { useLogoutMutation } from "../../api/network/userApiService";
 import { sideEffectLogOut } from "../../utils/common";
@@ -43,8 +43,8 @@ const DashboardHeader = () => {
   const navigate = useNavigate();
   const { getSessionStorageItem } = useSessionStorage();
 
-  const loggedInUserData: VerifyEmailOtpResponseSuccess = useSelector((state: any) => state.commonReducer.user);
-  const loggedInUser: TUser = loggedInUserData?.user ?? getSessionStorageItem(sessionStorageKeys.user);
+  const loggedInUserData: LegacyVerifyEmailOtpResponseSuccess = useSelector((state: any) => state.commonReducer.user);
+  const loggedInUser: TLegacyUser = loggedInUserData?.user ?? getSessionStorageItem(sessionStorageKeys.user);
 
   const { pathname } = useLocation();
   const adminsMenuActive = pathname.indexOf(routeUrls.dashboardChildren.admins) > -1;
@@ -75,6 +75,16 @@ const DashboardHeader = () => {
     }
   }
 
+  const avatarInitials = getUserIntials(
+    [
+      loggedInUser?.displayname,
+      loggedInUser?.contactname,
+      loggedInUser?.contactemail,
+      loggedInUser?.accountid,
+    ].find(item => !!item)
+    ?? ''
+  );
+
   return (
     <>
       <div
@@ -103,7 +113,7 @@ const DashboardHeader = () => {
           {/* Profile Icon */}
           <div className={`relative select-none${showProfileDropdown ? " z-modal" : ""}`}>
             <button type="button" className="flex items-center justify-center ml-5 cursor-pointer relative" onClick={handleClickProfileIcon}>
-              <AppAvatar initials={getUserIntials(loggedInUser?.name ?? loggedInUser?.email)} />
+              <AppAvatar initials={avatarInitials} />
             </button>
             <div
               className={`absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg z-modal${showProfileDropdown ? '' : ' hidden'}`}

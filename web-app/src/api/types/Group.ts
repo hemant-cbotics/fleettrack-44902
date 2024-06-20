@@ -14,5 +14,5 @@ export type OrganizationGroup = {
   name: string;
   description: string;
   is_active: boolean;
-  organization: number;
+  organization: string;
 };

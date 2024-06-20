@@ -73,7 +73,7 @@ const ScreenAdminDetailGroup = () => {
   // prepare query params for fetching organization groups
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = React.useState({
-    organization_id: thisUserOrganizationId ?? 0,
+    organization_id: `${thisUserOrganizationId}`,
     page: 1,
     page_size: APP_CONFIG.LISTINGS.LARGE_PAGE_SIZE,
     search: "",

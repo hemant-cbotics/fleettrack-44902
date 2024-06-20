@@ -47,7 +47,7 @@ const AdminsGroupsCreateNew = () => {
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
               createOrgGroupAPITrigger({
-                organization: thisUserOrganizationId ?? 0,
+                organization: `${thisUserOrganizationId}`,
                 name: values.name,
                 description: values.description,
               })

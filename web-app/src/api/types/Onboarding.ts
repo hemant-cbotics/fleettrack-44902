@@ -2,7 +2,8 @@
 // Login API types
 // ---------------
 
-import { TUser } from "./User"
+import { LegacyOrganizationAccount } from "./Account"
+import { TLegacyUser, TUser } from "./User"
 import { TUserRole } from "./UserRole"
 
 // --------------------------
@@ -63,6 +64,15 @@ export type VerifyEmailOtpResponseSuccess = {
 }
 
 export type VerifyEmailOtpResponse = VerifyEmailOtpResponseSuccess | VerifyEmailOtpResponseError;
+
+export type LegacyVerifyEmailOtpResponseWithAccount = TLegacyUser & { account: LegacyOrganizationAccount }
+
+export type LegacyVerifyEmailOtpResponseSuccess = {
+  token: string;
+  user: LegacyVerifyEmailOtpResponseWithAccount // TUser;
+}
+
+export type LegacyVerifyEmailOtpResponse = LegacyVerifyEmailOtpResponseSuccess | VerifyEmailOtpResponseError;
 
 // -------------------------
 // Forgot Password API types

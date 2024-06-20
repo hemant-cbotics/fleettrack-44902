@@ -94,7 +94,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
   // prepare group query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = React.useState({
-    organization_id: thisUserOrganizationId ?? 0,
+    organization_id: `${thisUserOrganizationId}`,
     page: 1,
     page_size: 100,
     search: ""
@@ -128,7 +128,7 @@ export const GeozoneDetailForm: FC<GeozoneDetailFormProps> = ({
         {
           id: parseInt(e.value),
           name: e.label,
-          organization: thisUserOrganizationId ?? 0
+          organization: `${thisUserOrganizationId}`
         }
       ]);
     }

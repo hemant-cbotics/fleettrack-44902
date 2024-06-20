@@ -13,6 +13,46 @@ export type TUser = {
   account: OrganizationAccount,
 }
 
+export type TLegacyUser = {
+  accountid: string,
+  contactemail: string,
+  contactname: string,
+  contactphone: string,
+  creationtime: number,
+  dashboardtiles: null,
+  defaultoverlay: null,
+  description: string,
+  displayname: string,
+  enablegeozonelabels: 0 | 1,
+  expirationtime: number,
+  firstloginpageid: "menu.top",
+  gender: 0, // need all possible values
+  isactive: 0 | 1,
+  lastiplogin: string,
+  lastlogintime: number,
+  lastpasswords: string | null,
+  lastupdatetime: number,
+  maxaccesslevel: number, // need all possible values
+  notes: string,
+  notifyemail: string,
+  passwdchangetime: number,
+  passwdquerytime: number,
+  pinnedgroups: null, // need possible data structure
+  preferreddeviceid: string,
+  requiretwofactor: 0 | 1,
+  roleid: string, // : "!sysadmin" // need all possible values
+  sessionexpire: number | null,
+  snowdashtiles: string | null,
+  suspenduntiltime: number,
+  temppassword: string | null,
+  timezone: string,
+  tomcattimeout: number,
+  userid: string,
+  usertype: number, // need all possible values
+  usesso: number,
+  welcomesettings: number,
+}
+
 export type TLoggedInUserOrganization = {
   id: number,
   owner: number,

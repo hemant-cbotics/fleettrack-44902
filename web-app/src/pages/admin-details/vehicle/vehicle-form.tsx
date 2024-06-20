@@ -66,7 +66,7 @@ export const VehicleDetailForm: FC<VehicleDetailFormProps> = ({
 
   const loadOptionsHandlerDriver = async (inputValue: string) => {
     const driversQueryResponse = await orgDriversQuery({
-      organization_id: thisUserOrganizationId ?? 0,
+      organization_id: `${thisUserOrganizationId}`,
       page: 1,
       page_size: APP_CONFIG.LISTINGS.DROPDOWN_SEARCH_PAGE_SIZE,
       search: inputValue,
@@ -735,7 +735,7 @@ export const VehicleGroupMembershipForm: FC<VehicleDetailFormProps> = ({
   // prepare group query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgGroupsQueryParams, setOrgGroupsQueryParams] = useState({
-    organization_id: thisUserOrganizationId ?? 0,
+    organization_id: `${thisUserOrganizationId}`,
     page: 1,
     page_size: 100,
     search: ""

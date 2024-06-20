@@ -5,7 +5,7 @@ export type GeozoneType = 'Circle' | 'Polygon' | 'Route';
 export type GeozoneVehicleGroup = {
   id: number;
   name: string;
-  organization: number;
+  organization: string;
 }
 
 export type OrganizationGeozone = {
@@ -27,6 +27,6 @@ export type OrganizationGeozone = {
   zone_color: string;
   speed_limit: number | null;
   is_active: boolean;
-  organization: number;
+  organization: string;
   groups: GeozoneVehicleGroup[];
 };

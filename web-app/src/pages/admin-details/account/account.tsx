@@ -27,9 +27,9 @@ import {
   sessionStorageKeys,
   useSessionStorage,
 } from "../../../utils/sessionStorageItems";
-import { VerifyEmailOtpResponseSuccess } from "../../../api/types/Onboarding";
+import { LegacyVerifyEmailOtpResponseSuccess, LegacyVerifyEmailOtpResponseWithAccount } from "../../../api/types/Onboarding";
 import { useSelector } from "react-redux";
-import { TUser } from "../../../api/types/User";
+import { TLegacyUser, TUser } from "../../../api/types/User";
 import { useEditOrganizationAccountMutation } from "../../../api/network/adminApiServices";
 import { toast } from "react-toastify";
 import { serializeErrorKeyValues } from "../../../api/network/errorCodes";
@@ -47,10 +47,10 @@ const ScreenAdminDetailAccount = () => {
   const { getSessionStorageItem, setSessionStorageItem } = useSessionStorage();
 
   // get account details from session storage
-  const loggedInUserData: VerifyEmailOtpResponseSuccess = useSelector(
+  const loggedInUserData: LegacyVerifyEmailOtpResponseSuccess = useSelector(
     (state: any) => state.commonReducer.user
   );
-  const loggedInUser: TUser =
+  const loggedInUser: LegacyVerifyEmailOtpResponseWithAccount =
     loggedInUserData?.user ?? getSessionStorageItem(sessionStorageKeys.user);
   const { account } = loggedInUser;
 
@@ -142,21 +142,24 @@ const ScreenAdminDetailAccount = () => {
       };
 
       // call api for account update
-      editOrganizationAccountApiTrigger({account_id: values.account_id, data: data})
-      .unwrap()
-      .then((data) => {
-        toast.success(t("toast.account_updated"));
-        if(!!data){
-          const user = {...loggedInUser};
-          user.account = data;
-          setSessionStorageItem(sessionStorageKeys.user, user);
-        }
-        navigate(routeUrls.dashboard);
+      editOrganizationAccountApiTrigger({
+        account_id: values.account_id,
+        data,
       })
-      .catch((error) => {
-        const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
-        toast.error(errors?.join(' '));
-      });
+        .unwrap()
+        .then((data) => {
+          toast.success(t("toast.account_updated"));
+          if(!!data) {
+            const user: LegacyVerifyEmailOtpResponseWithAccount = {...loggedInUser};
+            user.account = data;
+            setSessionStorageItem(sessionStorageKeys.user, user);
+          }
+          navigate(routeUrls.dashboard);
+        })
+        .catch((error) => {
+          const errors = !!error?.data ? serializeErrorKeyValues(error?.data) : [t('toast.updation_failed')];
+          toast.error(errors?.join(' '));
+        });
     },
   });
   const {
@@ -173,78 +176,78 @@ const ScreenAdminDetailAccount = () => {
     if (account) {
       setFormikValuesReady(false); // simulate render delay for select pre-selected values
       formik.setValues({
-        account_id: account.id,
+        account_id: account.accountid,
         account_description: account.description ?? "",
-        contact_name: account.contact_name ?? "",
-        contact_phone_number: account.contact_phone ?? "",
-        contact_email: loggedInUser.email ?? "",
-        private_cost: account.private_cost ?? 0.0,
-        idle_gas_usage: account.idle_gas_usage ?? 0.0,
-        distance_gas_usage: account.distance_gas_usage ?? 0.0,
+        contact_name: account.contactname ?? "",
+        contact_phone_number: account.contactphone ?? "",
+        contact_email: loggedInUser.contactemail ?? "",
+        private_cost: account.privategascost ?? 0.0,
+        idle_gas_usage: account.idlegasusage ?? 0.0,
+        distance_gas_usage: account.milesgasusage ?? 0.0, // TODO: check with BE
         auto_update_interval_for_maps:
-          account.auto_update_interval_for_maps ?? 0,
+          account.mapupdatetimer ?? 0,
         drivers_assigned_to_devices:
-          account.drivers_assigned_to_devices ?? false,
-        enable_map_clustering: account.enable_map_clustering ?? "",
-        open_reports_in_new_tab: account.open_reports_in_new_tab ?? false,
+          account.hasdriversassigned === 1,
+        enable_map_clustering: account.enableclustering === 1,
+        open_reports_in_new_tab: account.enablenewtabreporting === 1,
         sync_driverId_from_driver_admin:
-          account.sync_driver_id_from_driver_admin ?? false,
-        has_snowplows: account.has_snowplows ?? false,
-        hide_total_rows_in_csv: account.hide_total_rows_in_csv ?? false,
+          account.syncdriverid === 1,
+        has_snowplows: account.hassnowplows === 1,
+        hide_total_rows_in_csv: account.hidetotalsrowcsv === 1,
         timezone: account.timezone ?? "",
-        speed_units: account.speed_units ?? "",
-        distance_units: account.distance_units ?? "",
-        volume_units: account.volume_units ?? "",
-        economy_units: account.economy_units ?? "",
-        pressure_units: account.pressure_units ?? "",
-        temperature_units: account.temperature_units ?? "",
-        latitude_longitude_format: account.lat_lan_format ?? "",
-        route_segment_color_rule: account.route_segment_color_rule ?? "",
-        route_line_thickness: account.route_line_thickness ?? "",
-        multi_vehicle_map_name: account.multi_vehicle_map_name ?? "",
-        device_title: account.device_title ?? "",
-        device_title_plural: account.device_title_plural ?? "",
-        device_group_title: account.device_group_title ?? "",
-        device_group_title_plural: account.device_group_title_plural ?? "",
-        address_title: account.address_title ?? "",
-        address_title_plural: account.address_title_plural ?? "",
-        default_login_userId: account.default_login_user_id ?? "",
-        default_overlay: account.default_overlay ?? "",
-        last_maintenance_1: account.maintenance_intervals.last_maintenance_1 ?? 0,
-        last_maintenance_2: account.maintenance_intervals.last_maintenance_2 ?? 0,
-        last_maintenance_3: account.maintenance_intervals.last_maintenance_3 ?? 0,
-        last_maintenance_4: account.maintenance_intervals.last_maintenance_4 ?? 0,
-        last_maintenance_5: account.maintenance_intervals.last_maintenance_5 ?? 0,
-        last_maintenance_6: account.maintenance_intervals.last_maintenance_6 ?? 0,
-        last_maintenance_7: account.maintenance_intervals.last_maintenance_7 ?? 0,
-        last_maintenance_8: account.maintenance_intervals.last_maintenance_8 ?? 0,
-        last_maintenance_9: account.maintenance_intervals.last_maintenance_9 ?? 0,
-        last_maintenance_10: account.maintenance_intervals.last_maintenance_10 ?? 0,
-        last_eng_hours_maint_1: account.maintenance_intervals.last_eng_hours_maintenance_1 ?? 0,
-        last_eng_hours_maint_2: account.maintenance_intervals.last_eng_hours_maintenance_2 ?? 0,
-        last_eng_hours_maint_3: account.maintenance_intervals.last_eng_hours_maintenance_3 ?? 0,
-        last_eng_hours_maint_4: account.maintenance_intervals.last_eng_hours_maintenance_4 ?? 0,
-        last_eng_hours_maint_5: account.maintenance_intervals.last_eng_hours_maintenance_5 ?? 0,
-        last_service_time_1: account.maintenance_intervals.last_service_time_1 ?? 0,
-        last_service_time_2: account.maintenance_intervals.last_service_time_2 ?? 0,
-        last_service_time_3: account.maintenance_intervals.last_service_time_3 ?? 0,
-        last_service_time_4: account.maintenance_intervals.last_service_time_4 ?? 0,
-        last_service_time_5: account.maintenance_intervals.last_service_time_5 ?? 0,
-        harsh_braking: account.harsh_braking ?? "",
-        harsh_acceleration: account.harsh_acceleration ?? "",
-        speeding: account.speeding ?? "",
-        reverse: account.reverse ?? "",
-        seatbelt_off: account.seatbelt_off ?? "",
-        harsh_cornering: account.harsh_cornering ?? "",
-        idle_ratio: account.idle_ratio ?? "",
-        impact_crash_ai: account.impact_crash_ai ?? "",
-        cellphone_use_ai: account.cellphone_use_ai ?? "",
-        distracted_driving_ai: account.distracted_driving_ai ?? "",
-        drinking_eating_ai: account.drinking_eating_ai ?? "",
-        smoking_ai: account.smoking_ai ?? "",
-        possible_fatiuge_ai: account.possible_fatigue_ai ?? "",
-        obstructed_camera_ai: account.obstructed_camera_ai ?? "",
-        tailgating_ai: account.tailgating_ai ?? "",
+        speed_units: `${account.speedunits}`,
+        distance_units: `${account.distanceunits}`,
+        volume_units: `${account.volumeunits}`,
+        economy_units: `${account.economyunits}`,
+        pressure_units: `${account.pressureunits}`,
+        temperature_units: `${account.temperatureunits}`,
+        latitude_longitude_format: `${account.latlonformat}`,
+        route_segment_color_rule: `${account.routesegcolorsel}`,
+        route_line_thickness: `${account.routestrokethickness}`,
+        multi_vehicle_map_name: `${account.multivehiclemapname}`,
+        device_title: "", // TODO: check with BE
+        device_title_plural: "", // TODO: check with BE
+        device_group_title: "", // TODO: check with BE
+        device_group_title_plural: "", // TODO: check with BE
+        address_title: "", // TODO: check with BE
+        address_title_plural: "", // TODO: check with BE
+        default_login_userId: account.defaultuser ?? "",
+        default_overlay: account.defaultoverlay ?? "",
+        last_maintenance_1: account.maintlabelkm0 ?? "",
+        last_maintenance_2: account.maintlabelkm1 ?? 0,
+        last_maintenance_3: account.maintlabelkm2 ?? 0,
+        last_maintenance_4: account.maintlabelkm3 ?? 0,
+        last_maintenance_5: account.maintlabelkm4 ?? 0,
+        last_maintenance_6: account.maintlabelkm5 ?? 0,
+        last_maintenance_7: account.maintlabelkm6 ?? 0,
+        last_maintenance_8: account.maintlabelkm7 ?? 0,
+        last_maintenance_9: account.maintlabelkm8 ?? 0,
+        last_maintenance_10: account.maintlabelkm9 ?? 0,
+        last_eng_hours_maint_1: account.maintlabelhr0 ?? 0,
+        last_eng_hours_maint_2: account.maintlabelhr1 ?? 0,
+        last_eng_hours_maint_3: account.maintlabelhr2 ?? 0,
+        last_eng_hours_maint_4: account.maintlabelhr3 ?? 0,
+        last_eng_hours_maint_5: account.maintlabelhr4 ?? 0,
+        last_service_time_1: account.maintlabelft0 ?? 0,
+        last_service_time_2: account.maintlabelft1 ?? 0,
+        last_service_time_3: account.maintlabelft2 ?? 0,
+        last_service_time_4: account.maintlabelft3 ?? 0,
+        last_service_time_5: account.maintlabelft4 ?? 0,
+        harsh_braking: `${account.scorewtharshbrake}`,
+        harsh_acceleration: `${account.scorewtharshaccel}`,
+        speeding: `${account.scorewtspeeding}`,
+        reverse: `${account.scorewtreverse}`,
+        seatbelt_off: `${account.scorewtseatbeltoff}`,
+        harsh_cornering: `${account.scorewtcorneringai}`, // TODO: or scorewtcornering ?
+        idle_ratio: `${account.scorewtidle}`,
+        impact_crash_ai: `${account.scorewtimpactai}`,
+        cellphone_use_ai: `${account.scorewtphoneuseai}`,
+        distracted_driving_ai: `${account.scorewtdistractedai}`,
+        drinking_eating_ai: `${account.scorewtfooddrinkai}`,
+        smoking_ai: `${account.scorewtsmokingai}`,
+        possible_fatiuge_ai: `${account.scorewtfatigueai}`,
+        obstructed_camera_ai: `${account.scorewtobjcameraai}`,
+        tailgating_ai: `${account.scorewttailgatingai}`,
       });
       setTimeout(() => { setFormikValuesReady(true); }, 200);
     }

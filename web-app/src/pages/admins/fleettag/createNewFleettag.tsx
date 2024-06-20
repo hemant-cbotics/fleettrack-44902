@@ -48,7 +48,7 @@ const AdminsFleetTagsCreateNew = () => {
             validationSchema={YupValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
               createOrgFleettagAPITrigger({
-                organization: thisUserOrganizationId ?? 0,
+                organization: `${thisUserOrganizationId}`,
                 fleet_tag_name: values.name,
               })
                 .unwrap()

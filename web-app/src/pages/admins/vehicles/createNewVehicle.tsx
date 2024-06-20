@@ -49,7 +49,7 @@ const AdminsVehiclesCreateNew = () => {
             onSubmit={(values, { setSubmitting }) => {
               // if(APP_CONFIG.TOASTS.INFO) toast.info(t('loginScreen.toast.logging_you_in'));
               createOrgVehicleAPITrigger({
-                organization: thisUserOrganizationId ?? 0,
+                organization: `${thisUserOrganizationId}`,
                 vehicle_make: values.make,
                 vehicle_model: values.model,
                 vin: values.vin,

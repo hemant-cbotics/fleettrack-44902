@@ -113,7 +113,7 @@ const ScreenMapOverview = () => {
   // preparing query params
   const thisUserOrganizationId = useLoggedInUserData("ownerOrganizationId")
   const [orgVehiclesQueryParams, setOrgVehiclesQueryParams] = React.useState<OrganizationEntityListingPayload>({
-    organization_id: thisUserOrganizationId ?? 0,
+    organization_id: `${thisUserOrganizationId}`,
     page: 1,
     page_size: 30, // APP_CONFIG.LISTINGS.DEFAULT_PAGE_SIZE,
     search: "",

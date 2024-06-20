@@ -22,8 +22,8 @@ export const API_SERVER_URL = _API_SERVER_URL;
 export const API_VERSION_SUFFIX = "/api/v1";
 
 export const API_ENDPOINTS = {
-  LOGIN: `${API_VERSION_SUFFIX}/login/`,
-  VERIFY_EMAIL_OTP: `${API_VERSION_SUFFIX}/verify-email-otp/`,
+  LOGIN: `/legacy${API_VERSION_SUFFIX}/login/`,
+  VERIFY_EMAIL_OTP: `/legacy${API_VERSION_SUFFIX}/verify-email-otp/`,
   RESEND_EMAIL_OTP: `${API_VERSION_SUFFIX}/resend-email-otp/`,
   FORGOT_PASSWORD: `${API_VERSION_SUFFIX}/forgot-password/`,
   RESEND_FORGOT_PASSWORD: `${API_VERSION_SUFFIX}/resend-forgot-password/`,
@@ -42,7 +42,7 @@ export const API_ENDPOINTS = {
   },
 
   ADMINS: {
-    ORGANIZATION_USERS: (organization_id: number) => `/organization/organization-users/${organization_id}/`,
+    ORGANIZATION_USERS: (organization_id: string) => `/organization/organization-users/${organization_id}/`,
     SINGLE_ORGANIZATION_USER: (user_id: number) => `/organization/organization-user/${user_id}/`,
     EDIT_ORGANIZATION_USER: `/organization/edit-user/`,
 
@@ -58,7 +58,7 @@ export const API_ENDPOINTS = {
     SINGLE_ORGANIZATION_GROUP: (group_id: number) => `/group/ap1/v1/${group_id}/`,
     EDIT_ORGANIZATION_GROUP: (group_id: number) => `/group/ap1/v1/${group_id}/`,
 
-    EDIT_ORGANIZATION_ACCOUNT: (account_id: number) => `/users/api/v1/account/${account_id}/`,
+    EDIT_ORGANIZATION_ACCOUNT: (account_id: string) => `/users/api/v1/account/${account_id}/`,
 
     ORGANIZATION_FLEETTAGS: `/fleet-tag/ap1/v1/`,
     SINGLE_ORGANIZATION_FLEETTAG: (fleettags_id: number) => `/fleet-tag/ap1/v1/${fleettags_id}/`,

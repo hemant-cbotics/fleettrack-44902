@@ -33,7 +33,7 @@ import { TLoggedInUser } from "../types/User";
 import { OrganizationVehicle } from "../types/Vehicle";
 import { OrganizationDriver } from "../types/Driver";
 import { OrganizationGroup } from "../types/Group";
-import { OrganizationAccount } from "../types/Account";
+import { LegacyOrganizationAccount } from "../types/Account";
 import { OrganizationFleettag } from "../types/Fleettag";
 import { OrganizationGeozone } from "../types/Geozone";
 
@@ -532,7 +532,7 @@ export const AdminAPIs = createApi({
     }),
 
     //edit organization account
-    editOrganizationAccount: builder.mutation<OrganizationAccount, EditOrganizationAccountPayload>({
+    editOrganizationAccount: builder.mutation<LegacyOrganizationAccount, EditOrganizationAccountPayload>({ // TODO: change to legacy incomplete
       query: ({account_id, data}) => {
         return {
           url: API_ENDPOINTS.ADMINS.EDIT_ORGANIZATION_ACCOUNT(account_id),
@@ -544,7 +544,7 @@ export const AdminAPIs = createApi({
         handleAuthErrorCode(baseQueryReturnValue);
         return baseQueryReturnValue;
       },
-      transformResponse: (response: OrganizationAccount) => {
+      transformResponse: (response: LegacyOrganizationAccount) => { // TODO: change to legacy incomplete
         return response;
       },
     }),
