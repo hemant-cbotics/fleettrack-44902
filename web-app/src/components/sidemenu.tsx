@@ -10,9 +10,10 @@ import LeftArrowIcon from "../assets/svg/left-arrow-icon.svg";
 
 type TDashboardMenuListItemProps = {
   dashboardMenuItem: TDashboardMenuItem;
+  isSubmenu?: boolean;
 }
 
-const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboardMenuItem }) => {
+const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboardMenuItem, isSubmenu = false }) => {
   const { t } = useTranslation("translation", { keyPrefix: "dashboard.sidemenu" });
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -20,18 +21,40 @@ const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboar
     navigate(path);
   };
   const active =
-    pathname === dashboardMenuItem.path ||
+    !!dashboardMenuItem.children
+    ? pathname.includes(dashboardMenuItem.path)
+    : pathname === dashboardMenuItem.path ||
     (pathname.includes(routeUrls.dashboardChildren.admins) && pathname.includes(dashboardMenuItem.path));
   const title = t(dashboardMenuItem.slug);
+  if(isSubmenu) {
+    return (
+      <li
+        className={`px-3 py-2 rounded-lg ${active ? "font-bold text-sidemenu-text-active" : "font-semibold text-sidemenu-text hover:bg-gray-300 cursor-pointer"}`}
+        onClick={() => handleClick(dashboardMenuItem.path)}>
+        <span className="flex items-center gap-3">
+          <p className={`text-xs`}>{title}</p>
+        </span>
+      </li>
+    );
+  }
   return (
-    <li
-      className={`px-3 py-2 rounded-lg ${active ? "bg-gray-300" : "hover:bg-gray-300 cursor-pointer"}`}
-      onClick={() => handleClick(dashboardMenuItem.path)}>
-      <span className="flex items-center gap-3">
-        <img src={dashboardMenuItem.icon} alt={title} />
-        <p className={`text-xs ${active ? "font-bold text-sidemenu-text-active" : "font-semibold text-sidemenu-text"}`}>{title}</p>
-      </span>
-    </li>
+    <>
+      <li
+        className={`px-3 py-2 rounded-lg ${active ? "bg-gray-300" : "hover:bg-gray-300 cursor-pointer"}`}
+        onClick={() => handleClick(dashboardMenuItem.path)}>
+        <span className="flex items-center gap-3">
+          <img src={dashboardMenuItem.icon} alt={title} />
+          <p className={`text-xs ${active ? "font-bold text-sidemenu-text-active" : "font-semibold text-sidemenu-text"}`}>{title}</p>
+        </span>
+      </li>
+      {dashboardMenuItem.children && active && (
+        <ul className="space-y-4 ml-0">
+          {dashboardMenuItem.children.map((child, index) => (
+            <DashboardMenuListItem key={index} dashboardMenuItem={child} isSubmenu={true} />
+          ))}
+        </ul>
+      )}
+    </>
   )
 };
 

@@ -32,6 +32,7 @@ import ScreenAdminDetailFleettag from "../pages/admin-details/fleettag/fleettag"
 import ScreenMapOverview from "../pages/map-overview/map-overview"
 import ScreenAdminDetailGroup from "../pages/admin-details/group/group"
 import ScreenVehicleMap from "../pages/vehicle-map/vehicle-map"
+import MapPagesWrapper from "../components/maps/mapPagesWrapper"
 
 const UnProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isUserLoggedIn } = useAuth();
@@ -119,16 +120,30 @@ const routes: RouteObject[] = [
         element: <ScreenOverview />
       },
       {
-        path: routeUrls.dashboardChildren.map_overview,
-        element: <ScreenMapOverview />
-      },
-      {
-        path: routeUrls.dashboardChildren.map_overview + "/:deviceId",
-        element: <ScreenMapOverview />
+        path: routeUrls.dashboardChildren.maps,
+        element: <MapPagesWrapper />,
+        children: [
+          {
+            path: routeUrls.dashboardChildren.maps,
+            element: <Navigate to={routeUrls.dashboardChildren.mapsChildren.fleet} />,
+          },
+          {
+            path: routeUrls.dashboardChildren.mapsChildren.fleet,
+            element: <ScreenMapOverview />
+          },
+          { // TODO: added temporary route for vehicle map
+            path: routeUrls.dashboardChildren.mapsChildren.vehicle,
+            element: <ScreenVehicleMap />
+          },
+          {
+            path: routeUrls.dashboardChildren.mapsChildren.vehicle + "/:vehicleId",
+            element: <ScreenVehicleMap />
+          },
+        ]
       },
       {
         path: routeUrls.dashboardChildren.reports,
-        element: <ScreenVehicleMap />
+        element: <TemporaryRoute />
       },
       {
         path: routeUrls.dashboardChildren.manage_roles,

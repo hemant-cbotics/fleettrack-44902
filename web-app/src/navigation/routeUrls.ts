@@ -31,7 +31,11 @@ export const routeUrls = {
     },
 
     // under development
-    map_overview: "/dashboard/map-overview",
+    maps: "/dashboard/maps",
+    mapsChildren: {
+      fleet: "/dashboard/maps/fleet",
+      vehicle: "/dashboard/maps/vehicle",
+    },
     reports: "/dashboard/reports",
     manage_roles: "/dashboard/manage-roles",
     maintenance_admin: "/dashboard/maintenance-admin",

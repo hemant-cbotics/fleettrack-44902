@@ -5,11 +5,12 @@ export type TDashboardMenuItem = {
   slug: string;
   icon: string;
   path: string;
+  children?: TDashboardMenuItem[];
 };
 
 export const dashboardMenuItemSlugs = [
   "dashboard",
-  "map_overview",
+  "maps",
   "reports",
   "manage_roles",
   "maintenance_admin",
@@ -18,6 +19,7 @@ export const dashboardMenuItemSlugs = [
   "manage_rule_alert",
   "camera_admin",
 ];
+export const mapsMenuItemSlugs = ["fleet", "vehicle"];
 
 export const dashboardMenuItems: TDashboardMenuItem[] = [
   {
@@ -28,7 +30,19 @@ export const dashboardMenuItems: TDashboardMenuItem[] = [
   {
     slug: dashboardMenuItemSlugs[1],
     icon: dashboardMenuIcons.map_overview,
-    path: routeUrls.dashboardChildren.map_overview,
+    path: routeUrls.dashboardChildren.maps,
+    children: [
+      {
+        slug: mapsMenuItemSlugs[0],
+        icon: '',
+        path: routeUrls.dashboardChildren.mapsChildren.fleet,
+      },
+      {
+        slug: mapsMenuItemSlugs[1],
+        icon: '',
+        path: routeUrls.dashboardChildren.mapsChildren.vehicle,
+      }
+    ]
   },
   {
     slug: dashboardMenuItemSlugs[2],
