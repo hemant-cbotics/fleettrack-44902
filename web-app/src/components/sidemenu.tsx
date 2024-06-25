@@ -1,12 +1,10 @@
 import React from "react";
-import Logo from "../assets/svg/logo-fleettrack.svg";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { routeUrls } from "../navigation/routeUrls";
-import { useLogoutMutation } from "../api/network/userApiService";
-import { sideEffectLogOut } from "../utils/common";
-import { dashboardAdminsMenuItems, dashboardMenuItems, TDashboardMenuItem } from "../navigation/dashboardSideMenu";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import LeftArrowIcon from "../assets/svg/left-arrow-icon.svg";
+import Logo from "../assets/svg/logo-fleettrack.svg";
+import { TDashboardMenuItem, dashboardAdminsMenuItems, dashboardMenuItems } from "../navigation/dashboardSideMenu";
+import { routeUrls } from "../navigation/routeUrls";
 
 type TDashboardMenuListItemProps = {
   dashboardMenuItem: TDashboardMenuItem;
@@ -16,20 +14,36 @@ type TDashboardMenuListItemProps = {
 const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboardMenuItem, isSubmenu = false }) => {
   const { t } = useTranslation("translation", { keyPrefix: "dashboard.sidemenu" });
   const navigate = useNavigate();
+  const urlParams = useParams();
   const { pathname } = useLocation();
   const handleClick = (path: string) => {
     navigate(path);
   };
   const active =
-    !!dashboardMenuItem.children
+    !!dashboardMenuItem.children || dashboardMenuItem.hasQueryParam
     ? pathname.includes(dashboardMenuItem.path)
     : pathname === dashboardMenuItem.path ||
     (pathname.includes(routeUrls.dashboardChildren.admins) && pathname.includes(dashboardMenuItem.path));
   const title = t(dashboardMenuItem.slug);
   if(isSubmenu) {
+    if(dashboardMenuItem.hasQueryParam) {
+      if(pathname === `${dashboardMenuItem.path}/${urlParams[dashboardMenuItem.hasQueryParam]}`) {
+        return (
+          <li
+            className={`px-3 py-2 rounded-lg ${active ? "font-bold text-sidemenu-submenu-text-active" : "font-semibold text-sidemenu-text hover:bg-gray-200 cursor-pointer"}`}
+            onClick={() => handleClick(dashboardMenuItem.path)}>
+            <span className="flex items-center gap-3">
+              <p className={`text-xs`}>{title}</p>
+            </span>
+          </li>
+        );
+      } else {
+        return <></>
+      }
+    }
     return (
       <li
-        className={`px-3 py-2 rounded-lg ${active ? "font-bold text-sidemenu-text-active" : "font-semibold text-sidemenu-text hover:bg-gray-300 cursor-pointer"}`}
+        className={`px-3 py-2 rounded-lg ${active ? "font-bold text-sidemenu-submenu-text-active" : "font-semibold text-sidemenu-text hover:bg-gray-200 cursor-pointer"}`}
         onClick={() => handleClick(dashboardMenuItem.path)}>
         <span className="flex items-center gap-3">
           <p className={`text-xs`}>{title}</p>
@@ -48,7 +62,7 @@ const DashboardMenuListItem: React.FC<TDashboardMenuListItemProps> = ({ dashboar
         </span>
       </li>
       {dashboardMenuItem.children && active && (
-        <ul className="space-y-4 ml-0">
+        <ul className="space-y-2 pb-4">
           {dashboardMenuItem.children.map((child, index) => (
             <DashboardMenuListItem key={index} dashboardMenuItem={child} isSubmenu={true} />
           ))}

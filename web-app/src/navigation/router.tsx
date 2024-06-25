@@ -131,10 +131,6 @@ const routes: RouteObject[] = [
             path: routeUrls.dashboardChildren.mapsChildren.fleet,
             element: <ScreenMapOverview />
           },
-          { // TODO: added temporary route for vehicle map
-            path: routeUrls.dashboardChildren.mapsChildren.vehicle,
-            element: <ScreenVehicleMap />
-          },
           {
             path: routeUrls.dashboardChildren.mapsChildren.vehicle + "/:vehicleId",
             element: <ScreenVehicleMap />

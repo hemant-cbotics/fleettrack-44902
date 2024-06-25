@@ -12,6 +12,7 @@ import { formattedDateTime } from "../../utils/dateTime";
 import LoadingAnimation from "../../assets/svg/loadingAnimation.svg";
 import { TDataPoint } from "./type";
 import { mapVehicleDisplayTitle } from "./common";
+import { routeUrls } from "../../navigation/routeUrls";
 
 type VehicleDetailsProps = {
   vehicleId?: any;
@@ -199,7 +200,10 @@ const VehicleDetails:FC<VehicleDetailsProps> = ({ vehicleId, vehicleData }) => {
         label={t("vehicle_map_view")}
         type="button"
         variant="primary"
-        onClick={() => {}} 
+        onClick={() => {
+          hideModal();
+          navigate(`${routeUrls.dashboardChildren.mapsChildren.vehicle}/${vehicleId}`)
+        }}
       />
     </div>
   )

@@ -119,6 +119,7 @@ type AdminFormFieldDropdownProps = {
 type AdminFormFieldAsyncDropdownProps = AdminFormFieldDropdownProps & {
   noOptionsMessage?: (obj: { inputValue: string }) => string;
   defaultOption?: TSelectboxOption;
+  defaultOptions?: TSelectboxOption[];
   loadOptions: ((inputValue: string, callback: (options: OptionsOrGroups<TSelectboxOption, GroupBase<TSelectboxOption>>) => void) => void/* | Promise<...>*/) | undefined;
   searchStyle?: boolean;
   searchStyleOnClear?: () => void;
@@ -242,7 +243,7 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
   onChange,
   onBlur,
   value,
-  options = [],
+  defaultOptions = [],
   noOptionsMessage = () => "No options found",
   defaultOption = null,
   loadOptions,
@@ -347,9 +348,10 @@ export const AdminFormFieldAsyncDropdown: FC<AdminFormFieldAsyncDropdownProps> =
         }}
         placeholder={placeholder}
         cacheOptions
+        defaultOptions={defaultOptions}
         loadOptions={loadOptions}
-        value={options.find(optItem => optItem.value === selected)}
-        onChange={handleChange}
+        value={defaultOptions.find(optItem => optItem.value === selected)}
+        onChange={(e) => handleChange(e)}
         isDisabled={disabled || readOnly}
         menuPlacement={menuPlacement}
         defaultValue={defaultOption}

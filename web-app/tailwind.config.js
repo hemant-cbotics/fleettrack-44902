@@ -15,7 +15,8 @@ module.exports = {
         heading: {
           black: '#1e1e1e',
           gray444: '#444444',
-          gray666: '#666666'
+          gray666: '#666666',
+          gray888: '#888888',
         },
         field: {
           success: '#009006',
@@ -34,6 +35,7 @@ module.exports = {
         sidemenu: {
           text: '#555555',
           "text-active": '#304674',
+          "submenu-text-active": '#3D78B1',
         },
         accent: {
           blue: {

@@ -1,6 +1,7 @@
+import { OrganizationVehicle } from "../../api/types/Vehicle";
 import { TDataPoint } from "./type";
 
-export const mapVehicleDisplayTitle = (dataPoint: TDataPoint) => {
+export const mapVehicleDisplayTitle = (dataPoint: TDataPoint | OrganizationVehicle) => {
   return `${dataPoint.vehicle_model} ${dataPoint.vehicle_make}`;
 };
 

@@ -6,6 +6,7 @@ export type TDashboardMenuItem = {
   icon: string;
   path: string;
   children?: TDashboardMenuItem[];
+  hasQueryParam?: string; // optionally display menu item only if query param is present
 };
 
 export const dashboardMenuItemSlugs = [
@@ -41,6 +42,7 @@ export const dashboardMenuItems: TDashboardMenuItem[] = [
         slug: mapsMenuItemSlugs[1],
         icon: '',
         path: routeUrls.dashboardChildren.mapsChildren.vehicle,
+        hasQueryParam: 'vehicleId',
       }
     ]
   },

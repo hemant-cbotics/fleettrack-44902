@@ -657,6 +657,7 @@ export const language_en = {
   },
   vehicleMap: {
     selected_vehicle: "Selected Vehicle",
+    selected_vehicle_no_options: "No vehicles found. Please try another search.",
     tripDetails: {
       duration: "Duration",
       total_events: "Total Events",

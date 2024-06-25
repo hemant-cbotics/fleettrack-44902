@@ -22,6 +22,7 @@ export const APP_CONFIG = {
     DEFAULT_PAGE_SIZE: 10,
     DROPDOWN_SEARCH_PAGE_SIZE: 20,
     LARGE_PAGE_SIZE: 100, // for groups
+    TEMP_LARGE_PAGE_SIZE: 100, // TOOD: remove wherever used and implement proper pagination / infinite loading / load more
   },
   TOASTS: {
     INFO: false,

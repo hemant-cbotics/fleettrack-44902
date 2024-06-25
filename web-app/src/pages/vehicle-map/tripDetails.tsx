@@ -49,29 +49,38 @@ type TripDetailsProps = {
 };
 
 type TripAddressProps = {
-  point: string;
+  wrapperClassName?: string;
+  point: 'Start' | 'End';
   phone_no: string;
   address: string;
   time: string;
+  dottedLine?: boolean;
 };
 
-const TripAddress: FC<TripAddressProps> = ({ point, phone_no, address, time }) => {
-  
-  return (
-    <>
-      <div className="flex items-start">
-        <img src={ point === "Start" ? StartLocation : EndLocation} alt="location-icon" className="p-2"/>
-        <div className="font-medium leading-4 space-y-3">
-          <div className="text-sm">
-            <p>{phone_no}</p>
-            <p>{address}</p>
-          </div>
-          <p className="text-xs text-gray-500">{time}</p>
-        </div>
+const TripAddress: FC<TripAddressProps> = ({
+  wrapperClassName = 'relative flex items-start',
+  point,
+  phone_no,
+  address,
+  time,
+  dottedLine = false,
+}) => (
+  <div className={wrapperClassName}>
+    {dottedLine && (
+      <div className="absolute top-6 left-3 ml-[3px] w-0.5 h-[calc(100%-8px)] border border-dashed border-gray-400" />
+    )}
+    <img
+      src={point === "Start" ? StartLocation : EndLocation}
+      alt="location-icon" className="p-2" />
+    <div className="font-medium space-y-1">
+      <div className="text-[12px] leading-4 text-heading-gray444 pe-12">
+        <p>{phone_no}</p>
+        <p>{address}</p>
       </div>
-    </>
-  );
-};
+      <p className="text-[10px] leading-3 text-heading-gray888">{time}</p>
+    </div>
+  </div>
+);
 
 const TripDetails: FC<TripDetailsProps> = ({
   tripData,
@@ -92,23 +101,25 @@ const TripDetails: FC<TripDetailsProps> = ({
       >
         <div className="space-y-2">
           <div className="flex justify-between">
-            <p className="font-semibold text-base leading-6 text-blue-800">
+            <p className="font-semibold text-base leading-6 text-accent-blue-dark">
               {tripData.trip_no}
             </p>
             <div className="text-end">
-              <p className="font-bold text-xs leading-3">
+              <p className="font-bold text-[8px] leading-2">
                 {t("duration")}: {tripData.duration}
               </p>
-              <p className="font-bold text-sm leading-4 text-gray-500">
+              <p className="font-bold text-[10px] leading-3 mt-1 text-heading-gray888">
                 {tripData.distance}
               </p>
             </div>
           </div>
+          <div className="space-y-2">
             <TripAddress
               point="Start"
               phone_no={tripData.phone_no}
               address={tripData.address}
               time={tripData.time}
+              dottedLine={true}
             />
             <TripAddress
               point="End"
@@ -116,13 +127,15 @@ const TripDetails: FC<TripDetailsProps> = ({
               address={tripData.address}
               time={tripData.time} 
             />
+          </div>
           <div className="flex justify-between">
-            <p className="font-semibold text-sm leading-6">
-              {t("total_events")}: {tripData.totalEvents}
+            <p className="font-semibold text-xs leading-6 text-heading-gray666">
+              {t("total_events")}:{" "}
+              <span className="text-heading-black">{tripData.totalEvents}</span>
             </p>
             {!showEvents && (
               <p
-                className="font-medium text-base leading-5 text-blue-500 cursor-pointer"
+                className="font-medium text-sm leading-5 text-accent-blue-bright cursor-pointer"
                 onClick={() => setShowEvents(true)}
               >
                 {t("view_details")}

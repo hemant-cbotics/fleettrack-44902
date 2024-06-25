@@ -765,6 +765,7 @@ export const {
 
   //vehicle admin
   useOrganizationVehiclesQuery,
+  useLazyOrganizationVehiclesQuery,
   useCreateOrganizationVehicleMutation,
   useSingleOrganizationVehicleQuery,
   useEditOrganizationVehicleMutation,
