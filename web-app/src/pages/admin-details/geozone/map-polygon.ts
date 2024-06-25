@@ -40,7 +40,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
       (props.mapData as TGeozoneMapDataPolygon).centerPosition.longitude
     )
     if(APP_CONFIG.DEBUG.MAPS) console.log('Dropping center at', refCenter.latitude, refCenter.longitude);
-    props.mapRef.current.map.setView({ center: refCenter }); // set the view to the center
+    props.mapRef.current.map.setView({ center: refCenter, animate: true }); // set the view to the center
 
     // TODO: uncertain if polygon can have a centre pushpin
     // create center pushpin

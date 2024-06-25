@@ -39,7 +39,7 @@ export const mapOperations: TMapOperations = (props) => {
       (props.mapData as TGeozoneMapDataCircle).centerPosition.longitude
     )
     if(APP_CONFIG.DEBUG.MAPS) console.log('Dropping center at', refCenter.latitude, refCenter.longitude);
-    props.mapRef.current.map.setView({ center: refCenter }); // set the view to the center
+    props.mapRef.current.map.setView({ center: refCenter, animate: true }); // set the view to the center
 
     // create center pushpin
     props.mapRef.current.objects.mPushpins.pCentre = new Microsoft.Maps.Pushpin(

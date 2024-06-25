@@ -28,7 +28,7 @@ export const onMapScriptLoaded = (props: TOnMapScriptLoadedProps) => {
         props?.mapStateToSetToLastViewOnLoad?.mapCenter?.latitude ?? props.currentPosition.latitude,
         props?.mapStateToSetToLastViewOnLoad?.mapCenter?.longitude ?? props.currentPosition.longitude
       ),
-      zoom: props?.mapStateToSetToLastViewOnLoad?.mapZoom ?? 14,
+      zoom: props?.mapStateToSetToLastViewOnLoad?.mapZoom ?? APP_CONFIG.MAPS.DEFAULTS.ZOOM,
       showLocateMeButton: false,
       // showZoomButtons: false,
       // showDashboard: false,

@@ -48,7 +48,7 @@ export const mapOperations = (props: TMapOperationsProps) => {
         refCenter.latitude,
         refCenter.longitude
       );
-    props.mapRef.current.map.setView({ center: refCenter }); // set the view to the center
+    props.mapRef.current.map.setView({ center: refCenter, animate: true }); // set the view to the center
 
     // TODO: uncertain if routes can have a centre pushpin
     // create center pushpin

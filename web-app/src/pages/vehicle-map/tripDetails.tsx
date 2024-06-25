@@ -128,7 +128,7 @@ const TripDetails: FC<TripDetailsProps> = ({
               time={tripData.time} 
             />
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between pt-2">
             <p className="font-semibold text-xs leading-6 text-heading-gray666">
               {t("total_events")}:{" "}
               <span className="text-heading-black">{tripData.totalEvents}</span>
@@ -143,14 +143,14 @@ const TripDetails: FC<TripDetailsProps> = ({
             )}
           </div>
           {showEvents && (
-            <div className="space-y-3" onClick={() => setShowEvents(false)}>
+            <div className="space-y-3 pb-2" onClick={() => setShowEvents(false)}>
               {events.map((event, index) => (
                 <div className="flex justify-between">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <img src={event.icon} alt="icon"/>
-                    <p className="font-medium text-sm leading-4">{event.name}</p>
+                    <p className="font-medium text-xs leading-4">{event.name}</p>
                   </div>
-                  <div className="space-y-1 text-right font-medium text-xs leading-3 text-gray-500">
+                  <div className="text-right font-medium text-[8px] leading-1 text-heading-gray666">
                     <p>{event.date}</p>
                     <p>{event.time}</p>
                   </div>

@@ -46,6 +46,7 @@ export const APP_CONFIG = {
         latitude: 35.129186,
         longitude: -89.9571074,
       },
+      ZOOM: 7,
       RADIUS: 0.6,
       POLYGON_POINTS_RANGE: [3, 12],
       POLYGON_POINTS: 6,

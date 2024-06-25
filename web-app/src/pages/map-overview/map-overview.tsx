@@ -210,7 +210,7 @@ const ScreenMapOverview = () => {
         'centerToCoords',
         {
           center: newlySelectedLocationCoords,
-          zoom: 6,
+          zoom: APP_CONFIG.MAPS.DEFAULTS.ZOOM, // 6,
         }
       );
 
